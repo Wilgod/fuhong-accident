@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #fdd477;
+    min-height: 120px;
+    gap: 10px;
+    padding: 40px;
+}
+
+.header span {
+    color: #aa721b;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.header span::before {
+    content: "-";
+    margin-right: 10px;
+}
+.header span::after {
+    content: "-";
+    margin-left: 10px;
+}
