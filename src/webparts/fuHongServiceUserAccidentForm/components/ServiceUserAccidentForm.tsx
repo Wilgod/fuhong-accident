@@ -1,7 +1,10 @@
 import * as React from 'react'
+import { useState } from 'react';
+import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
-
+import "react-datepicker/dist/react-datepicker.css";
 export default function ServiceUserAccidentForm() {
+    const [date, setDate] = useState(new Date());
     return (
         <>
             <div className="mb-3">
@@ -457,6 +460,7 @@ export default function ServiceUserAccidentForm() {
                     </div>
 
                     <div className="form-group row mb-2">
+                        {/* 是否在醫院留醫 */}
                         <label className="col-12 col-md-2 col-form-label">是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
@@ -473,6 +477,80 @@ export default function ServiceUserAccidentForm() {
                             </div>
                         </div>
                     </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 報警處理 */}
+                        <label className="col-12 col-md-2 col-form-label">報警處理</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
+                                <label className="form-check-label" htmlFor="scenario-sleep">需要</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
+                                <label className="form-check-label" htmlFor="scenario-sleep">不需要</label>
+                            </div>
+                            <div>
+                                <label className="form-label">日期及時間</label>
+                                <input type="datetime-local" className="form-control" />
+                            </div>
+                            <div>
+                                <label className="form-label">報案編號</label>
+                                <input type="text" className="form-control" />
+                            </div>
+                            <div>
+                                <label className="form-label">警署</label>
+                                <input type="text" className="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 意外後中心即時應變措施 */}
+                        <label className="col-12 col-md-2 col-form-label">意外後中心即時應變措施</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
+                                <label className="form-check-label" htmlFor="scenario-sleep">有</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
+                                <label className="form-check-label" htmlFor="scenario-sleep">沒有</label>
+                            </div>
+                            <div>
+                                <label className="form-label">警署</label>
+                                <textarea className="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>家屬聯絡</h5>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 通知家屬日期及時間 */}
+                        <label className="col-12 col-md-2 col-form-label">通知家屬日期及時間</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                selected={date}
+                                onChange={(date) => setDate(date)}
+                                showTimeSelect
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="Pp"
+                            />
+                        </div>
+                        {/* 與服務使用者關係 */}
+                        <label className="col-12 col-md-2 col-form-label">與服務使用者關係</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+
                 </section>
             </div>
         </>
