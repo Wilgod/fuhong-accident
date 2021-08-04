@@ -186,19 +186,19 @@ export default function ServiceUserAccidentForm() {
                                 <label className="form-check-label" htmlFor="scenario-walk">步行期間</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="inside_activity" />
-                                <label className="form-check-label" htmlFor="scenario-walk">參與服務單位內活動</label>
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_inside_activity" value="scenario_inside_activity" />
+                                <label className="form-check-label" htmlFor="scenario_inside_activity">參與服務單位內活動</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="outside_activity" />
-                                <label className="form-check-label" htmlFor="scenario-walk">外出活動期間(請註明地點)</label>
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_outside_activity" value="scenario_outside_activity" />
+                                <label className="form-check-label" htmlFor="scenario_outside_activity">外出活動期間(請註明地點)</label>
                             </div>
                             <div className="">
                                 <textarea className="form-control" />
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="outside_activity" />
-                                <label className="form-check-label" htmlFor="scenario-walk">其他</label>
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_other" value="scenario_other" />
+                                <label className="form-check-label" htmlFor="scenario_other">其他</label>
                             </div>
                             <div className="">
                                 <textarea className="form-control" />
@@ -340,44 +340,44 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">地面濕滑</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-SLIPPERY-GROUND" value="ENV-SLIPPERY-GROUND" />
+                                <label className="form-check-label" htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">地面不平</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-UNEVEN-GROUND" value="ENV-UNEVEN-GROUND" />
+                                <label className="form-check-label" htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">障礙物品</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-OBSTACLE-ITEMS" value="ENV-OBSTACLE-ITEMS" />
+                                <label className="form-check-label" htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">光線不足</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-INSUFFICIENT-LIGHT" value="ENV-INSUFFICIENT-LIGHT" />
+                                <label className="form-check-label" htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">空間不足</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-NOT-ENOUGH-SPACE" value="ENV-NOT-ENOUGH-SPACE" />
+                                <label className="form-check-label" htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">聲響刺激</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-ACOUSTIC-STIMULATION" value="ENV-ACOUSTIC-STIMULATION" />
+                                <label className="form-check-label" htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">被別人碰撞</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-COLLIDED-BY-OTHERS" value="ENV-COLLIDED-BY-OTHERS" />
+                                <label className="form-check-label" htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">被別人傷害</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-HURT-BY-OTHERS" value="ENV-HURT-BY-OTHERS" />
+                                <label className="form-check-label" htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" />
+                                <label className="form-check-label" htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">其他</label>
+                                <input className="form-check-input" type="checkbox" id="ENV-OTHER" value="ENV-OTHER" />
+                                <label className="form-check-label" htmlFor="ENV-OTHER">其他</label>
                             </div>
                             <div className="">
                                 <textarea className="form-control" />
@@ -389,28 +389,28 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">情緒不穩</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL-EMOTIONAL-INSTABILITY" />
+                                <label className="form-check-label" htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">心急致傷</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-HEARTBROKEN" value="PERSONAL-HEARTBROKEN" />
+                                <label className="form-check-label" htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">進食時哽塞</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-CHOKING" value="PERSONAL-CHOKING" />
+                                <label className="form-check-label" htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">步履不穩</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL-UNSTEADY-WALKING" />
+                                <label className="form-check-label" htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">抽搐</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-TWITCH" value="PERSONAL-TWITCH" />
+                                <label className="form-check-label" htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                <label className="form-check-label" htmlFor="env-facotr-wet">其他個人因素</label>
+                                <input className="form-check-input" type="checkbox" id="PERSONAL-OTHER" value="PERSONAL-OTHER" />
+                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他個人因素</label>
                             </div>
                             <div className="">
                                 <textarea className="form-control" />
@@ -442,20 +442,20 @@ export default function ServiceUserAccidentForm() {
                     </div>
 
                     <div className="form-group row mb-2">
-                        {/* 服務使用者意外時情況*/}
-                        <label className="col-12 col-md-2 col-form-label">服務使用者意外時情況</label>
+                        {/* 就診安排*/}
+                        <label className="col-12 col-md-2 col-form-label">就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">醫生到診</label>
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="dinning" />
-                                <label className="form-check-label" htmlFor="scenario-dinning">門診</label>
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-wash" value="washing" />
-                                <label className="form-check-label" htmlFor="scenario-wash">急症室</label>
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
                             <div className="">
                                 <label className="form-label">醫院名稱</label>
@@ -478,12 +478,12 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">是</label>
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-true" value="isStayInHospital-true" />
+                                <label className="form-check-label" htmlFor="isStayInHospital-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">否</label>
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-false" value="isStayInHospital-false" />
+                                <label className="form-check-label" htmlFor="isStayInHospital-false">否</label>
                             </div>
                             <div>
                                 <label className="form-label">醫院名稱</label>
@@ -497,12 +497,12 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">需要</label>
+                                <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" />
+                                <label className="form-check-label" htmlFor="police-true">需要</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">不需要</label>
+                                <input className="form-check-input" type="radio" name="police" id="police-false" value="police-false" />
+                                <label className="form-check-label" htmlFor="police-false">不需要</label>
                             </div>
                             <div>
                                 <label className="form-label">日期及時間</label>
@@ -533,16 +533,15 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">有</label>
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="contingency-measure-true" />
+                                <label className="form-check-label" htmlFor="contingency-measure-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">沒有</label>
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="contingency-measure-false" />
+                                <label className="form-check-label" htmlFor="contingency-measure-false">沒有</label>
                             </div>
                             <div>
-                                <label className="form-label">警署</label>
-                                <textarea className="form-control" />
+                                <textarea className="form-control" placeholder="請註明"/>
                             </div>
                         </div>
                     </div>

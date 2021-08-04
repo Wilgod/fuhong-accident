@@ -21,7 +21,8 @@ export default class FuHongOutsidersAccidentFormWebPart extends BaseClientSideWe
     const element: React.ReactElement<IFuHongOutsidersAccidentFormProps> = React.createElement(
       FuHongOutsidersAccidentForm,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        context: this.context,
       }
     );
 

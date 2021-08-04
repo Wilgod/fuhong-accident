@@ -13,7 +13,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
-          <OutsidersAccidentForm />
+          <OutsidersAccidentForm context={this.props.context} />
         </div>
       </div>
     );

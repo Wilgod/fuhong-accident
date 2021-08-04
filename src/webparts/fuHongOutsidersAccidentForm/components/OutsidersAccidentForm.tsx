@@ -4,9 +4,17 @@ import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
 import "react-datepicker/dist/react-datepicker.css";
 import "./custom.css";
+import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+import * as moment from 'moment';
 
-export default function OutsidersAccidentForm() {
+interface IOutsidersAccidentForm {
+    context: WebPartContext;
+}
+
+export default function OutsidersAccidentForm({ context }: IOutsidersAccidentForm) {
     const [date, setDate] = useState(new Date());
+    console.log(context);
     return (
         <>
             <div className="mb-3">
@@ -131,44 +139,44 @@ export default function OutsidersAccidentForm() {
                             <label className="col-12 col-md-2 col-form-label">環境因素</label>
                             <div className="col">
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">地面濕滑</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-SLIPPERY-GROUND" value="ENV-SLIPPERY-GROUND" />
+                                    <label className="form-check-label" htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">地面不平</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-UNEVEN-GROUND" value="ENV-UNEVEN-GROUND" />
+                                    <label className="form-check-label" htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">障礙物品</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-OBSTACLE-ITEMS" value="ENV-OBSTACLE-ITEMS" />
+                                    <label className="form-check-label" htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">光線不足</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-INSUFFICIENT-LIGHT" value="ENV-INSUFFICIENT-LIGHT" />
+                                    <label className="form-check-label" htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">空間不足</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-NOT-ENOUGH-SPACE" value="ENV-NOT-ENOUGH-SPACE" />
+                                    <label className="form-check-label" htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">聲響刺激</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-ACOUSTIC-STIMULATION" value="ENV-ACOUSTIC-STIMULATION" />
+                                    <label className="form-check-label" htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">被別人碰撞</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-COLLIDED-BY-OTHERS" value="ENV-COLLIDED-BY-OTHERS" />
+                                    <label className="form-check-label" htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">被別人傷害</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-HURT-BY-OTHERS" value="ENV-HURT-BY-OTHERS" />
+                                    <label className="form-check-label" htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" />
+                                    <label className="form-check-label" htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" id="env-facotr-wet" value="env-facotr-wet" />
-                                    <label className="form-check-label" htmlFor="env-facotr-wet">其他</label>
+                                    <input className="form-check-input" type="checkbox" id="ENV-OTHER" value="ENV-OTHER" />
+                                    <label className="form-check-label" htmlFor="ENV-OTHER">其他</label>
                                 </div>
                                 <div className="">
                                     <textarea className="form-control" />
@@ -196,12 +204,12 @@ export default function OutsidersAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">意外事件有否證人證人目擊事故發生經過?</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
-                                <label className="form-check-label" htmlFor="scenario-sleep">有</label>
+                                <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" />
+                                <label className="form-check-label" htmlFor="witness-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="dinning" />
-                                <label className="form-check-label" htmlFor="scenario-dinning">沒有</label>
+                                <input className="form-check-input" type="radio" name="witness" id="witness-false" value="witness-false" />
+                                <label className="form-check-label" htmlFor="witness-false">沒有</label>
                             </div>
                             <div>
                                 <label className="form-label">證人姓名</label>
@@ -247,12 +255,12 @@ export default function OutsidersAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-male" value="male" />
-                                <label className="form-check-label" htmlFor="gender-male">有</label>
+                                <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" />
+                                <label className="form-check-label" htmlFor="police-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" />
-                                <label className="form-check-label" htmlFor="gender-female">沒有</label>
+                                <input className="form-check-input" type="radio" name="police" id="police-false" value="police-false" />
+                                <label className="form-check-label" htmlFor="police-false">沒有</label>
                             </div>
                             <div>
                                 <label className="form-label">日期及時間</label>
@@ -265,25 +273,123 @@ export default function OutsidersAccidentForm() {
                                     showTimeInput
                                 />
                             </div>
+                            <div>
+                                <label className="form-label">警署名稱</label>
+                                <input type="text" className="form-control" />
+                            </div>
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         <label className="col-12 col-md-2 col-form-label">家屬聯絡</label>
-                        <div className="col-12 col-md-4 d-flex align-items-center">
+                        <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-male" value="male" />
-                                <label className="form-check-label" htmlFor="gender-male">有</label>
+                                <input className="form-check-input" type="radio" name="family" id="family-true" value="family-true" />
+                                <label className="form-check-label" htmlFor="family-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" />
-                                <label className="form-check-label" htmlFor="gender-female">沒有</label>
+                                <input className="form-check-input" type="radio" name="family" id="family-false" value="family-false" />
+                                <label className="form-check-label" htmlFor="family-false">沒有</label>
+                            </div>
+                            <div>
+                                <label className="form-label">通知家屬日期及時間</label>
+                                <DatePicker
+                                    className="form-control"
+                                    selected={date}
+                                    onChange={(date) => setDate(date)}
+                                    timeInputLabel="Time:"
+                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                    showTimeInput
+                                />
+                            </div>
+                            <div>
+                                <label className="form-label">與傷者關係</label>
+                                <input type="text" className="form-control" />
                             </div>
                         </div>
                     </div>
-
-
                 </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-3">
+                    <div className="form-group row mb-2">
+                        {/* 填寫人姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 職級 */}
+                        <label className="col-12 col-md-2 col-form-label">職級</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 服務經理姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">服務經理姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 日期 */}
+                        <label className="col-12 col-md-2 col-form-label">日期</label>
+                        <label className="col-12 col-md-4 col-form-label">
+                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
+                        </label>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <span>[此欄由高級物理治療師填寫]</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 填寫人姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 職級 */}
+                        <label className="col-12 col-md-2 col-form-label">職級</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 日期 */}
+                        <label className="col-12 col-md-2 col-form-label">日期</label>
+                        <label className="col-12 col-md-4 col-form-label">
+                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
+                        </label>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 填寫人姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">「意外報告 (二)」交由</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={true}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className="col-12 col-md-2 col-form-label">評語</label>
+                        <div className="col">
+                            <textarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </>
     )
