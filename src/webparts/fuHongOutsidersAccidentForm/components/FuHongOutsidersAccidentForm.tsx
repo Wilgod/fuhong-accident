@@ -9,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import OutsidersAccidentForm from "./OutsidersAccidentForm";
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, {}> {
+  public constructor(props) {
+    super(props);
+  }
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>

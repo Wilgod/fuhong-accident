@@ -12,9 +12,13 @@ interface IOutsidersAccidentForm {
     context: WebPartContext;
 }
 
+interface IState {
+
+}
+
 export default function OutsidersAccidentForm({ context }: IOutsidersAccidentForm) {
     const [date, setDate] = useState(new Date());
-    console.log(context);
+
     return (
         <>
             <div className="mb-3">
@@ -332,8 +336,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             <input type="text" className="form-control" />
                         </div>
                         {/* 日期 */}
-                        <label className="col-12 col-md-2 col-form-label">日期</label>
-                        <label className="col-12 col-md-4 col-form-label">
+                        <label className="col-2 col-form-label">日期</label>
+                        <label className="col-4 col-form-label">
                             {`${moment(new Date()).format("DD-MMM-YYYY")}`}
                         </label>
                     </div>
@@ -362,8 +366,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                     <div className="form-group row mb-2">
                         {/* 日期 */}
-                        <label className="col-12 col-md-2 col-form-label">日期</label>
-                        <label className="col-12 col-md-4 col-form-label">
+                        <label className="col-2 col-form-label">日期</label>
+                        <label className="col-4 col-form-label">
                             {`${moment(new Date()).format("DD-MMM-YYYY")}`}
                         </label>
                     </div>

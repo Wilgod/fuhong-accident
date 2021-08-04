@@ -4,8 +4,60 @@ import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
 import "react-datepicker/dist/react-datepicker.css";
 import "./custom.css";
-export default function ServiceUserAccidentForm() {
+import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { WebPartContext } from '@microsoft/sp-webpart-base';
+import * as moment from 'moment';
+interface IServiceUserAccidentForm {
+    context: WebPartContext;
+}
+
+interface IState {
+    partientAcciedntScenario: string;
+    injury: string[];
+    uncomfortable: string[];
+    behavior: string[];
+    envFactor: string[];
+    personalFactor: string[];
+    arrangement: string;
+    isStayInHospital: string;
+    police: string;
+    contingencyMeasure: string;
+}
+
+export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentForm) {
     const [date, setDate] = useState(new Date());
+    const [form, setForm] = useState<IState>({
+        partientAcciedntScenario: "",
+        injury: [],
+        uncomfortable: [],
+        behavior: [],
+        envFactor: [],
+        personalFactor: [],
+        arrangement: "",
+        isStayInHospital: "",
+        police: "",
+        contingencyMeasure: ""
+    });
+
+    const radioButtonHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
+
+    const checkboxHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        const arr = form[name];
+        if (Array.isArray(arr)) {
+            if (arr.indexOf(value) > -1) {
+                const result = arr.filter((item) => item !== value);
+                setForm({ ...form, [name]: result });
+            } else {
+                setForm({ ...form, [name]: [...arr, value] });
+            }
+        }
+    }
 
     return (
         <>
@@ -162,47 +214,53 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">服務使用者意外時情況</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="sleeping" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-sleep">睡覺</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="dinning" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="SCENARIO_DINNING" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-dinning">進食</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-wash" value="washing" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-wash" value="SCENARIO_WASHING" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-wash">梳洗</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-toliet" value="toliet" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-toliet" value="SCENARIO_TOLIET" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-toliet">如廁</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-bath" value="bathing" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-bath" value="SCENARIO_BATHING" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-bath">洗澡</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="walking" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="SCENARIO_WALKING" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario-walk">步行期間</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_inside_activity" value="scenario_inside_activity" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_inside_activity" value="SCENARIO_INSIDE_ACTIVITY" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario_inside_activity">參與服務單位內活動</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_outside_activity" value="scenario_outside_activity" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_outside_activity" value="SCENARIO_OUTSIDE_ACTIVITY" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario_outside_activity">外出活動期間(請註明地點)</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder={"請註明"} />
+                                </div>
+                            }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_other" value="scenario_other" />
+                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_other" value="SCENARIO_OTHER" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="scenario_other">其他</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.partientAcciedntScenario === "SCENARIO_OTHER" &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder={"請註明"} />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -215,32 +273,35 @@ export default function ServiceUserAccidentForm() {
                         </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-head" value="injury_head" />
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-head">頭部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-neck" value="injury_neck" />
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-neck">頸部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-body" value="injury_body" />
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-body">軀幹</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-upper-limb" value="injury_upper_limb" />
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-upper-limb">上肢</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-lower-limb" value="injury_lower_limb" />
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-lower-limb">下肢</label>
                             </div>
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="injury-other" value="injury-other" />
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" name="injury" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-other">其他(請註明)</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.injury.indexOf("INJURY_OTHER") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -249,39 +310,45 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-bleeding" value="uncomfortable-bleeding" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-bleeding">流血</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-bruise" value="uncomfortable-bruise" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-bruise">瘀腫</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-fracture" value="uncomfortable-fracture" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-fracture">骨折</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-dizzy" value="uncomfortable-dizzy" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-dizzy">暈眩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-shock" value="uncomfortable-shock" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-shock">休克/失去知覺</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-other" value="uncomfortable-other" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-other">其他(請註明)</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="uncomfortable-injury" value="uncomfortable-injury" />
+                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-injury" value="UNCOMFORTABLE_INJURY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-injury">受傷情況</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.uncomfortable.indexOf("UNCOMFORTABLE_INJURY") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -290,28 +357,31 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">服務使用者有否出現不安全的行為 </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="behavior-others" value="behavior-others" />
+                                <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="behavior-others">傷害他人的動作</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="behavior-self" value="behavior-self" />
+                                <input className="form-check-input" type="checkbox" name="behavior" id="behavior-self" value="BEHAVIOR_SELF" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="behavior-self">傷害自已的動作</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="behavior-getoff" value="behavior-getoff" />
+                                <input className="form-check-input" type="checkbox" name="behavior" id="behavior-getoff" value="BEHAVIOR_GETOFF" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="behavior-getoff">除去身上的醫療器材</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="behavior-reject" value="behavior-reject" />
+                                <input className="form-check-input" type="checkbox" name="behavior" id="behavior-reject" value="BEHAVIOR_REJECT" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="behavior-reject">拒絕使用輔助器材</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="behavior-other" value="behavior-other" />
+                                <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="behavior-other">其他(請註明)</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -340,48 +410,51 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-SLIPPERY-GROUND" value="ENV-SLIPPERY-GROUND" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-UNEVEN-GROUND" value="ENV-UNEVEN-GROUND" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-OBSTACLE-ITEMS" value="ENV-OBSTACLE-ITEMS" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-INSUFFICIENT-LIGHT" value="ENV-INSUFFICIENT-LIGHT" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-NOT-ENOUGH-SPACE" value="ENV-NOT-ENOUGH-SPACE" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-ACOUSTIC-STIMULATION" value="ENV-ACOUSTIC-STIMULATION" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-COLLIDED-BY-OTHERS" value="ENV-COLLIDED-BY-OTHERS" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-HURT-BY-OTHERS" value="ENV-HURT-BY-OTHERS" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="ENV-OTHER" value="ENV-OTHER" />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="ENV-OTHER">其他</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.envFactor.indexOf("ENV_OTHER") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -389,32 +462,35 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL-EMOTIONAL-INSTABILITY" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" />
                                 <label className="form-check-label" htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-HEARTBROKEN" value="PERSONAL-HEARTBROKEN" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" />
                                 <label className="form-check-label" htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-CHOKING" value="PERSONAL-CHOKING" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" />
                                 <label className="form-check-label" htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL-UNSTEADY-WALKING" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" />
                                 <label className="form-check-label" htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-TWITCH" value="PERSONAL-TWITCH" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" />
                                 <label className="form-check-label" htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" id="PERSONAL-OTHER" value="PERSONAL-OTHER" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" />
                                 <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他個人因素</label>
                             </div>
-                            <div className="">
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
+                                <div className="">
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -422,7 +498,7 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure">(請註明事發地點附近之員工當時執行的職務)</label>
-                            <textarea className="form-control" id="procedure" />
+                            <textarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
                     </div>
                 </section>
@@ -446,30 +522,36 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
-                            <div className="">
-                                <label className="form-label">醫院名稱</label>
-                                <input type="text" className="form-control" />
-                            </div>
-                            <div className="">
-                                <label className="form-label">到達時間</label>
-                                {/* <input className="form-control" type="time" /> */}
-                                <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
-                            </div>
-                            <div className="">
-                                <label className="form-label">提供對服務使用者的治療</label>
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT" &&
+                                <>
+                                    <div className="">
+                                        <label className="form-label">醫院名稱</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div className="">
+                                        <label className="form-label">到達時間</label>
+                                        {/* <input className="form-control" type="time" /> */}
+                                        <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                                    </div>
+                                    <div className="">
+                                        <label className="form-label">提供對服務使用者的治療</label>
+                                        <textarea className="form-control" />
+                                    </div>
+                                </>
+                            }
+
                         </div>
                     </div>
 
@@ -478,17 +560,20 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-true" value="isStayInHospital-true" />
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="isStayInHospital-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-false" value="isStayInHospital-false" />
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="isStayInHospital-false">否</label>
                             </div>
-                            <div>
-                                <label className="form-label">醫院名稱</label>
-                                <textarea className="form-control" />
-                            </div>
+                            {
+                                form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE" &&
+                                <div>
+                                    <label className="form-label">醫院名稱</label>
+                                    <input type="text" className="form-control" />
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -497,34 +582,39 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" />
+                                <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="police-true">需要</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-false" value="police-false" />
+                                <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="police-false">不需要</label>
                             </div>
-                            <div>
-                                <label className="form-label">日期及時間</label>
-                                {/* <input type="datetime-local" className="form-control" /> */}
+                            {
+                                form.police === "POLICE_TRUE" &&
+                                <>
+                                    <div>
+                                        <label className="form-label">日期及時間</label>
+                                        {/* <input type="datetime-local" className="form-control" /> */}
 
-                                <DatePicker
-                                    className="form-control"
-                                    selected={date}
-                                    onChange={(date) => setDate(date)}
-                                    timeInputLabel="Time:"
-                                    dateFormat="MM/dd/yyyy h:mm aa"
-                                    showTimeInput
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">報案編號</label>
-                                <input type="text" className="form-control" />
-                            </div>
-                            <div>
-                                <label className="form-label">警署</label>
-                                <input type="text" className="form-control" />
-                            </div>
+                                        <DatePicker
+                                            className="form-control"
+                                            selected={date}
+                                            onChange={(date) => setDate(date)}
+                                            timeInputLabel="Time:"
+                                            dateFormat="MM/dd/yyyy h:mm aa"
+                                            showTimeInput
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">報案編號</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">警署</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </>
+                            }
                         </div>
                     </div>
 
@@ -533,16 +623,19 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="contingency-measure-true" />
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="contingency-measure-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="contingency-measure-false" />
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="CONTINGENCY_MEASURE_FALSE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="contingency-measure-false">沒有</label>
                             </div>
-                            <div>
-                                <textarea className="form-control" placeholder="請註明"/>
-                            </div>
+                            {
+                                form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
+                                <div>
+                                    <textarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
                     </div>
                 </section>
@@ -607,8 +700,54 @@ export default function ServiceUserAccidentForm() {
                 <hr className="my-3" />
 
                 <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <span>[此欄由高級物理治療師填寫]</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 填寫人姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 職級 */}
+                        <label className="col-12 col-md-2 col-form-label">職級</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
 
+                    <div className="form-group row mb-2">
+                        {/* 日期 */}
+                        <label className="col-2 col-form-label">日期</label>
+                        <label className="col-4 col-form-label">
+                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
+                        </label>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 填寫人姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">「意外報告 (二)」交由</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={true}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className="col-12 col-md-2 col-form-label">評語</label>
+                        <div className="col">
+                            <textarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
                 </section>
+
             </div>
         </>
     )
