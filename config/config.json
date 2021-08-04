@@ -9,10 +9,19 @@
           "manifest": "./src/webparts/fuHongServiceUserAccidentForm/FuHongServiceUserAccidentFormWebPart.manifest.json"
         }
       ]
+    },
+    "fu-hong-outsiders-accident-form-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/fuHongOutsidersAccidentForm/FuHongOutsidersAccidentFormWebPart.js",
+          "manifest": "./src/webparts/fuHongOutsidersAccidentForm/FuHongOutsidersAccidentFormWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "FuHongServiceUserAccidentFormWebPartStrings": "lib/webparts/fuHongServiceUserAccidentForm/loc/{locale}.js"
+    "FuHongServiceUserAccidentFormWebPartStrings": "lib/webparts/fuHongServiceUserAccidentForm/loc/{locale}.js",
+    "FuHongOutsidersAccidentFormWebPartStrings": "lib/webparts/fuHongOutsidersAccidentForm/loc/{locale}.js"
   }
 }
