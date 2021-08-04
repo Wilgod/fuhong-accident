@@ -608,7 +608,7 @@ export default function ServiceUserAccidentForm() {
                 <hr className="my-3" />
 
                 <section className="mb-3">
-                    
+
                 </section>
             </div>
         </>
