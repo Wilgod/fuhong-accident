@@ -3,8 +3,10 @@ import { useState } from 'react';
 import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
 import "react-datepicker/dist/react-datepicker.css";
+import "./custom.css";
 export default function ServiceUserAccidentForm() {
     const [date, setDate] = useState(new Date());
+
     return (
         <>
             <div className="mb-3">
@@ -90,12 +92,23 @@ export default function ServiceUserAccidentForm() {
                         {/* 意外發生日期*/}
                         <label className="col-12 col-md-2 col-form-label">意外發生日期</label>
                         <div className="col-12 col-md-4">
-                            <input type="date" className="form-control" />
+                            {/* <input type="date"  /> */}
+                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
                         </div>
                         {/* 意外發生時間*/}
                         <label className="col-12 col-md-2 col-form-label">意外發生日期</label>
                         <div className="col-12 col-md-4">
-                            <input type="time" className="form-control" />
+                            {/* <input type="time" className="form-control" /> */}
+                            <DatePicker
+                                className="form-control"
+                                selected={date}
+                                onChange={(date) => setDate(date)}
+                                showTimeSelect
+                                showTimeSelectOnly
+                                timeIntervals={15}
+                                timeCaption="Time"
+                                dateFormat="h:mm aa"
+                            />
                         </div>
                     </div>
 
@@ -450,7 +463,8 @@ export default function ServiceUserAccidentForm() {
                             </div>
                             <div className="">
                                 <label className="form-label">到達時間</label>
-                                <input className="form-control" type="time" />
+                                {/* <input className="form-control" type="time" /> */}
+                                <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
                             </div>
                             <div className="">
                                 <label className="form-label">提供對服務使用者的治療</label>
@@ -492,7 +506,16 @@ export default function ServiceUserAccidentForm() {
                             </div>
                             <div>
                                 <label className="form-label">日期及時間</label>
-                                <input type="datetime-local" className="form-control" />
+                                {/* <input type="datetime-local" className="form-control" /> */}
+
+                                <DatePicker
+                                    className="form-control"
+                                    selected={date}
+                                    onChange={(date) => setDate(date)}
+                                    timeInputLabel="Time:"
+                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                    showTimeInput
+                                />
                             </div>
                             <div>
                                 <label className="form-label">報案編號</label>
@@ -536,6 +559,7 @@ export default function ServiceUserAccidentForm() {
                         <label className="col-12 col-md-2 col-form-label">通知家屬日期及時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
+                                className="form-control"
                                 selected={date}
                                 onChange={(date) => setDate(date)}
                                 showTimeSelect
@@ -551,6 +575,40 @@ export default function ServiceUserAccidentForm() {
                         </div>
                     </div>
 
+                    <div className="form-group row mb-2">
+                        {/* 家屬姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">家屬姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 負責通知家屬的職員姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">負責通知家屬的職員姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 職位 */}
+                        <label className="col-12 col-md-2 col-form-label">職位</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 服務使用者經治後情況 */}
+                        <label className="col-12 col-md-2 col-form-label">服務使用者經治後情況</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-3">
+                    
                 </section>
             </div>
         </>
