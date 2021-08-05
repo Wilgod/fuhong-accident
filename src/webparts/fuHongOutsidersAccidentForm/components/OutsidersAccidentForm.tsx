@@ -64,7 +64,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
             <div className="mb-3">
                 <Header displayName="外界人士意外填報表(一)" />
             </div>
-            <div className="container">
+            <div className="container px-4">
                 <section className="mb-3">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
@@ -481,6 +481,14 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     </div>
                 </section>
 
+
+                <section className="py-3">
+                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                        <button className="btn btn-warning">提交</button>
+                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-secondary">取消</button>
+                    </div>
+                </section>
             </div>
         </>
     )

@@ -74,9 +74,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
             <div className="mb-3">
                 <Header displayName="服務使用者意外填報表(一)" />
             </div>
-            <div className="container">
+            <div className="container px-4">
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>服務使用者資料</h5>
@@ -212,7 +212,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件紀錄</h5>
@@ -409,7 +409,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>初步觀察的意外成因</h5>
@@ -513,7 +513,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件後之治療處理</h5>
@@ -650,7 +650,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>家屬聯絡</h5>
@@ -709,7 +709,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                 <hr className="my-3" />
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <span>[此欄由高級物理治療師填寫]</span>
@@ -758,6 +758,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col">
                             <textarea className="form-control" placeholder="請註明" />
                         </div>
+                    </div>
+                </section>
+
+                <section className="py-3">
+                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                        <button className="btn btn-warning">提交</button>
+                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-secondary">取消</button>
                     </div>
                 </section>
 
