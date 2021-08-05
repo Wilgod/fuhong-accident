@@ -7,6 +7,16 @@ import "./custom.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
+import TextareaAutosize from 'react-textarea-autosize';
+
+if (document.getElementById('workbenchPageContent') != null) {
+    document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+}
+
+if (document.querySelector('.CanvasZone') != null) {
+    (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+}
+
 interface IServiceUserAccidentForm {
     context: WebPartContext;
 }
@@ -462,27 +472,27 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className="col-12 col-md-2 col-form-label">個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他個人因素</label>
                             </div>
                             {
@@ -690,9 +700,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者經治後情況 */}
-                        <label className="col-12 col-md-2 col-form-label">服務使用者經治後情況</label>
+                        <label className="col-12 col-md-2 col-form-label">服務使用者經診治後情況</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <textarea className="form-control" />
                         </div>
                     </div>
                 </section>
@@ -732,10 +742,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
+                                titleText=""
+                                showtooltip={false}
                                 personSelectionLimit={1}
-                                showtooltip={true}
-                                principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                     </div>
 
