@@ -26,6 +26,7 @@ interface IState {
     witness: string;
     police: string;
     familyContact: string;
+    arrangement: string;
 }
 
 export default function OutsidersAccidentForm({ context }: IOutsidersAccidentForm) {
@@ -34,7 +35,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         envFactor: [],
         witness: "",
         police: "",
-        familyContact: ""
+        familyContact: "",
+        arrangement: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -293,11 +295,40 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
                     <div className="form-group row mb-2">
+                        {/* 就診安排*/}
                         <label className="col-12 col-md-2 col-form-label">就診安排</label>
                         <div className="col">
-                            <select className="form-control">
-                                <option>急症室</option>
-                            </select>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
+                            </div>
+                            {
+                                form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT" &&
+                                <>
+                                    <div className="">
+                                        <label className="form-label">醫院名稱</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div className="">
+                                        <label className="form-label">到達時間</label>
+                                        {/* <input className="form-control" type="time" /> */}
+                                        <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                                    </div>
+                                    <div className="">
+                                        <label className="form-label">提供對服務使用者的治療</label>
+                                        <textarea className="form-control" />
+                                    </div>
+                                </>
+                            }
+
                         </div>
                     </div>
 
