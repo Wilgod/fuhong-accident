@@ -8,7 +8,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
 import TextareaAutosize from 'react-textarea-autosize';
-
+import StyledDropzone from "../../../components/Dropzone/Dropzone";
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -32,6 +32,8 @@ interface IState {
     isStayInHospital: string;
     police: string;
     contingencyMeasure: string;
+    cctv: string;
+    photo: string;
 }
 
 export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentForm) {
@@ -46,7 +48,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         arrangement: "",
         isStayInHospital: "",
         police: "",
-        contingencyMeasure: ""
+        contingencyMeasure: "",
+        cctv: "",
+        photo: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -399,11 +403,35 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 相片及CCTV紀錄*/}
                         <label className="col-12 col-md-2 col-form-label">相片及CCTV紀錄</label>
                         <div className="col">
-                            <div className="">
-                                相片
+                            <div>相片</div>
+                            <div className="pl-2">
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="photo" id="photo-true" value="PHOTO_TRUE" onClick={radioButtonHandler} />
+                                    <label className="form-check-label" htmlFor="photo-true">有 (上載照片)</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
+                                    <label className="form-check-label" htmlFor="photo-flase">未能提供</label>
+                                </div>
+                                {
+                                    form.photo === "PHOTO_TRUE" &&
+                                    <StyledDropzone />
+                                }
                             </div>
-                            <div className="">
-                                CCTV記錄
+                            <div>CCTV記錄</div>
+                            <div className="pl-2">
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
+                                    <label className="form-check-label" htmlFor="cctv-true">有 (註: 三個工作天交總辦事處)</label>
+                                </div>
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} />
+                                    <label className="form-check-label" htmlFor="cctv-false">未能提供</label>
+                                </div>
+                                {
+                                    form.cctv === "CCTV_TRUE" &&
+                                    <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                                }
                             </div>
                         </div>
                     </div>
@@ -712,7 +740,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="mb-4">
                     <div className="form-group row mb-2">
                         {/* 填報人姓名 */}
-                        <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
+                        <label className="col-12 col-md-2 col-form-label">填報人姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -725,6 +753,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職級 */}
+                        <label className="col-12 col-md-2 col-form-label">日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
                         <label className="col-12 col-md-2 col-form-label">職級</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
@@ -741,8 +775,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                        <label className="col-12 col-md-2 col-form-label">服務經理評語</label>
+                        <label className="col-12 col-md-2 col-form-label">日期</label>
                         <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className="col-12 col-md-2 col-form-label">服務經理評語</label>
+                        <div className="col">
                             <textarea className="form-control" />
                         </div>
                     </div>
@@ -763,8 +803,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
+                    </div>
+                    <div className="form-group row mb-2">
                         <label className="col-12 col-md-2 col-form-label">SD評語</label>
-                        <div className="col-12 col-md-4">
+                        <div className="col">
                             <textarea className="form-control" />
                         </div>
                     </div>
