@@ -9,6 +9,17 @@ $fuhong-main-color: #fdd477;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
   }
 
+  h5 {
+    color: #9f6b21;
+    font-weight: 600;
+  }
+
+  .fieldTitle {
+    color: #707070;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
   .formHeader {
     display: flex;
     justify-content: center;
@@ -19,5 +30,11 @@ $fuhong-main-color: #fdd477;
       font-size: 30px;
       font-weight: 600;
     }
+  }
+
+  .buttonLabel {
+    color: hsl(0, 1%, 39%);
+    font-size: 16px;
+    font-weight: 600;
   }
 }
