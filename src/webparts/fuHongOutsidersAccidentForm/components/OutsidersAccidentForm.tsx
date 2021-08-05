@@ -178,7 +178,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
                     <div className="pl-3">
-                        <div className="form-group row mb-2">
+                        <div className="form-group row mb-4">
                             {/* 環境因素 */}
                             <label className="col-12 col-md-2 col-form-label">環境因素</label>
                             <div className="col">
@@ -230,7 +230,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 }
                             </div>
                         </div>
-                        <div className="form-group row mb-2">
+                        <div className="form-group row mb-4">
                             {/* 其他因素 */}
                             <label className="col-12 col-md-2 col-form-label">其他因素</label>
                             <div className="col">
@@ -246,7 +246,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-group row mb-4">
                         {/* 意外事件有否證人證人目擊事故發生經過? */}
                         <label className="col-12 col-md-2 col-form-label">意外事件有否證人證人目擊事故發生經過?</label>
                         <div className="col">
@@ -274,7 +274,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-group row mb-4">
                         {/* 相片及CCTV紀錄*/}
                         <label className="col-12 col-md-2 col-form-label">相片及CCTV紀錄</label>
                         <div className="col">
@@ -294,7 +294,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             <h5>意外事件後之處理</h5>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-group row mb-4">
                         {/* 就診安排*/}
                         <label className="col-12 col-md-2 col-form-label">就診安排</label>
                         <div className="col">
@@ -332,7 +332,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-group row mb-4">
                         <label className="col-12 col-md-2 col-form-label">報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
@@ -366,7 +366,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-group row mb-4">
                         <label className="col-12 col-md-2 col-form-label">家屬聯絡</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
@@ -403,12 +403,20 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                 <hr className="my-3" />
 
-                <section className="mb-3">
+                <section className="mb-4">
                     <div className="form-group row mb-2">
-                        {/* 填寫人姓名 */}
+                        {/* 填報人姓名 */}
                         <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         {/* 職級 */}
                         <label className="col-12 col-md-2 col-form-label">職級</label>
@@ -416,17 +424,84 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             <input type="text" className="form-control" />
                         </div>
                     </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-4">
                     <div className="form-group row mb-2">
                         {/* 服務經理姓名 */}
                         <label className="col-12 col-md-2 col-form-label">服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                        {/* 日期 */}
-                        <label className="col-2 col-form-label">日期</label>
-                        <label className="col-4 col-form-label">
-                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
-                        </label>
+                        <label className="col-12 col-md-2 col-form-label">服務經理評語</label>
+                        <div className="col-12 col-md-4">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <button className="btn btn-warning mr-3">批准</button>
+                            <button className="btn btn-danger mr-3">拒絕</button>
+                        </div>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-4">
+                    <div className="form-group row mb-2">
+                        {/* SD */}
+                        <label className="col-12 col-md-2 col-form-label">SD姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className="col-12 col-md-2 col-form-label">SD評語</label>
+                        <div className="col-12 col-md-4">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <button className="btn btn-primary">儲存評語</button>
+                        </div>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="mb-4">
+                    <div className="form-group row mb-2">
+                        {/* SD */}
+                        <label className="col-12 col-md-2 col-form-label">SPT姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className="col-12 col-md-2 col-form-label">SPT評語</label>
+                        <div className="col-12 col-md-4">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className="col-12 col-md-2 col-form-label">指派調查員</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <button className="btn btn-warning mr-3">批准</button>
+                            <button className="btn btn-danger mr-3">拒絕</button>
+                        </div>
                     </div>
                 </section>
 
@@ -438,29 +513,9 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             <span>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
-                        {/* 填寫人姓名 */}
-                        <label className="col-12 col-md-2 col-form-label">填寫人姓名</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
-                        </div>
-                        {/* 職級 */}
-                        <label className="col-12 col-md-2 col-form-label">職級</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
-                        </div>
-                    </div>
 
                     <div className="form-group row mb-2">
-                        {/* 日期 */}
-                        <label className="col-2 col-form-label">日期</label>
-                        <label className="col-4 col-form-label">
-                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
-                        </label>
-                    </div>
-
-                    <div className="form-group row mb-2">
-                        {/* 填寫人姓名 */}
+                        {/* 「意外報告 (二)」交由 */}
                         <label className="col-12 col-md-2 col-form-label">「意外報告 (二)」交由</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
@@ -472,12 +527,31 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
 
+
                     <div className="form-group row mb-2">
                         {/* 評語 */}
                         <label className="col-12 col-md-2 col-form-label">評語</label>
                         <div className="col">
                             <textarea className="form-control" placeholder="請註明" />
                         </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 高級物理治療師姓名 */}
+                        <label className="col-12 col-md-2 col-form-label">高級物理治療師姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={true}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        {/* 日期 */}
+                        <label className="col-2 col-form-label">日期</label>
+                        <label className="col-4 col-form-label">
+                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
+                        </label>
                     </div>
                 </section>
 
