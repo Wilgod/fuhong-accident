@@ -18,11 +18,11 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-interface IServiceUserAccidentForm {
+interface IServiceUserAccidentFormProps {
     context: WebPartContext;
 }
 
-interface IState {
+interface IServiceUserAccidentFormStates {
     partientAcciedntScenario: string;
     injury: string[];
     uncomfortable: string[];
@@ -37,9 +37,9 @@ interface IState {
     photo: string;
 }
 
-export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentForm) {
+export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
     const [date, setDate] = useState(new Date());
-    const [form, setForm] = useState<IState>({
+    const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
         injury: [],
         uncomfortable: [],

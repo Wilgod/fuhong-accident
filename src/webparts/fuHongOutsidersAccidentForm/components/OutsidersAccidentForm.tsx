@@ -20,11 +20,11 @@ if (document.querySelector('.CanvasZone') != null) {
 }
 
 
-interface IOutsidersAccidentForm {
+interface IOutsidersAccidentFormProps {
     context: WebPartContext;
 }
 
-interface IState {
+interface IOutsidersAccidentFormStates {
     envFactor: string[];
     witness: string;
     police: string;
@@ -34,9 +34,9 @@ interface IState {
     cctv: string;
 }
 
-export default function OutsidersAccidentForm({ context }: IOutsidersAccidentForm) {
+export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFormProps) {
     const [date, setDate] = useState(new Date());
-    const [form, setForm] = useState<IState>({
+    const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         envFactor: [],
         witness: "",
         police: "",
