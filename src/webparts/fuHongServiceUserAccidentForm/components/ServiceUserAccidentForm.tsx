@@ -200,7 +200,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 智力障礙程度 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>智力障礙程度</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <select className="form-control">
+                                <option>請選擇</option>
+                                <option>輕度</option>
+                                <option>嚴重</option>
+                            </select>
                         </div>
                     </div>
 
@@ -208,7 +212,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 自閉症譜系障礙(ASD) */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>自閉症譜系障礙(ASD)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="asd" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="asd_true">是</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="asd" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="asd_false">否</label>
+                            </div>
                         </div>
                     </div>
                 </section>

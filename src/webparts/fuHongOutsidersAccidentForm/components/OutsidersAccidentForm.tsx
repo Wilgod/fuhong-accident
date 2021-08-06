@@ -32,6 +32,7 @@ interface IOutsidersAccidentFormStates {
     arrangement: string;
     photo: string;
     cctv: string;
+    identity: string;
 }
 
 export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFormProps) {
@@ -43,7 +44,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         familyContact: "",
         arrangement: "",
         photo: "",
-        cctv: ""
+        cctv: "",
+        identity: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -64,6 +66,12 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 setForm({ ...form, [name]: [...arr, value] });
             }
         }
+    }
+
+    const selectionHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
     }
 
     return (
@@ -132,11 +140,22 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 身份*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>身份</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control" >
-                                <option>請選擇</option>
-                                <option>訪客</option>
+                            <select className="form-control" name="identity" value={form.identity} onChange={selectionHandler}>
+                                <option value="">請選擇</option>
+                                <option value="visitor">訪客</option>
+                                <option value="family">家屬</option>
+                                <option value="volunter">義工</option>
+                                <option value="intern">實習學生</option>
+                                <option value="others">其他</option>
                             </select>
+                            {
+                                form.identity &&
+                                <div className="mt-2">
+                                    <input type="text" className="form-control" placeholder="請註明" />
+                                </div>
+                            }
                         </div>
+
                     </div>
 
                     <div className="form-group row mb-2">
