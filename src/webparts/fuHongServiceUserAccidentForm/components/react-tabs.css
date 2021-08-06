@@ -6,6 +6,7 @@
     border-bottom: 1px solid #aaa;
     margin: 0 0 10px;
     padding: 0;
+    display: flex;
 }
 
 .react-tabs__tab {
@@ -17,10 +18,11 @@
     list-style: none;
     padding: 6px 12px;
     cursor: pointer;
+    flex: 1 1 100%;
 }
 
 .react-tabs__tab--selected {
-    background: #FDD477;
+    background: #fdd477;
     border-color: #aaa;
     color: black;
     border-radius: 5px 5px 0 0;

@@ -2,10 +2,10 @@ import * as React from 'react'
 import { useState } from 'react'
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import Header from "../Header/Header";
-import "./AccidentFollowUpForm.css";
+import DatePicker from "react-datepicker";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
-import DatePicker from "react-datepicker";
+import "./AccidentFollowUpForm.css";
 interface IAccidentFollowUpFormProps {
     context: WebPartContext;
 }

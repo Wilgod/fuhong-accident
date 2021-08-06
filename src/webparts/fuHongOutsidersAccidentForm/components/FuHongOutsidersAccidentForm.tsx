@@ -9,16 +9,33 @@ import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import OutsidersAccidentForm from "./OutsidersAccidentForm";
+
+const getCanvasZone = () => {
+  let x = document.getElementsByTagName("div");
+  for (let i = 0; i < x.length; i++) {
+    if (x[i].getAttribute("data-automation-id")) {
+      if (x[i].getAttribute("data-automation-id") === "CanvasZone") {
+        if (x[i].firstElementChild) {
+          x[i].firstElementChild.setAttribute("style", "max-width:none ;width:100%")
+        }
+        //x[i].style.maxWidth = 'none'
+        //x[i].style.width = '100%'
+        //console.log(x[i])
+      }
+    }
+  }
+}
+
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, {}> {
   public constructor(props) {
     super(props);
-
+    getCanvasZone();
   }
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
-          <Tabs>
+          <Tabs variant="fullWidth">
             <TabList>
               <Tab>22_外界人士意外填報表(一)</Tab>
               <Tab>21_意外跟進/結束表(三)</Tab>

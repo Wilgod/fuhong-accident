@@ -6,10 +6,12 @@
     border-bottom: 1px solid #aaa;
     margin: 0 0 10px;
     padding: 0;
+    display: flex;
 }
 
 .react-tabs__tab {
-    display: inline-block;
+    display: flex;
+    flex: 1 1 100%;
     border: 1px solid transparent;
     border-bottom: none;
     bottom: -1px;
@@ -20,7 +22,7 @@
 }
 
 .react-tabs__tab--selected {
-    background: #FDD477;
+    background: #fdd477;
     border-color: #aaa;
     color: black;
     border-radius: 5px 5px 0 0;
