@@ -5,6 +5,7 @@ import Header from "../Header/Header";
 import "./AccidentFollowUpForm.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
+import DatePicker from "react-datepicker";
 interface IAccidentFollowUpFormProps {
     context: WebPartContext;
 }
@@ -14,7 +15,7 @@ interface IAccidentFollowUpFormStates {
 }
 
 export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormProps) {
-    const [date, setState] = useState(new Date());
+    const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
 
     });
@@ -56,8 +57,6 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" disabled />
                         </div>
-                    </div>
-                    <div className="form-group row mb-2">
                         {/* 保險公司備案偏號 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>保險公司備案偏號</label>
                         <div className="col-12 col-md-4">
@@ -85,8 +84,6 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" disabled />
                         </div>
-                    </div>
-                    <div className="form-group row mb-2">
                         {/* 發生意外者姓名 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>發生意外者姓名</label>
                         <div className="col-12 col-md-4">
@@ -94,8 +91,8 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         </div>
                     </div>
                     <div className="form-group row">
-                        {/* 發生恴外日期 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>發生恴外日期</label>
+                        {/* 發生意外日期 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>發生意外日期</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" disabled />
                         </div>
@@ -139,29 +136,95 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                                 <option>繼續</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div className="form-group row mb-2">
-                        {/* 服務經姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>服務經姓名</label>
+                        {/* 服務經理姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
                                 personSelectionLimit={1}
-                                showtooltip={true}
+                                showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000} />
                         </div>
                     </div>
                 </section>
 
-                {/* <hr className="my-3" />
+                <hr className="my-3" />
 
+                <section className="mb-3">
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>高級物理治療師評語</label>
+                        <div className="col">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 高級物理治療師姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>高級物理治療師姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={false}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        {/* 日期*/}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            {/* <input type="date"  /> */}
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+                    {/* <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-primary">儲存評語</button>
+                            </div>
+                        </div>
+                    </div> */}
+                </section>
 
                 <hr className="my-3" />
 
+                <section className="mb-3">
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>評語</label>
+                        <div className="col">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 服務總監姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>服務總監姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={false}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        {/* 日期*/}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            {/* <input type="date"  /> */}
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                <hr className="my-3" /> */}
+                <hr className="my-3" />
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>

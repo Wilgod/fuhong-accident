@@ -96,8 +96,6 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <option>請選擇服務單位</option>
                             </select>
                         </div>
-                    </div>
-                    <div className="form-group row ">
                         {/* 保險公司備案偏號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案偏號</label>
                         <div className="col-12 col-md-4">
@@ -105,9 +103,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-
                     <hr className="my-3" />
-
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
@@ -160,10 +156,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期</label>
                         <div className="col-12 col-md-4">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} />
                         </div>
                         {/* 意外發生時間*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>時間</label>
                         <div className="col-12 col-md-4">
                             {/* <input type="time" className="form-control" /> */}
                             <DatePicker
@@ -172,7 +168,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 onChange={(date) => setDate(date)}
                                 showTimeSelect
                                 showTimeSelectOnly
-                                timeIntervals={15}
+                                timeIntervals={1}
                                 timeCaption="Time"
                                 dateFormat="h:mm aa"
                             />
@@ -429,7 +425,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 </div>
                                 {
                                     form.cctv === "CCTV_TRUE" &&
-                                    <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                                    <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
                                 }
                             </div>
                         </div>
@@ -580,7 +576,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div className="">
                                         <label className="form-label">到達時間</label>
                                         {/* <input className="form-control" type="time" /> */}
-                                        <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
                                     </div>
                                     <div className="">
                                         <label className="form-label">提供對服務使用者的治療</label>
@@ -638,7 +634,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                             selected={date}
                                             onChange={(date) => setDate(date)}
                                             timeInputLabel="Time:"
-                                            dateFormat="MM/dd/yyyy h:mm aa"
+                                            dateFormat="yyyy/MM/dd h:mm aa"
                                             showTimeInput
                                         />
                                     </div>
@@ -694,7 +690,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
-                                dateFormat="Pp"
+                                dateFormat="yyyy/MM/dd h:mm aa"
                             />
                         </div>
                         {/* 與服務使用者關係 */}
@@ -716,7 +712,15 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 負責通知家屬的職員姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>負責通知家屬的職員姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         {/* 職位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
@@ -728,7 +732,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-group row mb-2">
                         {/* 服務使用者經治後情況 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者經診治後情況</label>
-                        <div className="col-12 col-md-4">
+                        <div className="col">
                             <textarea className="form-control" />
                         </div>
                     </div>
@@ -754,7 +758,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 職級 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -772,11 +776,19 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -787,8 +799,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                     <div className="form-group row mb-2">
                         <div className="col-12">
-                            <button className="btn btn-warning mr-3">批准</button>
-                            <button className="btn btn-danger mr-3">拒絕</button>
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -796,42 +810,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-3" />
 
                 <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <span>[此欄由服務總監填寫]</span>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* SD */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>SD姓名</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
-                        </div>
-                    </div>
-                    <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>SD評語</label>
-                        <div className="col">
-                            <textarea className="form-control" />
-                        </div>
-                    </div>
-                    <div className="form-group row mb-2">
-                        <div className="col-12">
-                            <button className="btn btn-primary">儲存評語</button>
-                        </div>
-                    </div>
-                </section>
-
-                <hr className="my-3" />
-
-                <section className="mb-4">
-                    <div className="form-group row mb-2">
-                        {/* SD */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>SPT姓名</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
-                        </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>SPT評語</label>
-                        <div className="col-12 col-md-4">
-                            <textarea className="form-control" />
-                        </div>
-                    </div>
-                    <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>指派調查員</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -843,13 +829,22 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                    </div>
-                    <div className="form-group row mb-2">
-                        <div className="col-12">
-                            <button className="btn btn-warning mr-3">批准</button>
-                            <button className="btn btn-danger mr-3">拒絕</button>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
                         </div>
                     </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
+                        <div className="col">
+                            <textarea className="form-control" />
+                        </div>
+                    </div>
+                    {/* <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <button className="btn btn-primary">儲存評語</button>
+                        </div>
+                    </div> */}
                 </section>
 
                 <hr className="my-3" />
@@ -858,6 +853,32 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="row">
                         <div className="col-12 font-weight-bold">
                             <span>[此欄由高級物理治療師填寫]</span>
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 高級物理治療師姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={false}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        {/* 日期 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <div className="col">
+                            <textarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 
@@ -878,31 +899,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
 
                     <div className="form-group row mb-2">
-                        {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
-                        <div className="col">
-                            <textarea className="form-control" placeholder="請註明" />
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
-                        {/* 高級物理治療師姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師姓名</label>
-                        <div className="col-12 col-md-4">
-                            <PeoplePicker
-                                context={context}
-                                personSelectionLimit={1}
-                                showtooltip={true}
-                                principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
-                        </div>
-                        {/* 日期 */}
-                        <label className="col-2 col-form-label">日期</label>
-                        <label className="col-4 col-form-label">
-                            {`${moment(new Date()).format("DD-MMM-YYYY")}`}
-                        </label>
-                    </div>
                 </section>
+
+                <hr className="my-3" />
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
