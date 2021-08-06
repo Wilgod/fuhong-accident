@@ -103,6 +103,11 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 </section>
 
                 <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>1. 基本資料</h5>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名 (中文)</label>
@@ -194,18 +199,18 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 <section className="mb-3">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>意外事件紀錄</h5>
+                            <h5>2. 意外事件紀錄</h5>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h6>初步觀察的意外成因</h6>
+                            <h6>(2.1) 初步觀察的意外成因</h6>
                         </div>
                     </div>
                     <div className="pl-3">
                         <div className="form-group row mb-4">
                             {/* 環境因素 */}
-                            <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>環境因素</label>
+                            <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.1.1) 環境因素</label>
                             <div className="col">
                                 <div className="form-check form-check-inline">
                                     <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
@@ -257,7 +262,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                         <div className="form-group row mb-4">
                             {/* 其他因素 */}
-                            <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>其他因素</label>
+                            <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.1.2) 其他因素</label>
                             <div className="col">
                                 <textarea className="form-control" />
                             </div>
@@ -265,7 +270,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     </div>
                     <div className="form-group row mb-2">
                         {/* 事發過程 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事發過程</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.2) 事發過程</label>
                         <div className="col">
                             <textarea className="form-control" />
                         </div>
@@ -273,7 +278,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                     <div className="form-group row mb-4">
                         {/* 意外事件有否證人證人目擊事故發生經過? */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外事件有否證人證人目擊事故發生經過?</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.3) 意外事件有否證人證人目擊事故發生經過?</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" onClick={radioButtonHandler} />
@@ -301,7 +306,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                     <div className="form-group row mb-4">
                         {/* 相片及CCTV紀錄*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>相片及CCTV紀錄</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.4) 相片及CCTV紀錄</label>
                         <div className="col">
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
@@ -340,12 +345,12 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 <section className="mb-3">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>意外事件後之處理</h5>
+                            <h5>3. 意外事件後之處理</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-4">
                         {/* 就診安排*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>就診安排</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>3.1 就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
@@ -382,7 +387,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>報警處理</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.2) 報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" onClick={radioButtonHandler} />
@@ -416,7 +421,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>家屬聯絡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.3) 家屬聯絡</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="familyContact" id="family-true" value="family-true" onClick={radioButtonHandler} />

@@ -18,9 +18,6 @@ const getCanvasZone = () => {
         if (x[i].firstElementChild) {
           x[i].firstElementChild.setAttribute("style", "max-width:none ;width:100%")
         }
-        //x[i].style.maxWidth = 'none'
-        //x[i].style.width = '100%'
-        //console.log(x[i])
       }
     }
   }

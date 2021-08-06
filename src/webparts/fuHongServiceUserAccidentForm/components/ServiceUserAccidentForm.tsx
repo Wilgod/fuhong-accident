@@ -80,11 +80,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <Header displayName="服務使用者意外填報表(一)" />
             </div>
             <div className="container px-4">
-
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>服務使用者資料</h5>
+                            <h5>檔案編號</h5>
                         </div>
                     </div>
 
@@ -102,9 +101,16 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <input type="text" className="form-control" />
                         </div>
                     </div>
+                </section>
 
-                    <hr className="my-3" />
+                <hr className="my-3" />
 
+                <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>服務使用者資料</h5>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者姓名 (英文)</label>
@@ -227,13 +233,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>意外事件紀錄</h5>
+                            <h5>1. 意外事件紀錄</h5>
                         </div>
                     </div>
 
                     <div className="form-group row mb-4">
                         {/* 服務使用者意外時情況*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者意外時情況</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1.1) 服務使用者意外時情況</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
@@ -289,7 +295,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-group row mb-4">
                         {/* 服務使用者受傷部位*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>
-                            服務使用者受傷部位
+                            (1.2) 服務使用者受傷部位
                             <br />
                             (請上載相片 - 如有)
                         </label>
@@ -329,7 +335,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 服務使用者意外後有否身體不適/受傷*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者意外後有否身體不適/受傷 </label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1.3) 服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
                             <div className="form-check form-check-inline  mr-0 mr-md-3">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
@@ -373,7 +379,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 服務使用者有否出現不安全的行為*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者有否出現不安全的行為 </label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1.4) 服務使用者有否出現不安全的行為 </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} />
@@ -406,7 +412,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 相片及CCTV紀錄*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>相片及CCTV紀錄</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1.5) 相片及CCTV紀錄</label>
                         <div className="col">
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
@@ -446,12 +452,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>初步觀察的意外成因</h5>
+                            <h5>2. 初步觀察的意外成因</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-4">
                         {/* 環境因素 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>環境因素</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}> (2.1(a)) 環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
@@ -503,7 +509,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>個人因素</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.1(b)) 個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
@@ -539,7 +545,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
 
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事發過程</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.2) 事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure">(請註明事發地點附近之員工當時執行的職務)</label>
                             <textarea className="form-control" id="procedure" placeholder="請註明" />
@@ -550,12 +556,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>意外事件後之治療處理</h5>
+                            <h5>3. 意外事件後之治療處理</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-4">
                         {/* 服務單位即時治療/處理 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務單位即時治療/處理</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.1) 服務單位即時治療/處理</label>
                         <div className="col">
                             <textarea className="form-control" id="procedure" />
                         </div>
@@ -563,7 +569,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 就診安排*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>就診安排</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.2) 就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
@@ -601,7 +607,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 是否在醫院留醫 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>是否在醫院留醫</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.3) 是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
@@ -623,7 +629,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 報警處理 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>報警處理</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.4) 報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} />
@@ -664,7 +670,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 意外後中心即時應變措施 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外後中心即時應變措施</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.5) 意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} />
@@ -687,12 +693,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>家屬聯絡</h5>
+                            <h5>4. 家屬聯絡</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 通知家屬日期及時間 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>通知家屬日期及時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4.1) 通知家屬日期及時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -713,7 +719,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 家屬姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>家屬姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4.2) 家屬姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
@@ -721,7 +727,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 負責通知家屬的職員姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>負責通知家屬的職員姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4.3) 負責通知家屬的職員姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -742,7 +748,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者經治後情況 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者經診治後情況</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4.4) 服務使用者經診治後情況</label>
                         <div className="col">
                             <textarea className="form-control" />
                         </div>
