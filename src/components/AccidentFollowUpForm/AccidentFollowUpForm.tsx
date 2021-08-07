@@ -6,20 +6,33 @@ import DatePicker from "react-datepicker";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
 import "./AccidentFollowUpForm.css";
+import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 interface IAccidentFollowUpFormProps {
     context: WebPartContext;
 }
 
 interface IAccidentFollowUpFormStates {
-
+    followup: string;
+    remark: string;
+    sptComment: string;
+    sdComment: string;
 }
 
 export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormProps) {
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
-
+        followup: "",
+        remark: "",
+        sptComment: "",
+        sdComment: ""
     });
     const radioButtonHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
+
+    const textFieldHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         setForm({ ...form, [name]: value });
@@ -109,7 +122,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 意外報告的跟進措施 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>意外報告的跟進措施</label>
                         <div className="col">
-                            <textarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" placeholder="請註明" name="followup" onChange={textFieldHandler} value={form.followup} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -123,7 +136,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 備註 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>備註</label>
                         <div className="col">
-                            <textarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" placeholder="請註明" name="remark" onChange={textFieldHandler} value={form.remark} />
                         </div>
                     </div>
 
@@ -156,7 +169,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>高級物理治療師評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={textFieldHandler} value={form.sptComment} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -193,7 +206,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={textFieldHandler} value={form.sdComment} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">

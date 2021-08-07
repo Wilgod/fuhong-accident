@@ -19,6 +19,7 @@
     "@microsoft/sp-property-pane": "1.11.0",
     "@microsoft/sp-webpart-base": "1.11.0",
     "@pnp/spfx-controls-react": "^1.19.0",
+    "autosize": "^5.0.1",
     "bootstrap": "^4.4.1",
     "moment": "^2.29.1",
     "office-ui-fabric-react": "6.214.0",

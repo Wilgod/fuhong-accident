@@ -5,6 +5,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import * as moment from 'moment';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
+import AccidentReportForm from "../../../components/AccidentRepotForm/AccidentRepotForm";
 import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
@@ -35,11 +36,15 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           <Tabs variant="fullWidth">
             <TabList>
               <Tab>22_外界人士意外填報表(一)</Tab>
+              {/* <Tab>20_</Tab> */}
               <Tab>21_意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
               <OutsidersAccidentForm context={this.props.context} />
             </TabPanel>
+            {/* <TabPanel>
+              <AccidentReportForm context={this.props.context} />
+            </TabPanel> */}
             <TabPanel>
               <AccidentFollowUpForm context={this.props.context} />
             </TabPanel>
