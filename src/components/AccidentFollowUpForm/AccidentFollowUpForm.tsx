@@ -26,6 +26,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
         sptComment: "",
         sdComment: ""
     });
+
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;

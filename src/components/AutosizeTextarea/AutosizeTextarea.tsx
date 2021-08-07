@@ -5,6 +5,7 @@ import autosize from "autosize";
 
 interface IAutosizeTextareaProps {
     className?: string;
+    id?: string;
     name?: string;
     placeholder?: string;
     value?: string;

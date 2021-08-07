@@ -9,6 +9,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
+import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -191,7 +192,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 地點 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>地點</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                 </section>
@@ -255,7 +256,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 {
                                     form.envFactor.indexOf("ENV_OTHER") > -1 &&
                                     <div className="">
-                                        <textarea className="form-control" placeholder="請註明" />
+                                        <AutosizeTextarea className="form-control" placeholder="請註明" />
                                     </div>
                                 }
                             </div>
@@ -264,7 +265,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             {/* 其他因素 */}
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.1.2) 其他因素</label>
                             <div className="col">
-                                <textarea className="form-control" />
+                                <AutosizeTextarea className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -272,7 +273,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 事發過程 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.2) 事發過程</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
 
@@ -378,7 +379,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     </div>
                                     <div className="">
                                         <label className="form-label">提供對服務使用者的治療</label>
-                                        <textarea className="form-control" />
+                                        <AutosizeTextarea className="form-control" />
                                     </div>
                                 </>
                             }
@@ -512,7 +513,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -555,7 +556,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -596,7 +597,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
                         <div className="col">
-                            <textarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 

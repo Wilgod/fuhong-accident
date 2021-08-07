@@ -8,7 +8,7 @@ import "./custom.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
-import TextareaAutosize from 'react-textarea-autosize';
+import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -276,7 +276,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder={"請註明"} />
+                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} />
                                 </div>
                             }
                             <div className="form-check">
@@ -286,7 +286,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OTHER" &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder={"請註明"} />
+                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} />
                                 </div>
                             }
                         </div>
@@ -327,7 +327,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.injury.indexOf("INJURY_OTHER") > -1 &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                         </div>
@@ -364,14 +364,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                             <div className="my-2">
                                 <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
                             </div>
                             <div className="">
-                                <textarea className="form-control" placeholder="請註明" />
+                                <AutosizeTextarea className="form-control" placeholder="請註明" />
                             </div>
 
                         </div>
@@ -404,7 +404,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                         </div>
@@ -502,7 +502,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.envFactor.indexOf("ENV_OTHER") > -1 &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                         </div>
@@ -538,7 +538,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
                                 <div className="">
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                         </div>
@@ -548,7 +548,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.2) 事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure">(請註明事發地點附近之員工當時執行的職務)</label>
-                            <textarea className="form-control" id="procedure" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
                     </div>
                 </section>
@@ -563,7 +563,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 服務單位即時治療/處理 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.1) 服務單位即時治療/處理</label>
                         <div className="col">
-                            <textarea className="form-control" id="procedure" />
+                            <AutosizeTextarea className="form-control" id="procedure" />
                         </div>
                     </div>
 
@@ -597,7 +597,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     </div>
                                     <div className="">
                                         <label className="form-label">提供對服務使用者的治療</label>
-                                        <textarea className="form-control" />
+                                        <AutosizeTextarea className="form-control" />
                                     </div>
                                 </>
                             }
@@ -683,7 +683,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
                                 <div>
-                                    <textarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
                         </div>
@@ -750,7 +750,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 服務使用者經治後情況 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4.4) 服務使用者經診治後情況</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                 </section>
@@ -811,7 +811,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -854,7 +854,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
                         <div className="col">
-                            <textarea className="form-control" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -895,7 +895,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
                         <div className="col">
-                            <textarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 
