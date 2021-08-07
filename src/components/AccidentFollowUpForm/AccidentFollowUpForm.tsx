@@ -148,6 +148,7 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                             <select className="form-control">
                                 <option>請選擇</option>
                                 <option>繼續</option>
+                                <option>結束</option>
                             </select>
                         </div>
                         {/* 服務經理姓名 */}
