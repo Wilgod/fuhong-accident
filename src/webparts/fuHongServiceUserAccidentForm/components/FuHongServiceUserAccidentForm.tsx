@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
+import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
+
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -36,13 +38,17 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
           <Tabs variant="fullWidth">
             <TabList>
               <Tab>19_服務使用者意外填報表(一)</Tab>
+              <Tab>20_服務使用者/外界人士意外報告(二)</Tab>
               <Tab>21_意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
               <ServiceUserAccidentForm context={this.props.context} />
             </TabPanel>
             <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} />
+              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} />
+            </TabPanel>
+            <TabPanel>
+              <AccidentFollowUpForm context={this.props.context} formType={"SERVICE_USER"} />
             </TabPanel>
           </Tabs>
 

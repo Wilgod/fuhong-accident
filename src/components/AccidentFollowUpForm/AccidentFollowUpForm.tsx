@@ -9,6 +9,7 @@ import "./AccidentFollowUpForm.css";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 interface IAccidentFollowUpFormProps {
     context: WebPartContext;
+    formType: string;
 }
 
 interface IAccidentFollowUpFormStates {
@@ -18,7 +19,17 @@ interface IAccidentFollowUpFormStates {
     sdComment: string;
 }
 
-export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormProps) {
+const formTypeParser = (formType: string, additonalString: string) => {
+    switch (formType) {
+        case "SERVICE_USER":
+            return "服務使用者" + additonalString;
+        case "OUTSIDERS":
+            return "外界人士" + additonalString;
+        default: return "";
+    }
+}
+
+export default function AccidentFollowUpForm({ context, formType }: IAccidentFollowUpFormProps) {
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         followup: "",
@@ -53,6 +64,8 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
         }
     }
 
+
+
     return (
         <>
             <div className="mb-3">
@@ -69,19 +82,19 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                         {/* 保險公司備案偏號 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>保險公司備案偏號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row">
                         {/* 保險公司備案偏號 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>檔案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                 </section>
@@ -96,19 +109,19 @@ export default function AccidentFollowUpForm({ context }: IAccidentFollowUpFormP
                         {/* 意外性質 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>意外性質</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly value={formTypeParser(formType, "意外")} />
                         </div>
                         {/* 發生意外者姓名 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>發生意外者姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row">
                         {/* 發生意外日期 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>發生意外日期</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                 </section>
