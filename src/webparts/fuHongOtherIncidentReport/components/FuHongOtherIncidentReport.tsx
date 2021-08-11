@@ -7,9 +7,27 @@ import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import OtherIncidentReport from "./OtherIncidentReport";
+import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/IncidentFollowUpForm";
 import "./custom.css";
 
+const getCanvasZone = () => {
+  let x = document.getElementsByTagName("div");
+  for (let i = 0; i < x.length; i++) {
+    if (x[i].getAttribute("data-automation-id")) {
+      if (x[i].getAttribute("data-automation-id") === "CanvasZone") {
+        if (x[i].firstElementChild) {
+          x[i].firstElementChild.setAttribute("style", "max-width:none ;width:100%")
+        }
+      }
+    }
+  }
+}
+
 export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, {}> {
+  public constructor(props) {
+    super(props);
+    getCanvasZone();
+  }
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
       <div className={styles.fuHongOtherIncidentReport}>
@@ -17,9 +35,13 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
           <Tabs variant="fullWidth">
             <TabList>
               <Tab>23_其他事故呈報表</Tab>
+              <Tab>26_事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
               <OtherIncidentReport context={this.props.context} styles={styles} />
+            </TabPanel>
+            <TabPanel>
+              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} />
             </TabPanel>
           </Tabs>
         </div>

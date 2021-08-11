@@ -2,10 +2,10 @@ import * as React from 'react'
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import Header from "../../../components/Header/Header";
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
+import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 
 interface IOtherIncidentReportProps {
     context: WebPartContext;
