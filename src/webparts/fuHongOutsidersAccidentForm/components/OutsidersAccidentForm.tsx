@@ -155,7 +155,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <option value="others">其他</option>
                             </select>
                             {
-                                form.identity &&
+                                form.identity === "others" &&
                                 <div className="mt-2">
                                     <input type="text" className="form-control" placeholder="請註明" />
                                 </div>

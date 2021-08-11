@@ -108,7 +108,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
                     <div className="form-group row mb-2">
                         {/* 意外性質 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>意外性質</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外性質</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control-plaintext" readOnly value={formTypeParser(formType, "意外")} />
                         </div>

@@ -36,15 +36,15 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           <Tabs variant="fullWidth">
             <TabList>
               <Tab>22_外界人士意外填報表(一)</Tab>
-              {/* <Tab>20_</Tab> */}
+              <Tab>20_服務使用者/外界人士意外報告(二)</Tab>
               <Tab>21_意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
               <OutsidersAccidentForm context={this.props.context} />
             </TabPanel>
-            {/* <TabPanel>
-              <AccidentReportForm context={this.props.context} formType={"OUTSIDERS"} />
-            </TabPanel> */}
+            <TabPanel>
+              <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} />
+            </TabPanel>
             <TabPanel>
               <AccidentFollowUpForm context={this.props.context} formType={"OUTSIDERS"} />
             </TabPanel>
