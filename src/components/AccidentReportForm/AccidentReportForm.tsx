@@ -85,14 +85,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
-                        {/* 保險公司備案偏號 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>保險公司備案偏號</label>
+                        {/* 保險公司備案編號 */}
+                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row">
-                        {/* 保險公司備案偏號 */}
+                        {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label fieldTitle`}>檔案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />

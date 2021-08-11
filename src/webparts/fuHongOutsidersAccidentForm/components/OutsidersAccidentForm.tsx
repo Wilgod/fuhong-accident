@@ -95,8 +95,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <option>請選擇服務單位</option>
                             </select>
                         </div>
-                        {/* 保險公司備案偏號 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案偏號</label>
+                        {/* 保險公司備案編號 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
@@ -351,7 +351,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     </div>
                     <div className="form-group row mb-4">
                         {/* 就診安排*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>3.1 就診安排</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3.1) 就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />

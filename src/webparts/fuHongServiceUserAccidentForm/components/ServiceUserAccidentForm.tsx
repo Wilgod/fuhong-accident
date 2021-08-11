@@ -95,8 +95,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <option>請選擇服務單位</option>
                             </select>
                         </div>
-                        {/* 保險公司備案偏號 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案偏號</label>
+                        {/* 保險公司備案編號 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>

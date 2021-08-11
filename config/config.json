@@ -17,12 +17,30 @@
           "manifest": "./src/webparts/fuHongOutsidersAccidentForm/FuHongOutsidersAccidentFormWebPart.manifest.json"
         }
       ]
+    },
+    "fu-hong-special-incident-report-license-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/fuHongSpecialIncidentReportLicense/FuHongSpecialIncidentReportLicenseWebPart.js",
+          "manifest": "./src/webparts/fuHongSpecialIncidentReportLicense/FuHongSpecialIncidentReportLicenseWebPart.manifest.json"
+        }
+      ]
+    },
+    "fu-hong-other-incident-report-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/fuHongOtherIncidentReport/FuHongOtherIncidentReportWebPart.js",
+          "manifest": "./src/webparts/fuHongOtherIncidentReport/FuHongOtherIncidentReportWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
     "FuHongServiceUserAccidentFormWebPartStrings": "lib/webparts/fuHongServiceUserAccidentForm/loc/{locale}.js",
     "FuHongOutsidersAccidentFormWebPartStrings": "lib/webparts/fuHongOutsidersAccidentForm/loc/{locale}.js",
-    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
+    "FuHongSpecialIncidentReportLicenseWebPartStrings": "lib/webparts/fuHongSpecialIncidentReportLicense/loc/{locale}.js",
+    "FuHongOtherIncidentReportWebPartStrings": "lib/webparts/fuHongOtherIncidentReport/loc/{locale}.js"
   }
 }

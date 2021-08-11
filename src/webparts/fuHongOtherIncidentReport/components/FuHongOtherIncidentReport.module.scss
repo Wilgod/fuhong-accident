@@ -1,0 +1,43 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+$fuhong-main-color: #fdd477;
+.fuHongOtherIncidentReport {
+  .container {
+    max-width: 1200px;
+    margin: 0px auto;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  h5 {
+    color: #9f6b21;
+    font-weight: 600;
+  }
+
+  h6 {
+    color: #707070;
+    font-weight: 600;
+  }
+
+  .fieldTitle {
+    color: #717171;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .formHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    background-color: $fuhong-main-color;
+    span {
+      font-size: 30px;
+      font-weight: 600;
+    }
+  }
+
+  .buttonLabel {
+    color: hsl(0, 1%, 39%);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
