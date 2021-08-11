@@ -46,7 +46,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} />
             </TabPanel>
             <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} formType={"OUTSIDERS"} />
+              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} />
             </TabPanel>
           </Tabs>
         </div>

@@ -48,7 +48,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} />
             </TabPanel>
             <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} formType={"SERVICE_USER"} />
+              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} />
             </TabPanel>
           </Tabs>
 

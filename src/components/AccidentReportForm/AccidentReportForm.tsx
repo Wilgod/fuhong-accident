@@ -275,7 +275,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>個人因素</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}></label>
                         <div className="col">
                             <div>個人因素</div>
                             <div className="form-check form-check-inline">
