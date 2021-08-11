@@ -161,11 +161,11 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale1" value="SERVICE_USER_GENDER_MALE_1" />
+                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderMale1" value="SERVICE_USER_GENDER_MALE_1" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderMale1">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale1" value="SERVICE_USER_GENDER_FEMALE_1" />
+                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderFemale1" value="SERVICE_USER_GENDER_FEMALE_1" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderFemale1">女</label>
                             </div>
                         </div>
@@ -179,11 +179,11 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale2" value="SERVICE_USER_GENDER_MALE_2" />
+                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderMale2" value="SERVICE_USER_GENDER_MALE_2" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderMale2">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale2" value="SERVICE_USER_GENDER_FEMALE_2" />
+                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderFemale2" value="SERVICE_USER_GENDER_FEMALE_2" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderFemale2">女</label>
                             </div>
                         </div>
@@ -197,11 +197,11 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale3" value="SERVICE_USER_GENDER_MALE_3" />
+                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderMale3" value="SERVICE_USER_GENDER_MALE_3" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderMale3">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" />
+                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" />
                                 <label className="form-check-label" htmlFor="serviceUserGenderFemale3">女</label>
                             </div>
                         </div>
@@ -223,12 +223,12 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale1" value="SERVICE_USER_GENDER_MALE_1" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderMale1">男</label>
+                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderMale1" value="STAFF_GENDER_MALE_1" />
+                                <label className="form-check-label" htmlFor="staffGenderMale1">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale1" value="SERVICE_USER_GENDER_FEMALE_1" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderFemale1">女</label>
+                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderFemale1" value="STAFF_GENDER_FEMALE_1" />
+                                <label className="form-check-label" htmlFor="staffGenderFemale1">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
@@ -241,12 +241,12 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale2" value="SERVICE_USER_GENDER_MALE_2" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderMale2">男</label>
+                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderMale2" value="STAFF_GENDER_MALE_2" />
+                                <label className="form-check-label" htmlFor="staffGenderMale2">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale2" value="SERVICE_USER_GENDER_FEMALE_2" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderFemale2">女</label>
+                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderFemale2" value="STAFF_GENDER_FEMALE_2" />
+                                <label className="form-check-label" htmlFor="staffGenderFemale2">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
@@ -256,15 +256,15 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     </div>
                     <div className="form-group row mb-2">
                         <div className={`col-12 ${styles.fieldTitle}`}>(c) 職員 ( 三，如有 )</div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderMale3" value="SERVICE_USER_GENDER_MALE_3" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderMale3">男</label>
+                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderMale3" value="SERVICE_USER_GENDER_MALE_3" />
+                                <label className="form-check-label" htmlFor="staffGenderMale3">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers" id="serviceUserGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" />
-                                <label className="form-check-label" htmlFor="serviceUserGenderFemale3">女</label>
+                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" />
+                                <label className="form-check-label" htmlFor="staffGenderFemale3">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
