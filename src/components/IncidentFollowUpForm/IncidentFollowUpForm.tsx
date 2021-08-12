@@ -19,8 +19,9 @@ interface IIncidentFollowUpFormStates {
 
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
-        case "OTHER_INCIDENT": return "其他事故" + additonalString
-        default: return ""
+        case "OTHER_INCIDENT": return "其他事故" + additonalString;
+        case "SPECIAL_INCIDENT_REPORT_LICENSE": return "特別事故(牌照事務處)" + additonalString;
+        default: return "";
     }
 }
 

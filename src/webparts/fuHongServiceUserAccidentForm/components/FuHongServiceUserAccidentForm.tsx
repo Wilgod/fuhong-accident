@@ -31,7 +31,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-
+    
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>

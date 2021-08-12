@@ -5,8 +5,12 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import "./react-tabs.css";
+import "react-datepicker/dist/react-datepicker.css";
 import SpecialIncidentReportLicense from './SpecialIncidentReportLicense';
+import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/IncidentFollowUpForm";
+import "./react-tabs.css";
+import "./custom.css";
+
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -32,11 +36,16 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>19_服務使用者意外填報表(一)</Tab>
+              <Tab>24_特別事故報告(牌照事務處)</Tab>
+              <Tab>26_事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
               <SpecialIncidentReportLicense context={this.props.context} styles={styles} />
             </TabPanel>
+            <TabPanel>
+              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"}/>
+            </TabPanel>
+
           </Tabs>
         </div>
       </div>
