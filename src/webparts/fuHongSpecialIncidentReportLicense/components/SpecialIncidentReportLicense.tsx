@@ -17,7 +17,10 @@ interface ISpecialIncidentReportLicenseStates {
     police: string;
     policeInvestigate: string;
     residentMissing: string;
-    residentMissingReason: string
+    residentMissingReason: string;
+    residentMissingFound: string;
+    residentAbuse: string[];
+
 }
 
 export default function SpecialIncidentReportLicense({ context, styles }: ISpecialIncidentReportLicenseProps) {
@@ -26,7 +29,9 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
         police: "",
         policeInvestigate: "",
         residentMissing: "",
-        residentMissingReason: ""
+        residentMissingReason: "",
+        residentMissingFound: "",
+        residentAbuse: []
     });
     const [date, setDate] = useState(new Date());
 
@@ -250,7 +255,118 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                         </div>
                     </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (2) 住客失蹤以致需要報警求助 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2a)</label>
+                        <div className="col">
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="residentMissingFound" id="resident-missing-found-true" value="RESIDENT_MISSING_FOUND_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="resident-missing-found-true">已尋回</label>
+                            </div>
+                            {
+                                form.residentMissingFound === "RESIDENT_MISSING_FOUND_TRUE" &&
+                                <div>
+                                    <label>尋回日期</label>
+                                    <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                </div>
+                            }
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="residentMissingFound" id="resident-missing-found-false" value="RESIDENT_MISSING_FOUND_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="resident-missing-found-false">仍未尋回</label>
+                            </div>
+                            {
+                                form.residentMissingFound === "RESIDENT_MISSING_FOUND_FALSE" &&
+                                <div className="d-flex">
+                                    由失蹤日計起至呈報日，已失蹤
+                                    <div className="input-group mb-3">
+                                        <input type="number" className="form-control" min={0} />
+                                        <div className="input-group-append">
+                                            <span className="input-group-text" id="basic-addon2">日</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+
+                    <div className="form-group row mb-2">
+                        {/* (2b) 失蹤住客病歷 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2b) 失蹤住客病歷</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" value="RESIDENT_ABUSE_BODY" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-body">身體虐待</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" value="RESIDENT_ABUSE_MENTAL" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-mental">精神虐待</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" value="RESIDENT_ABUSE_NEGLIGENT" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-negligent">疏忽照顧</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-embezzle-property" value="RESIDENT_ABUSE_EMBEZZLE_PROPERTY" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-embezzle-property">侵吞財產</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-abandoned" value="RESIDENT_ABUSE_ABANDONED" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-abandoned">遺棄</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-sexual-assault" value="RESIDENT_ABUSE_SEXUAL_ASSAULT" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-sexual-assault">非禮／性侵犯</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-other">其他</label>
+                            </div>
+                            {
+                                form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
+                                <AutosizeTextarea className="form-control" placeholder="請詿明" />
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (3) 施虐者／懷疑施虐者的身份 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3a) 施虐者／懷疑施虐者的身份</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" value="RESIDENT_ABUSE_BODY" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-body">員工</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" value="RESIDENT_ABUSE_MENTAL" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-mental">住客</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" value="RESIDENT_ABUSE_NEGLIGENT" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-negligent">訪客</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-other">其他</label>
+                            </div>
+                            {
+                                form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
+                                <AutosizeTextarea className="form-control" placeholder="請詿明" />
+                            }
+                        </div>
+                    </div>
                 </section>
+
+
             </div>
         </>
     )
