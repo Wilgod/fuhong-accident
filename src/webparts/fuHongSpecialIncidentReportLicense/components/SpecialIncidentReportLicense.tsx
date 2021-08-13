@@ -20,7 +20,8 @@ interface ISpecialIncidentReportLicenseStates {
     residentMissingReason: string;
     residentMissingFound: string;
     residentAbuse: string[];
-
+    abuser: string;
+    referrals: string;
 }
 
 export default function SpecialIncidentReportLicense({ context, styles }: ISpecialIncidentReportLicenseProps) {
@@ -31,7 +32,9 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
         residentMissing: "",
         residentMissingReason: "",
         residentMissingFound: "",
-        residentAbuse: []
+        residentAbuse: [],
+        abuser: "",
+        referrals: ""
     });
     const [date, setDate] = useState(new Date());
 
@@ -128,7 +131,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <div className="col">
 
                             <div className="form-check">
-                                <input className="form-check-input form-check-lg" type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler} />
+                                <input className="form-check-input " type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="unusal-incident-general">在院舍內發生事故及送院後死亡</label>
                             </div>
                             {
@@ -329,38 +332,67 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-other">其他</label>
+                                <label className="form-check-label" htmlFor="resident-abuse-other">其他 (請註明)</label>
                             </div>
                             {
                                 form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
-                                <AutosizeTextarea className="form-control" placeholder="請詿明" />
+                                <AutosizeTextarea className="form-control" placeholder="請註明" />
                             }
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
-                        {/* (3) 施虐者／懷疑施虐者的身份 */}
+                        {/* (3a) 施虐者／懷疑施虐者的身份 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3a) 施虐者／懷疑施虐者的身份</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" value="RESIDENT_ABUSE_BODY" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-body">員工</label>
+                                <input className="form-check-input" type="radio" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="abuser-staff">員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" value="RESIDENT_ABUSE_MENTAL" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-mental">住客</label>
+                                <input className="form-check-input" type="radio" name="abuser" id="abuser-tenant" value="ABUSER_TENANT" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="abuser-tenant">住客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" value="RESIDENT_ABUSE_NEGLIGENT" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-negligent">訪客</label>
+                                <input className="form-check-input" type="radio" name="abuser" id="abuser-guest" value="ABUSER_GUEST" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="abuser-guest">訪客</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-other">其他</label>
+                                <input className="form-check-input" type="radio" name="abuser" id="abuser-other" value="ABUSER_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="abuser-other">其他 (請註明)</label>
                             </div>
                             {
-                                form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
-                                <AutosizeTextarea className="form-control" placeholder="請詿明" />
+                                form.abuser === "ABUSER_OTHER" &&
+                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (3b)*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3b)</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="referrals" id="referrals-true" value="REFERRALS_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="referrals-true">已轉介社工</label>
+                            </div>
+
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="referrals" id="referrals-false" value="REFERRALS_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="referrals-false">沒有轉介社工</label>
+                            </div>
+                            {
+                                form.referrals === "REFERRALS_TRUE" &&
+                                <>
+                                    <div className="">
+                                        <label>轉介日期</label>
+                                        <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                    </div>
+                                    <div className="">
+                                        <label>服務單位</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </>
                             }
                         </div>
                     </div>
