@@ -22,6 +22,13 @@ interface ISpecialIncidentReportLicenseStates {
     residentAbuse: string[];
     abuser: string;
     referrals: string;
+    residentAbusePolice: string;
+    disputePolice: string;
+    seriousMedicalIncident: string;
+    otherSeriousIncident: string;
+    otherIncident: string;
+    tenantGender: string;
+    notified: String;
 }
 
 export default function SpecialIncidentReportLicense({ context, styles }: ISpecialIncidentReportLicenseProps) {
@@ -34,7 +41,14 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
         residentMissingFound: "",
         residentAbuse: [],
         abuser: "",
-        referrals: ""
+        referrals: "",
+        residentAbusePolice: "",
+        disputePolice: "",
+        seriousMedicalIncident: "",
+        otherSeriousIncident: "",
+        otherIncident: "",
+        tenantGender: "",
+        notified: ""
     });
     const [date, setDate] = useState(new Date());
 
@@ -182,7 +196,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                         <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
                                     </div>
                                     <div>
-                                        <label>報警編號</label>
+                                        <label>報案編號</label>
                                         <AutosizeTextarea className="form-control" />
                                     </div>
                                 </>
@@ -396,9 +410,413 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             }
                         </div>
                     </div>
+                    <div className="form-group row mb-2">
+                        {/* (3c)*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3c)</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" value="RESIDENT_ABUSE_POLICE_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-police-true">已報警求助</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-false" value="RESIDENT_ABUSE_POLICE_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="resident-abuse-police-false">沒有報警求助</label>
+                            </div>
+                            {
+                                form.residentAbusePolice === "RESIDENT_ABUSE_POLICE_TRUE" &&
+                                <>
+                                    <div className="mb-1">
+                                        <label>報警日期</label>
+                                        <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                    </div>
+                                    <div>
+                                        <label>報案編號</label>
+                                        <AutosizeTextarea className="form-control" />
+                                    </div>
+                                </>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (4) 院舍內有爭執事件以致需要報警求助 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4) 院舍內有爭執事件以致需要報警求助</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-tenant-and-tenant">住客與住客</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-tenant-and-staff">住客與員工</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-tenant-and-guest">住客與訪客</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-staff-and-staff">員工與員工</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-staff-and-guest">員工與訪客</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-guest-and-guest">訪客與訪客</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="dispute-police-other">其他 (請註明)</label>
+                            </div>
+                            {
+                                form.disputePolice === "DISPUTE_POLICE_OTHER" &&
+                                <div className="">
+                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                </div>
+                            }
+                            <div className="mb-1">
+                                <label>報警日期</label>
+                                <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                            </div>
+                            <div>
+                                <label>報案編號</label>
+                                <AutosizeTextarea className="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」） */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）</label>
+                        <div className="col">
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="serious-medical-incident-mistake">住客誤服藥物引致入院接受檢查或治療</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="serious-medical-incident-over-or-missed">住客漏服或多服藥物引致入院接受檢查或治療</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="serious-medical-incident-counter-drug">住客服用成藥或非處方藥物引致入院接受檢查或治療</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="serious-medical-incident-other">其他 (請註明)</label>
+                            </div>
+                            {
+                                form.seriousMedicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
+                                <div className="">
+                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(6) 其他重大特別事故以致影響院舍日常運作</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-power-supply">停止電力供應</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-building">樓宇破損或結構問題</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-fire">火警</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-water-supply">停止食水供應</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-other">水浸／山泥傾瀉／其他天災意外</label>
+                            </div>
+                            {
+                                form.otherSeriousIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
+                                <div className="">
+                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* (7) 其他 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(7) 其他</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-true" value="OTHER_INCIDENT_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-true">是</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-false" value="OTHER_INCIDENT_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="other-incident-false">否</label>
+                            </div>
+                            {
+                                form.otherIncident === "OTHER_INCIDENT_TRUE" &&
+                                <AutosizeTextarea placeholder="請註明" className="form-control" />
+                            }
+                        </div>
+                    </div>
+                </section>
+                <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>住客及家屬情況</h5>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 住客姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>住客姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        {/* 年齡 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
+                        <div className="col-12 col-md-4">
+                            <input type="number" className="form-control" min={0} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 住客性別 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
+                        <div className="col-12 col-md-4">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="tenant-gender-male">男</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-female" value="TENANT_GENDER_FEMALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="tenant-gender-female">女</label>
+                            </div>
+                        </div>
+                        {/* 年齡 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>房及床號</label>
+                        <div className="col-12 col-md-4">
+                            <input type="number" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col">
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="notified" id="notified-true" value="NOTIFIED_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="notified-true">已通知住客監護人／保證人／家人／親屬</label>
+                            </div>
+                            {
+                                form.notified === "NOTIFIED_TRUE" &&
+                                <>
+                                    <div className="row my-2">
+                                        {/* 姓名 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
+                                        <div className="col-12 col-md-4">
+                                            <input type="text" className="form-control" />
+                                        </div>
+                                        {/* 年齡 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>關係</label>
+                                        <div className="col-12 col-md-4">
+                                            <input type="text" className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="row mb-2">
+                                        {/* 負責通知的員工姓名 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>負責通知的員工姓名</label>
+                                        <div className="col-12 col-md-4">
+                                            <input type="text" className="form-control" />
+                                        </div>
+                                        {/* 負責通知的員工職位 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>負責通知的員工職位</label>
+                                        <div className="col-12 col-md-4">
+                                            <input type="text" className="form-control" />
+                                        </div>
+                                    </div>
+                                    <div className="row mb-2">
+                                        {/* 日期和時間 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期和時間</label>
+                                        <div className="col-12 col-md-4">
+                                            <DatePicker
+                                                className="form-control"
+                                                selected={date}
+                                                onChange={(date) => setDate(date)}
+                                                showTimeSelect
+                                                timeFormat="p"
+                                                timeIntervals={15}
+                                                dateFormat="yyyy/MM/dd h:mm aa"
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                            }
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="notified" id="notified-false" value="NOTIFIED_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬</label>
+                            </div>
+                            {
+                                form.notified === "NOTIFIED_FALSE" &&
+                                <>
+                                    <label>原因:</label>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                </>
+                            }
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={false}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人職位</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                className="form-control"
+                                selected={date}
+                                onChange={(date) => setDate(date)}
+                                dateFormat="yyyy/MM/dd"
+                            />
+                        </div>
+                    </div>
                 </section>
 
+                <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>殘疾人士院舍特別事故報告 (附頁)</h5>
+                        </div>
+                    </div>
+                    <div className="row mt-3 mb-2">
+                        <div className="col-12">
+                            <span>(此附頁／載有相關資料的自訂報告須連同首兩頁的表格一併呈交)</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍名稱</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期和時間</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                className="form-control"
+                                selected={date}
+                                onChange={(date) => setDate(date)}
+                                showTimeSelect
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd h:mm aa"
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>受影響住客姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>身份證號碼</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 住客性別 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
+                        <div className="col-12 col-md-4">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="tenant-gender-male">男</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-female" value="TENANT_GENDER_FEMALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="tenant-gender-female">女</label>
+                            </div>
+                        </div>
+                        {/* 年齡 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
+                        <div className="col-12 col-md-4">
+                            <input type="number" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 住客病歷 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>住客病歷</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 特別事故詳情／發生經過 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>特別事故詳情／發生經過</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 院舍跟進行動／預防事故再次發生的建議或措施 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>院舍跟進行動／預防事故再次發生的建議或措施</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 填報人姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                personSelectionLimit={1}
+                                showtooltip={false}
+                                principalTypes={[PrincipalType.User]}
+                                resolveDelay={1000} />
+                        </div>
+                        {/* 職位 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人姓名</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                className="form-control"
+                                selected={date}
+                                onChange={(date) => setDate(date)}
+                                showTimeSelect
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd h:mm aa"
+                            />
+                        </div>
+                    </div>
+                </section>
 
+                <hr className="my-3" />
+
+                <section className="py-3">
+                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                        <button className="btn btn-warning">提交</button>
+                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-secondary">取消</button>
+                    </div>
+                </section>
             </div>
         </>
     )
