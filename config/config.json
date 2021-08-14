@@ -33,6 +33,14 @@
           "manifest": "./src/webparts/fuHongOtherIncidentReport/FuHongOtherIncidentReportWebPart.manifest.json"
         }
       ]
+    },
+    "fu-hong-special-incident-report-allowance-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/fuHongSpecialIncidentReportAllowance/FuHongSpecialIncidentReportAllowanceWebPart.js",
+          "manifest": "./src/webparts/fuHongSpecialIncidentReportAllowance/FuHongSpecialIncidentReportAllowanceWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -41,6 +49,7 @@
     "FuHongOutsidersAccidentFormWebPartStrings": "lib/webparts/fuHongOutsidersAccidentForm/loc/{locale}.js",
     "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js",
     "FuHongSpecialIncidentReportLicenseWebPartStrings": "lib/webparts/fuHongSpecialIncidentReportLicense/loc/{locale}.js",
-    "FuHongOtherIncidentReportWebPartStrings": "lib/webparts/fuHongOtherIncidentReport/loc/{locale}.js"
+    "FuHongOtherIncidentReportWebPartStrings": "lib/webparts/fuHongOtherIncidentReport/loc/{locale}.js",
+    "FuHongSpecialIncidentReportAllowanceWebPartStrings": "lib/webparts/fuHongSpecialIncidentReportAllowance/loc/{locale}.js"
   }
 }

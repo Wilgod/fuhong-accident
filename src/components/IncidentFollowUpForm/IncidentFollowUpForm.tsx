@@ -21,6 +21,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "OTHER_INCIDENT": return "其他事故" + additonalString;
         case "SPECIAL_INCIDENT_REPORT_LICENSE": return "特別事故(牌照事務處)" + additonalString;
+        case "SPECIAL_INCIDENT_REPORT_ALLOWANCE": return "特別事故(津貼科)" + additonalString;
         default: return "";
     }
 }

@@ -75,7 +75,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
     return (
         <>
             <div className="mb-3">
-                <Header displayName="服務使用者意外填報表(一)" />
+                <Header displayName="殘疾人士院舍特別事故報告" />
             </div>
             <div className="container px-4">
                 <section className="mb-4">
