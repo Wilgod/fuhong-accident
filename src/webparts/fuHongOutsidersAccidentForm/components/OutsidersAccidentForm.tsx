@@ -82,11 +82,11 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
             </div>
             <div className="container px-4">
                 <section className="mb-3">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>檔案編號</h5>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務單位</label>
@@ -251,7 +251,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 </div>
                                 <div className="form-check">
                                     <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
-                                    <label className="form-check-label" htmlFor="ENV-OTHER">其他</label>
+                                    <label className="form-check-label" htmlFor="ENV-OTHER">其他 (請註明)</label>
                                 </div>
                                 {
                                     form.envFactor.indexOf("ENV_OTHER") > -1 &&
@@ -265,7 +265,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             {/* 其他因素 */}
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.1.2) 其他因素</label>
                             <div className="col">
-                                <AutosizeTextarea className="form-control" />
+                                <AutosizeTextarea className="form-control" placeholder="請註明" />
                             </div>
                         </div>
                     </div>
@@ -273,7 +273,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 事發過程 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2.2) 事發過程</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 

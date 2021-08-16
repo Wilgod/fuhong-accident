@@ -388,6 +388,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         </div>
                     </div>
                 </section>
+
+                <section className="py-3">
+                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                        <button className="btn btn-warning">提交</button>
+                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-secondary">取消</button>
+                    </div>
+                </section>
             </div>
         </>
     )

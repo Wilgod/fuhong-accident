@@ -74,11 +74,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
             </div>
             <div className="container px-4">
                 <section className="mb-3">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>檔案編號</h5>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務單位</label>
@@ -103,7 +103,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 <section className="mb-3">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>發生意外資料</h5>
+                            <h5>意外資料</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -159,11 +159,19 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         {/* 意外跟進 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外跟進</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-follow-up-true">是</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-follow-up-false">否</label>
+                            </div>
+                            {/* <select className="form-control">
                                 <option>請選擇</option>
                                 <option>繼續</option>
                                 <option>結束</option>
-                            </select>
+                            </select> */}
                         </div>
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理姓名</label>
@@ -181,6 +189,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 <hr className="my-3" />
 
                 <section className="mb-3">
+                    <div className="row mb-2">
+                        <div className="col-12 font-weight-bold">
+                            <span>[此欄由高級物理治療師填寫]</span>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師評語</label>
@@ -218,6 +231,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 <hr className="my-3" />
 
                 <section className="mb-3">
+                    <div className="row mb-2">
+                        <div className="col-12 font-weight-bold">
+                            <span>[此欄由服務總監填寫]</span>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>

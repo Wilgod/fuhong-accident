@@ -338,8 +338,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
                             }
-
-                            <StyledDropzone />
+                            {
+                                form.injury.length > 0 &&
+                                <StyledDropzone />
+                            }
                         </div>
                     </div>
 
@@ -593,7 +595,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 3.1 服務單位即時治療/處理 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務單位即時治療/處理</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明"/>
+                            <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
                     </div>
 
@@ -852,7 +854,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" placeholder="請註明"/>
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
