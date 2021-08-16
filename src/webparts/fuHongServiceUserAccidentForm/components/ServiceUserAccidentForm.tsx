@@ -683,14 +683,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div>
                                         <label className="form-label">日期及時間</label>
                                         {/* <input type="datetime-local" className="form-control" /> */}
-
                                         <DatePicker
                                             className="form-control"
                                             selected={date}
                                             onChange={(date) => setDate(date)}
-                                            timeInputLabel="Time:"
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            showTimeInput
                                         />
                                     </div>
                                     <div>

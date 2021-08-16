@@ -300,9 +300,10 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                             className="form-control"
                                             selected={date}
                                             onChange={(date) => setDate(date)}
-                                            timeInputLabel="Time:"
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            showTimeInput
                                         />
                                     </div>
                                     <div>
@@ -338,9 +339,10 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                             className="form-control"
                                             selected={date}
                                             onChange={(date) => setDate(date)}
-                                            timeInputLabel="Time:"
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            showTimeInput
                                         />
                                     </div>
                                     <div>

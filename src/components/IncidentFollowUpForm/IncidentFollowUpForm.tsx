@@ -140,7 +140,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}
-                                dateFormat="yyyy/MM/dd h:mm aa"
+                                dateFormat="yyyy/MM/dd"
                                 readOnly
                             />
                         </div>
@@ -168,7 +168,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}
-                                dateFormat="yyyy/MM/dd h:mm aa"
+                                dateFormat="yyyy/MM/dd"
                                 readOnly
                             />
                         </div>
