@@ -161,32 +161,21 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 </div>
                             }
                         </div>
-
-                    </div>
-
-                    <div className="form-group row mb-2">
                         {/* 意外發生日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期和時間</label>
                         <div className="col-12 col-md-4">
-                            {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
-                        </div>
-                        {/* 時間*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>時間</label>
-                        <div className="col-12 col-md-4">
-                            {/* <input type="time" className="form-control" /> */}
                             <DatePicker
                                 className="form-control"
                                 selected={date}
                                 onChange={(date) => setDate(date)}
                                 showTimeSelect
-                                showTimeSelectOnly
-                                timeIntervals={1}
-                                timeCaption="Time"
-                                dateFormat="h:mm aa"
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd h:mm aa"
                             />
                         </div>
                     </div>
+
 
                     <div className="form-group row mb-2">
                         {/* 地點 */}
@@ -311,7 +300,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         <div className="col">
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
-                                <div className="form-check form-check-inline">
+                                <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-true" value="PHOTO_TRUE" onClick={radioButtonHandler} />
                                     <label className="form-check-label" htmlFor="photo-true">有 (上載照片)</label>
                                 </div>
@@ -319,24 +308,29 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     form.photo === "PHOTO_TRUE" &&
                                     <StyledDropzone />
                                 }
-                                <div className="form-check form-check-inline">
+                                <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
                                     <label className="form-check-label" htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
                             <div className={styles.buttonLabel}>CCTV記錄</div>
                             <div className="pl-2">
-                                <div className="form-check form-check-inline">
+                                <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
                                     <label className="form-check-label" htmlFor="cctv-true">有 (註: 三個工作天交總辦事處)</label>
                                 </div>
-                                <div className="form-check form-check-inline">
+                                <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} />
                                     <label className="form-check-label" htmlFor="cctv-false">未能提供</label>
                                 </div>
                                 {
                                     form.cctv === "CCTV_TRUE" &&
-                                    <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                                    <div className="row no-gutters">
+                                        <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
+                                        <div className="col">
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                                        </div>
+                                    </div>
                                 }
                             </div>
                         </div>
@@ -365,6 +359,10 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_REJECT" value="ARRANGEMENT_EMERGENCY_REJECT" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_REJECT">拒絕就診</label>
+                            </div>
                             {
                                 form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT" &&
                                 <>
@@ -374,12 +372,27 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     </div>
                                     <div className="">
                                         <label className="form-label">到達時間</label>
-                                        {/* <input className="form-control" type="time" /> */}
-                                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                                        <DatePicker
+                                            className="form-control"
+                                            selected={date}
+                                            onChange={(date) => setDate(date)}
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy/MM/dd h:mm aa"
+                                        />
                                     </div>
                                     <div className="">
-                                        <label className="form-label">提供對服務使用者的治療</label>
-                                        <AutosizeTextarea className="form-control" />
+                                        <label className="form-label">離開時間</label>
+                                        <DatePicker
+                                            className="form-control"
+                                            selected={date}
+                                            onChange={(date) => setDate(date)}
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy/MM/dd h:mm aa"
+                                        />
                                     </div>
                                 </>
                             }
@@ -491,9 +504,15 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 <hr className="my-3" />
 
                 <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級服務經理/服務經理填寫]</span>
+                        </div>
+                    </div>
+
                     <div className="form-group row mb-2">
                         {/* 服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -511,7 +530,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -529,7 +548,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 <hr className="my-3" />
 
                 <section className="mb-4">
-                    <div className="row">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <span>[此欄由服務總監填寫]</span>
                         </div>
@@ -569,7 +588,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 <hr className="my-3" />
 
                 <section className="mb-4">
-                    <div className="row">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <span>[此欄由高級物理治療師填寫]</span>
                         </div>
