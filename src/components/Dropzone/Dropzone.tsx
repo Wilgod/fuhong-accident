@@ -37,15 +37,30 @@ export default function StyledDropzone(props) {
         getInputProps,
         isDragActive,
         isDragAccept,
-        isDragReject
+        isDragReject,
+        acceptedFiles
     } = useDropzone({ accept: 'image/*' });
 
+    const files = acceptedFiles.map(file => {
+        return <li key={file.name}>
+            {file.name} - {file.size / 1024 ** 2} MB
+        </li>
+    });
+
     return (
-        <div className="container">
+        <div >
             <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
                 <input {...getInputProps()} />
                 <p>Drag 'n' drop some files here, or click to select files</p>
             </Container>
+            {
+                files.length > 0 &&
+                <aside>
+                    <h6>Files</h6>
+                    <ul>{files}</ul>
+                </aside>
+            }
+
         </div>
     );
 }
