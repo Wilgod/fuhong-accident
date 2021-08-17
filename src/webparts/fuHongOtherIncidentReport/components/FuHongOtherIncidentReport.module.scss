@@ -1,5 +1,6 @@
-@import '~office-ui-fabric-react/dist/sass/References.scss';
+@import "~office-ui-fabric-react/dist/sass/References.scss";
 $fuhong-main-color: #fdd477;
+$staff-label-color: #eba300;
 .fuHongOtherIncidentReport {
   .container {
     max-width: 1200px;
@@ -21,6 +22,10 @@ $fuhong-main-color: #fdd477;
     color: #717171;
     font-weight: 600;
     font-size: 16px;
+  }
+
+  .staffFieldLabel {
+    color: $staff-label-color;
   }
 
   .formHeader {

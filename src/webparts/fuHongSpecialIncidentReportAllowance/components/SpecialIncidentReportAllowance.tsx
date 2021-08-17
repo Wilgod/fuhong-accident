@@ -17,13 +17,25 @@ interface ISpecialIncidentReportAllowanceStates {
     accidentCategory: string;
     abusiveNature: string[];
     police: string;
+    medical: string;
+    notifyFamily: string;
+    meeting: string;
+    response: string;
 }
+
+const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
+const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
+
 
 export default function SpecialIncidentReportAllowance({ context, styles }: ISpecialIncidentReportAllowanceProps) {
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         accidentCategory: "",
         abusiveNature: [],
-        police: ""
+        police: "",
+        medical: "",
+        notifyFamily: "",
+        meeting: "",
+        response: ""
     });
     const [date, setDate] = useState(new Date());
 
@@ -60,7 +72,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     </div>
                     <div className="row my-3">
                         <div className="col-12 fontweight-bold">
-                            <span className={`px-2 font-weight-bold`} style={{ fontSize: 15 }}>(特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科)</span>
+                            <span className={`px-2 font-weight-bold`} style={{ fontSize: 15, cursor: "help" }} title={footNoteOne}>(特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科)</span>
                         </div>
                     </div>
 
@@ -200,26 +212,26 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-abuse">已確立／懷疑有服務使用者被職員<sup>2</sup> ／其他服務使用者虐待 </label>
+                                <label className="form-check-label" htmlFor="accident-category-abuse" >已確立／<span style={{ cursor: "help" }} title={footNoteTwo}>懷疑有服務使用者被職員<sup>2</sup></span> ／其他服務使用者虐待 </label>
                             </div>
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
                                 <div className="row">
                                     <label className={`col-12 col-form-label ${styles.fieldTitle}`}>虐待性質</label>
                                     <div className="col">
-                                        <div className="form-check form-check-inline mr-0 mr-md-3">
+                                        <div className="form-check form-check-inline mr-3">
                                             <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" onClick={checkboxHandler} />
                                             <label className="form-check-label" htmlFor="abusive-nature-body">身體虐待</label>
                                         </div>
-                                        <div className="form-check form-check-inline mr-0 mr-md-3">
+                                        <div className="form-check form-check-inline mr-3">
                                             <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-sexual-assault" value="ABUSIVE_NATURE_SEXUAL_ASSAULT" onClick={checkboxHandler} />
                                             <label className="form-check-label" htmlFor="abusive-nature-sexual-assault">性侵犯</label>
                                         </div>
-                                        <div className="form-check form-check-inline mr-0 mr-md-3">
+                                        <div className="form-check form-check-inline mr-3">
                                             <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-mental" value="ABUSIVE_NATURE_MENTAL" onClick={checkboxHandler} />
                                             <label className="form-check-label" htmlFor="abusive-nature-mental">精神虐待</label>
                                         </div>
-                                        <div className="form-check form-check-inline mr-0 mr-md-3">
+                                        <div className="form-check form-check-inline mr-3">
                                             <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-negligent-care" value="ABUSIVE_NATURE_NEGLIGENT_CARE" onClick={checkboxHandler} />
                                             <label className="form-check-label" htmlFor="abusive-nature-negligent-care">疏忽照顧</label>
                                         </div>
@@ -274,7 +286,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(a) 服務使用者 (一)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 服務使用者 (一)<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -292,7 +304,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(b) 服務使用者 (二，如有)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(b) 服務使用者 (二，如有)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -310,7 +322,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(c) 服務使用者 (三，如有)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(c) 服務使用者 (三，如有)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -332,11 +344,11 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>有關職員的資料 (如適用)</h5>
+                            <h5><span style={{ cursor: "help" }} title={footNoteTwo}>有關職員<sup>2</sup></span>的資料 (如適用)</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(a) 職員 ( 一 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 職員 ( 一 )<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -354,7 +366,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(b) 職員 ( 二，如有 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(b) 職員 ( 二，如有 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -372,7 +384,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle}`}>(c) 職員 ( 三，如有 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(c) 職員 ( 三，如有 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
@@ -406,7 +418,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="police-false">沒有</label>
+                                <label className="form-check-label" htmlFor="police-false">沒有 (請註明)</label>
                             </div>
                             {
                                 form.police === "POLICE_TRUE" &&
@@ -435,7 +447,242 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             }
                         </div>
                     </div>
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>通知家人 / 親屬 / 監護人 / 保證人</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-true" value="NOTIFY_FAMILY_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="notify-family-true">有</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-false" value="NOTIFY_FAMILY_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="notify-family-false">沒有 (請註明)</label>
+                            </div>
+                            {
+                                form.notifyFamily === "NOTIFY_FAMILY_TRUE" &&
+                                <>
+                                    <div>
+                                        <label className="form-label">通知日期和時間</label>
+                                        <DatePicker
+                                            className="form-control"
+                                            selected={date}
+                                            onChange={(date) => setDate(date)}
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy/MM/dd h:mm aa"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">與服務使用者的關係</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">負責職員姓名</label>
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </>
+                            }
+                            {form.notifyFamily === "NOTIFY_FAMILY_FALSE" &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>醫療安排</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="medical" id="medical-true" value="MEDICAL_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="medical-true">有 (請註明)</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="medical" id="medical-false" value="MEDICAL_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="medical-false">沒有</label>
+                            </div>
+                            {
+                                form.medical === "MEDICAL_TRUE" &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="meeting" id="meeting-true" value="MEETING_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="meeting-true">有</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="meeting" id="meeting-false" value="MEETING_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="meeting-false">沒有</label>
+                            </div>
+                            {
+                                form.meeting === "MEETING_TRUE" &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明，包括時間" />
+                                </div>
+                            }
+                            {
+                                form.meeting === "MEETING_FALSE" &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="response-true">有</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="response-false">沒有</label>
+                            </div>
+                            {
+                                form.response === "RESPONSE_TRUE" &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
+
+                    <div className="form-group row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>跟進計劃</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                        </div>
+                    </div>
                 </section>
+
+                <hr className="my-4" />
+
+                <section className="mb-4">
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>擬備人員</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                className="form-control"
+                                selected={new Date()}
+                                dateFormat="yyyy/MM/dd"
+
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div>
+                </section>
+
+                <hr className="my-4" />
+
+                <section className="mb-4">
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>批簽人員</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
+                    </div>
+                    <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker
+                                className="form-control"
+                                selected={new Date()}
+                                dateFormat="yyyy/MM/dd"
+
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row my-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <section className="py-3">
+                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                        <button className="btn btn-warning">提交</button>
+                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-secondary">取消</button>
+                    </div>
+                </section>
+
+                <hr className="my-3" />
+
+                <div>
+                    <ol>
+                        <li>{footNoteOne}</li>
+                        <li>{footNoteTwo}</li>
+                    </ol>
+                </div>
 
             </div>
         </>

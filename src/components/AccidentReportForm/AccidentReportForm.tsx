@@ -73,11 +73,11 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
             </div>
             <div className="container px-4">
                 <section className="mb-3">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>檔案編號</h5>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
