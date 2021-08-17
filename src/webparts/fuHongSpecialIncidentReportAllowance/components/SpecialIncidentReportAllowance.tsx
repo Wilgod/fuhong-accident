@@ -21,11 +21,11 @@ interface ISpecialIncidentReportAllowanceStates {
     notifyFamily: string;
     meeting: string;
     response: string;
+    toDepartment: string;
 }
 
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
-
 
 export default function SpecialIncidentReportAllowance({ context, styles }: ISpecialIncidentReportAllowanceProps) {
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
@@ -35,11 +35,17 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         medical: "",
         notifyFamily: "",
         meeting: "",
-        response: ""
+        response: "",
+        toDepartment: ""
     });
     const [date, setDate] = useState(new Date());
 
     const radioButtonHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
+    const selectionHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         setForm({ ...form, [name]: value });
@@ -72,66 +78,87 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     </div>
                     <div className="row my-3">
                         <div className="col-12 fontweight-bold">
-                            <span className={`px-2 font-weight-bold`} style={{ fontSize: 15, cursor: "help" }} title={footNoteOne}>(特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科)</span>
+                            <span className={`font-weight-bold`} style={{ fontSize: 15, cursor: "help" }} title={footNoteOne}>( 特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科 )</span>
                         </div>
                     </div>
 
                     <hr className="my-3" />
 
+                    <div className="form-group row">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>致部門</label>
+                        <div className="col-12 col-md-7">
+                            <select className="form-control" name={"toDepartment"} onChange={selectionHandler} >
+                                <option value="">請選擇部門</option>
+                                <option value="ALLOWANCE_SECTION">津貼科</option>
+                                <option value="ELDERLY_SERVICES_DIVISION">安老服務科</option>
+                                <option value="FAMILY_AND_CHILD_WELFARE_DIVISION">家庭及兒童福利科</option>
+                                <option value="REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION">康復及醫務社會服務科</option>
+                                <option value="YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP">青年及感化服務科 - 感化服務組</option>
+                                <option value="YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION">青年及感化服務科 - 青年事務組</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
                     <div className="row">
                         <div className="col-1">
                             致:
                         </div>
-                        <div className="col-auto mr-auto">
-                            津貼科
+                        <div className="col" >
+                            <div className="row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" ? "none" : "line-through"}` }}>
+                                <div className="col-auto mr-auto">
+                                    津貼科
+                                </div>
+                                <div className="col-auto">
+                                    (傳真: 2575 5632)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "ELDERLY_SERVICES_DIVISION" ? "none" : "line-through"}` }}>
+                        <div className="offset-1 col-auto mr-auto">
+                            <div>安老服務科</div>
                         </div>
                         <div className="col-auto">
-                            (傳真: 2575 5632)
+                            <div>(傳真: 2575 5632)</div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" ? "none" : "line-through"}` }}>
                         <div className="offset-1 col-auto mr-auto">
-                            <del>安老服務科</del>
+                            <div>家庭及兒童福利科</div>
                         </div>
                         <div className="col-auto">
-                            <del>(傳真: 2575 5632)</del>
+                            <div>(傳真: 2833 5840)</div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" ? "none" : "line-through"}` }}>
                         <div className="offset-1 col-auto mr-auto">
-                            <del>家庭及兒童福利科</del>
+                            <div>康復及醫務社會服務科</div>
                         </div>
                         <div className="col-auto">
-                            <del>(傳真: 2833 5840)</del>
+                            <div>(傳真: 2893 6983)</div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row" >
                         <div className="offset-1 col-auto mr-auto">
-                            <del>康復及醫務社會服務科</del>
-                        </div>
-                        <div className="col-auto">
-                            <del>(傳真: 2893 6983)</del>
+                            <div style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" ? "none" : "line-through"}` }}>青年及感化服務科</div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="offset-1 col-auto mr-auto">
-                            <del>青年及感化服務科</del>
-                        </div>
-                    </div>
-                    <div className="row">
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" ? "none" : "line-through"}` }}>
                         <div className="offset-2 col-auto mr-auto">
-                            <del>感化服務組</del>
+                            <div>感化服務組</div>
                         </div>
                         <div className="col-auto">
-                            <del>(傳真: 2833 5861)</del>
+                            <div>(傳真: 2833 5861)</div>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" ? "none" : "line-through"}` }}>
                         <div className="offset-2 col-auto mr-auto">
-                            <del>青年事務組</del>
+                            <div>青年事務組</div>
                         </div>
                         <div className="col-auto">
-                            <del>(傳真: 2838 7021)</del>
+                            <div>(傳真: 2838 7021)</div>
                         </div>
                     </div>
 
@@ -214,9 +241,18 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="accident-category-abuse" >已確立／<span style={{ cursor: "help" }} title={footNoteTwo}>懷疑有服務使用者被職員<sup>2</sup></span> ／其他服務使用者虐待 </label>
                             </div>
+
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
+                            </div>
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
-                                <div className="row">
+                                <div className="row my-2">
                                     <label className={`col-12 col-form-label ${styles.fieldTitle}`}>虐待性質</label>
                                     <div className="col">
                                         <div className="form-check form-check-inline mr-3">
@@ -246,14 +282,6 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                                     </div>
                                 </div>
                             }
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
-                            </div>
                         </div>
                     </div>
 
@@ -424,7 +452,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                                 form.police === "POLICE_TRUE" &&
                                 <>
                                     <div>
-                                        <label className="form-label">報警日期和時間</label>
+                                        <label className="form-label">報警日期及時間</label>
                                         <DatePicker
                                             className="form-control"
                                             selected={date}
