@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
 
@@ -31,7 +32,10 @@ const Container = styled.div`
   transition: border .24s ease-in-out;
 `;
 
+
+
 export default function StyledDropzone(props) {
+    const [uploadedFiles, setUploadedFiles] = useState([]);
     const {
         getRootProps,
         getInputProps,
@@ -41,9 +45,24 @@ export default function StyledDropzone(props) {
         acceptedFiles
     } = useDropzone({ accept: 'image/*' });
 
-    const files = acceptedFiles.map(file => {
-        return <li key={file.name}>
-            {file.name} - {file.size / 1024 ** 2} MB
+    const uploadedFilesHandler = () => {
+        setUploadedFiles(value => [...value, ...acceptedFiles]);
+    }
+
+    useEffect(() => {
+        uploadedFilesHandler();
+    }, [acceptedFiles])
+
+    const files = uploadedFiles.map((file, index) => {
+        return <li key={`${file.name}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1">
+                    {file.name} - {file.size / 1024 ** 2} MB
+                </span>
+                <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => setUploadedFiles(value => value.filter((f, i) => index !== i))}>
+                    &times;
+                </span>
+            </div>
         </li>
     });
 

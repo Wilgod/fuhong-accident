@@ -619,7 +619,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control"  />
                         </div>
                     </div>
 

@@ -308,23 +308,23 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             (請上載相片 - 如有)
                         </label>
                         <div className="col">
-                            <div className="form-check form-check-inline mr-0 mr-md-3">
+                            <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-head">頭部</label>
                             </div>
-                            <div className="form-check form-check-inline mr-0 mr-md-3">
+                            <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-neck">頸部</label>
                             </div>
-                            <div className="form-check form-check-inline mr-0 mr-md-3">
+                            <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-body">軀幹</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-upper-limb">上肢</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="injury-lower-limb">下肢</label>
                             </div>
@@ -349,23 +349,23 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 1.3 服務使用者意外後有否身體不適/受傷*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-bleeding">流血</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-bruise">瘀腫</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-fracture">骨折</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-dizzy">暈眩</label>
                             </div>
-                            <div className="form-check form-check-inline  mr-0 mr-md-3">
+                            <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
                                 <label className="form-check-label" htmlFor="uncomfortable-shock">休克/失去知覺</label>
                             </div>
