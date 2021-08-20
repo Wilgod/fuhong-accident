@@ -95,26 +95,16 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
 
                     <div className="form-group row mb-2">
                         {/* 事故發生日期 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期</label>
-                        <div className="col-12 col-md-4">
-                            <DatePicker
-                                className="form-control"
-                                selected={new Date()}
-                                dateFormat="yyyy/MM/dd"
-                            />
-                        </div>
-                        {/* 事故發生 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={date}
                                 onChange={(date) => setDate(date)}
                                 showTimeSelect
-                                showTimeSelectOnly
-                                timeIntervals={1}
-                                timeCaption="Time"
-                                dateFormat="h:mm aa"
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd h:mm aa"
                             />
                         </div>
                     </div>
@@ -384,7 +374,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>舉行專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="meeting" id="meeting-true" value="MEETING_TRUE" onClick={radioButtonHandler} />
@@ -397,7 +387,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                             {
                                 form.meeting === "MEETING_TRUE" &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明，包括時間" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明，包括日期" />
                                 </div>
                             }
                             {
@@ -414,11 +404,11 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="response-true">有</label>
+                                <label className="form-check-label" htmlFor="response-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="response-false">沒有</label>
+                                <label className="form-check-label" htmlFor="response-false">否</label>
                             </div>
                             {
                                 form.response === "RESPONSE_TRUE" &&
@@ -450,25 +440,27 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 <section className="mb-4">
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>擬備人員</label>
-                        <div className="col-12 col-md-4">
+                        {/* <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
-                        </div>
+                        </div> */}
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
@@ -479,10 +471,47 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                             />
                         </div>
                     </div>
+                </section>
+
+                <hr className="my-4" />
+
+                <section className="mb-4">
                     <div className="row">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級服務經理/服務經理填寫]</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 高級服務經理/服務經理姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -490,27 +519,33 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 <hr className="my-4" />
 
                 <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由服務總監填寫]</span>
+                        </div>
+                    </div>
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>批簽人員</label>
-                        <div className="col-12 col-md-4">
+                        {/* <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
-                        </div>
+                        </div> */}
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value="服務總監" readOnly />
-                        </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="row mb-0 mb-md-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" />
+                        </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
@@ -547,7 +582,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     </div>
                 </section>
 
-              
+
             </div>
         </>
     )
