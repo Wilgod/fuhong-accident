@@ -141,44 +141,35 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
 
                     <div className="form-group row mb-2">
-                        {/* 服務單位*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務單位</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
-                        </div>
-                        {/* 意外發生時間*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期</label>
-                        <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} readOnly={true} />
-                        </div>
-                    </div>
-
-                    <div className="form-group row mb-2">
                         {/* 意外發生日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期和時間</label>
                         <div className="col-12 col-md-4">
-                            {/* <input type="date"  /> */}
                             <DatePicker
                                 className="form-control"
                                 selected={date}
                                 onChange={(date) => setDate(date)}
                                 showTimeSelect
-                                showTimeSelectOnly
-                                timeIntervals={1}
-                                timeCaption="Time"
-                                dateFormat="h:mm aa"
-                                readOnly={true}
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd h:mm aa"
+                                readOnly
                             />
                         </div>
-                        {/* 意外發生時間*/}
+                        {/* 意外發生地點*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生地點</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" readOnly />
+                        </div>
+
+                    </div>
+
+                    <div className="form-group row mb-2">
+                        {/* 收到「意外填報表」日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>收到「意外填報表」日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} readOnly={true} />
                         </div>
-                    </div>
-
-                    <div className="form-group row mb-2">
-                        {/* 意外發生地點*/}
+                        {/* 預計意外分析完成日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>預計意外分析完成日期<br />
                             <span>(意外發生日期 + 1個月)</span>
                         </label>
@@ -222,7 +213,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     {/* 意外成因 */}
                     <div className="form-group row mb-4">
                         {/* 環境因素 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外問題</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外成因</label>
                         <div className="col">
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
@@ -357,8 +348,50 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                 <section className="mb-4">
                     <div className="row">
-                        <div className="col-12 font-weight-bold">
-                            <h5>高級物理治療師建議</h5>
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級服務經理/服務經理填寫]</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 高級服務經理/服務經理姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div>
+                    {/* <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
+                        </div>
+                    </div> */}
+                </section>
+
+
+                <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
