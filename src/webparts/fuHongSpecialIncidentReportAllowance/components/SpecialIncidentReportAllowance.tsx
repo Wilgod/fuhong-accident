@@ -71,11 +71,11 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
             </div>
             <div className="container px-4">
                 <section className="mb-4">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>報告資料</h5>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="row my-3">
                         <div className="col-12 fontweight-bold">
                             <span className={`font-weight-bold`} style={{ fontSize: 15, cursor: "help" }} title={footNoteOne}>( 特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科 )</span>
