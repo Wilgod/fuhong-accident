@@ -28,7 +28,11 @@ const formTypeParser = (formType: string, additonalString: string) => {
 
 export default function IncidentFollowUpForm({ context, styles, formType }: IIncidentFollowUpFormProps) {
     const [form, setForm] = useState<IIncidentFollowUpFormStates>();
-    console.log(context);
+    const radioButtonHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
     return (
         <>
             <div className="mb-3">
@@ -36,11 +40,11 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
             </div>
             <div className="container px-4">
                 <section className="mb-3">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>報告資料</h5>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="form-group row mb-2">
                         {/* 事故性質 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故性質</label>
@@ -86,7 +90,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                     </div>
                     <div className="form-group row mb-2">
                         {/* 事故性質 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故性質</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>跟進措施</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
@@ -110,13 +114,22 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
 
                     <div className="form-group row mb-2">
                         {/* 意外跟進 */}
+
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外跟進</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-follow-up-true">是</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-follow-up-false">否</label>
+                            </div>
+                            {/* <select className="form-control">
                                 <option>請選擇</option>
                                 <option>繼續</option>
                                 <option>結束</option>
-                            </select>
+                            </select> */}
                         </div>
                     </div>
                 </section>
@@ -124,8 +137,13 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                 <hr className="my-3" />
 
                 <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級服務經理/服務經理姓名填寫]</span>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -141,7 +159,6 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
-                                readOnly
                             />
                         </div>
                     </div>
@@ -152,6 +169,11 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
 
 
                 <section className="mb-3">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由服務總監填寫]</span>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監</label>
                         <div className="col-12 col-md-4">
@@ -169,7 +191,6 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
-                                readOnly
                             />
                         </div>
                     </div>
