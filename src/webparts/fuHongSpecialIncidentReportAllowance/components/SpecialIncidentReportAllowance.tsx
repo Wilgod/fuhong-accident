@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,8 +13,13 @@ interface ISpecialIncidentReportAllowanceProps {
     styles: any;
 }
 
+interface IAccidentCategoryAbuseDetails {
+    status: string;
+    person: string;
+}
 interface ISpecialIncidentReportAllowanceStates {
     accidentCategory: string;
+
     abusiveNature: string[];
     police: string;
     medical: string;
@@ -27,6 +32,8 @@ interface ISpecialIncidentReportAllowanceStates {
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
+
+
 export default function SpecialIncidentReportAllowance({ context, styles }: ISpecialIncidentReportAllowanceProps) {
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         accidentCategory: "",
@@ -38,6 +45,11 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         response: "",
         toDepartment: ""
     });
+    const [accidentCategoryAbuseDetails, setAccidentCategoryAbuseDetails] = useState<IAccidentCategoryAbuseDetails>({
+        status: "",
+        person: ""
+    });
+
     const [date, setDate] = useState(new Date());
 
     const radioButtonHandler = (event) => {
@@ -45,6 +57,13 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         const value = event.target.value;
         setForm({ ...form, [name]: value });
     }
+
+    const accidentCategoryAbuseDetailsRadioButtonHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setAccidentCategoryAbuseDetails({ ...accidentCategoryAbuseDetails, [name]: value });
+    }
+
     const selectionHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -63,6 +82,25 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
             }
         }
     }
+
+    const accidentCategoryHandler = () => {
+        if (form.accidentCategory !== "ACCIDENT_CATEGORY_ABUSE") {
+            setAccidentCategoryAbuseDetails({ status: "", person: "" });
+        }
+    }
+
+    const accidentCategoryAbuseHandler = () => {
+        const { status, person } = accidentCategoryAbuseDetails;
+        if (status || person) setForm({ ...form, accidentCategory: "ACCIDENT_CATEGORY_ABUSE" })
+    }
+
+    useEffect(() => {
+        accidentCategoryHandler()
+    }, [form.accidentCategory])
+
+    useEffect(() => {
+        accidentCategoryAbuseHandler()
+    }, [accidentCategoryAbuseDetails.status, accidentCategoryAbuseDetails.person])
 
     return (
         <>
@@ -166,6 +204,11 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold">
+                            <h5>報告單位資料</h5>
+                        </div>
+                    </div>
                     <div className="form-group row mb-2">
                         {/* 事故性質 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>機構名稱</label>
@@ -229,26 +272,46 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故類別</label>
                         <div className="col">
-                            <div className="form-check form-check-inline">
+                            <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="accident-category-unusual-death">服務使用者不尋常死亡／嚴重受傷導致死亡</label>
                             </div>
-                            <div className="form-check form-check-inline">
+                            <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-missing" value="ACCIDENT_CATEGORY_MISSING" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="accident-category-missing">服務使用者失踪而需要報警求助</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-abuse" >已確立／<span style={{ cursor: "help" }} title={footNoteTwo}>懷疑有服務使用者被職員<sup>2</sup></span> ／其他服務使用者虐待 </label>
-                            </div>
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} checked={form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE"} />
+                                <label className="form-check-label" htmlFor="accident-category-abuse" >
+                                    已
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"} />
+                                        <label className="form-check-label" htmlFor="accident-category-status-establish" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>確立</label>
+                                    </span>
+                                    ／
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-doubt" value="ACCIDENT_CATEGORY_STATUS_DOUBT" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT"} />
+                                        <label className="form-check-label" htmlFor="accident-category-status-doubt" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>懷疑</label>
+                                    </span>
+                                    &nbsp;
 
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
+                                    有服務使用者被
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-staff" value="ACCIDENT_CATEGORY_PERSON_STAFF" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF"} />
+                                        <label className="form-check-label" htmlFor="accident-category-person-staff">
+                                            <span style={{ cursor: "help", textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }} title={footNoteTwo}>職員<sup>2</sup></span>
+                                        </label>
+                                    </span>
+
+                                    ／
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-other" value="ACCIDENT_CATEGORY_PERSON_OTHER" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER"} />
+                                        <label className="form-check-label" htmlFor="accident-category-person-other" style={{ textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }}>其他服務使用者</label>
+                                    </span>
+
+                                    &nbsp;
+                                    虐待
+                                </label>
                             </div>
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
@@ -282,6 +345,15 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                                     </div>
                                 </div>
                             }
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
+                            </div>
+
                         </div>
                     </div>
 
@@ -606,39 +678,84 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 <section className="mb-4">
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>擬備人員</label>
-                        <div className="col-12 col-md-4">
+                        {/* <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
-                        </div>
+                        </div> */}
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
-
+                                readOnly
                             />
                         </div>
                     </div>
-                    <div className="row">
+                    {/* <div className="row">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div> */}
+                </section>
+
+                <hr className="my-4" />
+
+                <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由高級服務經理/服務經理填寫]</span>
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 高級服務經理/服務經理姓名 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <div className="col-12 col-md-4">
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
+                        </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        <div className="col-12">
+                            <div className="d-flex justify-content-center">
+                                <button className="btn btn-warning mr-3">批准</button>
+                                <button className="btn btn-danger mr-3">拒絕</button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -646,44 +763,50 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 <hr className="my-4" />
 
                 <section className="mb-4">
+                    <div className="row">
+                        <div className="col-12 font-weight-bold mb-2">
+                            <span>[此欄由服務總監填寫]</span>
+                        </div>
+                    </div>
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>批簽人員</label>
-                        <div className="col-12 col-md-4">
+                        {/* <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
-                        </div>
+                        </div> */}
+
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
+                    </div>
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>電話</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                    </div>
-                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
-
+                                readOnly
                             />
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
-                    <div className="form-group row my-2">
+                    <div className="row my-2">
                         <div className="col-12">
                             <div className="d-flex justify-content-center">
                                 <button className="btn btn-warning mr-3">批准</button>
