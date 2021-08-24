@@ -195,13 +195,6 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師評語</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={textFieldHandler} value={form.sptComment} />
-                        </div>
-                    </div>
-                    <div className="form-group row mb-2">
                         {/* 高級物理治療師姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
@@ -216,7 +209,14 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={textFieldHandler} value={form.sptComment} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -236,13 +236,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                             <span>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
-                        {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" onChange={textFieldHandler} value={form.sdComment} />
-                        </div>
-                    </div>
+
                     <div className="form-group row mb-2">
                         {/* 服務總監姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監姓名</label>
@@ -258,7 +252,14 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                        </div>
+                    </div>
+                    <div className="form-group row mb-2">
+                        {/* 評語 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <div className="col">
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={textFieldHandler} value={form.sdComment} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">

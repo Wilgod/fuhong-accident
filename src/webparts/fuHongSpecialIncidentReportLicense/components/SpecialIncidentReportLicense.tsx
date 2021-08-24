@@ -329,8 +329,8 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             {
                                 form.residentMissingFound === "RESIDENT_MISSING_FOUND_TRUE" &&
-                                <div>
-                                    <label>尋回日期</label>
+                                <div className="d-flex align-items-center">
+                                    <label className="mr-3">尋回日期</label>
                                     <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
                                 </div>
                             }
@@ -340,7 +340,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             {
                                 form.residentMissingFound === "RESIDENT_MISSING_FOUND_FALSE" &&
-                                <div className="d-flex">
+                                <div className="d-flex align-items-center">
                                     由失蹤日計起至呈報日，已失蹤
                                     <div className="input-group mb-3">
                                         <input type="number" className="form-control" min={0} />
@@ -644,7 +644,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className="form-check-label" htmlFor="tenant-gender-female">女</label>
                             </div>
                         </div>
-                        {/* 年齡 */}
+                        {/* 房及床號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>房及床號</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" />
@@ -665,7 +665,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                         <div className="col-12 col-md-4">
                                             <input type="text" className="form-control" />
                                         </div>
-                                        {/* 年齡 */}
+                                        {/* 關係 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>關係</label>
                                         <div className="col-12 col-md-4">
                                             <input type="text" className="form-control" />
@@ -736,6 +736,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 selected={date}
                                 onChange={(date) => setDate(date)}
                                 dateFormat="yyyy/MM/dd"
+                                readOnly
                             />
                         </div>
                     </div>
@@ -786,18 +787,18 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="tenant-gender-male">男</label>
+                                <input className="form-check-input" type="radio" name="tenantGender" id="attach-tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="attach-tenant-gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-female" value="TENANT_GENDER_FEMALE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="tenant-gender-female">女</label>
+                                <input className="form-check-input" type="radio" name="tenantGender" id="attach-tenant-gender-female" value="TENANT_GENDER_FEMALE" onChange={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="attach-tenant-gender-female">女</label>
                             </div>
                         </div>
                         {/* 年齡 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" />
+                            <input type="number" className="form-control" min={0} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -878,7 +879,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} dateFormat={"yyyy/MM/dd"} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -921,7 +922,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">

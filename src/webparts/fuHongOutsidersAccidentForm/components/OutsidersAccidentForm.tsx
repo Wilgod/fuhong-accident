@@ -126,7 +126,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="number" className="form-control" min={0}/>
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
@@ -493,7 +493,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 職級 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly/>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -529,7 +529,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} dateFormat="yyyy/MM/dd"  readOnly/>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -572,7 +572,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly/>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -611,7 +611,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 日期 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
 
