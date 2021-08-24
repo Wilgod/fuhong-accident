@@ -681,7 +681,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 form.police === "POLICE_TRUE" &&
                                 <>
                                     <div>
-                                        <label className="form-label">日期及時間</label>
+                                        <label className="form-label">日期和時間</label>
                                         {/* <input type="datetime-local" className="form-control" /> */}
                                         <DatePicker
                                             className="form-control"
@@ -736,7 +736,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                     <div className="form-group row mb-2">
                         {/* 4.1 通知家屬日期及時間 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>通知家屬日期及時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>通知家屬日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"

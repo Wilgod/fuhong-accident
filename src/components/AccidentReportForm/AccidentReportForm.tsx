@@ -167,7 +167,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         {/* 收到「意外填報表」日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>收到「意外填報表」日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} readOnly={true} />
+                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)}/>
                         </div>
                         {/* 預計意外分析完成日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>預計意外分析完成日期<br />

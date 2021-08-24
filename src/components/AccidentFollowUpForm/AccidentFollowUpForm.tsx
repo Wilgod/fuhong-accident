@@ -161,11 +161,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-follow-up-true">是</label>
+                                <label className="form-check-label" htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-follow-up-false">否</label>
+                                <label className="form-check-label" htmlFor="accident-follow-up-false">結束</label>
                             </div>
                             {/* <select className="form-control">
                                 <option>請選擇</option>

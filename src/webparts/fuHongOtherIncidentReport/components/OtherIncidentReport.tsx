@@ -285,7 +285,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 form.police === "POLICE_TRUE" &&
                                 <>
                                     <div>
-                                        <label className="form-label">報警日期及時間</label>
+                                        <label className="form-label">報警日期和時間</label>
                                         <DatePicker
                                             className="form-control"
                                             selected={date}
@@ -448,7 +448,15 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
@@ -534,7 +542,15 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">

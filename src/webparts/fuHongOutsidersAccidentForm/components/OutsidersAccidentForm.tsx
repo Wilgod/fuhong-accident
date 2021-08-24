@@ -416,7 +416,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 form.police === "police-true" &&
                                 <>
                                     <div>
-                                        <label className="form-label">日期及時間</label>
+                                        <label className="form-label">日期和時間</label>
                                         <DatePicker
                                             className="form-control"
                                             selected={date}

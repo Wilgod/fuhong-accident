@@ -58,7 +58,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期及時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -119,11 +119,11 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-follow-up-true">是</label>
+                                <label className="form-check-label" htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="accident-follow-up-false">否</label>
+                                <label className="form-check-label" htmlFor="accident-follow-up-false">結束</label>
                             </div>
                             {/* <select className="form-control">
                                 <option>請選擇</option>
@@ -150,7 +150,8 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 personSelectionLimit={1}
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                resolveDelay={1000}
+                                 />
                             {/* <input type="text" className="form-control" /> */}
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
@@ -159,6 +160,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
+                                readOnly
                             />
                         </div>
                     </div>
@@ -191,6 +193,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 className="form-control"
                                 selected={new Date()}
                                 dateFormat="yyyy/MM/dd"
+                                readOnly
                             />
                         </div>
                     </div>

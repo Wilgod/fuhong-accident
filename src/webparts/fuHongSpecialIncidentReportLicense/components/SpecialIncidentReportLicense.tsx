@@ -52,8 +52,8 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
         notified: "",
     });
     const [date, setDate] = useState(new Date());
-    const [extraFile, setExtraFile] = useState<FileList>();
-    const [subpoenaFile, setSubpoenaFile] = useState<FileList>();
+    const [extraFile, setExtraFile] = useState<FileList>(null);
+    const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -88,7 +88,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div> */}
                     <div className="row">
                         <div className="col-12">
-                            <div className={`font-weight-bold`} style={{ fontSize: 15 }}>【須在事件<span className="text-danger">發生後的3個曆日（包括公眾假期）內</span>提交】</div>
+                            <div className={`font-weight-bold mb-3`} style={{ fontSize: 15 }}>【須在事件<span className="text-danger">發生後的3個曆日（包括公眾假期）內</span>提交】</div>
                             {/* Only show in print form */}
                             {
                                 isPrintMode ?
@@ -96,17 +96,17 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                     :
                                     <div className="">
 
-                                        <div>若有相關資料/自訂報告，請於此上載</div>
+                                        <div className="mb-1 text-secondary font-weight-bold">若有相關資料/自訂報告，請於此上載</div>
 
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
                                                 <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => setExtraFile(event.target.files)} />
-                                                <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件"}</label>
+                                                <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                             </div>
                                             {
                                                 extraFile && extraFile.length > 0 &&
                                                 <div className="input-group-append">
-                                                    <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setExtraFile(undefined)}>清除</button>
+                                                    <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setExtraFile(null)}>清除</button>
                                                 </div>
                                             }
                                         </div>
@@ -214,12 +214,12 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <div className="input-group mb-2">
                                     <div className="custom-file">
                                         <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => setSubpoenaFile(event.target.files)} />
-                                        <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件"}</label>
+                                        <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                     </div>
                                     {
                                         subpoenaFile && subpoenaFile.length > 0 &&
                                         <div className="input-group-append">
-                                            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile(undefined)}>清除</button>
+                                            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile(null)}>清除</button>
                                         </div>
                                     }
                                 </div>

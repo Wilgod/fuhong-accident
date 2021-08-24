@@ -212,12 +212,12 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         {/* 事故性質 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>機構名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                         {/* 單位名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>單位名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -229,14 +229,14 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         {/* 負責職員姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>負責職員姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 單位地址 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>單位地址</label>
                         <div className="col">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                 </section>
@@ -314,33 +314,35 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </div>
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
-                                <div className="row my-2">
-                                    <label className={`col-12 col-form-label ${styles.fieldTitle}`}>虐待性質</label>
-                                    <div className="col">
-                                        <div className="form-check form-check-inline mr-3">
-                                            <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" onClick={checkboxHandler} />
-                                            <label className="form-check-label" htmlFor="abusive-nature-body">身體虐待</label>
+                                <div className="px-4">
+                                    <div className="row ">
+                                        <label className={`col-12 col-form-label ${styles.fieldTitle}`}>虐待性質</label>
+                                        <div className="col">
+                                            <div className="form-check form-check-inline mr-3">
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" onClick={checkboxHandler} />
+                                                <label className="form-check-label" htmlFor="abusive-nature-body">身體虐待</label>
+                                            </div>
+                                            <div className="form-check form-check-inline mr-3">
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-sexual-assault" value="ABUSIVE_NATURE_SEXUAL_ASSAULT" onClick={checkboxHandler} />
+                                                <label className="form-check-label" htmlFor="abusive-nature-sexual-assault">性侵犯</label>
+                                            </div>
+                                            <div className="form-check form-check-inline mr-3">
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-mental" value="ABUSIVE_NATURE_MENTAL" onClick={checkboxHandler} />
+                                                <label className="form-check-label" htmlFor="abusive-nature-mental">精神虐待</label>
+                                            </div>
+                                            <div className="form-check form-check-inline mr-3">
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-negligent-care" value="ABUSIVE_NATURE_NEGLIGENT_CARE" onClick={checkboxHandler} />
+                                                <label className="form-check-label" htmlFor="abusive-nature-negligent-care">疏忽照顧</label>
+                                            </div>
+                                            <div className="form-check mb-2">
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-other" value="ABUSIVE_NATURE_OTHER" onClick={checkboxHandler} />
+                                                <label className="form-check-label" htmlFor="abusive-nature-other">其他 (請註明)</label>
+                                            </div>
+                                            {
+                                                form.abusiveNature.indexOf("ABUSIVE_NATURE_OTHER") > -1 &&
+                                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                            }
                                         </div>
-                                        <div className="form-check form-check-inline mr-3">
-                                            <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-sexual-assault" value="ABUSIVE_NATURE_SEXUAL_ASSAULT" onClick={checkboxHandler} />
-                                            <label className="form-check-label" htmlFor="abusive-nature-sexual-assault">性侵犯</label>
-                                        </div>
-                                        <div className="form-check form-check-inline mr-3">
-                                            <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-mental" value="ABUSIVE_NATURE_MENTAL" onClick={checkboxHandler} />
-                                            <label className="form-check-label" htmlFor="abusive-nature-mental">精神虐待</label>
-                                        </div>
-                                        <div className="form-check form-check-inline mr-3">
-                                            <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-negligent-care" value="ABUSIVE_NATURE_NEGLIGENT_CARE" onClick={checkboxHandler} />
-                                            <label className="form-check-label" htmlFor="abusive-nature-negligent-care">疏忽照顧</label>
-                                        </div>
-                                        <div className="form-check mb-2">
-                                            <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-other" value="ABUSIVE_NATURE_OTHER" onClick={checkboxHandler} />
-                                            <label className="form-check-label" htmlFor="abusive-nature-other">其他 (請註明)</label>
-                                        </div>
-                                        {
-                                            form.abusiveNature.indexOf("ABUSIVE_NATURE_OTHER") > -1 &&
-                                            <AutosizeTextarea className="form-control" placeholder="請註明" />
-                                        }
                                     </div>
                                 </div>
                             }
@@ -523,7 +525,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                                 form.police === "POLICE_TRUE" &&
                                 <>
                                     <div>
-                                        <label className="form-label">報警日期及時間</label>
+                                        <label className="form-label">報警日期和時間</label>
                                         <DatePicker
                                             className="form-control"
                                             selected={date}
@@ -684,7 +686,15 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
@@ -771,12 +781,19 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         {/* <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div> */}
-
                     </div>
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={(e) => { console }}
+                                showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
                         <div className="col-12 col-md-4">
