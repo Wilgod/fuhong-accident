@@ -95,7 +95,9 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                     <div className="">注意：請在合適方格內加上「&#10003;」號，並連同附頁／載有相關資料的自訂報告一併呈交</div>
                                     :
                                     <div className="">
-                                        若有相關資料/自訂報告，請於此上載
+
+                                        <div>若有相關資料/自訂報告，請於此上載</div>
+
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
                                                 <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => setExtraFile(event.target.files)} />

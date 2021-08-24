@@ -43,7 +43,7 @@ $fuhong-main-color: #fdd477;
 
   .fileUploader {
     &::after {
-      content: "瀏覽";
+      content: "瀏覽" !important;
     }
   }
 }
