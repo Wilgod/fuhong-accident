@@ -69,6 +69,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         const value = event.target.value;
         setForm({ ...form, [name]: value });
     }
+
     const checkboxHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -136,8 +137,6 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </select>
                         </div>
                     </div>
-
-
 
                     <div className="row">
                         <div className="col-1">
@@ -611,7 +610,6 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                     </div>
 
-
                     <div className="form-group row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
                         <div className="col">
@@ -834,7 +832,6 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         <li>{footNoteTwo}</li>
                     </ol>
                 </div>
-
             </div>
         </>
     )
