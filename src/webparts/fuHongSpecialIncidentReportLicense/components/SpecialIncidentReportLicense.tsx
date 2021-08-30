@@ -138,7 +138,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* 殘疾人士院舍主管姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍主管姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍主管<br />姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
@@ -171,7 +171,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                 <section className="mb-4">
                     <div className="row">
                         <div className="col-12 font-weight-bold">
-                            <h5>特別事故報告</h5>
+                            <h5>特別事故類別</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -645,7 +645,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                         </div>
                         {/* 房及床號 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>房及床號</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>房及/或床號</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" />
                         </div>
@@ -865,7 +865,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* 服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -883,7 +883,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>

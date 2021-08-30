@@ -115,7 +115,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                     <div className="form-group row mb-2">
                         {/* 意外跟進 */}
 
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外跟進</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故跟進</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
@@ -134,16 +134,16 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                {/* <hr className="my-3" /> */}
 
                 <section className="mb-3">
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-12 font-weight-bold mb-2">
                             <span>[此欄由高級服務經理/服務經理姓名填寫]</span>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理<br />姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -151,7 +151,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000}
-                                 />
+                            />
                             {/* <input type="text" className="form-control" /> */}
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
@@ -177,7 +177,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -198,7 +198,7 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
