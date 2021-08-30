@@ -24,6 +24,14 @@ const getCanvasZone = () => {
   }
 }
 
+if (document.getElementById('workbenchPageContent') != null) {
+  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+}
+
+if (document.querySelector('.CanvasZone') != null) {
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+}
+
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, {}> {
   public constructor(props) {
     super(props);

@@ -36,6 +36,7 @@ interface IServiceUserAccidentFormStates {
     contingencyMeasure: string;
     cctv: string;
     photo: string;
+    serviceUserUncomfort: string;
 }
 
 export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
@@ -53,7 +54,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         police: "",
         contingencyMeasure: "",
         cctv: "",
-        photo: ""
+        photo: "",
+        serviceUserUncomfort: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -124,12 +126,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者姓名 (英文)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者姓名<br />(英文)</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者姓名 (中文)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者姓名<br /> (中文)</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
@@ -349,43 +351,57 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 1.3 服務使用者意外後有否身體不適/受傷*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
-                            <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-bleeding">流血</label>
+
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-true" value="SERVICE_USER_UNCOMFORT_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="service-user-uncomfort-true">有</label>
                             </div>
-                            <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-bruise">瘀腫</label>
-                            </div>
-                            <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-fracture">骨折</label>
-                            </div>
-                            <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-dizzy">暈眩</label>
-                            </div>
-                            <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-shock">休克/失去知覺</label>
-                            </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="uncomfortable-other">其他 (請註明)</label>
-                            </div>
-                            {
-                                form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
-                                <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
-                                </div>
-                            }
-                            <div className="my-2">
-                                <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
-                            </div>
-                            <div className="">
-                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="service-user-uncomfort-false">沒有</label>
                             </div>
 
+                            {
+                                form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE" &&
+                                <div>
+                                    <div className="form-check form-check-inline ">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-bleeding">流血</label>
+                                    </div>
+                                    <div className="form-check form-check-inline ">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-bruise">瘀腫</label>
+                                    </div>
+                                    <div className="form-check form-check-inline ">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-fracture">骨折</label>
+                                    </div>
+                                    <div className="form-check form-check-inline ">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-dizzy">暈眩</label>
+                                    </div>
+                                    <div className="form-check form-check-inline ">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-shock">休克/失去知覺</label>
+                                    </div>
+                                    <div className="form-check">
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
+                                        <label className="form-check-label" htmlFor="uncomfortable-other">其他 (請註明)</label>
+                                    </div>
+                                    {
+                                        form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
+                                        <div className="">
+                                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                        </div>
+                                    }
+                                    <div className="my-2">
+                                        <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
+                                    </div>
+                                    <div className="">
+                                        <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -459,7 +475,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <div className="pl-2">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
-                                    <label className="form-check-label" htmlFor="cctv-true">有 (註: 三個工作天交總辦事處)</label>
+                                    <label className="form-check-label" htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
                                 </div>
                                 {
                                     form.cctv === "CCTV_TRUE" &&
@@ -648,12 +664,16 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="isStayInHospital-true">是</label>
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="is-stay-in-hospital-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="isStayInHospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="isStayInHospital-false">否</label>
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="is-stay-in-hospital-false">否</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-not-applicable" value="IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" onClick={radioButtonHandler} />
+                                <label className="form-check-label" htmlFor="is-stay-in-hospital-false">不適用</label>
                             </div>
                             {
                                 form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE" &&
@@ -813,7 +833,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 職級 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly/>
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -834,7 +854,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                     <div className="form-group row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -848,11 +868,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly/>
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -891,13 +911,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly/>
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control"  />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -936,7 +956,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -944,7 +964,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 「意外報告 (二)」交由 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>「意外報告 (二)」交由</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pl-0`}>「意外報告 (二)」交由</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -956,6 +976,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} px-0`}>填寫</label>
                     </div>
 
                     <div className="form-group row mb-2">
