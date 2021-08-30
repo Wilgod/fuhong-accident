@@ -144,7 +144,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         {/* 執行時段 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>執行時段</label>
                         <div className="col">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" placeholder="請註明" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
@@ -173,8 +173,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                                 <option>結束</option>
                             </select> */}
                         </div>
+                    </div>
+
+                    <div className="form-group row mb-2">
                         {/* 服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -182,6 +185,12 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000} />
+                        </div>
+                        {/* 日期*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-4">
+                            {/* <input type="date"  /> */}
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                 </section>
@@ -257,7 +266,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                     </div>
                     <div className="form-group row mb-2">
                         {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="sdComment" onChange={textFieldHandler} value={form.sdComment} />
                         </div>
