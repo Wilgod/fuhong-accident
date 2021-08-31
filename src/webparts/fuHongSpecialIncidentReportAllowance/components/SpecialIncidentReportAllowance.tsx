@@ -108,7 +108,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
             <div className="mb-3">
                 <Header displayName="殘疾人士院舍特別事故報告" />
             </div>
-            <div className="container px-4">
+            <div className="container-fluid px-4">
                 <section className="mb-4">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
@@ -735,7 +735,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     </div>
                     <div className="form-group row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理<br />姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}

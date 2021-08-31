@@ -12,6 +12,14 @@ import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/Incid
 import "./react-tabs.css";
 import "./custom.css";
 
+if (document.getElementById('workbenchPageContent') != null) {
+  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+}
+
+if (document.querySelector('.CanvasZone') != null) {
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+}
+
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {

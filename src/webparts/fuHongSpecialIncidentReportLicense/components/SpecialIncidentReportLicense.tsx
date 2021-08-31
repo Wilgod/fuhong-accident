@@ -79,7 +79,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
             <div className="mb-3">
                 <Header displayName="殘疾人士院舍特別事故報告" />
             </div>
-            <div className="container px-4">
+            <div className="container-fluid px-4">
                 <section className="mb-4">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">

@@ -71,7 +71,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
             <div className="mb-3">
                 <Header displayName="服務使用者/外界人士意外報告(二)" />
             </div>
-            <div className="container px-4">
+            <div className="container-fluid px-4">
                 <section className="mb-3">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
@@ -116,12 +116,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<br />(英文)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<br />(中文)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
@@ -354,7 +354,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
                     <div className="form-group row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理<br/>姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -372,7 +372,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/服務經理<br/>評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
