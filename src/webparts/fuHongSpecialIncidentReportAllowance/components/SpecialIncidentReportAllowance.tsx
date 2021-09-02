@@ -158,7 +158,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             <div>安老服務科</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2575 5632)</div>
+                            <div>(傳真: 2832 2936)</div>
                         </div>
                     </div>
                     <div className="row" style={{ textDecoration: `${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "none" : "line-through"}` }}>

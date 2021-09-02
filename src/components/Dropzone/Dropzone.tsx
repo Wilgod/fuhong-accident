@@ -70,7 +70,7 @@ export default function StyledDropzone(props) {
         <div >
             <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
                 <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
+                <p>選擇文件或者把文件拖拽到此區域</p>
             </Container>
             {
                 files.length > 0 &&

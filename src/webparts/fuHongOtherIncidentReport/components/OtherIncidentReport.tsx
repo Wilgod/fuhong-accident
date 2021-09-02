@@ -120,7 +120,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_true" value="REPORTED_BY_NEWS_TRUE" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="reportedByNews_true">是 (請註明)</label>
+                                <label className="form-check-label" htmlFor="reportedByNews_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_false" value="REPORTED_BY_NEWS_FALSE" onChange={radioButtonHandler} />

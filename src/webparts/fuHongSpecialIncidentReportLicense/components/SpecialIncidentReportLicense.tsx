@@ -243,7 +243,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                     </div>
                                     <div>
                                         <label>報案編號</label>
-                                        <AutosizeTextarea className="form-control" />
+                                        <input className="form-control" />
                                     </div>
                                 </>
                             }
@@ -392,7 +392,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="resident-abuse-other">其他 (請註明)</label>
+                                <label className="form-check-label" htmlFor="resident-abuse-other">其他</label>
                             </div>
                             {
                                 form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
@@ -419,7 +419,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="abuser" id="abuser-other" value="ABUSER_OTHER" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="abuser-other">其他 (請註明)</label>
+                                <label className="form-check-label" htmlFor="abuser-other">其他</label>
                             </div>
                             {
                                 form.abuser === "ABUSER_OTHER" &&
@@ -476,7 +476,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                     </div>
                                     <div>
                                         <label>報案編號</label>
-                                        <AutosizeTextarea className="form-control" />
+                                        <input className="form-control" />
                                     </div>
                                 </>
                             }
@@ -527,7 +527,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             <div>
                                 <label>報案編號</label>
-                                <AutosizeTextarea className="form-control" />
+                                <input className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -550,7 +550,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" onChange={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="serious-medical-incident-other">其他 (請註明)</label>
+                                <label className="form-check-label" htmlFor="serious-medical-incident-other">其他</label>
                             </div>
                             {
                                 form.seriousMedicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&

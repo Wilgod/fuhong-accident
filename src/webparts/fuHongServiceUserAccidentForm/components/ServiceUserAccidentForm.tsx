@@ -221,6 +221,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" />
                                 <label className="form-check-label" htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" />
+                                <label className="form-check-label" htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" />
+                                <label className="form-check-label" htmlFor="intellectual-disability-unknown">不知</label>
+                            </div>
                         </div>
                     </div>
 
@@ -469,9 +477,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
                                     <label className="form-check-label" htmlFor="photo-false">未能提供</label>
                                 </div>
-
                             </div>
-                            <div className={styles.buttonLabel}>CCTV記錄</div>
+                            <div className={styles.buttonLabel}>CCTV紀錄</div>
                             <div className="pl-2">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />

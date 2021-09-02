@@ -291,7 +291,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他個人因素</label>
+                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他</label>
                             </div>
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
@@ -397,7 +397,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 服務單位*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}

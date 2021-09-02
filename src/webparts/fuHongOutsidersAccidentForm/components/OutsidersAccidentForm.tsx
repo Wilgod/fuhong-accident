@@ -240,7 +240,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 </div>
                                 <div className="form-check">
                                     <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
-                                    <label className="form-check-label" htmlFor="ENV-OTHER">其他 (請註明)</label>
+                                    <label className="form-check-label" htmlFor="ENV-OTHER">其他</label>
                                 </div>
                                 {
                                     form.envFactor.indexOf("ENV_OTHER") > -1 &&
@@ -313,7 +313,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     <label className="form-check-label" htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
-                            <div className={styles.buttonLabel}>CCTV記錄</div>
+                            <div className={styles.buttonLabel}>CCTV紀錄</div>
                             <div className="pl-2">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
