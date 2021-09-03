@@ -35,6 +35,7 @@ const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍�
 
 
 export default function SpecialIncidentReportAllowance({ context, styles }: ISpecialIncidentReportAllowanceProps) {
+    const [isPrintMode, setPrintMode] = useState(false);
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         accidentCategory: "",
         abusiveNature: [],
@@ -519,7 +520,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="police-false">沒有 (請註明)</label>
+                                <label className="form-check-label" htmlFor="police-false">沒有 {isPrintMode && <span>(請註明)</span>}</label>
                             </div>
                             {
                                 form.police === "POLICE_TRUE" &&
@@ -557,7 +558,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-false" value="NOTIFY_FAMILY_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="notify-family-false">沒有 (請註明)</label>
+                                <label className="form-check-label" htmlFor="notify-family-false">沒有 {isPrintMode && <span>(請註明)</span>}</label>
                             </div>
                             {
                                 form.notifyFamily === "NOTIFY_FAMILY_TRUE" &&
@@ -597,7 +598,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medical" id="medical-true" value="MEDICAL_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="medical-true">有 (請註明)</label>
+                                <label className="form-check-label" htmlFor="medical-true">有 {isPrintMode && <span>(請註明)</span>}</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medical" id="medical-false" value="MEDICAL_FALSE" onClick={radioButtonHandler} />
@@ -841,14 +842,19 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                {
+                    isPrintMode &&
+                    <>
+                        <hr className="my-3" />
+                        <div>
+                            <ol>
+                                <li>{footNoteOne}</li>
+                                <li>{footNoteTwo}</li>
+                            </ol>
+                        </div>
+                    </>
+                }
 
-                <div>
-                    <ol>
-                        <li>{footNoteOne}</li>
-                        <li>{footNoteTwo}</li>
-                    </ol>
-                </div>
             </div>
         </>
     )
