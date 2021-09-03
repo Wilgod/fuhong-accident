@@ -36,6 +36,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   public constructor(props) {
     super(props);
     getCanvasZone();
+    console.log("Flow 2");
   }
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
     return (
@@ -43,9 +44,9 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>22_外界人士意外填報表(一)</Tab>
-              <Tab>20_服務使用者/外界人士意外報告(二)</Tab>
-              <Tab>21_意外跟進/結束表(三)</Tab>
+              <Tab>外界人士意外填報表(一)</Tab>
+              <Tab>服務使用者/外界人士意外報告(二)</Tab>
+              <Tab>意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
               <OutsidersAccidentForm context={this.props.context} />

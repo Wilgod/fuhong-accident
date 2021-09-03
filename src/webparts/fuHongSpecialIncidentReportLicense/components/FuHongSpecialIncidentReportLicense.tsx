@@ -36,6 +36,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
   public constructor(props) {
     super(props);
     getCanvasZone();
+    console.log("Flow 4");
   }
 
   public render(): React.ReactElement<IFuHongSpecialIncidentReportLicenseProps> {
@@ -44,8 +45,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>24_特別事故報告(牌照事務處)</Tab>
-              <Tab>26_事故跟進/結束報告</Tab>
+              <Tab>特別事故報告(牌照事務處)</Tab>
+              <Tab>事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
               <SpecialIncidentReportLicense context={this.props.context} styles={styles} />

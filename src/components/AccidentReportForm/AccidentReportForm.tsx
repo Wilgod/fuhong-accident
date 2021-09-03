@@ -81,19 +81,19 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>服務單位</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
                         {/* 保險公司備案編號 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>保險公司備案編號</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
                     </div>
                     <div className="form-group row">
                         {/* 保險公司備案編號 */}
-                        <label className={`col-12 col-md-2 col-form-label fieldTitle`}>檔案編號</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>檔案編號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
@@ -116,12 +116,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
@@ -129,12 +129,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 年齡*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>年齡</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly min={0} />
                         </div>
                         {/* 性別*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>性別</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
@@ -142,7 +142,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 意外發生日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生日期和時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -156,7 +156,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                             />
                         </div>
                         {/* 意外發生地點*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發生地點</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外發生地點</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
@@ -165,12 +165,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 收到「意外填報表」日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>收到「意外填報表」日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>收到「意外填報表」日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} />
                         </div>
                         {/* 預計意外分析完成日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>預計意外分析完成日期<br />
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>預計意外分析完成日期<br />
                             <span>(意外發生日期 + 1個月)</span>
                         </label>
                         <div className="col-12 col-md-4">
@@ -180,7 +180,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 意外性質*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外性質</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外性質</label>
                         <div className="col">
                             <div className="form-check form-check-inline mr-0 mr-md-3">
                                 <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_FALL" value="ACCIDENTAL_NATURE_FALL" onClick={checkboxHandler} />
@@ -213,7 +213,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     {/* 意外成因 */}
                     <div className="form-group row mb-4">
                         {/* 環境因素 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外成因</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外成因</label>
                         <div className="col">
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
@@ -303,21 +303,21 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>意外發現之經過</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外發現之經過</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>可能引致意外之因素</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>可能引致意外之因素</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>建議</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>建議</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
@@ -326,7 +326,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 調查員姓名*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>調查員姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>調查員姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -339,8 +339,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職級*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職級</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>職級</label>
+                        <div className="col-12 col-md-5">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
@@ -354,7 +354,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
                     <div className="form-group row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -366,13 +366,13 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -397,7 +397,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                     <div className="form-group row mb-2">
                         {/* 服務單位*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -410,13 +410,13 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 showHiddenInUI={false} />
                         </div>
                         {/* 意外發生時間*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} readOnly={true} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級物理治療師建議</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級物理治療師建議</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>

@@ -35,6 +35,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
   public constructor(props) {
     super(props);
     getCanvasZone();
+    console.log("Flow 5");
   }
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
@@ -42,8 +43,8 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>23_其他事故呈報表</Tab>
-              <Tab>26_事故跟進/結束報告</Tab>
+              <Tab>其他事故呈報表</Tab>
+              <Tab>事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
               <OtherIncidentReport context={this.props.context} styles={styles} />

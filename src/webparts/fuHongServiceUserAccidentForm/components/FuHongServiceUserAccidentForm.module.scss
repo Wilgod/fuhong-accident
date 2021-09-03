@@ -3,6 +3,14 @@
 $fuhong-main-color: #fdd477;
 
 .fuHongServiceUserAccidentForm {
+  textarea,
+  input {
+    &::placeholder {
+      color: #717171;
+      font-weight: bold;
+    }
+  }
+
   .container {
     max-width: 1400px;
     margin: 0px auto;

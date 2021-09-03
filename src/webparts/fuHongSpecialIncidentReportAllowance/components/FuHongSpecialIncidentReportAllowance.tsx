@@ -37,6 +37,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
   public constructor(props) {
     super(props);
     getCanvasZone();
+    console.log("Flow 3");
   }
 
   public render(): React.ReactElement<IFuHongSpecialIncidentReportAllowanceProps> {
@@ -46,8 +47,8 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>25_特別事故報告(津貼科)</Tab>
-              <Tab>26_事故跟進/結束報告</Tab>
+              <Tab>特別事故報告(津貼科)</Tab>
+              <Tab>事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
               <SpecialIncidentReportAllowance context={this.props.context} styles={styles} />

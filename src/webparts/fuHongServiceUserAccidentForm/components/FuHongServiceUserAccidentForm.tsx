@@ -35,7 +35,8 @@ if (document.querySelector('.CanvasZone') != null) {
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, {}> {
   public constructor(props) {
     super(props);
-    getCanvasZone();
+    //getCanvasZone();
+    console.log("Flow 1");
   }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
@@ -45,9 +46,9 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         <div className={styles.container}>
           <Tabs variant="fullWidth">
             <TabList>
-              <Tab>19_服務使用者意外填報表(一)</Tab>
-              <Tab>20_服務使用者/外界人士意外報告(二)</Tab>
-              <Tab>21_意外跟進/結束表(三)</Tab>
+              <Tab>服務使用者意外填報表(一)</Tab>
+              <Tab>服務使用者/外界人士意外報告(二)</Tab>
+              <Tab>意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
               <ServiceUserAccidentForm context={this.props.context} />

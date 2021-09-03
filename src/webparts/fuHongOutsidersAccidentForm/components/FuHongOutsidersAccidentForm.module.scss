@@ -1,6 +1,14 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 $fuhong-main-color: #fdd477;
 .fuHongOutsidersAccidentForm {
+  textarea,
+  input {
+    &::placeholder {
+      color: #717171;
+      font-weight: bold;
+    }
+  }
+
   .container {
     max-width: 1400px;
     margin: 0px auto;
@@ -16,7 +24,6 @@ $fuhong-main-color: #fdd477;
     color: #707070;
     font-weight: 600;
   }
-
 
   .fieldTitle {
     color: #717171;
