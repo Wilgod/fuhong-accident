@@ -291,7 +291,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他</label>
+                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他個人因素 (請註明)</label>
                             </div>
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&

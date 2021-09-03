@@ -124,33 +124,33 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* 經辦人 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>經辦人<br />(負責督察姓名)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>經辦人<span className="d-sm-inline d-md-block">(負責督察姓名)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 殘疾人士院舍名稱 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍名稱</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>殘疾人士院舍名稱</label>
                         <div className="col">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 殘疾人士院舍主管姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍主管<br />姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>殘疾人士院舍主管<span className="d-sm-inline d-md-block">姓名</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                         {/* 聯絡電話 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>聯絡電話</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>聯絡電話</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 事故發生日期 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>事故發生日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
                         </div>
@@ -158,7 +158,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             isPrintMode === false &&
                             <>
                                 {/* 保險公司備案編號 */}
-                                <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>保險公司備案編號</label>
+                                <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>保險公司備案編號</label>
                                 <div className="col-12 col-md-4">
                                     <input type="text" className="form-control" />
                                 </div>
@@ -176,7 +176,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/*(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡</label>
                         <div className="col">
 
                             <div className="form-check">
@@ -228,7 +228,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* 報警求助 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1a)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(1a)</label>
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onChange={radioButtonHandler} />
@@ -256,7 +256,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* 警方到院舍調查日期及時間 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(1b) 警方到院舍調查日期及時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(1b) 警方到院舍調查日期及時間</label>
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="policeInvestigate" id="police-investigate-true" value="POLICE_INVESTIGATE_TRUE" onChange={radioButtonHandler} />
@@ -280,7 +280,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (2) 住客失蹤以致需要報警求助 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2) 住客失蹤以致需要報警求助</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(2) 住客失蹤以致需要報警求助</label>
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" onChange={radioButtonHandler} />
@@ -321,7 +321,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (2) 住客失蹤以致需要報警求助 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2a)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(2a)</label>
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="residentMissingFound" id="resident-missing-found-true" value="RESIDENT_MISSING_FOUND_TRUE" onChange={radioButtonHandler} />
@@ -356,7 +356,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (2b) 失蹤住客病歷 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(2b) 失蹤住客病歷</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(2b) 失蹤住客病歷</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
@@ -364,7 +364,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" value="RESIDENT_ABUSE_BODY" onClick={checkboxHandler} />
@@ -403,7 +403,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (3a) 施虐者／懷疑施虐者的身份 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3a) 施虐者／懷疑施虐者的身份</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(3a) 施虐者／懷疑施虐者的身份</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={radioButtonHandler} />
@@ -430,7 +430,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (3b)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3b)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(3b)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="referrals" id="referrals-false" value="REFERRALS_FALSE" onChange={radioButtonHandler} />
@@ -457,7 +457,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* (3c)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(3c)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(3c)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-false" value="RESIDENT_ABUSE_POLICE_FALSE" onChange={radioButtonHandler} />
@@ -485,7 +485,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (4) 院舍內有爭執事件以致需要報警求助 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(4) 院舍內有爭執事件以致需要報警求助</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(4) 院舍內有爭執事件以致需要報警求助</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" onChange={radioButtonHandler} />
@@ -534,7 +534,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」） */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）</label>
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" onChange={radioButtonHandler} />
@@ -563,7 +563,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(6) 其他重大特別事故以致影響院舍日常運作</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(6) 其他重大特別事故以致影響院舍日常運作</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" onChange={radioButtonHandler} />
@@ -596,7 +596,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* (7) 其他 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(7) 其他</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>(7) 其他</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-true" value="OTHER_INCIDENT_TRUE" onChange={radioButtonHandler} />
@@ -621,19 +621,19 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* 住客姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>住客姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>住客姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                         {/* 年齡 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>年齡</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" min={0} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 住客性別 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
@@ -645,7 +645,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                         </div>
                         {/* 房及床號 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>房及/或床號</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>房及/或床號</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" />
                         </div>
@@ -714,7 +714,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報人姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -723,13 +723,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人職位</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報人職位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -754,11 +754,11 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>殘疾人士院舍名稱</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>殘疾人士院舍名稱</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>事故發生日期和時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -773,18 +773,18 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>受影響住客姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>受影響住客姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>身份證號碼</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>身份證號碼</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 住客性別 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="tenantGender" id="attach-tenant-gender-male" value="TENANT_GENDER_MALE" onChange={radioButtonHandler} />
@@ -796,35 +796,35 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             </div>
                         </div>
                         {/* 年齡 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>年齡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>年齡</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" min={0} />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 住客病歷 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>住客病歷</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>住客病歷</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 特別事故詳情／發生經過 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>特別事故詳情／發生經過</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>特別事故詳情／發生經過</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 院舍跟進行動／預防事故再次發生的建議或措施 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>院舍跟進行動／預防事故再次發生的建議或措施</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>院舍跟進行動／預防事故再次發生的建議或措施</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" placeholder="請註明" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 填報人姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報人姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報人姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -834,13 +834,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 resolveDelay={1000} />
                         </div>
                         {/* 職位 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>職位</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>職位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>填報日期</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
@@ -865,7 +865,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
 
                     <div className="form-group row mb-2">
                         {/* 服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -877,13 +877,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} dateFormat={"yyyy/MM/dd"} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<br />服務經理評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -908,7 +908,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                     </div>
                     <div className="form-group row mb-2">
                         {/* SD */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監姓名</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}
@@ -920,13 +920,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>服務總監評語</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務總監評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
