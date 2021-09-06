@@ -56,7 +56,7 @@ export default function StyledDropzone(props) {
     const files = uploadedFiles.map((file, index) => {
         return <li key={`${file.name}_${index}`}>
             <div className="d-flex">
-                <span className="flex-grow-1">
+                <span className="flex-grow-1 text-break">
                     {file.name} - {file.size / 1024 ** 2} MB
                 </span>
                 <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => setUploadedFiles(value => value.filter((f, i) => index !== i))}>

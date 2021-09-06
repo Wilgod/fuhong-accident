@@ -91,7 +91,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div> */}
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 服務單位 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-xl-4">
@@ -110,12 +110,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>服務使用者資料</h5>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
                             <select className="form-control" >
@@ -124,7 +124,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(英文)</span></label>
                         <div className="col-12 col-xl-4">
@@ -137,7 +137,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 年齡*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-xl-4">
@@ -148,16 +148,16 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-xl-4 pt-xl-0">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male" />
-                                <label className="form-check-label" htmlFor="gender-male">男</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" />
-                                <label className="form-check-label" htmlFor="gender-female">女</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>
                             </div>
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 服務使用者檔案號碼*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者檔案號碼</label>
                         <div className="col-12 col-xl-4">
@@ -170,7 +170,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 意外發生日期*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>意外發生日期和時間</label>
                         <div className="col-12 col-xl-4">
@@ -192,17 +192,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
 
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 是否使用輪椅*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>是否使用輪椅</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" />
-                                <label className="form-check-label" htmlFor="wheelchair-true">是</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" />
-                                <label className="form-check-label" htmlFor="wheelchair-false">否</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-false">否</label>
                             </div>
                         </div>
 
@@ -211,87 +211,87 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="asd" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="asd_true">是</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="asd" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="asd_false">否</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_false">否</label>
                             </div>
                         </div>
 
 
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 智力障礙程度 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>智力障礙程度</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" />
-                                <label className="form-check-label" htmlFor="intellectual-disability-mild">輕度</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-mild">輕度</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" />
-                                <label className="form-check-label" htmlFor="intellectual-disability-moderate">中度</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-moderate">中度</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" />
-                                <label className="form-check-label" htmlFor="intellectual-disability-severe">嚴重</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" />
-                                <label className="form-check-label" htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" />
-                                <label className="form-check-label" htmlFor="intellectual-disability-unknown">不知</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件紀錄</h5>
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 1.1 服務使用者意外時情況*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外時情況</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-sleep">睡覺</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-sleep">睡覺</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="SCENARIO_DINNING" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-dinning">進食</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-dinning">進食</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-wash" value="SCENARIO_WASHING" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-wash">梳洗</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-wash">梳洗</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-toliet" value="SCENARIO_TOLIET" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-toliet">如廁</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-toliet">如廁</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-bath" value="SCENARIO_BATHING" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-bath">洗澡</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-bath">洗澡</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="SCENARIO_WALKING" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario-walk">步行期間</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-walk">步行期間</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_inside_activity" value="SCENARIO_INSIDE_ACTIVITY" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario_inside_activity">參與服務單位內活動</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_inside_activity">參與服務單位內活動</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_outside_activity" value="SCENARIO_OUTSIDE_ACTIVITY" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario_outside_activity">外出活動期間(請註明地點)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_outside_activity">外出活動期間(請註明地點)</label>
                             </div>
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
@@ -301,7 +301,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_other" value="SCENARIO_OTHER" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="scenario_other">其他 (請註明)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_other">其他 (請註明)</label>
                             </div>
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OTHER" &&
@@ -318,27 +318,27 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-head">頭部</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-head">頭部</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-neck">頸部</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-neck">頸部</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-body">軀幹</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-body">軀幹</label>
                             </div>
                             <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-upper-limb">上肢</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-upper-limb">上肢</label>
                             </div>
                             <div className="form-check form-check-inline ">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-lower-limb">下肢</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-lower-limb">下肢</label>
                             </div>
                             <div className="form-check mb-2">
                                 <input className="form-check-input" type="checkbox" name="injury" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="injury-other">其他 (請註明)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-other">其他 (請註明)</label>
                             </div>
                             {
                                 form.injury.indexOf("INJURY_OTHER") > -1 &&
@@ -357,18 +357,18 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     </div> */}
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 1.3 服務使用者意外後有否身體不適/受傷*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
 
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-true" value="SERVICE_USER_UNCOMFORT_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="service-user-uncomfort-true">有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="service-user-uncomfort-false">沒有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-false">沒有</label>
                             </div>
 
                             {
@@ -376,27 +376,27 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <div>
                                     <div className="form-check form-check-inline ">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-bleeding">流血</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bleeding">流血</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-bruise">瘀腫</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bruise">瘀腫</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-fracture">骨折</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-fracture">骨折</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-dizzy">暈眩</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-dizzy">暈眩</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-shock">休克/失去知覺</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-shock">休克/失去知覺</label>
                                     </div>
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="uncomfortable-other">其他 (請註明)</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-other">其他 (請註明)</label>
                                     </div>
                                     {
                                         form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
@@ -419,34 +419,34 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-true" value="BEHAVIOR_SWITCH_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="behavior-switch-true">有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="behavior-switch-false">沒有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-false">沒有</label>
                             </div>
                             {
                                 form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE" &&
                                 <div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="behavior-others">傷害他人的動作</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-others">傷害他人的動作</label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-self" value="BEHAVIOR_SELF" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="behavior-self">傷害自已的動作</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-self">傷害自已的動作</label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-getoff" value="BEHAVIOR_GETOFF" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="behavior-getoff">除去身上的醫療器材</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-getoff">除去身上的醫療器材</label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-reject" value="BEHAVIOR_REJECT" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="behavior-reject">拒絕使用輔助器材</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-reject">拒絕使用輔助器材</label>
                                     </div>
                                     <div className="form-check">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} />
-                                        <label className="form-check-label" htmlFor="behavior-other">其他 (請註明)</label>
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-other">其他 (請註明)</label>
                                     </div>
                                     {
                                         form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
@@ -463,7 +463,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     </div> */}
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 1.5 相片及CCTV紀錄*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>相片及CCTV紀錄</label>
                         <div className="col">
@@ -471,7 +471,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <div className="pl-4">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-true" value="PHOTO_TRUE" onClick={radioButtonHandler} />
-                                    <label className="form-check-label" htmlFor="photo-true">有 (上載照片)</label>
+                                    <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-true">有 (上載照片)</label>
                                 </div>
                                 {
                                     form.photo === "PHOTO_TRUE" &&
@@ -479,7 +479,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
-                                    <label className="form-check-label" htmlFor="photo-false">未能提供</label>
+                                    <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
 
@@ -487,11 +487,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <div className="pl-4">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
-                                    <label className="form-check-label" htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
+                                    <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
                                 </div>
                                 {
                                     form.cctv === "CCTV_TRUE" &&
-                                    <div className="row no-gutters">
+                                    <div className="form-row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
                                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
@@ -500,7 +500,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} />
-                                    <label className="form-check-label" htmlFor="cctv-false">未能提供</label>
+                                    <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
                             </div>
                         </div>
@@ -508,54 +508,54 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>初步觀察的意外成因</h5>
                         </div>
                     </div>
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/*  (2.1(a))  環境因素 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="ENV-OTHER">其他 (請註明)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他 (請註明)</label>
                             </div>
                             {
                                 form.envFactor.indexOf("ENV_OTHER") > -1 &&
@@ -566,33 +566,33 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* (2.1(b)) 個人因素 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-TWITCH">抽搐</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
-                                <label className="form-check-label" htmlFor="PERSONAL-OTHER">其他</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-OTHER">其他</label>
                             </div>
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
@@ -603,23 +603,23 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* (2.2) 事發過程 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
-                            <label htmlFor="procedure" style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
+                            <label htmlFor="procedure" className={styles.labelColor} style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
                             <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
                     </div>
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件後之治療處理</h5>
                         </div>
                     </div>
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 3.1 服務單位即時治療/處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
@@ -627,30 +627,30 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 3.2 就診安排*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
                             {
                                 form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT" &&
                                 <>
-                                    <div className="">
+                                    <div className="mt-2" style={{ fontSize: 15 }}>
                                         <label className="form-label">醫院名稱</label>
                                         <input type="text" className="form-control" />
                                     </div>
-                                    <div className="">
+                                    <div className="" style={{ fontSize: 15 }}>
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
                                             className="form-control"
@@ -662,7 +662,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                             dateFormat="yyyy/MM/dd h:mm aa"
                                         />
                                     </div>
-                                    <div className="">
+                                    <div className="" style={{ fontSize: 15 }}>
                                         <label className="form-label">提供予服務使用者的治療</label>
                                         <AutosizeTextarea className="form-control" />
                                     </div>
@@ -671,25 +671,25 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 3.3 是否在醫院留醫 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="is-stay-in-hospital-true">是</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="is-stay-in-hospital-false">否</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-false">否</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-not-applicable" value="IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="is-stay-in-hospital-not-applicable">不適用</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-not-applicable">不適用</label>
                             </div>
                             {
                                 form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE" &&
-                                <div>
+                                <div className="mt-2">
                                     <label className="form-label">醫院名稱</label>
                                     <input type="text" className="form-control" />
                                 </div>
@@ -697,17 +697,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 3.4 報警處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="police-true">需要</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">需要</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="police-false">不需要</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">不需要</label>
                             </div>
                             {
                                 form.police === "POLICE_TRUE" &&
@@ -738,17 +738,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* 3.5 意外後中心即時應變措施 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="contingency-measure-true">有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="contingency-measure-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="CONTINGENCY_MEASURE_FALSE" onClick={radioButtonHandler} />
-                                <label className="form-check-label" htmlFor="contingency-measure-false">沒有</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="contingency-measure-false">沒有</label>
                             </div>
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
@@ -761,12 +761,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>家屬聯絡</h5>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 4.1 通知家屬日期及時間 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>通知家屬日期和時間</label>
                         <div className="col-12 col-xl-4">
@@ -787,7 +787,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-4">
+                    <div className="form-row mb-4">
                         {/* (4.2)  家屬姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬姓名</label>
                         <div className="col-12 col-xl-4">
@@ -795,7 +795,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/*(4.3) 負責通知家屬的職員姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pr-xl-0 pt-xl-0`}>負責通知家屬的職員姓名</label>
                         <div className="col-12 col-xl-4">
@@ -816,9 +816,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* (4.4) 服務使用者經治後情況 */}
-                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後<span className="d-sm-inline d-xl-block">情況</span></label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後情況</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -828,7 +828,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 填報人姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>填報人姓名</label>
                         <div className="col-12 col-xl-4">
@@ -848,7 +848,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
@@ -864,7 +864,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理姓名</span></label>
                         <div className="col-12 col-xl-4">
@@ -883,13 +883,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row my-2">
                         <div className="col-12">
                             <div className="d-flex justify-content-center">
                                 <button className="btn btn-warning mr-3">批准</button>
@@ -907,7 +907,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* SD */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
                         <div className="col-12 col-xl-4">
@@ -925,7 +925,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
@@ -947,7 +947,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 高級物理治療師姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-xl-4">
@@ -965,7 +965,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 評語 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
@@ -973,7 +973,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-row mb-2">
                         {/* 「意外報告 (二)」交由 */}
                         <label className={`col-4 col-lg-3 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >｢意外報告 (二)｣交由</label>
                         <div className="col-6 col-xl-4">
@@ -990,7 +990,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>
                     </div>
 
-                    <div className="form-group row mb-2">
+                    <div className="form-group row my-2">
                         <div className="col-12">
                             <div className="d-flex justify-content-center">
                                 <button className="btn btn-warning mr-3">批准</button>

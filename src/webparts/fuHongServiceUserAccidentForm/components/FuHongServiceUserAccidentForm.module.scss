@@ -2,6 +2,7 @@
 
 $fuhong-main-color: #fdd477;
 $background-color: white;
+$label-color: hsl(0, 2%, 23%);
 
 .fuHongServiceUserAccidentForm {
   textarea,
@@ -30,6 +31,12 @@ $background-color: white;
     overflow-wrap: normal;
   }
 
+  .labelColor {
+    color: $label-color;
+    font-weight: 500;
+    font-size: 16px;
+  }
+
   h5 {
     color: #9f6b21;
     font-weight: 600;
@@ -41,7 +48,7 @@ $background-color: white;
   }
 
   .fieldTitle {
-    color: #717171;
+    color: #555454;
     font-weight: 600;
     font-size: 16px;
   }
