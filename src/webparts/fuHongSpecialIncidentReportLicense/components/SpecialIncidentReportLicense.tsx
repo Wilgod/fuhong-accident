@@ -286,7 +286,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="resident-missing-inside">住客擅自／在員工不知情下離開院舍</label>
                             </div>
-                            <div className="form-check">
+                            <div className="form-check mb-2">
                                 <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-outside" value="RESIDENT_MISSING_OUTSIDE" onChange={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="resident-missing-outside">院外活動期間失蹤</label>
                             </div>

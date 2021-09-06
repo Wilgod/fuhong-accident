@@ -1,6 +1,7 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 
 $fuhong-main-color: #fdd477;
+$background-color: white;
 
 .fuHongServiceUserAccidentForm {
   textarea,
@@ -11,10 +12,22 @@ $fuhong-main-color: #fdd477;
     }
   }
 
+  .backgroundColor {
+    background-color: $background-color;
+  }
+
+  hr {
+    background-color: hsla(0, 1%, 60%, 0.789);
+  }
+
   .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0px auto;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .textOverflowInline {
+    overflow-wrap: normal;
   }
 
   h5 {

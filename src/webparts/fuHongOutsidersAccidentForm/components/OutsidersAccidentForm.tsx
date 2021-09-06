@@ -625,7 +625,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                     <div className="form-group row mb-2">
                         {/* 「意外報告 (二)」交由 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pl-0 pt-0`}>「意外報告 (二)」交由</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pl-0 pt-0 `}>｢意外報告 (二)｣交由</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
                                 context={context}

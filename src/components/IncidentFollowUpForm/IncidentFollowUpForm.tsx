@@ -154,8 +154,8 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                             />
                             {/* <input type="text" className="form-control" /> */}
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}
@@ -187,8 +187,8 @@ export default function IncidentFollowUpForm({ context, styles, formType }: IInc
                                 resolveDelay={1000} />
                             {/* <input type="text" className="form-control" /> */}
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>日期</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
+                        <div className="col-12 col-md-5">
                             <DatePicker
                                 className="form-control"
                                 selected={new Date()}

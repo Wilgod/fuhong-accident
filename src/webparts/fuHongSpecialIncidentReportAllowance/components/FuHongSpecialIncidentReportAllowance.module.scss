@@ -11,9 +11,13 @@ $staff-label-color: #eba300;
   }
 
   .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0px auto;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .textOverflowInline{
+    overflow-wrap: normal;
   }
 
   h5 {

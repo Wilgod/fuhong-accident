@@ -35,7 +35,7 @@ if (document.querySelector('.CanvasZone') != null) {
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, {}> {
   public constructor(props) {
     super(props);
-    //getCanvasZone();
+    getCanvasZone();
     console.log("Flow 1");
   }
 

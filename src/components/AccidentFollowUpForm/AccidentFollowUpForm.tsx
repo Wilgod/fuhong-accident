@@ -81,7 +81,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                     </div> */}
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務單位</label>
+                        <label className={`col-12 col-lg-2 col-form-label ${styles.fieldTitle} pt-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly />
                         </div>

@@ -80,10 +80,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
     return (
         <>
-            <div className="mb-3">
+            <div>
                 <Header displayName="服務使用者意外填報表(一)" />
             </div>
-            <div className="container-fluid px-4">
+            <div className={`${styles.backgroundColor} container-fluid px-4 pt-3`}>
                 <section className="mb-4">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
@@ -93,31 +93,31 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務單位 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務單位</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
+                        <div className="col-12 col-xl-4">
                             <select className="form-control">
                                 <option>請選擇服務單位</option>
                             </select>
                         </div>
                         {/* 保險公司備案編號 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>保險公司備案編號</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>服務使用者資料</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
+                        <div className="col-12 col-xl-4">
                             <select className="form-control" >
                                 <option>請選擇服務使用者</option>
                             </select>
@@ -126,26 +126,26 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者姓名<span className="d-sm-inline d-md-block">(英文)</span></label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(英文)</span></label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者姓名<span className="d-sm-inline d-md-block">(中文)</span></label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(中文)</span></label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/* 年齡*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>年齡</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
+                        <div className="col-12 col-xl-4">
                             <input type="number" className="form-control" min={0} />
                         </div>
                         {/* 性別*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>性別</label>
-                        <div className="col-12 col-md-4 pt-0">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
+                        <div className="col-12 col-xl-4 pt-xl-0">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male" />
                                 <label className="form-check-label" htmlFor="gender-male">男</label>
@@ -159,21 +159,21 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 服務使用者檔案號碼*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者檔案號碼</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者檔案號碼</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                         {/* 接受服務類別*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>接受服務類別</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/* 意外發生日期*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外發生日期和時間</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>意外發生日期和時間</label>
+                        <div className="col-12 col-xl-4">
                             <DatePicker
                                 className="form-control"
                                 selected={date}
@@ -185,8 +185,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             />
                         </div>
                         {/* 意外發生地點*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外發生地點</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
@@ -194,8 +194,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 是否使用輪椅*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>是否使用輪椅</label>
-                        <div className="col-12 col-md-4 d-flex align-items-center">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>是否使用輪椅</label>
+                        <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" />
                                 <label className="form-check-label" htmlFor="wheelchair-true">是</label>
@@ -207,8 +207,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
 
                         {/* 自閉症譜系障礙(ASD) */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>自閉症譜系障礙(ASD)</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>自閉症譜系障礙(ASD)</label>
+                        <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="asd" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
                                 <label className="form-check-label" htmlFor="asd_true">是</label>
@@ -224,7 +224,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 智力障礙程度 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>智力障礙程度</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>智力障礙程度</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" />
@@ -250,8 +250,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件紀錄</h5>
                         </div>
@@ -259,7 +259,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 1.1 服務使用者意外時情況*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者意外時情況</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外時情況</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
@@ -310,12 +310,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 </div>
                             }
                         </div>
-                    </div>
 
-                    <div className="form-group row mb-4">
                         {/* 1.2 服務使用者受傷部位*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>
-                            服務使用者受傷部位<span className="d-sm-inline d-md-block">(請上載相片 - 如有)</span>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0  `}>
+                            服務使用者受傷部位<span className="d-sm-inline d-xl-block">(請上載相片 - 如有)</span>
                         </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
@@ -355,9 +353,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
+                    {/* <div className="form-group row mb-4">
+
+                    </div> */}
+
                     <div className="form-group row mb-4">
                         {/* 1.3 服務使用者意外後有否身體不適/受傷*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者意外後有否身體不適/受傷 </label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外後有否身體不適/受傷 </label>
                         <div className="col">
 
                             <div className="form-check form-check-inline">
@@ -411,11 +413,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 </div>
                             }
                         </div>
-                    </div>
 
-                    <div className="form-group row mb-4">
                         {/* 1.4 服務使用者有否出現不安全的行為*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者有否出現不安全的行為 </label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者有否出現不安全的行為 </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-true" value="BEHAVIOR_SWITCH_TRUE" onClick={radioButtonHandler} />
@@ -459,9 +459,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                     </div>
 
+                    {/* <div className="form-group row mb-4">
+
+                    </div> */}
+
                     <div className="form-group row mb-4">
                         {/* 1.5 相片及CCTV紀錄*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>相片及CCTV紀錄</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>相片及CCTV紀錄</label>
                         <div className="col">
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-4">
@@ -478,7 +482,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <label className="form-check-label" htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
-                            <div className={styles.buttonLabel}>CCTV紀錄</div>
+
+                            <div className={`${styles.buttonLabel} mt-2`} >CCTV紀錄</div>
                             <div className="pl-4">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
@@ -502,15 +507,15 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>初步觀察的意外成因</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-4">
                         {/*  (2.1(a))  環境因素 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>環境因素</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
@@ -563,7 +568,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* (2.1(b)) 個人因素 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>個人因素</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
@@ -600,23 +605,23 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* (2.2) 事發過程 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>事發過程</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
-                            <label htmlFor="procedure">請註明事發地點附近之員工當時執行的職務</label>
+                            <label htmlFor="procedure" style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
                             <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
                     </div>
                 </section>
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件後之治療處理</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-4">
                         {/* 3.1 服務單位即時治療/處理 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務單位即時治療/處理</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
                         </div>
@@ -624,7 +629,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 3.2 就診安排*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>就診安排</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
@@ -668,7 +673,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 3.3 是否在醫院留醫 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>是否在醫院留醫</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
@@ -694,7 +699,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 3.4 報警處理 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>報警處理</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} />
@@ -735,7 +740,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-4">
                         {/* 3.5 意外後中心即時應變措施 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>意外後中心即時應變措施</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} />
@@ -755,16 +760,16 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>家屬聯絡</h5>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 4.1 通知家屬日期及時間 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>通知家屬日期和時間</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>通知家屬日期和時間</label>
+                        <div className="col-12 col-xl-4">
                             <DatePicker
                                 className="form-control"
                                 selected={date}
@@ -776,24 +781,24 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             />
                         </div>
                         {/* 與服務使用者關係 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>與服務使用者關係</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} ${styles.textOverflowInline} pt-xl-0`}>與服務使用者關係</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-4">
                         {/* (4.2)  家屬姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>家屬姓名</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬姓名</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/*(4.3) 負責通知家屬的職員姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>負責通知家屬的職員姓名</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pr-xl-0 pt-xl-0`}>負責通知家屬的職員姓名</label>
+                        <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
                                 titleText=""
@@ -805,28 +810,28 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職位 */}
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>職位</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
+                        <div className="col-12 col-xl-5">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/* (4.4) 服務使用者經治後情況 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務使用者經診治後情況</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後<span className="d-sm-inline d-xl-block">情況</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
-                <section className="mb-4">
+                <section className="mb-5">
                     <div className="form-group row mb-2">
                         {/* 填報人姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>填報人姓名</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>填報人姓名</label>
+                        <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
                                 titleText=""
@@ -838,31 +843,31 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職級 */}
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-xl-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>職級</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
+                        <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" />
                         </div>
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理姓名</span></label>
+                        <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
                                 titleText=""
@@ -873,13 +878,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-xl-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -894,21 +899,20 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span>[此欄由服務總監填寫]</span>
+                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="form-group row mb-2">
                         {/* SD */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務總監姓名</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
+                        <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
-                                titleText=""
                                 showtooltip={false}
                                 personSelectionLimit={1}
                                 ensureUser={true}
@@ -916,13 +920,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-xl-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-group row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>服務總監評語</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -934,19 +938,19 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div> */}
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
-                <section className="mb-4">
-                    <div className="row">
+                <section className="mb-5">
+                    <div className="row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span>[此欄由高級物理治療師填寫]</span>
+                            <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/* 高級物理治療師姓名 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級物理治療師姓名</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師姓名</label>
+                        <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
                                 personSelectionLimit={1}
@@ -955,15 +959,15 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 resolveDelay={1000} />
                         </div>
                         {/* 日期 */}
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-xl-5">
                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
                         </div>
                     </div>
 
                     <div className="form-group row mb-2">
                         {/* 評語 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-0`}>高級物理治療師評語</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" />
                         </div>
@@ -971,8 +975,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-group row mb-2">
                         {/* 「意外報告 (二)」交由 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pl-0 pt-0`}>「意外報告 (二)」交由</label>
-                        <div className="col-12 col-md-4">
+                        <label className={`col-4 col-lg-3 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >｢意外報告 (二)｣交由</label>
+                        <div className="col-6 col-xl-4">
                             <PeoplePicker
                                 context={context}
                                 titleText=""
@@ -983,7 +987,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} px-0 pt-0`}>填寫</label>
+                        <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>
                     </div>
 
                     <div className="form-group row mb-2">
@@ -997,7 +1001,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                 </section>
 
-                <hr className="my-3" />
+                <hr className="my-4" />
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
