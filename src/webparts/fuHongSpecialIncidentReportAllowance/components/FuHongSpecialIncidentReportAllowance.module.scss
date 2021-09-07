@@ -1,6 +1,7 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 $fuhong-main-color: #fdd477;
 $staff-label-color: #eba300;
+$label-color: hsl(0, 2%, 23%);
 .fuHongSpecialIncidentReportAllowance {
   textarea,
   input {
@@ -16,8 +17,14 @@ $staff-label-color: #eba300;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
   }
 
-  .textOverflowInline{
+  .textOverflowInline {
     overflow-wrap: normal;
+  }
+
+  .labelColor {
+    color: $label-color;
+    font-weight: 500;
+    font-size: 16px;
   }
 
   h5 {

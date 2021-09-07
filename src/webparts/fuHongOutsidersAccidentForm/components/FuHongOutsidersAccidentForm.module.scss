@@ -1,5 +1,6 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 $fuhong-main-color: #fdd477;
+$label-color: hsl(0, 2%, 23%);
 .fuHongOutsidersAccidentForm {
   textarea,
   input {
@@ -11,6 +12,12 @@ $fuhong-main-color: #fdd477;
 
   .textOverflowInline {
     overflow-wrap: normal;
+  }
+
+  .labelColor {
+    color: $label-color;
+    font-weight: 500;
+    font-size: 16px;
   }
 
   .container {

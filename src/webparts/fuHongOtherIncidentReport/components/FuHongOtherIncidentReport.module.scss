@@ -1,6 +1,7 @@
 @import "~office-ui-fabric-react/dist/sass/References.scss";
 $fuhong-main-color: #fdd477;
 $staff-label-color: #eba300;
+$label-color: hsl(0, 2%, 23%);
 .fuHongOtherIncidentReport {
   textarea,
   input {
@@ -8,6 +9,12 @@ $staff-label-color: #eba300;
       color: #717171;
       font-weight: bold;
     }
+  }
+
+  .labelColor {
+    color: $label-color;
+    font-weight: 500;
+    font-size: 16px;
   }
 
   .container {
@@ -36,7 +43,7 @@ $staff-label-color: #eba300;
     color: $staff-label-color;
   }
 
-  .textOverflowInline{
+  .textOverflowInline {
     overflow-wrap: normal;
   }
 
