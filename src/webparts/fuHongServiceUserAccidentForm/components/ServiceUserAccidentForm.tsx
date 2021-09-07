@@ -84,7 +84,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <Header displayName="服務使用者意外填報表(一)" />
             </div>
             <div className={`${styles.backgroundColor} container-fluid px-4 pt-3`}>
-                <section className="mb-4">
+                <section className="mb-5">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>檔案編號</h5>
@@ -107,7 +107,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     </div>
                 </section>
 
-                <hr className="my-4" />
+                {/* <hr className="my-4" /> */}
 
                 <section className="mb-5">
                     <div className="row mb-3">
@@ -483,7 +483,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 </div>
                             </div>
 
-                            <div className={`${styles.buttonLabel} mt-2`} >CCTV紀錄</div>
+                            <div className={`${styles.buttonLabel} mt-3`} >CCTV紀錄</div>
                             <div className="pl-4">
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
@@ -608,7 +608,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure" className={styles.labelColor} style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
-                            <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" id="procedure" />
                         </div>
                     </div>
                 </section>
@@ -623,7 +623,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 3.1 服務單位即時治療/處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" id="procedure" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" id="procedure"  />
                         </div>
                     </div>
 
@@ -650,7 +650,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <label className="form-label">醫院名稱</label>
                                         <input type="text" className="form-control" />
                                     </div>
-                                    <div className="" style={{ fontSize: 15 }}>
+                                    <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
                                             className="form-control"
@@ -662,7 +662,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                             dateFormat="yyyy/MM/dd h:mm aa"
                                         />
                                     </div>
-                                    <div className="" style={{ fontSize: 15 }}>
+                                    <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">提供予服務使用者的治療</label>
                                         <AutosizeTextarea className="form-control" />
                                     </div>
