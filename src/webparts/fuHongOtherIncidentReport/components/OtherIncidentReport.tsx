@@ -136,14 +136,14 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故的描述</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                 </section>
 
                 <section className="mb-5">
                     <div className="row mb-2">
-                        <div className="col-12 font-weight-bold">
+                        <div className="col-12 font-weight-bold mb-2">
                             <h5>有關服務使用者的資料 (如適用)</h5>
                         </div>
                     </div>

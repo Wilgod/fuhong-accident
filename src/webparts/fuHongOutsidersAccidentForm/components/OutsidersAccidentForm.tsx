@@ -254,7 +254,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                             {/* (2.1.2) 其他因素 */}
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>其他因素</label>
                             <div className="col">
-                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                <AutosizeTextarea className="form-control" />
                             </div>
                         </div>
                     </div>
@@ -262,7 +262,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/*(2.2)  事發過程 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
 
@@ -338,8 +338,8 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                 </section>
 
                 <section className="mb-5">
-                    <div className="row">
-                        <div className="col-12 font-weight-bold">
+                    <div className="row mb-2">
+                        <div className="col-12 font-weight-bold mb-2">
                             <h5>意外事件後之處理</h5>
                         </div>
                     </div>

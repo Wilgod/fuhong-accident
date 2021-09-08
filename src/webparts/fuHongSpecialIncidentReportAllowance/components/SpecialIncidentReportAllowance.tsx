@@ -376,7 +376,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>特別事故描述</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                            <AutosizeTextarea className="form-control" />
                         </div>
                     </div>
                 </section>
