@@ -2,6 +2,8 @@ import * as React from 'react';
 import styles from './FuHongFormsMenu.module.scss';
 import { IFuHongFormsMenuProps } from './IFuHongFormsMenuProps';
 import 'bootstrap/dist/css/bootstrap.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, {}> {
 
@@ -10,28 +12,31 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private OTHER_INCIDENT_REPORT = "OtherIncidentReport"; // form 23
   private SPECIAL_INCIDENT_REPORT_ALLOWANCE = "SpecialIncidentReportAllowance"; // form 24
   private SPECIAL_INCIDENT_REPORT_LICENSE = "SpecialIncidentReportLicense"; //form 25
-
+  private SITE_CONTENT = `${this.props.context.pageContext.web.absoluteUrl}/_layouts/15/viewlsts.aspx?view=14`;
   public constructor(props) {
     super(props);
     getCanvasZone();
   }
 
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
-
-
     const ItemComponent = (href, name) => {
-      return <a href={href + ".aspx"} target="_blank" data-interception="off">
+      return <a className="text-decoration-none" href={href + ".aspx"} target="_blank" data-interception="off">
         <div className="shadow p-3 mb-2 bg-white rounded">
-          <span className="h6 font-weight-bold text-decoration-none">{name}</span>
+          <span className="h6 font-weight-bold">{name}</span>
         </div>
       </a>
     }
 
-
     return (
       <div className={styles.fuHongFormsMenu} >
         <div className={styles.container}>
-          <div className="p-5">
+
+          <div className="p-3">
+            <div className="d-flex justify-content-end mb-3">
+              <a href={this.SITE_CONTENT} target="_blank" data-interception="off">
+                <FontAwesomeIcon size="2x" icon={fontawesome.faCog} title={"Site Content"} />
+              </a>
+            </div>
             <div className="row">
               <div className="col-12">
                 {ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}

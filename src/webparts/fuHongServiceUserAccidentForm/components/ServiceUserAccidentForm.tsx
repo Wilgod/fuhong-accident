@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Header from "../../../components/Header/Header";
@@ -10,6 +10,14 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
+import { sp } from "@pnp/sp";
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { getServiceUserAccident } from '../../../api/FetchFuHongList';
+import { postServiceUserAccident } from '../../../api/PostFuHongList';
+
+
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -37,9 +45,33 @@ interface IServiceUserAccidentFormStates {
     cctv: string;
     photo: string;
     serviceUserUncomfort: string;
+    patientWheelchair: string;
+    accidentLocation: string;
+    patientASD: string;
+    intellectualDisability: string;
+    personalFactorOtherRemark: string;
+    enviromentalFactorOtherRemark: string;
+    accidentDetail: string;
+    treatmentAfterAccident: string;
+    medicalArrangementHospital: string;
+    medicalArrangementTreatment: string;
+    stayInHospitalName: string;
+    policeStation: string;
+    policeReportNumber: string;
+    contingenyMeasureRemark: string;
+    contactFamilyRelationship: string;
+    contactFamilyName: string;
+    afterTreatmentDescription: string;
 }
 
+
+
 export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
+    const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
+    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
+    const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
+    const [policeDate, setPoliceDate] = useState(new Date());
+    const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
@@ -55,8 +87,33 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         contingencyMeasure: "",
         cctv: "",
         photo: "",
-        serviceUserUncomfort: ""
+        serviceUserUncomfort: "",
+        patientWheelchair: "",
+        accidentLocation: "",
+        patientASD: "",
+        intellectualDisability: "",
+        personalFactorOtherRemark: "",
+        enviromentalFactorOtherRemark: "",
+        accidentDetail: "",
+        treatmentAfterAccident: "",
+        medicalArrangementHospital: "",
+        medicalArrangementTreatment: "",
+        stayInHospitalName: "",
+        policeReportNumber: "",
+        policeStation: "",
+        contingenyMeasureRemark: "",
+        contactFamilyRelationship: "",
+        contactFamilyName: "",
+        afterTreatmentDescription: ""
     });
+
+    const textHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        if (name) {
+            setForm({ ...form, [name]: value });
+        }
+    }
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -78,6 +135,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         }
     }
 
+    // useEffect(() => {
+    //     getServiceUserAccident();
+    // }, []);
+    console.log(form)
     return (
         <>
             <div>
@@ -85,12 +146,6 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
             </div>
             <div className={`${styles.backgroundColor} container-fluid px-4 pt-3`}>
                 <section className="mb-5">
-                    {/* <div className="row">
-                        <div className="col-12 font-weight-bold">
-                            <h5>檔案編號</h5>
-                        </div>
-                    </div> */}
-
                     <div className="form-row mb-2">
                         {/* 服務單位 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
@@ -102,7 +157,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" onChange={textHandler} />
                         </div>
                     </div>
                 </section>
@@ -110,7 +165,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 {/* <hr className="my-4" /> */}
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>服務使用者資料</h5>
                         </div>
@@ -161,12 +216,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 服務使用者檔案號碼*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者檔案號碼</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" onChange={textHandler} />
                         </div>
                         {/* 接受服務類別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" onChange={textHandler} />
                         </div>
                     </div>
 
@@ -176,8 +231,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-xl-4">
                             <DatePicker
                                 className="form-control"
-                                selected={date}
-                                onChange={(date) => setDate(date)}
+                                selected={accidentTime}
+                                onChange={setAccidentTime}
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
@@ -187,21 +242,21 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 意外發生地點*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={textHandler} />
                         </div>
                     </div>
 
 
                     <div className="form-row mb-2">
                         {/* 是否使用輪椅*/}
-                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>是否使用輪椅</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否使用輪椅</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-false">否</label>
                             </div>
                         </div>
@@ -210,11 +265,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>自閉症譜系障礙(ASD)</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="asd" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="asd" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_false">否</label>
                             </div>
                         </div>
@@ -224,26 +279,26 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                     <div className="form-row mb-2">
                         {/* 智力障礙程度 */}
-                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-0`}>智力障礙程度</label>
+                        <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>智力障礙程度</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-mild">輕度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-moderate">中度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
                         </div>
@@ -251,7 +306,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件紀錄</h5>
                         </div>
@@ -408,7 +463,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
                                     </div>
                                     <div className="">
-                                        <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                        <AutosizeTextarea className="form-control" />
                                     </div>
                                 </div>
                             }
@@ -494,7 +549,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div className="form-row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
-                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} />
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={setCctvRecordReceiveDate} />
                                         </div>
                                     </div>
                                 }
@@ -508,7 +563,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>初步觀察的意外成因</h5>
                         </div>
@@ -560,7 +615,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.envFactor.indexOf("ENV_OTHER") > -1 &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.enviromentalFactorOtherRemark} name={"enviromentalFactorOtherRemark"} onChange={textHandler} />
                                 </div>
                             }
                         </div>
@@ -597,7 +652,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textHandler} />
                                 </div>
                             }
                         </div>
@@ -608,13 +663,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure" className={styles.labelColor} style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
-                            <AutosizeTextarea className="form-control" id="procedure" />
+                            <AutosizeTextarea className="form-control" id="procedure" name="accidentDetail" value={form.accidentDetail} onChange={textHandler} />
                         </div>
                     </div>
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外事件後之治療處理</h5>
                         </div>
@@ -623,7 +678,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 3.1 服務單位即時治療/處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" id="procedure"  />
+                            <AutosizeTextarea className="form-control" id="procedure" name="treatmentAfterAccident" value={form.treatmentAfterAccident} onChange={textHandler} />
                         </div>
                     </div>
 
@@ -648,14 +703,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <>
                                     <div className="mt-2" style={{ fontSize: 15 }}>
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control" name="medicalArrangementHospital" value={form.medicalArrangementHospital} onChange={textHandler} />
                                     </div>
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
                                             className="form-control"
-                                            selected={date}
-                                            onChange={(date) => setDate(date)}
+                                            selected={medicalArrangementDate}
+                                            onChange={setMedicalArrangementDate}
                                             showTimeSelect
                                             timeFormat="p"
                                             timeIntervals={15}
@@ -664,7 +719,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     </div>
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">提供予服務使用者的治療</label>
-                                        <AutosizeTextarea className="form-control" />
+                                        <AutosizeTextarea className="form-control" name="medicalArrangementTreatment" value={form.medicalArrangementTreatment} onChange={textHandler} />
                                     </div>
                                 </>
                             }
@@ -691,7 +746,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE" &&
                                 <div className="mt-2">
                                     <label className="form-label">醫院名稱</label>
-                                    <input type="text" className="form-control" />
+                                    <input type="text" className="form-control" name="stayInHospitalName" value={form.stayInHospitalName} onChange={textHandler} />
                                 </div>
                             }
                         </div>
@@ -717,8 +772,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         {/* <input type="datetime-local" className="form-control" /> */}
                                         <DatePicker
                                             className="form-control"
-                                            selected={date}
-                                            onChange={(date) => setDate(date)}
+                                            selected={policeDate}
+                                            onChange={setPoliceDate}
                                             showTimeSelect
                                             timeFormat="p"
                                             timeIntervals={15}
@@ -727,11 +782,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     </div>
                                     <div>
                                         <label className="form-label">報案編號</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={textHandler} />
                                     </div>
                                     <div>
                                         <label className="form-label">警署</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={textHandler} />
                                     </div>
                                 </>
                             }
@@ -753,7 +808,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" name="contingenyMeasureRemark" value={form.contingenyMeasureRemark} placeholder="請註明" onChange={textHandler} />
                                 </div>
                             }
                         </div>
@@ -761,7 +816,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>家屬聯絡</h5>
                         </div>
@@ -772,8 +827,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-xl-4">
                             <DatePicker
                                 className="form-control"
-                                selected={date}
-                                onChange={(date) => setDate(date)}
+                                selected={contactFamilyDate}
+                                onChange={setContactFamilyDate}
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
@@ -783,7 +838,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 與服務使用者關係 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} ${styles.textOverflowInline} pt-xl-0`}>與服務使用者關係</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="contactFamilyRelationship" value={form.contactFamilyRelationship} onChange={textHandler} />
                         </div>
                     </div>
 
@@ -791,7 +846,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* (4.2)  家屬姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬姓名</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="contactFamilyName" value={form.contactFamilyName} onChange={textHandler} />
                         </div>
                     </div>
 
@@ -812,7 +867,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 職位 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-xl-5">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" onChange={textHandler} />
                         </div>
                     </div>
 
@@ -820,7 +875,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* (4.4) 服務使用者經治後情況 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後情況</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler} />
                         </div>
                     </div>
                 </section>
@@ -859,7 +914,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
@@ -902,7 +957,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
                         </div>
@@ -941,7 +996,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
                         </div>
@@ -1006,7 +1061,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success">草稿</button>
+                        <button className="btn btn-success" onClick={() => postServiceUserAccident({})}>草稿</button>
                         <button className="btn btn-secondary">取消</button>
                     </div>
                 </section>

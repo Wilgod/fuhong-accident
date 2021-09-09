@@ -4,12 +4,15 @@ import { IFuHongServiceUserAccidentFormProps } from './IFuHongServiceUserAcciden
 import { escape } from '@microsoft/sp-lodash-subset';
 import * as moment from 'moment';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { sp } from "@pnp/sp";
 import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
+
+
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -36,6 +39,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   public constructor(props) {
     super(props);
     getCanvasZone();
+
+    sp.setup({ spfxContext: this.props.context });
     console.log("Flow 1");
   }
 
