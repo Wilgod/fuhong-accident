@@ -6,7 +6,7 @@ import Header from "../../../components/Header/Header";
 import styles from "./FuHongServiceUserAccidentForm.module.scss";
 import "./custom.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
-import { WebPartContext } from '@microsoft/sp-webpart-base';
+
 import * as moment from 'moment';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
@@ -16,8 +16,10 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { getServiceUserAccident } from '../../../api/FetchFuHongList';
 import { postServiceUserAccident } from '../../../api/PostFuHongList';
-
-
+import { getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
+import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
+import { addDays, dateFieldRawHandler } from '../../../utils/DateFactory';
+import { formProperties } from 'office-ui-fabric-react';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -26,56 +28,19 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-interface IServiceUserAccidentFormProps {
-    context: WebPartContext;
-}
-
-interface IServiceUserAccidentFormStates {
-    partientAcciedntScenario: string;
-    injury: string[];
-    uncomfortable: string[];
-    behaviorSwitch: string;
-    behavior: string[];
-    envFactor: string[];
-    personalFactor: string[];
-    arrangement: string;
-    isStayInHospital: string;
-    police: string;
-    contingencyMeasure: string;
-    cctv: string;
-    photo: string;
-    serviceUserUncomfort: string;
-    patientWheelchair: string;
-    accidentLocation: string;
-    patientASD: string;
-    intellectualDisability: string;
-    personalFactorOtherRemark: string;
-    enviromentalFactorOtherRemark: string;
-    accidentDetail: string;
-    treatmentAfterAccident: string;
-    medicalArrangementHospital: string;
-    medicalArrangementTreatment: string;
-    stayInHospitalName: string;
-    policeStation: string;
-    policeReportNumber: string;
-    contingenyMeasureRemark: string;
-    contactFamilyRelationship: string;
-    contactFamilyName: string;
-    afterTreatmentDescription: string;
-}
-
-
-
 export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
     const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
     const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
     const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
     const [policeDate, setPoliceDate] = useState(new Date());
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
+    const [sd, setSD] = useState(null);
+    const [spt, setSPT] = useState(null);
+    const [contactStaff, setContactStaff] = useState(null);
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
-        injury: [],
+        injuredArea: [],
         uncomfortable: [],
         behaviorSwitch: "",
         behavior: [],
@@ -104,8 +69,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         contingenyMeasureRemark: "",
         contactFamilyRelationship: "",
         contactFamilyName: "",
-        afterTreatmentDescription: ""
+        afterTreatmentDescription: "",
+        scenarioOutsideActivityRemark: "",
+        scenarioOtherRemark: "",
+        injuredAreaOther: "",
+        uncomfortableDescription: "",
+        uncomfortableOtherRemark: ""
     });
+    const [error, setError] = useState<IErrorFields>({});
 
     const textHandler = (event) => {
         const name = event.target.name;
@@ -134,11 +105,118 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
             }
         }
     }
+    //request body parser and validation
+    const dataFactory = () => {
+        const body = {};
+        const error: IErrorFields = {};
 
-    // useEffect(() => {
-    //     getServiceUserAccident();
-    // }, []);
-    console.log(form)
+        //意外發生日期和時間
+        if (accidentTime) {
+            body["accidentTime"] = accidentTime.toISOString();
+        } else {
+            error.accidentTime = "ACCIDENT_TIME_ERROR";
+        }
+
+        //意外發生地點
+        if (form.accidentLocation.trim().length > 0) {
+            body["accidentTime"] = form.accidentLocation;
+        } else {
+            error.accidentLocation = "ACCIDENT_LOCATION_ERROR";
+        }
+
+        //智力障礙程度
+        if (form.intellectualDisability) {
+            body["intellectualDisability"] = form.intellectualDisability;
+        } else {
+            error.intellectualDisability = "INTELLECTUAL_DISABILITY_ERROR"
+        }
+
+        //服務使用者意外時情況
+        if (form.partientAcciedntScenario) {
+            body["partientAcciedntScenario"] = form.partientAcciedntScenario;
+
+            if (form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY")
+                if (form.scenarioOutsideActivityRemark.trim()) {
+                    body["CircumstanceLocation"] = form.scenarioOutsideActivityRemark.trim();
+                } else {
+                    error.scenarioOutsideActivityRemark = "請填寫";
+                }
+            if (form.partientAcciedntScenario === "SCENARIO_OTHER") {
+                if (form.scenarioOtherRemark.trim()) {
+                    body["CircumstanceOtherRemark"] = form.scenarioOtherRemark.trim();
+                } else {
+                    error.scenarioOtherRemark = "請填寫"
+                }
+            }
+        } else {
+            error.partientAcciedntScenario = "請選擇";
+        }
+
+        //服務使用者受傷部位
+        if (form.injuredArea.length > 0) {
+            body["InjuredArea"] = JSON.stringify(form.injuredArea);
+
+            if (form.injuredArea.indexOf("INJURY_OTHER") > -1) {
+                body["InjuredAreaOtherRemark"] = form.injuredAreaOther;
+            } else {
+                error.injuredAreaOther = "請填寫";
+            }
+        } else {
+            error.injuredArea = "請選擇";
+        }
+
+        //服務使用者意外後有否身體不適/受傷
+        if (form.serviceUserUncomfort) {
+            body["UnwellAfterInjured"] = form.serviceUserUncomfort;
+
+            if (form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE") {
+                if (form.uncomfortable.length > 0) {
+                    body["UnwellAfterInjuredChoices"] = JSON.stringify(form.uncomfortable);
+
+                    if (form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1) {
+                        body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
+                    } else {
+                        error.uncomfortableOtherRemark = "請填寫";
+                    }
+
+                    if (form.uncomfortableDescription) {
+                        body["UnwellAfterInjuredDescription"] = form.uncomfortableDescription;
+                    } else {
+                        error.uncomfortableDescription = "請填寫";
+                    }
+                } else {
+                    error.uncomfortableOtherRemark = "請選擇";
+                }
+            } else {
+                error.uncomfortable = "請選擇";
+            }
+        } else {
+            error.serviceUserUncomfort = "請選擇";
+        }
+
+        return [body, error];
+    }
+
+    const draftHandler = () => {
+        // implement
+        const [body, error] = dataFactory();
+        if (Object.keys(error).length > 0) {
+            setError(error);
+            return;
+        }
+    }
+    const submitHandler = () => {
+        // implement
+        const [body, error] = dataFactory();
+        if (Object.keys(error).length > 0) {
+            setError(error);
+            return;
+        }
+    }
+    const cancelHandler = () => {
+        //implement 
+    }
+
     return (
         <>
             <div>
@@ -233,16 +311,21 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 className="form-control"
                                 selected={accidentTime}
                                 onChange={setAccidentTime}
+                                onChangeRaw={(event) => dateFieldRawHandler(event, setAccidentTime)}
+                                maxDate={new Date()}
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
                                 dateFormat="yyyy/MM/dd h:mm aa"
                             />
+                            {error.accidentTime && <div className="text-danger">{error.accidentTime}</div>}
+
                         </div>
                         {/* 意外發生地點*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
                         <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={textHandler} />
+                            {error.accidentLocation && <div className="text-danger">{error.accidentLocation}</div>}
                         </div>
                     </div>
 
@@ -302,6 +385,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
                         </div>
+                        {form.intellectualDisability && <div className="text-danger">{form.intellectualDisability}</div>}
                     </div>
                 </section>
 
@@ -315,6 +399,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-row mb-4">
                         {/* 1.1 服務使用者意外時情況*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外時情況</label>
+
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
@@ -351,7 +436,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} />
+                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOutsideActivityRemark" value={form.scenarioOutsideActivityRemark} onChange={textHandler} />
+                                    {error.scenarioOutsideActivityRemark && <div className="text-danger">{error.scenarioOutsideActivityRemark}</div>}
                                 </div>
                             }
                             <div className="form-check">
@@ -361,9 +447,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.partientAcciedntScenario === "SCENARIO_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} />
+                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOtherRemark" value={form.scenarioOtherRemark} onChange={textHandler} />
+                                    {error.scenarioOtherRemark && <div className="text-danger">{error.scenarioOtherRemark}</div>}
                                 </div>
                             }
+                            {error.partientAcciedntScenario && <div className="text-danger">{error.partientAcciedntScenario}</div>}
                         </div>
 
                         {/* 1.2 服務使用者受傷部位*/}
@@ -372,37 +460,39 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-head">頭部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-neck">頸部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-body">軀幹</label>
                             </div>
                             <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-upper-limb">上肢</label>
                             </div>
                             <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-lower-limb">下肢</label>
                             </div>
                             <div className="form-check mb-2">
-                                <input className="form-check-input" type="checkbox" name="injury" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-other">其他 (請註明)</label>
                             </div>
+                            {error.injuredArea && <div className="text-danger">{error.injuredArea}</div>}
                             {
-                                form.injury.indexOf("INJURY_OTHER") > -1 &&
+                                form.injuredArea.indexOf("INJURY_OTHER") > -1 &&
                                 <div className="mb-2">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.injuredAreaOther} name="injuredAreaOther" onChange={textHandler} />
+                                    {error.injuredAreaOther && <div className="text-danger">{error.injuredAreaOther}</div>}
                                 </div>
                             }
                             {
-                                form.injury.length > 0 &&
+                                form.injuredArea.length > 0 &&
                                 <StyledDropzone />
                             }
                         </div>
@@ -425,11 +515,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-false">沒有</label>
                             </div>
-
+                            {error.serviceUserUncomfort && <div className="text-danger">{error.serviceUserUncomfort}</div>}
                             {
                                 form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE" &&
                                 <div>
-                                    <div className="form-check form-check-inline ">
+                                    <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bleeding">流血</label>
                                     </div>
@@ -453,17 +543,20 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-other">其他 (請註明)</label>
                                     </div>
+                                    {error.uncomfortable && <div className="text-danger">{error.uncomfortable}</div>}
                                     {
                                         form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
                                         <div className="">
-                                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                            <AutosizeTextarea className="form-control" placeholder="請註明" name="uncomfortableOtherRemark" value={form.uncomfortableOtherRemark} onChange={textHandler} />
+                                            {error.uncomfortableOtherRemark && <div>{error.uncomfortableOtherRemark}</div>}
                                         </div>
                                     }
                                     <div className="my-2">
                                         <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
                                     </div>
                                     <div className="">
-                                        <AutosizeTextarea className="form-control" />
+                                        <AutosizeTextarea className="form-control" name="uncomfortableDescription" value={form.uncomfortableDescription} onChange={textHandler} />
+                                        {error.uncomfortableDescription && <div>{error.uncomfortableDescription}</div>}
                                     </div>
                                 </div>
                             }
@@ -861,7 +954,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
+                                selectedItems={setContactStaff}
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職位 */}
@@ -1060,9 +1153,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success" onClick={() => postServiceUserAccident({})}>草稿</button>
-                        <button className="btn btn-secondary">取消</button>
+                        <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
+                        <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
+                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                     </div>
                 </section>
 
