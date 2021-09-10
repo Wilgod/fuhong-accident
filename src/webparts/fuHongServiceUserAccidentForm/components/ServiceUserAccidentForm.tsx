@@ -74,7 +74,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         scenarioOtherRemark: "",
         injuredAreaOther: "",
         uncomfortableDescription: "",
-        uncomfortableOtherRemark: ""
+        uncomfortableOtherRemark: "",
+        behaviorOtherRemark: ""
     });
     const [error, setError] = useState<IErrorFields>({});
 
@@ -193,6 +194,28 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         } else {
             error.serviceUserUncomfort = "請選擇";
         }
+
+        //服務使用者有否出現不安全的行為
+        if (form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE") {
+            body["UnsafeBehaviors"] = form.behaviorSwitch;
+
+            if (form.behavior.length > 0) {
+                body["UnsafeBehaviorsChoices"] = JSON.stringify(form.behavior);
+
+                if (form.behavior.indexOf("BEHAVIOR_OTHER") > -1) {
+                    body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
+                } else {
+                    error.behaviorOtherRemark = "請填寫";
+                }
+            } else {
+                error.behavior = "請選擇";
+            }
+
+        } else {
+            error.behaviorSwitch = "請選擇";
+        }
+
+        //相片及CCTV紀錄
 
         return [body, error];
     }
@@ -573,6 +596,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-false">沒有</label>
                             </div>
+                            {error.behavior && <div className="text-danger">{error.behavior}</div>}
                             {
                                 form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE" &&
                                 <div>
@@ -596,10 +620,12 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-other">其他 (請註明)</label>
                                     </div>
+                                    {error.behaviorOtherRemark && <div className="text-danger">{error.behaviorOtherRemark}</div>}
                                     {
                                         form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
                                         <div className="">
-                                            <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                            <AutosizeTextarea className="form-control" placeholder="請註明" name="behaviorOtherRemark" value={form.behaviorOtherRemark} onChange={textHandler} />
+                                            {error.behaviorOtherRemark && <div className="text-danger">{error.behaviorOtherRemark}</div>}
                                         </div>
                                     }
                                 </div>

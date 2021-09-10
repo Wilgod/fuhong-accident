@@ -37,6 +37,7 @@ interface IServiceUserAccidentFormStates {
     injuredAreaOther: string;
     uncomfortableOtherRemark: string;
     uncomfortableDescription: string;
+    behaviorOtherRemark: string;
 }
 
 interface IServiceUserAccidentFormProps {
@@ -56,6 +57,9 @@ interface IErrorFields {
     uncomfortable?: string;
     uncomfortableDescription?: string;
     uncomfortableOtherRemark?: string;
+    behaviorSwitch?: string;
+    behavior?: string;
+    behaviorOtherRemark?: string;
 }
 
 export { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps }
