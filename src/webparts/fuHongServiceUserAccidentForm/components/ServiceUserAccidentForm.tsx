@@ -6,7 +6,6 @@ import Header from "../../../components/Header/Header";
 import styles from "./FuHongServiceUserAccidentForm.module.scss";
 import "./custom.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
-
 import * as moment from 'moment';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
@@ -18,8 +17,9 @@ import { getServiceUserAccident } from '../../../api/FetchFuHongList';
 import { postServiceUserAccident } from '../../../api/PostFuHongList';
 import { getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
-import { addDays, dateFieldRawHandler } from '../../../utils/DateFactory';
-import { formProperties } from 'office-ui-fabric-react';
+import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
+import useUserInfoAD from '../../../hooks/useUserInfoAD';
+
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -34,9 +34,14 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
     const [policeDate, setPoliceDate] = useState(new Date());
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
-    const [sd, setSD] = useState(null);
-    const [spt, setSPT] = useState(null);
-    const [contactStaff, setContactStaff] = useState(null);
+    const [contactStaff, setContactStaff] = useUserInfoAD();//負責通知家屬的職員姓名
+    const [reporter, setReporter] = useUserInfoAD(); // 填報人姓名
+    const [serviceManger, setServiceManger] = useState(null); //[此欄由高級服務經理/服務經理填寫]
+    const [serviceDirector, setServiceDirector] = useState(null); // [此欄由服務總監填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapy] = useState(null); // [此欄由高級物理治療師填寫]
+    const [investigator, setInvestigator] = useState(null); // [此欄由高級物理治療師填寫]
+
+
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
@@ -66,7 +71,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         stayInHospitalName: "",
         policeReportNumber: "",
         policeStation: "",
-        contingenyMeasureRemark: "",
+        contingencyMeasureRemark: "",
         contactFamilyRelationship: "",
         contactFamilyName: "",
         afterTreatmentDescription: "",
@@ -110,6 +115,15 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     const dataFactory = () => {
         const body = {};
         const error: IErrorFields = {};
+
+        const test = {
+            contactStaff,
+            reporter,
+            serviceManger,
+            serviceDirector,
+            sPhysicalTherapy,
+            investigator
+        }
 
         //意外發生日期和時間
         if (accidentTime) {
@@ -196,27 +210,194 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         }
 
         //服務使用者有否出現不安全的行為
-        if (form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE") {
+        if (form.behaviorSwitch) {
             body["UnsafeBehaviors"] = form.behaviorSwitch;
+            if (form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE") {
 
-            if (form.behavior.length > 0) {
-                body["UnsafeBehaviorsChoices"] = JSON.stringify(form.behavior);
+                if (form.behavior.length > 0) {
+                    body["UnsafeBehaviorsChoices"] = JSON.stringify(form.behavior);
 
-                if (form.behavior.indexOf("BEHAVIOR_OTHER") > -1) {
-                    body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
+                    if (form.behavior.indexOf("BEHAVIOR_OTHER") > -1) {
+                        body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
+                    } else {
+                        error.behaviorOtherRemark = "請填寫";
+                    }
                 } else {
-                    error.behaviorOtherRemark = "請填寫";
+                    error.behavior = "請選擇";
                 }
-            } else {
-                error.behavior = "請選擇";
             }
-
         } else {
-            error.behaviorSwitch = "請選擇";
+            error.behaviorSwitch = "請選擇"; // Havent choose the switch button
         }
 
         //相片及CCTV紀錄
+        if (form.photo) {
+            body["PhotoRecord"] = form.photo;
+            if (form.photo === "PHOTO_TRUE") {
+                error.photo = "請上傳照片";
+            }
+        } else {
+            error.photoChoice = "請選擇";
+        }
 
+        if (form.cctv) {
+            body["CctvRecord"] = form.cctv;
+            if (form.cctv === "CCTV_TRUE") {
+                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
+            }
+        } else {
+            error.cctv = "請選擇";
+        }
+
+        // 環境因素
+        if (form.envFactor.length > 0) {
+            body["ObserveEnvironmentFactor"] = JSON.stringify(form.envFactor);
+            if (form.envFactor.indexOf("ENV_OTHER") > -1 && form.enviromentalFactorOtherRemark.trim()) {
+                body["ObserveEnvironmentFactorOther"] = form.enviromentalFactorOtherRemark.trim();
+            } else {
+                error.evnFactorOtherRemark = "請註明";
+            }
+        } else {
+            error.envFactor = "請選擇";
+        }
+
+        //個人因素
+        if (form.personalFactor.length > 0) {
+            body["ObservePersonalFactor"] = JSON.stringify(form.personalFactor);
+            if (form.personalFactorOtherRemark.indexOf("PERSONAL_OTHER") > -1 && form.personalFactorOtherRemark.trim()) {
+                body["ObservePersonalFactorOther"] = form.personalFactorOtherRemark.trim();
+            } else {
+                error.personalFactorOtherRemark = "請註明";
+            }
+        } else {
+            error.personalFactor = "請選擇";
+        }
+
+        //事發過程
+        if (form.accidentDetail.trim()) {
+            body["AccidentDetail"] = form.accidentDetail.trim();
+        } else {
+            error.accidentDetail = "請填寫";
+        }
+
+        //服務單位即時治療/處理
+        if (form.treatmentAfterAccident.trim()) {
+            body["TreatmentAfterAccident"] = form.treatmentAfterAccident.trim();
+        } else {
+            error.treatmentAfterAccident = "請填寫";
+        }
+
+        //就診安排
+        if (form.arrangement) {
+            body["MedicalArrangement"] = form.arrangement;
+            //醫院名稱
+            if (form.arrangement.indexOf("ARRANGEMENT_EMERGENCY_DEPARTMENT") > -1) {
+                if (form.medicalArrangementHospital.trim()) {
+                    body["MedicalArrangementHospital"] = form.medicalArrangementHospital.trim();
+                } else {
+                    error.medicalArrangementHospital = "請填寫";
+                }
+            }
+            //到達時間
+            body["MedicalArrangementDate"] = medicalArrangementDate.toISOString();
+
+            // 提供予服務使用者的治療
+            if (form.medicalArrangementTreatment.trim()) {
+                body["MedicalArrangementTreatment"] = form.medicalArrangementTreatment.trim();
+            } else {
+                error.medicalArrangementTreatment = "請填寫";
+            }
+        } else {
+            error.arrangement = "請選擇";
+        }
+
+        //是否在醫院留醫
+        if (form.isStayInHospital) {
+            body["StayInHospital"] = form.isStayInHospital;
+            //醫院名稱
+            if (form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE") {
+                if (form.stayInHospitalName.trim()) {
+                    body["StayInHospitalName"] = form.stayInHospitalName;
+                } else {
+                    error.isStayInHospitalName = "請填寫";
+                }
+            }
+        } else {
+            error.isStayInHospital = "請選擇";
+        }
+
+        //報警處理
+        if (form.police) {
+            body["Police"] = form.police;
+            if (form.police === "POLICE_TRUE") {
+                //日期和時間
+                body["CalledPoliceDate"] = policeDate.toISOString();
+
+                //報案編號
+                if (form.policeReportNumber.trim()) {
+                    body["CalledPoliceReportNumber"] = form.policeReportNumber.trim();
+                } else {
+                    error.policeReportNumber = "請填寫";
+                }
+
+                //警署
+                if (form.policeStation.trim()) {
+                    body["CalledPolice"] = form.policeStation.trim();
+                } else {
+                    error.policeStation = "請填寫";
+                }
+            }
+        } else {
+            error.police = "請選擇";
+        }
+
+        //意外後中心即時應變措施 
+        if (form.contingencyMeasure) {
+            body["ContingencyMeasure"] = form.contingencyMeasure;
+            if (form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE") {
+                if (form.contingencyMeasureRemark.trim()) {
+                    body["ContingencyMeasureRemark"] = form.contingencyMeasureRemark.trim();
+                } else {
+                    error.contingencyMeasureRemark = "請填寫";
+                }
+            }
+        } else {
+            error.contingencyMeasure = "請選擇";
+        }
+
+        //通知家屬日期和時間
+        body["ContactFamilyDate"] = contactFamilyDate.toISOString();
+
+        //與服務使用者關係
+        if (form.contactFamilyRelationship.trim()) {
+            body["ContactFamilyRelationship"] = form.contactFamilyRelationship.trim();
+        } else {
+            error.contactFamilyRelationship = "請填寫";
+        }
+
+        //家屬姓名
+        if (form.contactFamilyName.trim()) {
+            body["ContactFamilyName"] = form.contactFamilyName.trim();
+        } else {
+            error.contactFamilyName = "請填寫";
+        }
+
+        //負責通知家屬的職員姓名
+
+        // if(){
+        // ContactFamilyStaff <- sp field
+        // }else{
+
+        // }
+
+        //服務使用者經診治後情況
+        if (form.afterTreatmentDescription.trim()) {
+            body["AfterTreatmentDescription"] = form.afterTreatmentDescription.trim();
+        } else {
+            error.afterTreatmentDescription = "請填寫";
+        }
+
+        console.log(body);
         return [body, error];
     }
 
@@ -596,7 +777,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-false">沒有</label>
                             </div>
-                            {error.behavior && <div className="text-danger">{error.behavior}</div>}
+                            {error.behaviorSwitch && <div className="text-danger">{error.behaviorSwitch}</div>}
                             {
                                 form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE" &&
                                 <div>
@@ -620,7 +801,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-other">其他 (請註明)</label>
                                     </div>
-                                    {error.behaviorOtherRemark && <div className="text-danger">{error.behaviorOtherRemark}</div>}
+                                    {error.behavior && <div className="text-danger">{error.behavior}</div>}
                                     {
                                         form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
                                         <div className="">
@@ -649,13 +830,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 </div>
                                 {
                                     form.photo === "PHOTO_TRUE" &&
-                                    <StyledDropzone />
+                                    <>
+                                        <StyledDropzone />
+                                        {error.photo && <div className="text-danger">{error.photo}</div>}
+                                    </>
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
+                            {error.photoChoice && <div className="text-danger">{error.photoChoice}</div>}
 
                             <div className={`${styles.buttonLabel} mt-3`} >CCTV紀錄</div>
                             <div className="pl-4">
@@ -669,6 +854,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
                                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={setCctvRecordReceiveDate} />
+
                                         </div>
                                     </div>
                                 }
@@ -676,6 +862,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
+                                {error.cctv && <div className="text-danger">{error.cctv}</div>}
                             </div>
                         </div>
                     </div>
@@ -735,8 +922,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 form.envFactor.indexOf("ENV_OTHER") > -1 &&
                                 <div className="">
                                     <AutosizeTextarea className="form-control" placeholder="請註明" value={form.enviromentalFactorOtherRemark} name={"enviromentalFactorOtherRemark"} onChange={textHandler} />
+                                    {error.evnFactorOtherRemark && <div className="text-danger">{error.evnFactorOtherRemark}</div>}
                                 </div>
                             }
+                            {error.envFactor && <div className="text-danger">{error.envFactor}</div>}
                         </div>
                     </div>
 
@@ -772,8 +961,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
                                 <div className="">
                                     <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textHandler} />
+                                    {error.personalFactorOtherRemark && <div className="text-danger">{error.personalFactorOtherRemark}</div>}
                                 </div>
                             }
+                            {error.personalFactor && <div className="text-danger">{error.personalFactor}</div>}
                         </div>
                     </div>
 
@@ -783,6 +974,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col">
                             <label htmlFor="procedure" className={styles.labelColor} style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
                             <AutosizeTextarea className="form-control" id="procedure" name="accidentDetail" value={form.accidentDetail} onChange={textHandler} />
+                            {error.accidentDetail && <div className="text-danger">{error.accidentDetail}</div>}
                         </div>
                     </div>
                 </section>
@@ -798,6 +990,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" id="procedure" name="treatmentAfterAccident" value={form.treatmentAfterAccident} onChange={textHandler} />
+                            {error.treatmentAfterAccident && <div className="text-danger">{error.treatmentAfterAccident}</div>}
                         </div>
                     </div>
 
@@ -823,6 +1016,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div className="mt-2" style={{ fontSize: 15 }}>
                                         <label className="form-label">醫院名稱</label>
                                         <input type="text" className="form-control" name="medicalArrangementHospital" value={form.medicalArrangementHospital} onChange={textHandler} />
+                                        {error.medicalArrangementHospital && <div className="text-danger">{error.medicalArrangementHospital}</div>}
                                     </div>
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">到達時間</label>
@@ -839,9 +1033,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">提供予服務使用者的治療</label>
                                         <AutosizeTextarea className="form-control" name="medicalArrangementTreatment" value={form.medicalArrangementTreatment} onChange={textHandler} />
+                                        {error.medicalArrangementTreatment && <div className="text-danger">{error.medicalArrangementTreatment}</div>}
                                     </div>
                                 </>
                             }
+                            {error.arrangement && <div className="text-danger">{error.arrangement}</div>}
                         </div>
                     </div>
 
@@ -866,6 +1062,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 <div className="mt-2">
                                     <label className="form-label">醫院名稱</label>
                                     <input type="text" className="form-control" name="stayInHospitalName" value={form.stayInHospitalName} onChange={textHandler} />
+                                    {error.isStayInHospitalName && <div className="text-danger">{error.isStayInHospitalName}</div>}
                                 </div>
                             }
                         </div>
@@ -902,13 +1099,16 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                     <div>
                                         <label className="form-label">報案編號</label>
                                         <input type="text" className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={textHandler} />
+                                        {error.policeReportNumber && <div className="text-danger">{error.policeReportNumber}</div>}
                                     </div>
                                     <div>
                                         <label className="form-label">警署</label>
                                         <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={textHandler} />
+                                        {error.policeStation && <div className="text-danger">{error.policeStation}</div>}
                                     </div>
                                 </>
                             }
+                            {error.police && <div className="text-danger">{error.police}</div>}
                         </div>
                     </div>
 
@@ -927,9 +1127,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" name="contingenyMeasureRemark" value={form.contingenyMeasureRemark} placeholder="請註明" onChange={textHandler} />
+                                    <AutosizeTextarea className="form-control" name="contingenyMeasureRemark" value={form.contingencyMeasureRemark} placeholder="請註明" onChange={textHandler} />
+                                    {error.contingencyMeasureRemark && <div className="text-danger">{error.contingencyMeasureRemark}</div>}
                                 </div>
                             }
+                            {error.contingencyMeasure && <div className="text-danger">{error.contingencyMeasure}</div>}
                         </div>
                     </div>
                 </section>
@@ -958,6 +1160,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} ${styles.textOverflowInline} pt-xl-0`}>與服務使用者關係</label>
                         <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" name="contactFamilyRelationship" value={form.contactFamilyRelationship} onChange={textHandler} />
+                            {error.contactFamilyRelationship && <div className="text-danger">{error.contactFamilyRelationship}</div>}
                         </div>
                     </div>
 
@@ -966,6 +1169,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬姓名</label>
                         <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" name="contactFamilyName" value={form.contactFamilyName} onChange={textHandler} />
+                            {error.contactFamilyName && <div className="text-danger">{error.contactFamilyName}</div>}
                         </div>
                     </div>
 
@@ -986,7 +1190,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 職位 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-xl-5">
-                            <input type="text" className="form-control" onChange={textHandler} />
+                            <input type="text" className="form-control" onChange={textHandler} value={contactStaff && (contactStaff.jobTitle || "")} />
                         </div>
                     </div>
 
@@ -995,6 +1199,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後情況</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler} />
+                            {error.afterTreatmentDescription && <div className="text-danger">{error.afterTreatmentDescription}</div>}
                         </div>
                     </div>
                 </section>
@@ -1013,7 +1218,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
+                                selectedItems={setReporter}
                                 showHiddenInUI={false} />
                         </div>
                         {/* 職級 */}
@@ -1025,7 +1230,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} />
                         </div>
                     </div>
                 </section>
@@ -1049,7 +1254,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
+                                selectedItems={setServiceManger}
                                 showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1091,8 +1296,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                selectedItems={setServiceDirector}
+                                showHiddenInUI={false}
+                            />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1127,10 +1333,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <div className="col-12 col-xl-4">
                             <PeoplePicker
                                 context={context}
-                                personSelectionLimit={1}
+                                titleText=""
                                 showtooltip={false}
-                                principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                selectedItems={setSPhysicalTherapy}
+                                showHiddenInUI={false} />
                         </div>
                         {/* 日期 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1158,7 +1367,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
+                                selectedItems={setInvestigator}
                                 showHiddenInUI={false} />
                         </div>
                         <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>

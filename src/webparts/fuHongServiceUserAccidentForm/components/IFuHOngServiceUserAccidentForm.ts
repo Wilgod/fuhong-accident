@@ -28,7 +28,7 @@ interface IServiceUserAccidentFormStates {
     stayInHospitalName: string;
     policeStation: string;
     policeReportNumber: string;
-    contingenyMeasureRemark: string;
+    contingencyMeasureRemark: string;
     contactFamilyRelationship: string;
     contactFamilyName: string;
     afterTreatmentDescription: string;
@@ -38,6 +38,7 @@ interface IServiceUserAccidentFormStates {
     uncomfortableOtherRemark: string;
     uncomfortableDescription: string;
     behaviorOtherRemark: string;
+
 }
 
 interface IServiceUserAccidentFormProps {
@@ -60,6 +61,28 @@ interface IErrorFields {
     behaviorSwitch?: string;
     behavior?: string;
     behaviorOtherRemark?: string;
+    photo?: string; // CCTV
+    photoChoice?: string;
+    cctv?: string;
+    envFactor?: string;
+    evnFactorOtherRemark?: string;
+    personalFactor?: string;
+    personalFactorOtherRemark?: string;
+    accidentDetail?: string;
+    treatmentAfterAccident?: string;
+    arrangement?: string;
+    medicalArrangementHospital?: string;
+    medicalArrangementTreatment?: string;
+    isStayInHospital?: string;
+    isStayInHospitalName?: string;
+    police?: string;
+    policeReportNumber?: string;
+    policeStation?: string;
+    contingencyMeasure?: string;
+    contingencyMeasureRemark?: string;
+    contactFamilyRelationship?: string;
+    contactFamilyName?: string;
+    afterTreatmentDescription?: string;
 }
 
 export { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps }

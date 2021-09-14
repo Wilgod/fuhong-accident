@@ -1,5 +1,3 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react';
 import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";

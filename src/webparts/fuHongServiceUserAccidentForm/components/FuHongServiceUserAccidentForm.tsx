@@ -11,7 +11,7 @@ import "./react-tabs.css";
 import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
-
+import { graph } from "@pnp/graph/presets/all";
 
 
 const getCanvasZone = () => {
@@ -41,11 +41,14 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     getCanvasZone();
 
     sp.setup({ spfxContext: this.props.context });
+    graph.setup({
+      spfxContext: this.props.context
+    });
     console.log("Flow 1");
   }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-    
+
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>
