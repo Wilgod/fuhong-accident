@@ -17,6 +17,7 @@ import { getServiceUserAccident } from '../../../api/FetchFuHongList';
 import { postServiceUserAccident } from '../../../api/PostFuHongList';
 import { getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
+import { IUser } from '../../../interface/IUser';
 import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 
@@ -28,6 +29,8 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
+
+
 export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
     const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
     const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
@@ -36,12 +39,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
     const [contactStaff, setContactStaff] = useUserInfoAD();//負責通知家屬的職員姓名
     const [reporter, setReporter] = useUserInfoAD(); // 填報人姓名
-    const [serviceManger, setServiceManger] = useState(null); //[此欄由高級服務經理/服務經理填寫]
-    const [serviceDirector, setServiceDirector] = useState(null); // [此欄由服務總監填寫]
-    const [sPhysicalTherapy, setSPhysicalTherapy] = useState(null); // [此欄由高級物理治療師填寫]
-    const [investigator, setInvestigator] = useState(null); // [此欄由高級物理治療師填寫]
-
-
+    const [serviceManger, setServiceManger] = useUserInfoAD(); //[此欄由高級服務經理/服務經理填寫]
+    const [serviceDirector, setServiceDirector] = useUserInfoAD(); // [此欄由服務總監填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapy] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
+    const [investigator, setInvestigator] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
@@ -84,6 +85,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     });
     const [error, setError] = useState<IErrorFields>({});
 
+    const CURRENT_USER: IUser = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
+
+
     const textHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -124,7 +132,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
             sPhysicalTherapy,
             investigator
         }
-
+        console.log(test);
         //意外發生日期和時間
         if (accidentTime) {
             body["accidentTime"] = accidentTime.toISOString();
@@ -384,12 +392,6 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
 
         //負責通知家屬的職員姓名
 
-        // if(){
-        // ContactFamilyStaff <- sp field
-        // }else{
-
-        // }
-
         //服務使用者經診治後情況
         if (form.afterTreatmentDescription.trim()) {
             body["AfterTreatmentDescription"] = form.afterTreatmentDescription.trim();
@@ -420,6 +422,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     const cancelHandler = () => {
         //implement 
     }
+
+    useEffect(() => {
+        setReporter([CURRENT_USER.email]);
+    }, []);
 
     return (
         <>
@@ -1185,7 +1191,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={setContactStaff}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={contactStaff && [contactStaff.mail]}
+
+                            />
                         </div>
                         {/* 職位 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
@@ -1219,7 +1228,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={setReporter}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={
+                                    reporter && [reporter.mail]
+                                } />
                         </div>
                         {/* 職級 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1255,7 +1267,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={setServiceManger}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={serviceManger && [serviceManger.mail]}
+                            />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1298,6 +1312,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 isRequired={false}
                                 selectedItems={setServiceDirector}
                                 showHiddenInUI={false}
+                                defaultSelectedUsers={serviceDirector && [serviceDirector.mail]}
                             />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1339,7 +1354,10 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={setSPhysicalTherapy}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={sPhysicalTherapy && [sPhysicalTherapy.mail]}
+                            />
+
                         </div>
                         {/* 日期 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1368,7 +1386,9 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={setInvestigator}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={investigator && [investigator.mail]}
+                            />
                         </div>
                         <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>
                     </div>

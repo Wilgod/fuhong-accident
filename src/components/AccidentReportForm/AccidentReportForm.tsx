@@ -1,24 +1,13 @@
 import * as React from 'react';
 import { useState } from "react";
-import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 import DatePicker from "react-datepicker";
 import Header from "../Header/Header";
 import "./AccidentReportForm.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
-interface IAccidentFollowUpRepotFormProps {
-    context: WebPartContext;
-    styles: any;
-    formType: string;
+import useUserInfoAD from "../../hooks/useUserInfoAD";
+import { IAccidentFollowUpRepotFormProps, IAccidentFollowUpRepotFormStates, IAccidentFollowUpReportFormError } from "./IaccidentReportForm";
 
-}
-
-interface IAccidentFollowUpRepotFormStates {
-    textarea: string;
-    accidentalNature: string[];
-    envFactor: string[];
-    personalFactor: string[];
-}
 
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
@@ -33,12 +22,42 @@ const formTypeParser = (formType: string, additonalString: string) => {
 export default function AccidentFollowUpRepotForm({ context, styles, formType }: IAccidentFollowUpRepotFormProps) {
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
-        textarea: "",
-        accidentalNature: [],
-        envFactor: [],
-        personalFactor: []
+        formType: "",
+        accidentNatureFall: false,
+        accidentNatureChok: false,
+        accidentNatureBehavior: false,
+        accidentNatureEnvFactor: false,
+        accidentNatureOther: false,
+        accidentalNatureOtherRemark: "",
+        envFactorSlipperyGround: false,
+        envFactorUnevenGround: false,
+        envFactorObstacleItems: false,
+        envFactorInsufficientLight: false,
+        envFactorNotEnoughSpace: false,
+        envFactorNoise: false,
+        envFactorCollision: false,
+        envFactorHurtByOthers: false,
+        envFactorAssistiveEquipment: false,
+        envFactorOther: false,
+        envFactorOtherRemark: "",
+        personalFactorEmotional: false,
+        personalFactorImpatient: false,
+        personalFactorChok: false,
+        personalFactorUnsteadyWalk: false,
+        personalFactorTwitch: false,
+        personalFactorOther: false,
+        personalFactorOtherRemark: "",
+        accidentalDiscovery: "",
+        accidentCauseFactor: "",
+        suggestion: "",
+        sptComment: "",
+        sdComment: "",
     });
-
+    const [investigator, seInvestigator] = useUserInfoAD();
+    const [SPT, setSPT] = useUserInfoAD(); //高級物理治療師填寫
+    const [SD, setSD] = useUserInfoAD(); //高級服務經理/服務經理填寫
+    const [sptDate, setSptDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(new Date());
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -50,6 +69,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
         const name = event.target.name;
         const value = event.target.value;
         setForm({ ...form, [name]: value });
+    }
+
+    const checkboxBoolHandler = (event) => {
+        const name = event.target.name;
+        console.log(name);
+        setForm({ ...form, [name]: !form[name] });
     }
 
     const checkboxHandler = (event) => {
@@ -65,6 +90,112 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
             }
         }
     }
+
+    const dataFactory = () => {
+        let body = {};
+        let error: IAccidentFollowUpReportFormError = {};
+        // Title <-form type
+        body["Title"] = formType;
+        body["AccidentNatureFall"] = form.accidentNatureFall;
+        body["AccidentNatureChok"] = form.accidentNatureChok;
+        body["AccidentNatureBehavior"] = form.accidentNatureBehavior;
+        body["AccidentNatureEnvFactor"] = form.accidentNatureEnvFactor;
+        body["AccidentNatureOther"] = form.accidentNatureOther;
+        if (form.accidentNatureOther) {
+            if (form.accidentalNatureOtherRemark.trim()) {
+                body["AccidentNatureOtherRemark"] = form.accidentalNatureOtherRemark;
+            } else {
+                // Error handling
+            }
+        }
+
+        body["EnvFactorSlipperyGround"] = form.envFactorSlipperyGround;
+        body["EnvFactorUnevenGround"] = form.envFactorUnevenGround;
+        body["EnvFactorObstacleItems"] = form.envFactorObstacleItems;
+        body["EnvFactorInsufficientLight"] = form.envFactorInsufficientLight;
+        body["EnvFactorAssistiveEquipment"] = form.envFactorAssistiveEquipment
+        body["EnvFactorNotEnoughSpace"] = form.envFactorNotEnoughSpace;
+        body["EnvFactorNoise"] = form.envFactorNoise
+        body["EnvFactorCollision"] = form.envFactorCollision;
+        body["EnvFactorHurtByOthers"] = form.envFactorHurtByOthers;
+        body["EvnFactorOther"] = form.envFactorOther;
+        if (form.envFactorOther) {
+            if (form.envFactorOtherRemark.trim()) {
+                body["EnvFactorOtherRemark"] = form.envFactorOtherRemark;
+            } else {
+                //Error handling
+            }
+        }
+
+        body["PersonalFactorEmotional"] = form.personalFactorEmotional;
+        body["PersonalFactorImpatient"] = form.personalFactorImpatient;
+        body["PersonalFactorChok"] = form.personalFactorChok;
+        body["PersonalFactorUnsteadyWalk"] = form.personalFactorUnsteadyWalk;
+        body["PersonalFactorTwitch"] = form.personalFactorTwitch;
+        body["PersonalFactorOther"] = form.personalFactorOther;
+        if (form.personalFactorOther) {
+            if (form.personalFactorOtherRemark.trim()) {
+                body["PersonalFactorOtherRemark"] = form.personalFactorOtherRemark;
+            } else {
+                //error handling
+            }
+        }
+
+        //AccidentalDiscovery 意外發現之經過
+        if (form.accidentalDiscovery.trim()) {
+            body["AccidentalDiscovery"] = form.accidentalDiscovery;
+        } else {
+            // error handling 
+        }
+
+        //AccidentCauseFactor 可能引致意外之因素
+        if (form.accidentCauseFactor.trim()) {
+            body["AccidentCauseFactor"] = form.accidentCauseFactor;
+        } else {
+            // error handling
+        }
+
+        //Suggestion 建議 
+        if (form.suggestion) {
+            body["Suggestion"] = form.suggestion;
+        } else {
+            //error handling
+        }
+
+        if (investigator) {
+            //body["InvestigatorId"] = 
+        } else {
+            //error handling
+        }
+
+
+        // investigator 調查員
+        // SPT 
+        // SPTDate
+        // SPTComment
+        // SD
+        // SDDate
+        // SDComment
+
+
+        console.log(body);
+        return [body, error];
+    }
+    console.log(investigator);
+
+
+    const submitHandler = () => {
+        const data = dataFactory();
+    };
+
+    const draftHandler = () => {
+        const data = dataFactory();
+    };
+
+    const cancelHandler = () => {
+        const data = dataFactory();
+    };
+
 
     return (
         <>
@@ -183,29 +314,29 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外性質</label>
                         <div className="col">
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_FALL" value="ACCIDENTAL_NATURE_FALL" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ACCIDENTAL_NATURE_FALL">跌倒</label>
+                                <input className="form-check-input" type="checkbox" name="accidentNatureFall" id="accidental-nature-fall" checked={form.accidentNatureFall} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-fall">跌倒</label>
                             </div>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_CHOKING" value="ACCIDENTAL_NATURE_CHOKING" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ACCIDENTAL_NATURE_CHOKING">哽塞</label>
+                                <input className="form-check-input" type="checkbox" name="accidentNatureChok" id="accidental-nature-choking" checked={form.accidentNatureChok} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-choking">哽塞</label>
                             </div>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_BEHAVIOR" value="ACCIDENTAL_NATURE_BEHAVIOR" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ACCIDENTAL_NATURE_BEHAVIOR">服務使用者行為問題</label>
+                                <input className="form-check-input" type="checkbox" name="accidentNatureBehavior" id="accidental-nature-behavior" checked={form.accidentNatureBehavior} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-behavior">服務使用者行為問題</label>
                             </div>
                             <div className="form-check form-check-inline  mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_ENV_FACTOR" value="ACCIDENTAL_NATURE_ENV_FACTOR" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ACCIDENTAL_NATURE_ENV_FACTOR">環境因素</label>
+                                <input className="form-check-input" type="checkbox" name="accidentNatureEnvFactor" id="accidental-nature-env-factor" checked={form.accidentNatureEnvFactor} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-env-factor">環境因素</label>
                             </div>
                             <div className="form-check mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentalNature" id="ACCIDENTAL_NATURE_OTHER" value="ACCIDENTAL_NATURE_OTHER" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ACCIDENTAL_NATURE_OTHER">其他</label>
+                                <input className="form-check-input" type="checkbox" name="accidentNatureOther" id="accidental-nature-other" checked={form.accidentNatureOther} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-other">其他</label>
                             </div>
                             {
-                                form.accidentalNature.indexOf("ACCIDENTAL_NATURE_OTHER") > -1 &&
+                                form.accidentNatureOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="accidentalNatureOtherRemark" value={form.accidentalNatureOtherRemark} onChange={textFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -217,49 +348,49 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         <div className="col">
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorSlipperyGround" id="env-slippery-ground" checked={form.envFactorSlipperyGround} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-slippery-ground">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorUnevenGround" id="env-uneven-ground" checked={form.envFactorUnevenGround} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-uneven-ground">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorObstacleItems" id="env-obstacle-items" checked={form.envFactorObstacleItems} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-obstacle-items">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorInsufficientLight" id="env-insufficient-light" checked={form.envFactorInsufficientLight} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-insufficient-light">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorNotEnoughSpace" id="env-not-enough-space" checked={form.envFactorNotEnoughSpace} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-not-enough-space">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorNoise" id="env-acoustic-stimulation" checked={form.envFactorNoise} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-acoustic-stimulation">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorCollision" id="env-collided-by-others" checked={form.envFactorCollision} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-collided-by-others">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorHurtByOthers" id="env-hurt-by-others" checked={form.envFactorHurtByOthers} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-hurt-by-others">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxHandler} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
+                                <input className="form-check-input" type="checkbox" name="envFactorAssistiveEquipment" id="env-improper-use-of-assistive-equipment" checked={form.envFactorAssistiveEquipment} onClick={checkboxBoolHandler} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-improper-use-of-assistive-equipment">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactorOther" id="ENV-OTHER" checked={form.envFactorOther} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他</label>
                             </div>
                             {
-                                form.envFactor.indexOf("ENV_OTHER") > -1 &&
+                                form.accidentNatureOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -270,33 +401,33 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                         <div className="col">
                             <div>個人因素</div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorEmotional" id="PERSONAL-EMOTIONAL-INSTABILITY" checked={form.personalFactorEmotional} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorImpatient" id="PERSONAL-HEARTBROKEN" checked={form.personalFactorImpatient} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorChok" id="PERSONAL-CHOKING" checked={form.personalFactorChok} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name={"personalFactorUnsteadyWalk"} id="PERSONAL-UNSTEADY-WALKING" checked={form.personalFactorUnsteadyWalk} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorTwitch" id="PERSONAL-TWITCH" checked={form.personalFactorTwitch} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorOther" id="PERSONAL-OTHER" checked={form.personalFactorOther} onClick={checkboxBoolHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-OTHER">其他</label>
                             </div>
                             {
-                                form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
+                                form.personalFactorOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -305,21 +436,21 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發現之經過</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>可能引致意外之因素</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} />
                         </div>
                     </div>
 
@@ -335,13 +466,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                selectedItems={seInvestigator}
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={investigator && [investigator.mail]}
+                            />
                         </div>
                         {/* 職級*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-md-5">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={investigator && (investigator.jobTitle || "")} />
                         </div>
                     </div>
                 </section>
@@ -365,18 +498,20 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                selectedItems={setSD}
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={SD && [SD.mail]}
+                            />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={setSdDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={form.sdComment} onChange={textFieldHandler} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -399,7 +534,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     </div>
 
                     <div className="form-row mb-2">
-                        {/* 服務單位*/}
+                        {/* 高級物理治療師姓名*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
                             <PeoplePicker
@@ -409,19 +544,20 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                selectedItems={setSPT}
+                                showHiddenInUI={false}
+                                defaultSelectedUsers={SPT && [SPT.mail]} />
                         </div>
                         {/* 意外發生時間*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} readOnly={true} />
+                            <DatePicker className="form-control" selected={sptDate} dateFormat="yyyy/MM/dd" onChange={setSptDate} readOnly={true} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="sptComment" value={form.sptComment} onChange={textFieldHandler} />
                         </div>
                     </div>
                 </section>
@@ -430,9 +566,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success">草稿</button>
-                        <button className="btn btn-secondary">取消</button>
+                        <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
+                        <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
+                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                     </div>
                 </section>
             </div>

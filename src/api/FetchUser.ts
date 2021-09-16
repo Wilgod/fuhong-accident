@@ -18,7 +18,6 @@ export async function getUserInfoByEmail(email: string) {
 export async function getUserAdByGraph(email: string) {
     try {
         const matchingUser = await graph.users.getById(email)();
-        console.log(matchingUser)
         return matchingUser;
     } catch (err) {
         console.error(err);

@@ -7,10 +7,14 @@ export default function useUserInfoAD() {
 
     useEffect(() => {
         if (peoplePicker) {
-            if (Array.isArray(peoplePicker) && peoplePicker.length > 0) {
-                const email = peoplePicker[0].secondaryText;
-                getUserAdByGraph(email).then(setUser).catch(console.error);
+            if (Array.isArray(peoplePicker)) {
+                if (peoplePicker.length > 0) {
+                    const email = peoplePicker[0].secondaryText || peoplePicker[0];
+                    getUserAdByGraph(email).then(setUser).catch(console.error);
+                }
             }
+        } else {
+            setUser(null);
         }
     }, [peoplePicker, setUser]);
 
