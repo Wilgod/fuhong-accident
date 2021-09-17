@@ -11,7 +11,7 @@ import { graph } from "@pnp/graph";
 import "@pnp/graph/users";
 
 export async function getUserInfoByEmail(email: string) {
-    const result = await sp.web.ensureUser(email);
+    const result = await sp.web.siteUsers.getByEmail(email).get();
     console.log(result);
 }
 

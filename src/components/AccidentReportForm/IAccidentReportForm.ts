@@ -1,10 +1,11 @@
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { Role } from '../../utils/RoleParser';
 
 export interface IAccidentFollowUpRepotFormProps {
     context: WebPartContext;
     styles: any;
     formType: string;
-
+    currentUserRole: Role
 }
 
 export interface IAccidentFollowUpRepotFormStates {
@@ -54,6 +55,7 @@ export interface IAccidentFollowUpReportFormError {
 //EnvFactorObstacleItems
 //EnvFactorInsufficientLight
 //EnvFactorNotEnoughSpace
+//EnvFactorAssistiveEquipment
 //EnvFactorNoise
 //EnvFactorCollision
 //EnvFactorHurtByOthers
@@ -64,6 +66,5 @@ export interface IAccidentFollowUpReportFormError {
 //PersonalFactorChok
 //PersonalFactorUnsteadyWalk
 //PersonalFactorTwitch
-//EnvFactorAssistiveEquipment
 //PersonalFactorOther
 //PersonalFactorOtherRemark

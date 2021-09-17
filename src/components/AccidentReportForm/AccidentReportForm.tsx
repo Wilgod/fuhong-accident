@@ -6,7 +6,7 @@ import Header from "../Header/Header";
 import "./AccidentReportForm.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import useUserInfoAD from "../../hooks/useUserInfoAD";
-import { IAccidentFollowUpRepotFormProps, IAccidentFollowUpRepotFormStates, IAccidentFollowUpReportFormError } from "./IaccidentReportForm";
+import { IAccidentFollowUpRepotFormProps, IAccidentFollowUpRepotFormStates, IAccidentFollowUpReportFormError } from "./IAccidentReportForm";
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -232,7 +232,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>{formTypeParser(formType, "資料")}</h5>
                         </div>
@@ -482,7 +482,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
@@ -527,7 +527,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
                         </div>

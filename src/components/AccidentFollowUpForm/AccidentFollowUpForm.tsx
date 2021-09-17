@@ -7,19 +7,8 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import * as moment from 'moment';
 import "./AccidentFollowUpForm.css";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
-interface IAccidentFollowUpFormProps {
-    context: WebPartContext;
-    formType: string;
-    styles: any;
-}
-
-interface IAccidentFollowUpFormStates {
-    followup: string;
-    remark: string;
-    sptComment: string;
-    sdComment: string;
-}
-
+import { IAccidentFollowUpFormStates, IAccidentFollowUpFormProps } from './IAccidentFollowUpForm';
+import useUserInfoAD from '../../hooks/useUserInfoAD';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -30,13 +19,20 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles }: IAccidentFollowUpFormProps) {
-    const [date, setDate] = useState(new Date());
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole }: IAccidentFollowUpFormProps) {
+    const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
+    const [sdDate, setSdDate] = useState(new Date()); // 服務總監
+    const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
+    const [smAD, setSmPicker, smPicker] = useUserInfoAD();// 高級服務經理
+    const [sptAD, setSptPicker, sptPicker] = useUserInfoAD();// 高級物理治療師
+    const [sdAD, setSdPicker, sdPicker] = useUserInfoAD();// 服務總監
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
-        followup: "",
+        accidentalFollowUpContinue: "",
+        executionPeriod: "",
+        followUpMeasures: "",
         remark: "",
-        sptComment: "",
-        sdComment: ""
+        sdComment: "",
+        sptComment: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -65,7 +61,59 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
         }
     }
 
+    const dataFactory = () => {
 
+        let body = {};
+        let error = {};
+
+        body["FormType"] = formType;
+
+        if (form.followUpMeasures.trim()) {
+            body["FollowUpMeasures"] = form.followUpMeasures;
+        } else {
+            // error handling;
+        }
+
+        if (form.executionPeriod.trim()) {
+            body["ExecutionPeriod"] = form.executionPeriod;
+        } else {
+            //error handling
+        }
+
+        if (form.remark) {
+            body["Remark"] = form.remark;
+        } else {
+            //error handling;
+        }
+
+        if (form.accidentalFollowUpContinue) {
+            body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? true : false;
+        }
+
+
+        return [body, error];
+    }
+
+    const submitHandler = (event) => {
+
+        //Implement
+    }
+
+    const draftHandler = (event) => {
+        // Implement
+    }
+
+    const cancelHandler = (event) => {
+        //Implement
+    }
+
+    const approveHandler = () => {
+        //Implement
+    }
+
+    const rejectHnadler = () => {
+        //Implement
+    }
 
     return (
         <>
@@ -101,7 +149,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外資料</h5>
                         </div>
@@ -128,7 +176,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>意外跟進行動表</h5>
                         </div>
@@ -137,14 +185,14 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         {/* 意外報告的跟進措施 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="followup" onChange={textFieldHandler} value={form.followup} />
+                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 執行時段 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
                         <div className="col">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="executionPeriod" onChange={textFieldHandler} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -160,11 +208,11 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外跟進</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
                             {/* <select className="form-control">
@@ -184,13 +232,16 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                                 personSelectionLimit={1}
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                resolveDelay={1000}
+                                selectedItems={setSmPicker}
+                                defaultSelectedUsers={smAD && [smAD.mail]}
+                            />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={smDate} onChange={setSmDate} readOnly />
                         </div>
                     </div>
                 </section>
@@ -198,7 +249,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 <hr className="my-4" />
 
                 <section className="mb-3">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
                         </div>
@@ -212,13 +263,16 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                                 personSelectionLimit={1}
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                resolveDelay={1000}
+                                selectedItems={setSptPicker}
+                                defaultSelectedUsers={sptAD && [sptAD.mail]}
+                            />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sptDate} onChange={setSptDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -240,7 +294,7 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                 <hr className="my-4" />
 
                 <section className="mb-3">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
                         </div>
@@ -255,13 +309,17 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
                                 personSelectionLimit={1}
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000} />
+                                resolveDelay={1000}
+                                ensureUser={true}
+                                selectedItems={setSdPicker}
+                                defaultSelectedUsers={sdAD && [sdAD.mail]}
+                            />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
                             {/* <input type="date"  /> */}
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={setSdDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -285,9 +343,9 @@ export default function AccidentFollowUpForm({ context, formType, styles }: IAcc
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success">草稿</button>
-                        <button className="btn btn-secondary">取消</button>
+                        <button className="btn btn-warning" onClick={(event => submitHandler(event))}>提交</button>
+                        <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
+                        <button className="btn btn-secondary" onClick={(event => cancelHandler(event))}>取消</button>
                     </div>
                 </section>
             </div>

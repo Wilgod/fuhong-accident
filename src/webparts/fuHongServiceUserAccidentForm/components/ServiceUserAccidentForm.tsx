@@ -20,6 +20,10 @@ import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormP
 import { IUser } from '../../../interface/IUser';
 import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
+import { getUserInfoByEmail } from '../../../api/FetchUser';
+import { Role } from '../../../utils/RoleParser';
+import { getServiceUserList } from '../../../api/FetchServiceUser';
+import useServiceUser from '../../../hooks/useServiceUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -29,9 +33,11 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
+// getUserInfoByEmail("jonathan.tsoi@fuhong.org");
+// getUserInfoByEmail("rosetti.to@fuhong.org");
+// getUserInfoByEmail("anita.poon@fuhong.org");
 
-
-export default function ServiceUserAccidentForm({ context }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole }: IServiceUserAccidentFormProps) {
     const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
     const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
     const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
@@ -43,6 +49,8 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
     const [serviceDirector, setServiceDirector] = useUserInfoAD(); // [此欄由服務總監填寫]
     const [sPhysicalTherapy, setSPhysicalTherapy] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
+    const [serviceUserList, serviceUser, serviceNumber, setServiceNumber] = useServiceUser();
+
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         partientAcciedntScenario: "",
@@ -81,8 +89,15 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         injuredAreaOther: "",
         uncomfortableDescription: "",
         uncomfortableOtherRemark: "",
-        behaviorOtherRemark: ""
+        behaviorOtherRemark: "",
     });
+    const [sdComment, setSdComment] = useState("");
+    const [sdDate, setSdDate] = useState(new Date());
+    const [sptComment, setSptComment] = useState("");
+    const [sptDate, setSptDate] = useState(new Date());
+    const [smComment, setSmComment] = useState("");
+    const [smDate, setSmDate] = useState(new Date());
+
     const [error, setError] = useState<IErrorFields>({});
 
     const CURRENT_USER: IUser = {
@@ -423,8 +438,28 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
         //implement 
     }
 
+    const smApproveHandler = () => {
+        // implement
+    }
+
+    const smRejectHandler = () => {
+        // implement
+    }
+
+    const sptApproveHandler = () => {
+        // implement
+
+    }
+
+    const sptRejectHandler = () => {
+        // implement
+
+    }
+
+
     useEffect(() => {
         setReporter([CURRENT_USER.email]);
+
     }, []);
 
     return (
@@ -461,8 +496,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
-                            <select className="form-control" >
+                            <select className="form-control" value={serviceNumber} onChange={(event) => setServiceNumber(event.target.value)}>
                                 <option>請選擇服務使用者</option>
+                                {
+                                    serviceUserList.map((user) => {
+                                        return <option value={user.ServiceNumber}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
+                                    })
+                                }
                             </select>
                         </div>
                     </div>
@@ -471,7 +511,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(英文)</span></label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={serviceUser && serviceUser.NameEN} />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(中文)</span></label>
@@ -1273,23 +1313,27 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={smDate} onChange={setSmDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
                         </div>
                     </div>
-                    <div className="form-row my-2">
-                        <div className="col-12">
-                            <div className="d-flex justify-content-center">
-                                <button className="btn btn-warning mr-3">批准</button>
-                                <button className="btn btn-danger mr-3">拒絕</button>
+                    {
+                        Role.SERVICE_MANAGER === currentUserRole &&
+                        <div className="form-row my-2">
+                            <div className="col-12">
+                                <div className="d-flex justify-content-center">
+                                    <button className="btn btn-warning mr-3" onClick={smApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={smRejectHandler}>拒絕</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
                 </section>
 
                 <hr className="my-4" />
@@ -1317,13 +1361,13 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={setSdDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -1357,12 +1401,11 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={sPhysicalTherapy && [sPhysicalTherapy.mail]}
                             />
-
                         </div>
                         {/* 日期 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sptDate} onChange={setSptDate} readOnly />
                         </div>
                     </div>
 
@@ -1370,7 +1413,7 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         {/* 評語 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sptComment} onChange={(event) => setSptComment(event.target.value)} />
                         </div>
                     </div>
 
@@ -1393,15 +1436,17 @@ export default function ServiceUserAccidentForm({ context }: IServiceUserAcciden
                         <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>
                     </div>
 
-                    <div className="form-group row my-2">
-                        <div className="col-12">
-                            <div className="d-flex justify-content-center">
-                                <button className="btn btn-warning mr-3">批准</button>
-                                <button className="btn btn-danger mr-3">拒絕</button>
+                    {
+                        Role.SENIOR_PHYSIOTHERAPIST === currentUserRole &&
+                        <div className="form-group row my-2">
+                            <div className="col-12">
+                                <div className="d-flex justify-content-center">
+                                    <button className="btn btn-warning mr-3" onClick={sptApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={sptRejectHandler}>拒絕</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
+                    }
                 </section>
 
                 <hr className="my-4" />

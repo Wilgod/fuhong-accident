@@ -1,4 +1,5 @@
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import { Role } from '../../../utils/RoleParser';
 
 interface IServiceUserAccidentFormStates {
     partientAcciedntScenario: string;
@@ -43,6 +44,7 @@ interface IServiceUserAccidentFormStates {
 
 interface IServiceUserAccidentFormProps {
     context: WebPartContext;
+    currentUserRole: Role
 }
 
 interface IErrorFields {

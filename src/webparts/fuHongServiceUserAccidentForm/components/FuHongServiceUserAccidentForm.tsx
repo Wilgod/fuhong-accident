@@ -12,7 +12,8 @@ import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
 import { graph } from "@pnp/graph/presets/all";
-
+import { jobTitleParser, Role } from '../../../utils/RoleParser';
+import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -35,16 +36,33 @@ if (document.querySelector('.CanvasZone') != null) {
   (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, {}> {
+
+export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
 
     sp.setup({ spfxContext: this.props.context });
-    graph.setup({
-      spfxContext: this.props.context
-    });
+    graph.setup({ spfxContext: this.props.context });
+
+    this.state = {
+      currentUserRole: Role.PROFESSIONAL
+    }
     console.log("Flow 1");
+  }
+
+  private checkRole = () => {
+    const queryParameter = getQueryParameterString("role");
+    if (queryParameter) {
+      const role = jobTitleParser(queryParameter);
+      this.setState({
+        currentUserRole: role
+      });
+    }
+  }
+
+  public componentDidMount() {
+    this.checkRole(); // Testing Only
   }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
@@ -59,13 +77,13 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <Tab>意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
-              <ServiceUserAccidentForm context={this.props.context} />
+              <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} />
             </TabPanel>
             <TabPanel>
-              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} />
+              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} />
             </TabPanel>
             <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} />
+              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} />
             </TabPanel>
           </Tabs>
         </div>
