@@ -7,11 +7,11 @@ import "@pnp/sp/items";
 export async function getServiceUserList() {
     try {
         const LIST_NAME = "Service User";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.select("ServiceNumber", "NameCN", "ID").getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.select("ServiceNumber", "NameCN", "ID").orderBy("ServiceNumber").getAll();
         return items;
     } catch (err) {
         console.error(err);
-        throw new Error("Fetch failed");
+        throw new Error("getServiceUserList failed");
     }
 }
 
@@ -21,8 +21,8 @@ export async function getServiceUserByServiceNumber(serviceNumber: string) {
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter(`ServiceNumber eq '${serviceNumber}'`).get();
         return items;
     } catch (err) {
-        console.log(err);
-        throw new Error("Fetch failed");
+        console.error(err);
+        throw new Error("getServiceUserByServiceNumber failed");
     }
 }
 
@@ -32,7 +32,7 @@ export async function getServiceUserByID(ID: number) {
         const items = await sp.web.lists.getByTitle(LIST_NAME).items.getById(ID).get();
         return items;
     } catch (err) {
-        console.log(err);
-        throw new Error("Fetch failed");
+        console.error(err);
+        throw new Error("getServiceUserByID failed");
     }
 }

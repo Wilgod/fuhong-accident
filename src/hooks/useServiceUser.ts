@@ -3,7 +3,7 @@ import { getServiceUserByID, getServiceUserByServiceNumber, getServiceUserList }
 
 export default function useServiceUser() {
     const [serviceUserList, setServiceUserList] = useState([]);
-    const [serviceUserRecordId, setServiceUserRecordId] = useState();
+    const [serviceUserRecordId, setServiceUserRecordId] = useState(null);
     const [serviceUser, setServiceUser] = useState(null);
 
     useEffect(() => {
@@ -13,9 +13,13 @@ export default function useServiceUser() {
     }, []);
 
     useEffect(() => {
-        getServiceUserByID(serviceUserRecordId).then((user) => {
-            setServiceUser(user);
-        }).catch(console.error);
+        if (serviceUserRecordId) {
+            getServiceUserByID(serviceUserRecordId).then((user) => {
+                setServiceUser(user);
+            }).catch(console.error);
+        } else {
+            setServiceUser(null);
+        }
     }, [serviceUserRecordId]);
 
     return [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId]

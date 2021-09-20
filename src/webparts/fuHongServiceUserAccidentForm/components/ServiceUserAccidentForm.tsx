@@ -24,6 +24,7 @@ import { getUserInfoByEmail } from '../../../api/FetchUser';
 import { Role } from '../../../utils/RoleParser';
 import { getServiceUserList } from '../../../api/FetchServiceUser';
 import useServiceUser from '../../../hooks/useServiceUser';
+import { intellectualDisabilityParser } from '../../../utils/IntellectualDisabilityParser';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -49,7 +50,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     const [serviceDirector, setServiceDirector] = useUserInfoAD(); // [此欄由服務總監填寫]
     const [sPhysicalTherapy, setSPhysicalTherapy] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
-    const [serviceUserList, serviceUser, serviceNumber, setServiceNumber] = useServiceUser();
+    const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
@@ -496,11 +497,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
-                            <select className="form-control" value={serviceNumber} onChange={(event) => setServiceNumber(event.target.value)}>
+                            <select className="form-control" value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value)}>
                                 <option>請選擇服務使用者</option>
                                 {
                                     serviceUserList.map((user) => {
-                                        return <option value={user.ServiceNumber}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
+                                        return <option value={user.ID}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
                                     })
                                 }
                             </select>
@@ -511,12 +512,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(英文)</span></label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" value={serviceUser && serviceUser.NameEN} />
+                            <input type="text" className="form-control" value={serviceUser ? serviceUser.NameEN : ""} />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(中文)</span></label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={serviceUser ? serviceUser.NameCN : ""} />
                         </div>
                     </div>
 
@@ -524,17 +525,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 年齡*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-xl-4">
-                            <input type="number" className="form-control" min={0} />
+                            <input type="number" className="form-control" min={0} value={serviceUser ? serviceUser.Age : 0} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-xl-4 pt-xl-0">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male" />
+                                <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male" checked={serviceUser && serviceUser.Gender === "Male"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" />
+                                <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" checked={serviceUser && serviceUser.Gender === "Female"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>
                             </div>
                         </div>
@@ -544,12 +545,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 服務使用者檔案號碼*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者檔案號碼</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" onChange={textHandler} />
+                            <input type="text" className="form-control" onChange={textHandler} value={serviceUser ? serviceUser.ServiceNumber : ""} />
                         </div>
                         {/* 接受服務類別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className="form-control" onChange={textHandler} />
+                            <input type="text" className="form-control" onChange={textHandler} value={serviceUser ? serviceUser.ServiceType : ""} />
                         </div>
                     </div>
 
@@ -585,11 +586,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否使用輪椅</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" onChange={radioButtonHandler} checked={serviceUser && serviceUser.Wheelchair === true} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" onChange={radioButtonHandler} checked={serviceUser && (serviceUser.Wheelchair === false || serviceUser.Wheelchair === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-false">否</label>
                             </div>
                         </div>
@@ -598,11 +599,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>自閉症譜系障礙(ASD)</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} checked={serviceUser && (serviceUser.ASD === true)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientASD" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} checked={serviceUser && (serviceUser.ASD === false || serviceUser.ASD === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_false">否</label>
                             </div>
                         </div>
@@ -615,27 +616,27 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>智力障礙程度</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "MILD"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-mild">輕度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "MODERATE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-moderate">中度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "SEVERE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "EXTREME_SEVERE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" onChange={radioButtonHandler} checked={serviceUser && (serviceUser.IntellectualDisability === "UNKNOWN" || serviceUser.IntellectualDisability === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
+                            {error.intellectualDisability && <div className="text-danger">{error.intellectualDisability}</div>}
                         </div>
-                        {form.intellectualDisability && <div className="text-danger">{form.intellectualDisability}</div>}
                     </div>
                 </section>
 
