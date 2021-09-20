@@ -16,10 +16,7 @@ interface IServiceUserAccidentFormStates {
     cctv: string;
     photo: string;
     serviceUserUncomfort: string;
-    patientWheelchair: string;
     accidentLocation: string;
-    patientASD: string;
-    intellectualDisability: string;
     personalFactorOtherRemark: string;
     enviromentalFactorOtherRemark: string;
     accidentDetail: string;

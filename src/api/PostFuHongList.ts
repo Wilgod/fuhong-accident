@@ -6,7 +6,7 @@ import "@pnp/sp/items";
 export async function postServiceUserAccident(body: any) {
     try {
         const LIST_NAME = "Service User Accident";
-        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add({ "Status": "SAVE" })
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
         console.log(result);
     } catch (err) {
         console.error(err);

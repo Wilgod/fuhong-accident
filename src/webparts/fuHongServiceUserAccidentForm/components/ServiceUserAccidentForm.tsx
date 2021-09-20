@@ -13,7 +13,7 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { getServiceUserAccident } from '../../../api/FetchFuHongList';
+import { getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { postServiceUserAccident } from '../../../api/PostFuHongList';
 import { getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
@@ -25,6 +25,7 @@ import { Role } from '../../../utils/RoleParser';
 import { getServiceUserList } from '../../../api/FetchServiceUser';
 import useServiceUser from '../../../hooks/useServiceUser';
 import { intellectualDisabilityParser } from '../../../utils/IntellectualDisabilityParser';
+import { getQueryParameterNumber } from '../../../utils/UrlQueryHelper';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -44,12 +45,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
     const [policeDate, setPoliceDate] = useState(new Date());
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
-    const [contactStaff, setContactStaff] = useUserInfoAD();//負責通知家屬的職員姓名
-    const [reporter, setReporter] = useUserInfoAD(); // 填報人姓名
-    const [serviceManger, setServiceManger] = useUserInfoAD(); //[此欄由高級服務經理/服務經理填寫]
-    const [serviceDirector, setServiceDirector] = useUserInfoAD(); // [此欄由服務總監填寫]
-    const [sPhysicalTherapy, setSPhysicalTherapy] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
-    const [investigator, setInvestigator] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
+    const [contactStaff, setContactStaff, contactStaffPickerInfo] = useUserInfoAD();//負責通知家屬的職員姓名
+    const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
+    const [serviceManger, setServiceManger, serviceManagerPickerInfo] = useUserInfoAD(); //[此欄由高級服務經理/服務經理填寫]
+    const [serviceDirector, setServiceDirector, serviceDreictorPickerInfo] = useUserInfoAD(); // [此欄由服務總監填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapy, sPhysicalTherapyPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
+    const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
     const [date, setDate] = useState(new Date());
@@ -68,10 +69,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         cctv: "",
         photo: "",
         serviceUserUncomfort: "",
-        patientWheelchair: "",
         accidentLocation: "",
-        patientASD: "",
-        intellectualDisability: "",
         personalFactorOtherRemark: "",
         enviromentalFactorOtherRemark: "",
         accidentDetail: "",
@@ -136,7 +134,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         }
     }
     //request body parser and validation
-    const dataFactory = () => {
+    const dataFactory = (status: string) => {
         const body = {};
         const error: IErrorFields = {};
 
@@ -148,31 +146,40 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
             sPhysicalTherapy,
             investigator
         }
-        console.log(test);
+
+        body["Status"] = status;
+
+        if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
+            body["ServiceUserId"] = serviceUserRecordId;
+        } else {
+            // Implement Error handling
+
+        }
+
         //意外發生日期和時間
         if (accidentTime) {
-            body["accidentTime"] = accidentTime.toISOString();
+            body["AccidentTime"] = accidentTime.toISOString();
         } else {
             error.accidentTime = "ACCIDENT_TIME_ERROR";
         }
 
         //意外發生地點
         if (form.accidentLocation.trim().length > 0) {
-            body["accidentTime"] = form.accidentLocation;
+            body["AccidentLocation"] = form.accidentLocation;
         } else {
             error.accidentLocation = "ACCIDENT_LOCATION_ERROR";
         }
 
         //智力障礙程度
-        if (form.intellectualDisability) {
-            body["intellectualDisability"] = form.intellectualDisability;
-        } else {
-            error.intellectualDisability = "INTELLECTUAL_DISABILITY_ERROR"
-        }
+        // if (form.intellectualDisability) {
+        //     body["intellectualDisability"] = form.intellectualDisability;
+        // } else {
+        //     error.intellectualDisability = "INTELLECTUAL_DISABILITY_ERROR"
+        // }
 
         //服務使用者意外時情況
         if (form.partientAcciedntScenario) {
-            body["partientAcciedntScenario"] = form.partientAcciedntScenario;
+            body["Circumstance"] = form.partientAcciedntScenario;
 
             if (form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY")
                 if (form.scenarioOutsideActivityRemark.trim()) {
@@ -256,7 +263,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
         //相片及CCTV紀錄
         if (form.photo) {
-            body["PhotoRecord"] = form.photo;
+            body["PhotoRecord"] = form.photo === "PHOTO_TRUE";
             if (form.photo === "PHOTO_TRUE") {
                 error.photo = "請上傳照片";
             }
@@ -265,7 +272,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         }
 
         if (form.cctv) {
-            body["CctvRecord"] = form.cctv;
+            body["CctvRecord"] = form.cctv === "CCTV_TRUE";
             if (form.cctv === "CCTV_TRUE") {
                 body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
             }
@@ -288,7 +295,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         //個人因素
         if (form.personalFactor.length > 0) {
             body["ObservePersonalFactor"] = JSON.stringify(form.personalFactor);
-            if (form.personalFactorOtherRemark.indexOf("PERSONAL_OTHER") > -1 && form.personalFactorOtherRemark.trim()) {
+            if (form.personalFactor.indexOf("PERSONAL_OTHER") > -1 && form.personalFactorOtherRemark.trim()) {
                 body["ObservePersonalFactorOther"] = form.personalFactorOtherRemark.trim();
             } else {
                 error.personalFactorOtherRemark = "請註明";
@@ -352,7 +359,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
         //報警處理
         if (form.police) {
-            body["Police"] = form.police;
+            body["CalledPolice"] = form.police === "POLICE_TRUE";
             if (form.police === "POLICE_TRUE") {
                 //日期和時間
                 body["CalledPoliceDate"] = policeDate.toISOString();
@@ -366,7 +373,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
                 //警署
                 if (form.policeStation.trim()) {
-                    body["CalledPolice"] = form.policeStation.trim();
+                    body["CalledPoliceStation"] = form.policeStation.trim();
                 } else {
                     error.policeStation = "請填寫";
                 }
@@ -374,7 +381,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         } else {
             error.police = "請選擇";
         }
-
+        console.log(form);
         //意外後中心即時應變措施 
         if (form.contingencyMeasure) {
             body["ContingencyMeasure"] = form.contingencyMeasure;
@@ -405,8 +412,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         } else {
             error.contactFamilyName = "請填寫";
         }
-
         //負責通知家屬的職員姓名
+        if (contactStaffPickerInfo && contactStaffPickerInfo.length > 0) {
+            console.log(contactStaffPickerInfo);
+            const [contactStaff] = contactStaffPickerInfo;
+            body["ContactFamilyStaffId"] = contactStaff.id;
+        }
 
         //服務使用者經診治後情況
         if (form.afterTreatmentDescription.trim()) {
@@ -415,24 +426,28 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
             error.afterTreatmentDescription = "請填寫";
         }
 
+        if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
+            body["SMApproved"] = true;
+        }
+
         console.log(body);
         return [body, error];
     }
 
-    const draftHandler = () => {
-        // implement
-        const [body, error] = dataFactory();
-        if (Object.keys(error).length > 0) {
-            setError(error);
-            return;
-        }
+    const draftHandler = (event) => {
+        event.preventDefault();
+        const [body] = dataFactory("DRAFT");
+        postServiceUserAccident(body);
     }
-    const submitHandler = () => {
-        // implement
-        const [body, error] = dataFactory();
+
+    const submitHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory("SUBMIT");
         if (Object.keys(error).length > 0) {
             setError(error);
             return;
+        } else {
+            postServiceUserAccident(body);
         }
     }
     const cancelHandler = () => {
@@ -457,10 +472,56 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
     }
 
+    const loadData = async (formId: number) => {
+        const data = await getServiceUserAccidentById(formId);
+        console.log(data);
+        if (data) {
+            setForm({
+                accidentDetail: data.AccidentDetail || "",
+                accidentLocation: data.AccidentLocation || "",
+                afterTreatmentDescription: data.AfterTreatmentDescription || "",
+                behaviorSwitch: data.UnsafeBehaviors || "",
+                behavior: JSON.parse(data.UnsafeBehaviorsChoices),
+                behaviorOtherRemark: data.UnsafeBehaviorsOther || "",
+                serviceUserUncomfort: data.UnwellAfterInjured,
+                uncomfortable: JSON.parse(data.UnwellAfterInjuredChoices),
+                uncomfortableDescription: data.UnwellAfterInjuredDescription,
+                uncomfortableOtherRemark: data.UnwellAfterInjuredOther,
+                cctv: data.CctvRecord ? "CCTV_TRUE" : "CCTV_FALSE",
+                photo: data.PhotoRecord ? "PHOTO_TRUE" : "PHOTO_FALSE",
+                contactFamilyName: data.ContactFamilyName,
+                contactFamilyRelationship: data.ContactFamilyRelationship,
+                personalFactor: JSON.parse(data.ObservePersonalFactor),
+                personalFactorOtherRemark: data.ObservePersonalFactorOther,
+                envFactor: JSON.parse(data.ObserveEnvironmentFactor),
+                enviromentalFactorOtherRemark: data.ObserveEnvironmentFactorOther,
+                contingencyMeasure: data.ContingencyMeasure,
+                contingencyMeasureRemark: data.ContingencyMeasureRemark,
+                injuredArea: JSON.parse(data.InjuredArea),
+                injuredAreaOther: data.InjuredAreaOtherRemark,
+                arrangement: data.MedicalArrangement || "",
+                medicalArrangementHospital: data.MedicalArrangementHospital,
+                medicalArrangementTreatment: data.MedicalArrangementTreatment,
+                isStayInHospital: data.StayInHospital,
+                stayInHospitalName: data.StayInHospitalName,
+                police: data.CalledPolice ? "POLICE_TRUE" : "POLICE_FALSE",
+                policeStation: data.CalledPoliceStation,
+                policeReportNumber: data.CalledPoliceReportNumber,
+                treatmentAfterAccident: data.TreatmentAfterAccident,
+                partientAcciedntScenario: data.Circumstance,
+                scenarioOtherRemark: data.CircumstanceOtherRemark,
+                scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
+            });
+        }
+    }
 
     useEffect(() => {
-        setReporter([CURRENT_USER.email]);
-
+        const formId = getQueryParameterNumber("formId");
+        if (formId) {
+            loadData(formId);
+        } else {
+            setReporter([CURRENT_USER.email]);
+        }
     }, []);
 
     return (
@@ -570,7 +631,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 dateFormat="yyyy/MM/dd h:mm aa"
                             />
                             {error.accidentTime && <div className="text-danger">{error.accidentTime}</div>}
-
                         </div>
                         {/* 意外發生地點*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
@@ -580,17 +640,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         </div>
                     </div>
 
-
                     <div className="form-row mb-2">
                         {/* 是否使用輪椅*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否使用輪椅</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" onChange={radioButtonHandler} checked={serviceUser && serviceUser.Wheelchair === true} />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true" checked={serviceUser && serviceUser.Wheelchair === true} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" onChange={radioButtonHandler} checked={serviceUser && (serviceUser.Wheelchair === false || serviceUser.Wheelchair === null)} />
+                                <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-false" value="false" checked={serviceUser && (serviceUser.Wheelchair === false || serviceUser.Wheelchair === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-false">否</label>
                             </div>
                         </div>
@@ -599,16 +658,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>自閉症譜系障礙(ASD)</label>
                         <div className="col-12 col-xl-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE" onClick={radioButtonHandler} checked={serviceUser && (serviceUser.ASD === true)} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE" checked={serviceUser && (serviceUser.ASD === true)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientASD" id="asd_false" value="ASD_FALSE" onClick={radioButtonHandler} checked={serviceUser && (serviceUser.ASD === false || serviceUser.ASD === null)} />
+                                <input className="form-check-input" type="radio" name="patientASD" id="asd_false" value="ASD_FALSE" checked={serviceUser && (serviceUser.ASD === false || serviceUser.ASD === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_false">否</label>
                             </div>
                         </div>
-
-
                     </div>
 
                     <div className="form-row mb-2">
@@ -616,26 +673,26 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>智力障礙程度</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "MILD"} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD" checked={serviceUser && serviceUser.IntellectualDisability === "MILD"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-mild">輕度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "MODERATE"} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE" checked={serviceUser && serviceUser.IntellectualDisability === "MODERATE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-moderate">中度</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "SEVERE"} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-severe" value="INTELLECTUAL_DISABILITY_SEVERE" checked={serviceUser && serviceUser.IntellectualDisability === "SEVERE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" onChange={radioButtonHandler} checked={serviceUser && serviceUser.IntellectualDisability === "EXTREME_SEVERE"} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-extreme-severe" value="INTELLECTUAL_DISABILITY_EXTREME_SEVERE" checked={serviceUser && serviceUser.IntellectualDisability === "EXTREME_SEVERE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" onChange={radioButtonHandler} checked={serviceUser && (serviceUser.IntellectualDisability === "UNKNOWN" || serviceUser.IntellectualDisability === null)} />
+                                <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-unknown" value="INTELLECTUAL_DISABILITY_UNKNOWN" checked={serviceUser && (serviceUser.IntellectualDisability === "UNKNOWN" || serviceUser.IntellectualDisability === null)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
-                            {error.intellectualDisability && <div className="text-danger">{error.intellectualDisability}</div>}
+                            {/* {error.intellectualDisability && <div className="text-danger">{error.intellectualDisability}</div>} */}
                         </div>
                     </div>
                 </section>
@@ -901,7 +958,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
                                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={setCctvRecordReceiveDate} />
-
                                         </div>
                                     </div>
                                 }
@@ -1174,7 +1230,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" name="contingenyMeasureRemark" value={form.contingencyMeasureRemark} placeholder="請註明" onChange={textHandler} />
+                                    <AutosizeTextarea className="form-control" name="contingencyMeasureRemark" value={form.contingencyMeasureRemark} placeholder="請註明" onChange={textHandler} />
                                     {error.contingencyMeasureRemark && <div className="text-danger">{error.contingencyMeasureRemark}</div>}
                                 </div>
                             }
@@ -1234,7 +1290,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 selectedItems={setContactStaff}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={contactStaff && [contactStaff.mail]}
-
                             />
                         </div>
                         {/* 職位 */}
@@ -1451,15 +1506,34 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                 </section>
 
                 <hr className="my-4" />
-
-                <section className="py-3">
-                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
-                        <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
-                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
+                {
+                    (Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole) &&
+                    <section className="py-3">
+                        <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                            <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                            <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                            <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
+                        </div>
+                    </section>
+                }
+                {/* {
+                    Role.SENIOR_PHYSIOTHERAPIST === currentUserRole &&
+                    <div className="py-3">
+                        <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                            <button className="btn btn-warning mr-3" onClick={sptApproveHandler}>批准</button>
+                            <button className="btn btn-danger mr-3" onClick={sptRejectHandler}>拒絕</button>
+                        </div>
                     </div>
-                </section>
-
+                }
+                {
+                    Role.SERVICE_MANAGER === currentUserRole &&
+                    <div className="py-3">
+                        <div className="d-flex justify-content-center">
+                            <button className="btn btn-warning mr-3" onClick={smApproveHandler}>批准</button>
+                            <button className="btn btn-danger mr-3" onClick={smRejectHandler}>拒絕</button>
+                        </div>
+                    </div>
+                } */}
             </div>
         </>
     )
