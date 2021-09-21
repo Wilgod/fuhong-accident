@@ -2,7 +2,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { Role } from '../../../utils/RoleParser';
 
 interface IServiceUserAccidentFormStates {
-    partientAcciedntScenario: string;
+    patientAcciedntScenario: string;
     injuredArea: string[];
     uncomfortable: string[];
     behaviorSwitch: string;

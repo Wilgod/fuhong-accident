@@ -55,7 +55,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
-        partientAcciedntScenario: "",
+        patientAcciedntScenario: "",
         injuredArea: [],
         uncomfortable: [],
         behaviorSwitch: "",
@@ -178,16 +178,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         // }
 
         //服務使用者意外時情況
-        if (form.partientAcciedntScenario) {
-            body["Circumstance"] = form.partientAcciedntScenario;
+        if (form.patientAcciedntScenario) {
+            body["Circumstance"] = form.patientAcciedntScenario;
 
-            if (form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY")
+            if (form.patientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY")
                 if (form.scenarioOutsideActivityRemark.trim()) {
                     body["CircumstanceLocation"] = form.scenarioOutsideActivityRemark.trim();
                 } else {
                     error.scenarioOutsideActivityRemark = "請填寫";
                 }
-            if (form.partientAcciedntScenario === "SCENARIO_OTHER") {
+            if (form.patientAcciedntScenario === "SCENARIO_OTHER") {
                 if (form.scenarioOtherRemark.trim()) {
                     body["CircumstanceOtherRemark"] = form.scenarioOtherRemark.trim();
                 } else {
@@ -474,8 +474,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
     const loadData = async (formId: number) => {
         const data = await getServiceUserAccidentById(formId);
-        console.log(data);
         if (data) {
+            console.log(data);
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -508,7 +508,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                 policeStation: data.CalledPoliceStation,
                 policeReportNumber: data.CalledPoliceReportNumber,
                 treatmentAfterAccident: data.TreatmentAfterAccident,
-                partientAcciedntScenario: data.Circumstance,
+                patientAcciedntScenario: data.Circumstance,
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
                 scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
             });
@@ -517,7 +517,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
     useEffect(() => {
         const formId = getQueryParameterNumber("formId");
+        console.log(formId);
         if (formId) {
+
             loadData(formId);
         } else {
             setReporter([CURRENT_USER.email]);
@@ -710,50 +712,50 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_SLEEPING")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-sleep">睡覺</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-dinning" value="SCENARIO_DINNING" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-dinning" value="SCENARIO_DINNING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_DINNING")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-dinning">進食</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-wash" value="SCENARIO_WASHING" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-wash" value="SCENARIO_WASHING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_WASHING")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-wash">梳洗</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-toliet" value="SCENARIO_TOLIET" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-toliet" value="SCENARIO_TOLIET" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_TOLIET")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-toliet">如廁</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-bath" value="SCENARIO_BATHING" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-bath" value="SCENARIO_BATHING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_BATHING")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-bath">洗澡</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario-walk" value="SCENARIO_WALKING" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-walk" value="SCENARIO_WALKING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_WALKING")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-walk">步行期間</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_inside_activity" value="SCENARIO_INSIDE_ACTIVITY" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario_inside_activity" value="SCENARIO_INSIDE_ACTIVITY" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_INSIDE_ACTIVITY")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_inside_activity">參與服務單位內活動</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_outside_activity" value="SCENARIO_OUTSIDE_ACTIVITY" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario_outside_activity" value="SCENARIO_OUTSIDE_ACTIVITY" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_OUTSIDE_ACTIVITY")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_outside_activity">外出活動期間(請註明地點)</label>
                             </div>
                             {
-                                form.partientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
+                                form.patientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
                                 <div className="">
                                     <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOutsideActivityRemark" value={form.scenarioOutsideActivityRemark} onChange={textHandler} />
                                     {error.scenarioOutsideActivityRemark && <div className="text-danger">{error.scenarioOutsideActivityRemark}</div>}
                                 </div>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="partientAcciedntScenario" id="scenario_other" value="SCENARIO_OTHER" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario_other" value="SCENARIO_OTHER" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_OTHER")} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario_other">其他 (請註明)</label>
                             </div>
                             {
-                                form.partientAcciedntScenario === "SCENARIO_OTHER" &&
+                                form.patientAcciedntScenario === "SCENARIO_OTHER" &&
                                 <div className="">
                                     <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOtherRemark" value={form.scenarioOtherRemark} onChange={textHandler} />
                                     {error.scenarioOtherRemark && <div className="text-danger">{error.scenarioOtherRemark}</div>}
@@ -768,27 +770,27 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_HEAD") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-head">頭部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-neck" value="INJURY_NECK" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_NECK") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-neck">頸部</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-body" value="INJURY_BODY" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_BODY") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-body">軀幹</label>
                             </div>
                             <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-upper-limb" value="INJURY_UPPER_LIMB" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_UPPER_LIMB") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-upper-limb">上肢</label>
                             </div>
                             <div className="form-check form-check-inline ">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-lower-limb" value="INJURY_LOWER_LIMB" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_LOWER_LIMB") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-lower-limb">下肢</label>
                             </div>
                             <div className="form-check mb-2">
-                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_OTHER") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-other">其他 (請註明)</label>
                             </div>
                             {error.injuredArea && <div className="text-danger">{error.injuredArea}</div>}
@@ -816,11 +818,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <div className="col">
 
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-true" value="SERVICE_USER_UNCOMFORT_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-true" value="SERVICE_USER_UNCOMFORT_TRUE" onClick={radioButtonHandler} checked={form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} checked={form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_FALSE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-false">沒有</label>
                             </div>
                             {error.serviceUserUncomfort && <div className="text-danger">{error.serviceUserUncomfort}</div>}
@@ -828,27 +830,27 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE" &&
                                 <div>
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_BLEEDING") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bleeding">流血</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bruise" value="UNCOMFORTABLE_BRUISE" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_BRUISE") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bruise">瘀腫</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-fracture" value="UNCOMFORTABLE_FRACTURE" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_FRACTURE") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-fracture">骨折</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-dizzy" value="UNCOMFORTABLE_DIZZY" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_DIZZY") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-dizzy">暈眩</label>
                                     </div>
                                     <div className="form-check form-check-inline ">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-shock" value="UNCOMFORTABLE_SHOCK" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_SHOCK") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-shock">休克/失去知覺</label>
                                     </div>
                                     <div className="form-check">
-                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-other">其他 (請註明)</label>
                                     </div>
                                     {error.uncomfortable && <div className="text-danger">{error.uncomfortable}</div>}
@@ -874,11 +876,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者有否出現不安全的行為 </label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-true" value="BEHAVIOR_SWITCH_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-true" value="BEHAVIOR_SWITCH_TRUE" onClick={radioButtonHandler} checked={form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} checked={form.behaviorSwitch === "BEHAVIOR_SWITCH_FALSE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-false">沒有</label>
                             </div>
                             {error.behaviorSwitch && <div className="text-danger">{error.behaviorSwitch}</div>}
@@ -886,23 +888,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE" &&
                                 <div>
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_OTHERS") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-others">傷害他人的動作</label>
                                     </div>
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-self" value="BEHAVIOR_SELF" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-self" value="BEHAVIOR_SELF" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_SELF") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-self">傷害自已的動作</label>
                                     </div>
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-getoff" value="BEHAVIOR_GETOFF" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-getoff" value="BEHAVIOR_GETOFF" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_GETOFF") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-getoff">除去身上的醫療器材</label>
                                     </div>
                                     <div className="form-check form-check-inline">
-                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-reject" value="BEHAVIOR_REJECT" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-reject" value="BEHAVIOR_REJECT" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_REJECT") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-reject">拒絕使用輔助器材</label>
                                     </div>
                                     <div className="form-check">
-                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} />
+                                        <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_OTHER") > -1} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-other">其他 (請註明)</label>
                                     </div>
                                     {error.behavior && <div className="text-danger">{error.behavior}</div>}
@@ -929,7 +931,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-4">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="photo" id="photo-true" value="PHOTO_TRUE" onClick={radioButtonHandler} />
+                                    <input className="form-check-input" type="radio" name="photo" id="photo-true" value="PHOTO_TRUE" onClick={radioButtonHandler} checked={form.photo === "PHOTO_TRUE"} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-true">有 (上載照片)</label>
                                 </div>
                                 {
@@ -940,7 +942,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                     </>
                                 }
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} />
+                                    <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} checked={form.photo === "PHOTO_FALSE"} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
@@ -949,7 +951,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                             <div className={`${styles.buttonLabel} mt-3`} >CCTV紀錄</div>
                             <div className="pl-4">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} checked={form.cctv === "CCTV_TRUE"} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
                                 </div>
                                 {
@@ -962,7 +964,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                     </div>
                                 }
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} checked={form.cctv === "CCTV_FALSE"} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
                                 {error.cctv && <div className="text-danger">{error.cctv}</div>}
@@ -982,43 +984,43 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_SLIPPERY_GROUND") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_UNEVEN_GROUND") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_OBSTACLE_ITEMS") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_INSUFFICIENT_LIGHT") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_NOT_ENOUGH_SPACE") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_ACOUSTIC_STIMULATION") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_COLLIDED_BY_OTHERS") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_HURT_BY_OTHERS") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-OTHER" value="ENV_OTHER" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_OTHER") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他 (請註明)</label>
                             </div>
                             {
@@ -1037,27 +1039,27 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>個人因素</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-HEARTBROKEN" value="PERSONAL_HEARTBROKEN" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_HEARTBROKEN") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-CHOKING" value="PERSONAL_CHOKING" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_CHOKING") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-UNSTEADY-WALKING" value="PERSONAL_UNSTEADY_WALKING" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_UNSTEADY_WALKING") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-TWITCH" value="PERSONAL_TWITCH" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_TWITCH") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-OTHER" value="PERSONAL_OTHER" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_OTHER") > -1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-OTHER">其他</label>
                             </div>
                             {
@@ -1102,15 +1104,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.arrangement === "ARRANGEMENT_DOCTOR_VISIT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} checked={form.arrangement === "ARRANGEMENT_OUTPATIENT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} checked={form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
                             {
@@ -1149,15 +1151,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否在醫院留醫</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} checked={form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-false" value="IS_STAY_IN_HOSPITAL_FALSE" onClick={radioButtonHandler} checked={form.isStayInHospital === "IS_STAY_IN_HOSPITAL_FALSE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-false">否</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-not-applicable" value="IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-not-applicable" value="IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" onClick={radioButtonHandler} checked={form.isStayInHospital === "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-not-applicable">不適用</label>
                             </div>
                             {
@@ -1176,11 +1178,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} checked={form.police === "POLICE_TRUE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">需要</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="police" id="police-false" value="POLICE_FALSE" onClick={radioButtonHandler} checked={form.police === "POLICE_FALSE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">不需要</label>
                             </div>
                             {
@@ -1220,11 +1222,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外後中心即時應變措施</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} checked={form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="contingency-measure-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="CONTINGENCY_MEASURE_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-false" value="CONTINGENCY_MEASURE_FALSE" onClick={radioButtonHandler} checked={form.contingencyMeasure === "CONTINGENCY_MEASURE_FALSE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="contingency-measure-false">沒有</label>
                             </div>
                             {
