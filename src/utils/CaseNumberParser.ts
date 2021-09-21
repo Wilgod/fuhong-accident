@@ -14,10 +14,22 @@ export const getLastFormId = (latestItem: any[], key: string): number => {
     return 0;
 }
 
-export const newFormIdParser = (type: string, id: number): string => {
-    if (!type || !id) return null;
-    id += 1
+// 53 -> 053
+export const newFormIdParser = (id: number): string => {
+    const numberInString = id.toLocaleString(undefined, { useGrouping: false, minimumIntegerDigits: 3 });
+    return `${numberInString}`;
+}
+
+// 2021 - 2022 => 2122 
+export const finicalYearFactory = () => {
     const currentYear = new Date().getFullYear();
-    const numberInString = id.toLocaleString(undefined, { useGrouping: false, minimumIntegerDigits: 6 });
-    return `${type}-${currentYear}-${numberInString}`;
+    const comingYear = currentYear + 1;
+    return `${currentYear}`.substring(2) + `${comingYear}`.substring(2);
+}
+
+// SUI-2122KHH053
+export const caseNumberParser = (caseType: string, serviceUnit: string, caseOrder: number) => {
+    const financialYear = finicalYearFactory();
+    const stringCaseOrder = newFormIdParser(caseOrder);
+    return `${caseType}-${financialYear}${serviceUnit}${stringCaseOrder}`;
 }

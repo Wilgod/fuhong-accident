@@ -25,3 +25,38 @@ export async function getUserAdByGraph(email: string) {
     }
 
 }
+// SM
+export async function getServiceManagersByGraph() {
+    try {
+        const result = await graph.users.filter(`jobTitle eq 'Service Manager' or jobTitle eq 'Senior Service Manager'`).get();
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw Error("Get User AD By Graph error");
+    }
+}
+
+// SD
+export async function getServiceDirectorsByGraph() {
+    try {
+        const result = await graph.users.filter(`jobTitle eq 'Service Director'`).get();
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw Error("Get User AD By Graph error");
+    }
+}
+
+// SPT
+export async function getSeniorPhysiotherapistByGraph() {
+    try {
+        const result = await graph.users.filter(`jobTitle eq 'Senior Physiotherapist'`).get();
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw Error("Get User AD By Graph error");
+    }
+}

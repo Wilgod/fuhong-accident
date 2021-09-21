@@ -13,19 +13,20 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { postServiceUserAccident } from '../../../api/PostFuHongList';
-import { getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
+import { caseNumberParser, getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
 import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
-import { getUserInfoByEmail } from '../../../api/FetchUser';
+import { getSeniorPhysiotherapistByGraph, getServiceDirectorsByGraph, getServiceManagersByGraph, getUserInfoByEmail } from '../../../api/FetchUser';
 import { Role } from '../../../utils/RoleParser';
 import { getServiceUserList } from '../../../api/FetchServiceUser';
 import useServiceUser from '../../../hooks/useServiceUser';
 import { intellectualDisabilityParser } from '../../../utils/IntellectualDisabilityParser';
 import { getQueryParameterNumber } from '../../../utils/UrlQueryHelper';
+import useServiceUnit from '../../../hooks/useServiceUnits';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -52,6 +53,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     const [sPhysicalTherapy, setSPhysicalTherapy, sPhysicalTherapyPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
+    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
 
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
@@ -517,9 +519,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
     useEffect(() => {
         const formId = getQueryParameterNumber("formId");
-        console.log(formId);
+        console.log(caseNumberParser("SUI", "KVK", 54));
         if (formId) {
-
             loadData(formId);
         } else {
             setReporter([CURRENT_USER.email]);
@@ -537,8 +538,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 服務單位 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-xl-4">
-                            <select className="form-control">
+                            <select className="form-control" value={serviceUnit} onChange={(event) => setServiceUnit(event.target.value)} >
                                 <option>請選擇服務單位</option>
+                                {serviceUnitList.map((unit) => {
+                                    return <option value={unit.ShortForm}>{`${unit.Title} - ${unit.ShortForm}`}</option>
+                                })}
                             </select>
                         </div>
                         {/* 保險公司備案編號 */}
