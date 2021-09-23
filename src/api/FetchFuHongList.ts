@@ -19,8 +19,9 @@ export async function getServiceUnits() {
 export async function getServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.getAll();
-        console.log(items);
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getAll();
+
         return items;
     } catch (err) {
         console.error(err);
@@ -31,8 +32,10 @@ export async function getServiceUserAccident() {
 export async function getServiceUserAccidentById(id: number) {
     try {
         const LIST_NAME = "Service User Accident";
-        const item = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).get();
-        //  console.log(item);
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "ContactFamilyStaff/Id", "ContactFamilyStaff/EMail", 'ContactFamilyStaff/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "ContactFamilyStaff", "SM", "SPT", "SD").get();
+
         return item;
     } catch (err) {
         console.error(err);
@@ -44,11 +47,11 @@ export async function getLastCaseNo() {
     try {
         const LIST_NAME = "Service User Accident";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("Created", false).top(1).get();
-        //  console.log(item);
+
         return item;
     } catch (err) {
         console.error(err);
-        throw new Error("getServiceUserAccidentById failed");
+        throw new Error("getLastCaseNo failed");
     }
 }
 

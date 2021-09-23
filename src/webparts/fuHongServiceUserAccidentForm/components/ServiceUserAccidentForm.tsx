@@ -13,8 +13,8 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
-import { postServiceUserAccident } from '../../../api/PostFuHongList';
+import { getLastCaseNo, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { createServiceUserAccident, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
 import { caseNumberParser, getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
@@ -27,6 +27,10 @@ import useServiceUser from '../../../hooks/useServiceUser';
 import { intellectualDisabilityParser } from '../../../utils/IntellectualDisabilityParser';
 import { getQueryParameterNumber } from '../../../utils/UrlQueryHelper';
 import useServiceUnit from '../../../hooks/useServiceUnits';
+import useSPT from '../../../hooks/useSPT';
+import useSD from '../../../hooks/useSD';
+import useSM from '../../../hooks/useSM';
+import useSharePointGroup from '../../../hooks/useSharePointGroup';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -41,6 +45,8 @@ if (document.querySelector('.CanvasZone') != null) {
 // getUserInfoByEmail("anita.poon@fuhong.org");
 
 export default function ServiceUserAccidentForm({ context, currentUserRole }: IServiceUserAccidentFormProps) {
+    const [formStatus, setFormStatus] = useState("");
+    const [formId, setFormId] = useState(null);
     const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
     const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
     const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
@@ -48,14 +54,21 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
     const [contactStaff, setContactStaff, contactStaffPickerInfo] = useUserInfoAD();//負責通知家屬的職員姓名
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
-    const [serviceManger, setServiceManger, serviceManagerPickerInfo] = useUserInfoAD(); //[此欄由高級服務經理/服務經理填寫]
-    const [serviceDirector, setServiceDirector, serviceDreictorPickerInfo] = useUserInfoAD(); // [此欄由服務總監填寫]
-    const [sPhysicalTherapy, setSPhysicalTherapy, sPhysicalTherapyPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
-    const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [此欄由高級物理治療師填寫]
+    const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
+    const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
+    const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    const [sptList] = useSPT();
+    const [smList] = useSM();
+    const [sdList] = useSD();
 
     const [date, setDate] = useState(new Date());
+
+
+
+
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
         injuredArea: [],
@@ -98,7 +111,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     const [sptDate, setSptDate] = useState(new Date());
     const [smComment, setSmComment] = useState("");
     const [smDate, setSmDate] = useState(new Date());
-
+    const [reportedDate, setReportedDate] = useState(new Date());
     const [error, setError] = useState<IErrorFields>({});
 
     const CURRENT_USER: IUser = {
@@ -140,22 +153,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         const body = {};
         const error: IErrorFields = {};
 
-        const test = {
-            contactStaff,
-            reporter,
-            serviceManger,
-            serviceDirector,
-            sPhysicalTherapy,
-            investigator
-        }
-
-        body["Status"] = status;
-
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUserId"] = serviceUserRecordId;
         } else {
             // Implement Error handling
 
+        }
+        //服務單位
+        if (serviceUnit) {
+            body["ServiceUnit"] = serviceUnit;
+        } else {
+            // Implement error handling
         }
 
         //意外發生日期和時間
@@ -383,7 +391,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         } else {
             error.police = "請選擇";
         }
-        console.log(form);
+
         //意外後中心即時應變措施 
         if (form.contingencyMeasure) {
             body["ContingencyMeasure"] = form.contingencyMeasure;
@@ -416,9 +424,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         }
         //負責通知家屬的職員姓名
         if (contactStaffPickerInfo && contactStaffPickerInfo.length > 0) {
-            console.log(contactStaffPickerInfo);
-            const [contactStaff] = contactStaffPickerInfo;
-            body["ContactFamilyStaffId"] = contactStaff.id;
+            const [contactStaffObj] = contactStaffPickerInfo;
+            body["ContactFamilyStaffId"] = contactStaffObj.id;
         }
 
         //服務使用者經診治後情況
@@ -428,18 +435,48 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
             error.afterTreatmentDescription = "請填寫";
         }
 
-        if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
-            body["SMApproved"] = true;
+        console.log("Check")
+
+        //console.log(serviceManager);
+        // 高級服務經理/服務經理
+        if (serviceManager) {
+
+            body["SMId"] = serviceManager.Id;
+        } else {
+            // error implemenetation
+        }
+        // console.log(serviceDirector)
+        // // 服務總監
+        if (serviceDirector) {
+            body["SDId"] = serviceDirector.Id;
+        } else {
+            // error implemenetation
+        }
+        console.log(sPhysicalTherapy)
+        // // 高級物理治療師
+        if (sPhysicalTherapy) {
+            body["SPT"] = sPhysicalTherapy.Id;
+        } else {
+            //error implementation
         }
 
-        console.log(body);
+        if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
+            body["SMApproved"] = true;
+            body["Status"] = "SM_APPROVED";
+        } else if (status === "SUBMIT") {
+            body["Status"] = "PENDING_APPROVE";
+        } else {
+            body["Status"] = "DRAFT";
+        }
+
+
         return [body, error];
     }
 
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
-        postServiceUserAccident(body);
+        createServiceUserAccident(body);
     }
 
     const submitHandler = (event) => {
@@ -449,7 +486,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
             setError(error);
             return;
         } else {
-            postServiceUserAccident(body);
+            getLastCaseNo().then((value) => {
+                createServiceUserAccident({
+                    ...body,
+                    "CaseNumber": caseNumberParser("SUI", serviceUnit, 54)
+                }).then(console.log).catch(console.error);
+            })
         }
     }
     const cancelHandler = () => {
@@ -457,27 +499,59 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
     }
 
     const smApproveHandler = () => {
-        // implement
+        const body = {
+            "SMApproved": true,
+            "SDComment": sdComment.trim(),
+            "SMDate": smDate.toISOString()
+        };
+        updateServiceUserAccidentById(formId, body);
     }
 
     const smRejectHandler = () => {
-        // implement
+        const body = {
+            "SMApproved": false,
+            "SDComment": sdComment.trim(),
+            "SMDate": smDate.toISOString()
+        };
+        updateServiceUserAccidentById(formId, body);
     }
 
     const sptApproveHandler = () => {
-        // implement
+        if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+            const body = {
+                "SPTApproved": true,
+                "SPTComment": sptComment.trim(),
+                "SPTDate": sptDate.toISOString(),
+                "InvestigatorId": investigatorPickerInfo[0].id
+            };
+            updateServiceUserAccidentById(formId, body).then(() => {
 
+            });
+        } else {
+            // error implementation
+        }
     }
 
     const sptRejectHandler = () => {
-        // implement
+        if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+            const body = {
+                "SPTApproved": false,
+                "SPTComment": sptComment.trim(),
+                "SPTDate": sptDate.toISOString(),
+                "InvestigatorId": investigatorPickerInfo[0].id
+            };
+            updateServiceUserAccidentById(formId, body).then(() => {
 
+            });
+        } else {
+            // error implementation
+        }
     }
 
     const loadData = async (formId: number) => {
         const data = await getServiceUserAccidentById(formId);
         if (data) {
-            console.log(data);
+
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -514,24 +588,49 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
                 scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
             });
+
+            // Service Unit
+            setServiceUnit(data.ServiceUnit);
+
+            //Service User
+            setServiceUserRecordId(data.ServiceUserId);
+
+            //Contact Family Staff
+            if (data.ContactFamilyStaff && data.ContactFamilyStaff.EMail) {
+                setContactStaff([{ secondaryText: data.ContactFamilyStaff.EMail, id: data.ContactFamilyStaff.Id }]);
+            }
+
+            // Form Process Status
+            if (data.Status) {
+                setFormStatus(data.Status);
+            }
+
+            //Created By whom
+            if (data.Author) {
+                setReporter([{ secondaryText: data.Author.EMail, id: data.Author.Id }]);
+            }
+
+            if (data.Created) {
+                setReportedDate(new Date(data.Created));
+            }
         }
     }
 
     useEffect(() => {
         const formId = getQueryParameterNumber("formId");
-        console.log(caseNumberParser("SUI", "KVK", 54));
+
         if (formId) {
             loadData(formId);
+            setFormId(formId);
         } else {
-            setReporter([CURRENT_USER.email]);
+            setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
+
     }, []);
 
     return (
         <>
-            <div>
-                <Header displayName="服務使用者意外填報表(一)" />
-            </div>
+            <Header displayName="服務使用者意外填報表(一)" />
             <div className={`${styles.backgroundColor} container-fluid px-4 pt-3`}>
                 <section className="mb-5">
                     <div className="form-row mb-2">
@@ -1338,7 +1437,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 職級 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setReportedDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1361,7 +1460,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理姓名</span></label>
                         <div className="col-12 col-xl-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -1371,7 +1470,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 selectedItems={setServiceManger}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={serviceManger && [serviceManger.mail]}
-                            />
+                            /> */}
+                            <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
+                                <option>請選擇服務經理</option>
+                                {
+                                    smList.map((sm) => {
+                                        return <option value={sm.mail}>{sm.displayName}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1385,7 +1492,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         </div>
                     </div>
                     {
-                        Role.SERVICE_MANAGER === currentUserRole &&
+                        Role.SERVICE_MANAGER === currentUserRole && formStatus === "PENDING_APPROVE" &&
                         <div className="form-row my-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
@@ -1410,7 +1517,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* SD */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
                         <div className="col-12 col-xl-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 showtooltip={false}
                                 personSelectionLimit={1}
@@ -1419,7 +1526,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 selectedItems={setServiceDirector}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={serviceDirector && [serviceDirector.mail]}
-                            />
+                            /> */}
+                            <select className="form-control" value={serviceDirectorEmail} onChange={(event) => setServiceDirectorEmail(event.target.value)}>
+                                <option>請選擇服務總監</option>
+                                {
+                                    sdList.map((sd) => {
+                                        return <option value={sd.mail}>{sd.displayName}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1452,7 +1567,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 高級物理治療師姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-xl-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -1462,7 +1577,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 selectedItems={setSPhysicalTherapy}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={sPhysicalTherapy && [sPhysicalTherapy.mail]}
-                            />
+                            /> */}
+                            <select className="form-control" value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
+                                <option>請選擇高級物理治療師</option>
+                                {
+                                    sptList.map((spt) => {
+                                        return <option value={spt.mail}>{spt.displayName}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         {/* 日期 */}
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -1513,7 +1636,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
 
                 <hr className="my-4" />
                 {
-                    (Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole) &&
                     <section className="py-3">
                         <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                             <button className="btn btn-warning" onClick={submitHandler}>提交</button>

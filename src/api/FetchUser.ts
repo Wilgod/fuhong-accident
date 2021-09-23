@@ -11,8 +11,13 @@ import { graph } from "@pnp/graph";
 import "@pnp/graph/users";
 
 export async function getUserInfoByEmail(email: string) {
-    const result = await sp.web.siteUsers.getByEmail(email).get();
-    console.log(result);
+    try {
+        const result = await sp.web.siteUsers.getByEmail(email).get();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw Error("getUserInfoByEmail error");
+    }
 }
 
 export async function getUserAdByGraph(email: string) {
@@ -29,7 +34,7 @@ export async function getUserAdByGraph(email: string) {
 export async function getServiceManagersByGraph() {
     try {
         const result = await graph.users.filter(`jobTitle eq 'Service Manager' or jobTitle eq 'Senior Service Manager'`).get();
-        console.log(result);
+
         return result;
     } catch (err) {
         console.error(err);
@@ -41,7 +46,7 @@ export async function getServiceManagersByGraph() {
 export async function getServiceDirectorsByGraph() {
     try {
         const result = await graph.users.filter(`jobTitle eq 'Service Director'`).get();
-        console.log(result);
+
         return result;
     } catch (err) {
         console.error(err);
@@ -53,7 +58,7 @@ export async function getServiceDirectorsByGraph() {
 export async function getSeniorPhysiotherapistByGraph() {
     try {
         const result = await graph.users.filter(`jobTitle eq 'Senior Physiotherapist'`).get();
-        console.log(result);
+
         return result;
     } catch (err) {
         console.error(err);

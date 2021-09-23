@@ -73,7 +73,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
     const checkboxBoolHandler = (event) => {
         const name = event.target.name;
-        console.log(name);
+        
         setForm({ ...form, [name]: !form[name] });
     }
 
@@ -178,11 +178,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
         // SDComment
 
 
-        console.log(body);
+     
         return [body, error];
     }
-    console.log(investigator);
-
 
     const submitHandler = () => {
         const data = dataFactory();
