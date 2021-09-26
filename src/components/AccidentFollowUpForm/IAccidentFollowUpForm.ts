@@ -7,6 +7,7 @@ export interface IAccidentFollowUpFormProps {
     formType: string;
     styles: any;
     currentUserRole: Role;
+    parentFormData: any;
 }
 
 export interface IAccidentFollowUpFormStates {

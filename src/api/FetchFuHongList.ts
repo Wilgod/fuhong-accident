@@ -81,3 +81,17 @@ export async function getAccidentReportFormById(formId: number) {
     }
 }
 
+// form 21
+export async function getAccidentFollowUpFormById(formId: number) {
+    try {
+        const LIST_NAME = "Accident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(formId).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SPT", "SD").get();
+
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAccidentFollowUpFormById failed");
+    }
+}

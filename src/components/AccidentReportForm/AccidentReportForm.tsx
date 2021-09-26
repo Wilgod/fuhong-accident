@@ -71,7 +71,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
     const [accidentTime, setAccidentTime] = useState(new Date());
     const [estimatedFinishDate, setEstimatedFinishDate] = useState(new Date());
-
+    const [formReceivedDate, setFormReceivedDate] = useState(new Date());
     const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
@@ -186,11 +186,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
         }
 
-
-
-
-
-
         return [body, error];
     }
 
@@ -226,7 +221,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     "CaseNumber": parentFormData.CaseNumber,
                     "ParentFormId": parentFormData.Id
                 };
-                console.log(accidentFollowUpReportFormBody)
                 createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
 
                     // Update main form status and stage 3
@@ -254,6 +248,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             }
             updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
                 // Update main form status and stage
+                // Update main form status and stage 3
+                const serviceUserAccidentFormBody = {
+                    "Stage": "2",
+                    "Status": "CASE_REJECTED"
+                }
+                updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
+                    //trigger notification work flow
+                }).catch(console.error);
             }).catch(console.error);
         }
     }
@@ -272,6 +274,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             setInvestigator([{ secondaryText: parentFormData.Investigator.EMail, id: parentFormData.Investigator.Id }]);
         }
 
+        if (parentFormData.AccidentTime) {
+            setAccidentTime(new Date(parentFormData.AccidentTime))
+        }
+
         // Get Accident report form
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
@@ -279,7 +285,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 console.log(formTwentyData)
                 //收到「意外填報表」日期
                 if (formTwentyData.ReceivedDate) {
-                    setAccidentTime(new Date(formTwentyData.ReceivedDate));
+                    setFormReceivedDate(new Date(formTwentyData.ReceivedDate));
                 }
                 //預計意外分析完成日期
                 if (formTwentyData.ReceivedDate) {
@@ -406,7 +412,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 收到「意外填報表」日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>收到「意外填報表」日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={accidentTime} dateFormat="yyyy/MM/dd" readOnly />
+                            <DatePicker className="form-control" selected={formReceivedDate} dateFormat="yyyy/MM/dd" readOnly />
                         </div>
                         {/* 預計意外分析完成日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>預計意外分析完成日期<br />
@@ -612,14 +618,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={SD && [SD.mail]}
                             /> */}
-                            <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
+                            {/* <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
                                 <option>請選擇服務經理</option>
                                 {
                                     smList.map((sm) => {
                                         return <option value={sm.mail}>{sm.displayName}</option>
                                     })
                                 }
-                            </select>
+                            </select> */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -658,14 +665,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 selectedItems={setSPT}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={SPT && [SPT.mail]} /> */}
-                            <select className="form-control" value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
+                            {/* <select className="form-control" value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
                                 <option>請選擇高級物理治療師</option>
                                 {
                                     sptList.map((spt) => {
                                         return <option value={spt.mail}>{spt.displayName}</option>
                                     })
                                 }
-                            </select>
+                            </select> */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SPT ? `${parentFormData.SPT.Title}` : ""}`} />
                         </div>
                         {/* 意外發生時間*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>

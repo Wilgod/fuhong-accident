@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import Header from "../Header/Header";
 import DatePicker from "react-datepicker";
@@ -9,6 +9,13 @@ import "./AccidentFollowUpForm.css";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 import { IAccidentFollowUpFormStates, IAccidentFollowUpFormProps } from './IAccidentFollowUpForm';
 import useUserInfoAD from '../../hooks/useUserInfoAD';
+import useSPT from '../../hooks/useSPT';
+import useSM from '../../hooks/useSM';
+import useSD from '../../hooks/useSD';
+import useSharePointGroup from '../../hooks/useSharePointGroup';
+import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
+import useServiceUser from '../../hooks/useServiceUser';
+import { getServiceUserAccidentById } from '../../api/FetchFuHongList';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -19,13 +26,25 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
-    const [smAD, setSmPicker, smPicker] = useUserInfoAD();// 高級服務經理
-    const [sptAD, setSptPicker, sptPicker] = useUserInfoAD();// 高級物理治療師
-    const [sdAD, setSdPicker, sdPicker] = useUserInfoAD();// 服務總監
+    // const [smAD, setSmPicker, smPicker] = useUserInfoAD();// 高級服務經理
+    // const [sptAD, setSptPicker, sptPicker] = useUserInfoAD();// 高級物理治療師
+    // const [sdAD, setSdPicker, sdPicker] = useUserInfoAD();// 服務總監
+    const [accidentTime, setAccidentTime] = useState(new Date());
+    const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
+    const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
+
+    const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
+    const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
+
+    const [sptList] = useSPT();
+    const [smList] = useSM();
+    const [sdList] = useSD();
+
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: "",
         executionPeriod: "",
@@ -45,20 +64,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const name = event.target.name;
         const value = event.target.value;
         setForm({ ...form, [name]: value });
-    }
-
-    const checkboxHandler = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        const arr = form[name];
-        if (Array.isArray(arr)) {
-            if (arr.indexOf(value) > -1) {
-                const result = arr.filter((item) => item !== value);
-                setForm({ ...form, [name]: result });
-            } else {
-                setForm({ ...form, [name]: [...arr, value] });
-            }
-        }
     }
 
     const dataFactory = () => {
@@ -95,7 +100,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
 
     const submitHandler = (event) => {
-
         //Implement
     }
 
@@ -114,6 +118,27 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const rejectHnadler = () => {
         //Implement
     }
+    const loadData = () => {
+        console.log(parentFormData);
+
+        // Service Unit
+        setServiceUnitByShortForm(parentFormData.ServiceUnit);
+
+        //Service User
+        setServiceUserRecordId(parentFormData.ServiceUserId);
+        if (parentFormData && parentFormData.Id) {
+            getServiceUserAccidentById(parentFormData.Id).then((serviceUserAccidentResponse) => {
+
+            }).catch(console.error);
+        }
+    }
+
+    useEffect(() => {
+        // Get stage oen form data
+        if (parentFormData) {
+            loadData();
+        }
+    }, [parentFormData]);
 
     return (
         <>
@@ -131,19 +156,19 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務單位 */}
                         <label className={`col-12 col-lg-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${serviceUnitDetail && serviceUnitDetail.Title ? `${serviceUnitDetail.Title} - ${serviceUnitDetail.ShortForm}` : ""}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.InsuranceCaseNo ? `${parentFormData.InsuranceCaseNo}` : ""}`} />
                         </div>
                     </div>
                     <div className="form-row">
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>檔案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.CaseNumber ? `${parentFormData.CaseNumber}` : ""}`} />
                         </div>
                     </div>
                 </section>
@@ -163,14 +188,22 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 發生意外者姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>發生意外者姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
                         </div>
                     </div>
                     <div className="form-row">
                         {/* 發生意外日期 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>發生意外日期</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <DatePicker
+                                className="form-control"
+                                selected={accidentTime}
+                                showTimeSelect
+                                timeFormat="p"
+                                timeIntervals={15}
+                                dateFormat="yyyy/MM/dd"
+                                readOnly
+                            />
                         </div>
                     </div>
                 </section>
@@ -227,7 +260,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 personSelectionLimit={1}
                                 showtooltip={false}
@@ -235,7 +268,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 resolveDelay={1000}
                                 selectedItems={setSmPicker}
                                 defaultSelectedUsers={smAD && [smAD.mail]}
-                            />
+                            /> */}
+                            {/* <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
+                                <option>請選擇服務經理</option>
+                                {
+                                    smList.map((sm) => {
+                                        return <option value={sm.mail}>{sm.displayName}</option>
+                                    })
+                                }
+                            </select> */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -258,7 +300,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 高級物理治療師姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 personSelectionLimit={1}
                                 showtooltip={false}
@@ -266,7 +308,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 resolveDelay={1000}
                                 selectedItems={setSptPicker}
                                 defaultSelectedUsers={sptAD && [sptAD.mail]}
-                            />
+                            /> */}
+                            {/* <select className="form-control" value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
+                                <option>請選擇高級物理治療師</option>
+                                {
+                                    sptList.map((spt) => {
+                                        return <option value={spt.mail}>{spt.displayName}</option>
+                                    })
+                                }
+                            </select> */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SPT ? `${parentFormData.SPT.Title}` : ""}`} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -304,7 +355,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務總監姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 personSelectionLimit={1}
                                 showtooltip={false}
@@ -313,7 +364,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 ensureUser={true}
                                 selectedItems={setSdPicker}
                                 defaultSelectedUsers={sdAD && [sdAD.mail]}
-                            />
+                            /> */}
+                            {/* <select className="form-control" value={serviceDirectorEmail} onChange={(event) => setServiceDirectorEmail(event.target.value)}>
+                                <option>請選擇服務總監</option>
+                                {
+                                    sdList.map((sd) => {
+                                        return <option value={sd.mail}>{sd.displayName}</option>
+                                    })
+                                }
+                            </select> */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SD ? `${parentFormData.SD.Title}` : ""}`} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
