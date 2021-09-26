@@ -14,7 +14,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { getLastCaseNo, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
-import { createServiceUserAccident, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createServiceUserAccident, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
 import { caseNumberParser, getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
@@ -434,8 +434,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             error.afterTreatmentDescription = "請填寫";
         }
 
-        console.log("Check")
-
         //console.log(serviceManager);
         // 高級服務經理/服務經理
         if (serviceManager) {
@@ -450,7 +448,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             // error implemenetation
         }
-        console.log(sPhysicalTherapy)
+
         // // 高級物理治療師
         if (sPhysicalTherapy) {
             body["SPTId"] = sPhysicalTherapy.Id;
@@ -502,7 +500,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             "SDComment": sdComment.trim(),
             "SMDate": smDate.toISOString()
         };
-        updateServiceUserAccidentById(formId, body);
+        updateServiceUserAccidentById(formId, body).then(() => {
+            // Update form to stage 1-2
+
+
+            // Trigger notification workflow
+        }).catch(console.error);
     }
 
     const smRejectHandler = () => {
@@ -516,14 +519,44 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const sptApproveHandler = () => {
         if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-            const body = {
+            const serviceAccidentUserFormBody = {
                 "SPTApproved": true,
                 "SPTComment": sptComment.trim(),
                 "SPTDate": sptDate.toISOString(),
-                "InvestigatorId": investigatorPickerInfo[0].id
+                "InvestigatorId": investigatorPickerInfo[0].id,
+                "Status": "INVESTIGATE",
+                "Stage": "2"
             };
-            updateServiceUserAccidentById(formId, body).then(() => {
+            updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                // Create form 20, switch to stage 2]
+                if (formOneResponse) {
+                    getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
+                        if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
+                            let accidentTime = serviceUserAccidentForm.AccidentTime
+                            const accidentReportFormBody = {
+                                "CaseNumber": serviceUserAccidentForm.CaseNumber,
+                                "ParentFormId": serviceUserAccidentForm.Id,
+                                "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                "ReceivedDate": new Date().toISOString(), // 交付日期
+                                "SPTId": serviceUserAccidentForm.SPTId,
+                                "SMId": serviceUserAccidentForm.SMId,
+                                "InvestigatorId": serviceUserAccidentForm.InvestigatorId
+                            }
+                            createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                // Trigger notification workflow
+                                //console.log(formTwoResponse)
 
+                                //AccidentReportForm
+                                if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+                                    console.log(formTwoResponse.data.Id)
+                                    updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                        console.log(res)
+                                    }).catch(console.log);
+                                }
+                            })
+                        }
+                    }).catch(console.log);
+                }
             });
         } else {
             // error implementation
@@ -588,6 +621,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
             });
 
+            //setAccidentTime
+            setAccidentTime(new Date(data.AccidentTime));
+
             // Service Unit
             setServiceUnit(data.ServiceUnit);
 
@@ -629,7 +665,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
 
             if (data.Investigator) {
-                setInvestigator([{ secondaryText: data.Investigator.email, id: data.Investigator.id }]);
+                setInvestigator([{ secondaryText: data.Investigator.EMail, id: data.Investigator.Id }]);
             }
 
         }

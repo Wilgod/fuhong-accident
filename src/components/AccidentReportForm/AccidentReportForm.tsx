@@ -8,6 +8,14 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import useUserInfoAD from "../../hooks/useUserInfoAD";
 import { IAccidentFollowUpRepotFormProps, IAccidentFollowUpRepotFormStates, IAccidentFollowUpReportFormError } from "./IAccidentReportForm";
 import { Role } from '../../utils/RoleParser';
+import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
+import useServiceUser from '../../hooks/useServiceUser';
+import useSharePointGroup from '../../hooks/useSharePointGroup';
+import useSPT from '../../hooks/useSPT';
+import useSD from '../../hooks/useSD';
+import useSM from '../../hooks/useSM';
+import { getAccidentReportFormById } from '../../api/FetchFuHongList';
+import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -51,20 +59,27 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         accidentalDiscovery: "",
         accidentCauseFactor: "",
         suggestion: "",
-        sptComment: "",
-        sdComment: "",
     });
-    const [investigator, seInvestigator] = useUserInfoAD();
-    const [SPT, setSPT] = useUserInfoAD(); //高級物理治療師填寫
-    const [SD, setSD] = useUserInfoAD(); //高級服務經理/服務經理填寫
-    const [sptDate, setSptDate] = useState(new Date());
-    const [sdDate, setSdDate] = useState(new Date());
 
-    const radioButtonHandler = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setForm({ ...form, [name]: value });
-    }
+    const [investigator, setInvestigator] = useUserInfoAD();
+
+    const [sptDate, setSptDate] = useState(new Date());
+    const [smDate, setSmDate] = useState(new Date());
+    const [sptComment, setSptComment] = useState("");
+    const [smComment, setSmComment] = useState("");
+
+
+    const [accidentTime, setAccidentTime] = useState(new Date());
+    const [estimatedFinishDate, setEstimatedFinishDate] = useState(new Date());
+
+    const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
+    const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
+
+    const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
+    const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
+
+    const [sptList] = useSPT();
+    const [smList] = useSM();
 
     const textFieldHandler = (event) => {
         const name = event.target.name;
@@ -75,20 +90,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const checkboxBoolHandler = (event) => {
         const name = event.target.name;
         setForm({ ...form, [name]: !form[name] });
-    }
-
-    const checkboxHandler = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        const arr = form[name];
-        if (Array.isArray(arr)) {
-            if (arr.indexOf(value) > -1) {
-                const result = arr.filter((item) => item !== value);
-                setForm({ ...form, [name]: result });
-            } else {
-                setForm({ ...form, [name]: [...arr, value] });
-            }
-        }
     }
 
     const dataFactory = () => {
@@ -168,14 +169,25 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             //error handling
         }
 
-
-        // investigator 調查員
         // SPT 
+        if (sPhysicalTherapy) {
+            console.log(sPhysicalTherapy);
+        } else {
+            //error handling
+
+        }
         // SPTDate
         // SPTComment
-        // SD
-        // SDDate
-        // SDComment
+
+
+        if (serviceManager) {
+            console.log(serviceManager);
+        } else {
+
+        }
+
+
+
 
 
 
@@ -194,17 +206,106 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         const data = dataFactory();
     };
 
-    const loadData = () => {
+    const sptApproveHandler = () => {
+        // approve
+        // main form Status
+        // sub form spt approved // SPTApproved, comment , date
+        // Create Form 21
+        if (parentFormData && parentFormData.AccidentReportFormId) {
+            const accidentReportFormBody = {
+                "SPTApproved": true,
+                "SPTDate": new Date().toISOString(),
+                "SPTComment": sptComment
+            }
+            updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
+                // Create Accident Follow Up Report Form
+                const accidentFollowUpReportFormBody = {
+                    "SPTId": parentFormData.SPTId,
+                    "SMId": parentFormData.SMId,
+                    "SDId": parentFormData.SDId,
+                    "CaseNumber": parentFormData.CaseNumber,
+                    "ParentFormId": parentFormData.Id
+                };
+                console.log(accidentFollowUpReportFormBody)
+                createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
 
+                    // Update main form status and stage 3
+                    const serviceUserAccidentFormBody = {
+                        "AccidentFollowUpFormId": accidentFollowUpReportFormResponse.data.Id,
+                        "Stage": "3",
+                        "Status": "FOLLOW_UP_CREATED"
+                    }
+                    updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
+                        //trigger notification work flow
+                    }).catch(console.error);
+                }).catch(console.error);
+            }).catch(console.log);
+        }
+    }
+
+    const sptRejectHandler = () => {
+        // main form Status
+        // sub form spt approved // SPTApproved, comment , date
+        if (parentFormData && parentFormData.AccidentReportFormId) {
+            const accidentReportFormBody = {
+                "SPTApproved": false,
+                "SPTDate": new Date().toISOString(),
+                "SPTComment": sptComment
+            }
+            updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
+                // Update main form status and stage
+            }).catch(console.error);
+        }
+    }
+
+    const loadData = () => {
+        console.log(parentFormData);
+
+        // Service Unit
+        setServiceUnitByShortForm(parentFormData.ServiceUnit);
+
+        //Service User
+        setServiceUserRecordId(parentFormData.ServiceUserId);
+
+        //調查員
+        if (parentFormData.Investigator) {
+            setInvestigator([{ secondaryText: parentFormData.Investigator.EMail, id: parentFormData.Investigator.Id }]);
+        }
+
+        // Get Accident report form
+        if (parentFormData && parentFormData.AccidentReportFormId) {
+            getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
+
+                console.log(formTwentyData)
+                //收到「意外填報表」日期
+                if (formTwentyData.ReceivedDate) {
+                    setAccidentTime(new Date(formTwentyData.ReceivedDate));
+                }
+                //預計意外分析完成日期
+                if (formTwentyData.ReceivedDate) {
+                    setEstimatedFinishDate(new Date(formTwentyData.EstimatedFinishDate));
+                }
+
+                if (formTwentyData.SPT && formTwentyData.SPT.EMail) {
+                    setSPhysicalTherapyEmail(formTwentyData.SPT.EMail)
+                }
+
+                if (formTwentyData.SM && formTwentyData.SM.EMail) {
+                    setServiceManagerEmail(formTwentyData.SM.EMail)
+                }
+
+            });
+        }
     }
 
     useEffect(() => {
+        // Get stage oen form data
         if (parentFormData) {
             loadData();
         }
     }, [parentFormData]);
 
-
+    console.log(investigator);
     return (
         <>
             <div>
@@ -222,19 +323,19 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${serviceUnitDetail && serviceUnitDetail.Title ? `${serviceUnitDetail.Title} - ${serviceUnitDetail.ShortForm}` : ""}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.InsuranceCaseNo ? `${parentFormData.InsuranceCaseNo}` : ""}`} />
                         </div>
                     </div>
                     <div className="form-row">
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>檔案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.CaseNumber ? `${parentFormData.CaseNumber}` : ""}`} />
                         </div>
                     </div>
                 </section>
@@ -257,12 +358,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameEN ? `${serviceUser.NameEN}` : ""}`} />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
                         </div>
                     </div>
 
@@ -270,12 +371,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly min={0} />
+                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.Age ? `${serviceUser.Age}` : ""}`} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={serviceUser && serviceUser.Gender === "Male" ? "男" : "女"} />
                         </div>
                     </div>
 
@@ -285,8 +386,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
-                                selected={date}
-                                onChange={(date) => setDate(date)}
+                                selected={accidentTime}
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
@@ -297,7 +397,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 意外發生地點*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.AccidentLocation ? `${parentFormData.AccidentLocation}` : ""} />
                         </div>
 
                     </div>
@@ -306,14 +406,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 收到「意外填報表」日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>收到「意外填報表」日期</label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" selected={accidentTime} dateFormat="yyyy/MM/dd" readOnly />
                         </div>
                         {/* 預計意外分析完成日期*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>預計意外分析完成日期<br />
                             <span>(意外發生日期 + 1個月)</span>
                         </label>
                         <div className="col-12 col-md-4">
-                            <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={(date) => setDate(date)} />
+                            <DatePicker className="form-control" selected={estimatedFinishDate} dateFormat="yyyy/MM/dd" readOnly />
                         </div>
                     </div>
 
@@ -467,7 +567,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 調查員姓名*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>調查員姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -477,12 +577,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 selectedItems={seInvestigator}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={investigator && [investigator.mail]}
-                            />
+                                
+                            /> */}
+                            <input type="text" className="form-control" value={investigator && (investigator.displayName || "")} readOnly />
                         </div>
                         {/* 職級*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-md-5">
-                            <input type="text" className="form-control" value={investigator && (investigator.jobTitle || "")} />
+                            <input type="text" className="form-control" value={investigator && (investigator.jobTitle || "")} readOnly />
                         </div>
                     </div>
                 </section>
@@ -499,7 +601,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -509,27 +611,28 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 selectedItems={setSD}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={SD && [SD.mail]}
-                            />
+                            /> */}
+                            <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
+                                <option>請選擇服務經理</option>
+                                {
+                                    smList.map((sm) => {
+                                        return <option value={sm.mail}>{sm.displayName}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={setSdDate} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={smDate} onChange={setSmDate} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={form.sdComment} onChange={textFieldHandler} disabled={currentUserRole !== Role.SERVICE_MANAGER} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={currentUserRole !== Role.SERVICE_MANAGER} />
                         </div>
                     </div>
-                    {/* <div className="form-group row mb-2">
-                        <div className="col-12">
-                            <div className="d-flex justify-content-center">
-                                <button className="btn btn-warning mr-3">批准</button>
-                                <button className="btn btn-danger mr-3">拒絕</button>
-                            </div>
-                        </div>
-                    </div> */}
+
                 </section>
 
                 <hr className="my-4" />
@@ -545,7 +648,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 高級物理治療師姓名*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -554,7 +657,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 isRequired={false}
                                 selectedItems={setSPT}
                                 showHiddenInUI={false}
-                                defaultSelectedUsers={SPT && [SPT.mail]} />
+                                defaultSelectedUsers={SPT && [SPT.mail]} /> */}
+                            <select className="form-control" value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
+                                <option>請選擇高級物理治療師</option>
+                                {
+                                    sptList.map((spt) => {
+                                        return <option value={spt.mail}>{spt.displayName}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         {/* 意外發生時間*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -565,9 +676,20 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" value={form.sptComment} onChange={textFieldHandler} disabled={Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole} />
+                            <AutosizeTextarea className="form-control" name="sptComment" value={sptComment} onChange={(event) => setSptComment(event.target.value)} disabled={Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole} />
                         </div>
                     </div>
+                    {
+                        Role.SENIOR_PHYSIOTHERAPIST === currentUserRole &&
+                        <div className="form-group row mt-3 mb-2">
+                            <div className="col-12">
+                                <div className="d-flex justify-content-center">
+                                    <button className="btn btn-warning mr-3" onClick={() => sptApproveHandler()}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={() => sptRejectHandler()}>拒絕</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </section>
 
                 <hr className="my-4" />

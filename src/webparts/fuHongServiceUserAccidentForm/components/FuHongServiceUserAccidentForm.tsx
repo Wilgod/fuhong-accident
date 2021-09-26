@@ -38,7 +38,7 @@ if (document.querySelector('.CanvasZone') != null) {
 }
 
 
-export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any }> {
+export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -48,7 +48,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
     this.state = {
       currentUserRole: Role.PROFESSIONAL,
-      serviceUserAccidentFormData: null
+      serviceUserAccidentFormData: null,
+      stage: ""
     }
     console.log("Flow 1");
   }

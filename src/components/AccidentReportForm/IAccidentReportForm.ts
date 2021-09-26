@@ -38,8 +38,6 @@ export interface IAccidentFollowUpRepotFormStates {
     accidentalDiscovery: string;
     accidentCauseFactor: string;
     suggestion: string;
-    sptComment: string;
-    sdComment: string;
 }
 
 export interface IAccidentFollowUpReportFormError {

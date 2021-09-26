@@ -12,6 +12,6 @@ export default function useSharePointGroup() {
             setUser(null);
         }
     }, [email, setUser]);
-    console.log(user)
+    
     return [user, setEmail, email];
 }

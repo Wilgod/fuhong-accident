@@ -7,11 +7,22 @@ import "@pnp/sp/items";
 export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.get();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.getAll();
         return items;
     } catch (err) {
         console.error(err);
         throw new Error("getServiceUnit failed");
+    }
+}
+
+export async function getServiceUnitByShortForm(serviceUnitShortForm: string) {
+    try {
+        const LIST_NAME = "Service Units";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter(`ShortForm eq '${serviceUnitShortForm}'`).top(1).get();
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getServiceUnitByShortForm failed");
     }
 }
 
@@ -56,3 +67,17 @@ export async function getLastCaseNo() {
 }
 
 // Form 20
+export async function getAccidentReportFormById(formId: number) {
+    try {
+        const LIST_NAME = "Accident Report Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(formId).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", 'Investigator/Title')
+            .expand("Author", "SM", "SPT", "Investigator").get();
+
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAccidentReportFormById failed");
+    }
+}
+

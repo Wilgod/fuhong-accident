@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getServiceUserByID, getServiceUserByServiceNumber, getServiceUserList } from "../api/FetchServiceUser";
+import { getServiceUserByID, getServiceUserList } from "../api/FetchServiceUser";
 
 export default function useServiceUser() {
     const [serviceUserList, setServiceUserList] = useState([]);
