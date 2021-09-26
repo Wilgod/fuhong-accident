@@ -13,7 +13,8 @@ import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/Accid
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
 import { graph } from "@pnp/graph/presets/all";
 import { jobTitleParser, Role } from '../../../utils/RoleParser';
-import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
+import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
+import { getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -37,7 +38,7 @@ if (document.querySelector('.CanvasZone') != null) {
 }
 
 
-export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role }> {
+export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -46,7 +47,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.PROFESSIONAL
+      currentUserRole: Role.PROFESSIONAL,
+      serviceUserAccidentFormData: null
     }
     console.log("Flow 1");
   }
@@ -63,7 +65,15 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   public componentDidMount() {
     this.checkRole(); // Testing Only
+    this.initialDataByFormId();
   }
+
+  private async initialDataByFormId() {
+    const formId = getQueryParameterNumber("formId");
+    const data = await getServiceUserAccidentById(formId);
+    this.setState({ serviceUserAccidentFormData: data });
+  }
+
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
 
@@ -77,10 +87,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <Tab>意外跟進/結束表(三)</Tab>
             </TabList>
             <TabPanel>
-              <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} />
+              <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} />
             </TabPanel>
             <TabPanel>
-              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} />
+              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} />
             </TabPanel>
             <TabPanel>
               <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} />

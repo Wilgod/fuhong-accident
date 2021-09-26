@@ -44,7 +44,7 @@ if (document.querySelector('.CanvasZone') != null) {
 // getUserInfoByEmail("rosetti.to@fuhong.org");
 // getUserInfoByEmail("anita.poon@fuhong.org");
 
-export default function ServiceUserAccidentForm({ context, currentUserRole }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formId, setFormId] = useState(null);
     const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
@@ -119,7 +119,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         name: context.pageContext.legacyPageContext.userDisplayName,
         id: context.pageContext.legacyPageContext.userId,
     }
-
 
     const textHandler = (event) => {
         const name = event.target.name;
@@ -440,7 +439,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         //console.log(serviceManager);
         // 高級服務經理/服務經理
         if (serviceManager) {
-
             body["SMId"] = serviceManager.Id;
         } else {
             // error implemenetation
@@ -455,7 +453,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         console.log(sPhysicalTherapy)
         // // 高級物理治療師
         if (sPhysicalTherapy) {
-            body["SPT"] = sPhysicalTherapy.Id;
+            body["SPTId"] = sPhysicalTherapy.Id;
         } else {
             //error implementation
         }
@@ -548,9 +546,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
         }
     }
 
-    const loadData = async (formId: number) => {
-        const data = await getServiceUserAccidentById(formId);
+    const loadData = async (data: any) => {
+
         if (data) {
+            setFormId(data.Id);
 
             setForm({
                 accidentDetail: data.AccidentDetail || "",
@@ -613,20 +612,36 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
             if (data.Created) {
                 setReportedDate(new Date(data.Created));
             }
+
+            if (data.SPT) {
+                setSPhysicalTherapyEmail(data.SPT.EMail)
+                // setSptDate(new Date(data.SPTDate));
+            }
+
+            if (data.SM) {
+                setServiceManagerEmail(data.SM.EMail);
+                //    setSmDate(new Date(data.SMDate));
+            }
+
+            if (data.SD) {
+                setServiceDirectorEmail(data.SD.EMail);
+                //setSdDate(new Date(data.SDDate));
+            }
+
+            if (data.Investigator) {
+                setInvestigator([{ secondaryText: data.Investigator.email, id: data.Investigator.id }]);
+            }
+
         }
     }
 
     useEffect(() => {
-        const formId = getQueryParameterNumber("formId");
-
-        if (formId) {
-            loadData(formId);
-            setFormId(formId);
+        if (formData) {
+            loadData(formData);
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
-
-    }, []);
+    }, [formData]);
 
     return (
         <>
@@ -1488,7 +1503,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={Role.SERVICE_MANAGER !== currentUserRole} />
                         </div>
                     </div>
                     {
@@ -1544,7 +1559,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={Role.SERVICE_DIRECTOR !== currentUserRole} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -1598,7 +1613,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                         {/* 評語 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sptComment} onChange={(event) => setSptComment(event.target.value)} />
+                            <AutosizeTextarea className="form-control" value={sptComment} onChange={(event) => setSptComment(event.target.value)} disabled={Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole} />
                         </div>
                     </div>
 
@@ -1616,6 +1631,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole }: IS
                                 selectedItems={setInvestigator}
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={investigator && [investigator.mail]}
+                                disabled={Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole}
                             />
                         </div>
                         <label className={`col col-xl-2 col-form-label ${styles.fieldTitle} px-0 pt-xl-0`}>填寫</label>

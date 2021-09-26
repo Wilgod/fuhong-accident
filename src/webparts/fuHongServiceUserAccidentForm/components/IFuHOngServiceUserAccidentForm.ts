@@ -42,6 +42,7 @@ interface IServiceUserAccidentFormStates {
 interface IServiceUserAccidentFormProps {
     context: WebPartContext;
     currentUserRole: Role
+    formData: any;
 }
 
 interface IErrorFields {

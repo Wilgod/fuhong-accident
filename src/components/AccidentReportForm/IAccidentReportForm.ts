@@ -5,7 +5,8 @@ export interface IAccidentFollowUpRepotFormProps {
     context: WebPartContext;
     styles: any;
     formType: string;
-    currentUserRole: Role
+    currentUserRole: Role;
+    parentFormData: any;
 }
 
 export interface IAccidentFollowUpRepotFormStates {

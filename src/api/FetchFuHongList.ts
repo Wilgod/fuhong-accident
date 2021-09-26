@@ -33,8 +33,8 @@ export async function getServiceUserAccidentById(id: number) {
     try {
         const LIST_NAME = "Service User Accident";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "ContactFamilyStaff/Id", "ContactFamilyStaff/EMail", 'ContactFamilyStaff/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title')
-            .expand("Author", "ContactFamilyStaff", "SM", "SPT", "SD").get();
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "ContactFamilyStaff/Id", "ContactFamilyStaff/EMail", 'ContactFamilyStaff/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
+            .expand("Author", "ContactFamilyStaff", "SM", "SPT", "SD", "Investigator").get();
 
         return item;
     } catch (err) {

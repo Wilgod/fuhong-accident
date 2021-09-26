@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 import DatePicker from "react-datepicker";
 import Header from "../Header/Header";
@@ -7,6 +7,7 @@ import "./AccidentReportForm.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import useUserInfoAD from "../../hooks/useUserInfoAD";
 import { IAccidentFollowUpRepotFormProps, IAccidentFollowUpRepotFormStates, IAccidentFollowUpReportFormError } from "./IAccidentReportForm";
+import { Role } from '../../utils/RoleParser';
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -19,7 +20,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole }: IAccidentFollowUpRepotFormProps) {
     const [date, setDate] = useState(new Date());
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
         formType: "",
@@ -73,7 +74,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
 
     const checkboxBoolHandler = (event) => {
         const name = event.target.name;
-        
         setForm({ ...form, [name]: !form[name] });
     }
 
@@ -178,7 +178,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
         // SDComment
 
 
-     
+
         return [body, error];
     }
 
@@ -193,6 +193,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
     const cancelHandler = () => {
         const data = dataFactory();
     };
+
+    const loadData = () => {
+
+    }
+
+    useEffect(() => {
+        if (parentFormData) {
+            loadData();
+        }
+    }, [parentFormData]);
 
 
     return (
@@ -509,7 +519,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={form.sdComment} onChange={textFieldHandler} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={form.sdComment} onChange={textFieldHandler} disabled={currentUserRole !== Role.SERVICE_MANAGER} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -555,7 +565,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType }:
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" value={form.sptComment} onChange={textFieldHandler} />
+                            <AutosizeTextarea className="form-control" name="sptComment" value={form.sptComment} onChange={textFieldHandler} disabled={Role.SENIOR_PHYSIOTHERAPIST !== currentUserRole} />
                         </div>
                     </div>
                 </section>
