@@ -88,16 +88,22 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     const screenSwitch = () => {
       switch (this.state.screenNav) {
-        case "HOME":
-        // return <div>HOME</div>
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
         // return <div>STAT</div>
         case "DASHBOARD":
         // return <div>DASHBOARD</div>
+        case "HOME":
         default:
-          return <TodoListComponent />
+          return (
+            <div>
+              <div className="mb-3" style={{ fontSize: 19, fontWeight: 600 }}>
+                主頁
+              </div>
+              <TodoListComponent />
+            </div>
+          )
       }
     }
 
@@ -119,7 +125,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     {siteContentCog()}
                   </div>
                 </div>
-                {screenSwitch()}
+                <div className="p-2">
+                  {screenSwitch()}
+                </div>
               </div>
             </div>
           </div>
