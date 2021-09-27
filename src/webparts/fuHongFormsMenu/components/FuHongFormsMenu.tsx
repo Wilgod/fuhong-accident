@@ -4,8 +4,19 @@ import { IFuHongFormsMenuProps } from './IFuHongFormsMenuProps';
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 
-export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, {}> {
+if (document.getElementById('workbenchPageContent') != null) {
+  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+}
+
+if (document.querySelector('.CanvasZone') != null) {
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+}
+
+
+
+export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, { formToggle: boolean, screenNav: string }> {
 
   private SERVICE_USER_ACCIDENT = "ServiceUserAccident"; // form 19
   private OUTSIDERS_ACCIDENT = "OutsidersAccident"; //form 22
@@ -16,50 +27,99 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   public constructor(props) {
     super(props);
     getCanvasZone();
+
+    this.state = {
+      formToggle: false,
+      screenNav: ""
+    }
+  }
+
+  private formToggleHandler = (event) => {
+    event.stopPropagation();
+    this.setState({ formToggle: !this.state.formToggle })
+  }
+
+  private screenNavHandler = (event, nav: string) => {
+    event.stopPropagation();
+    this.setState({ screenNav: nav });
   }
 
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
     const ItemComponent = (href, name) => {
       return <a className="text-decoration-none" href={href + ".aspx"} target="_blank" data-interception="off">
-        <div className="shadow p-3 mb-2 bg-white rounded">
-          <span className="h6 font-weight-bold">{name}</span>
-        </div>
+        {name}
       </a>
     }
 
+    const formList = () => {
+      return <ul>
+        <li>{ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}</li>
+        <li>{ItemComponent(this.OUTSIDERS_ACCIDENT, "外界人士意外")}</li>
+        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_ALLOWANCE, "特別事故報告 (牌照事務處)")}</li>
+        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_LICENSE, "特別事故報告 (津貼科)")}</li>
+        <li>{ItemComponent(this.OTHER_INCIDENT_REPORT, "其他事故")}</li>
+      </ul>
+    }
+
+    const siteContentCog = () => {
+      return (
+        <a href={this.SITE_CONTENT} target="_blank" data-interception="off">
+          <FontAwesomeIcon size="lg" icon={fontawesome.faCog} title={"Site Content"} />
+        </a>
+      )
+    }
+
+
+
+    const navigationMenu = () => {
+      return <div className={`${styles.navigationMenu}`}>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>主頁</div>
+        <div className={`${styles.child}`} onClick={this.formToggleHandler}>
+          表格
+          {
+            this.state.formToggle && formList()
+          }
+        </div>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "REPORT")}>報告</div>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "STAT")}>統計資料</div>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>儀表板</div>
+      </div>
+    }
+
+    const screenSwitch = () => {
+      switch (this.state.screenNav) {
+        case "HOME":
+        // return <div>HOME</div>
+        case "REPORT":
+        // return <div>REPORT</div>
+        case "STAT":
+        // return <div>STAT</div>
+        case "DASHBOARD":
+        // return <div>DASHBOARD</div>
+        default:
+          return <TodoListComponent />
+      }
+    }
+
+
     return (
       <div className={styles.fuHongFormsMenu} >
-        <div className={styles.container}>
-
-          <div className="p-3">
-            <div className="d-flex justify-content-end mb-3">
-              <a href={this.SITE_CONTENT} target="_blank" data-interception="off">
-                <FontAwesomeIcon size="2x" icon={fontawesome.faCog} title={"Site Content"} />
-              </a>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                {ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}
+        <div className={styles.container} >
+          <div className="container-fluid">
+            <div className="row no-gutters">
+              {/* Navigation menu */}
+              <div className="col-12 col-md-3 col-lg-2" style={{ backgroundColor: "#F7CD70", minHeight: 500, padding: "10px 0px" }}>
+                {navigationMenu()}
               </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                {ItemComponent(this.OUTSIDERS_ACCIDENT, "外界人士意外")}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                {ItemComponent(this.SPECIAL_INCIDENT_REPORT_ALLOWANCE, "特別事故報告 (牌照事務處)")}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                {ItemComponent(this.SPECIAL_INCIDENT_REPORT_LICENSE, "特別事故報告 (津貼科)")}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                {ItemComponent(this.OTHER_INCIDENT_REPORT, "其他事故")}
+              {/* Main Content */}
+              <div className="col" >
+                <div className={`${styles.systemTitle}`}>
+                  意外及事故呈報系統
+                  <div style={{ float: "right" }}>
+                    {siteContentCog()}
+                  </div>
+                </div>
+                {screenSwitch()}
               </div>
             </div>
           </div>
