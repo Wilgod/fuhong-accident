@@ -15,8 +15,6 @@ export interface IAccidentFollowUpFormStates {
     executionPeriod: string;
     remark: string;
     accidentalFollowUpContinue: string;
-    sdComment: string;
-    sptComment: string;
 }
 
 //FormType

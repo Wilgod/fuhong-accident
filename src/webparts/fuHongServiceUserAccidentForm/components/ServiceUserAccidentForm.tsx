@@ -13,9 +13,9 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import { getLastCaseNo, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { FormFlow, getLastCaseNo, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { createAccidentReportForm, createServiceUserAccident, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
-import { caseNumberParser, getLastFormId, newFormIdParser } from '../../../utils/CaseNumberParser';
+import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
 import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
@@ -434,14 +434,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             error.afterTreatmentDescription = "請填寫";
         }
 
-        //console.log(serviceManager);
+
         // 高級服務經理/服務經理
         if (serviceManager) {
             body["SMId"] = serviceManager.Id;
         } else {
             // error implemenetation
         }
-        // console.log(serviceDirector)
+
         // // 服務總監
         if (serviceDirector) {
             body["SDId"] = serviceDirector.Id;
@@ -482,12 +482,18 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setError(error);
             return;
         } else {
-            getLastCaseNo().then((value) => {
+            caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
                 createServiceUserAccident({
                     ...body,
-                    "CaseNumber": caseNumberParser("SUI", serviceUnit, 54)
+                    "CaseNumber": caseNumber
                 }).then(console.log).catch(console.error);
-            })
+            }).catch(console.error);
+            // getLastCaseNo(FormFlow.SERVICE_USER_ACCIDENT).then((value) => {
+            //     createServiceUserAccident({
+            //         ...body,
+            //         "CaseNumber": caseNumberParser("SUI", serviceUnit, 54)
+            //     }).then(console.log).catch(console.error);
+            // })
         }
     }
     const cancelHandler = () => {
@@ -544,11 +550,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
                                 // Trigger notification workflow
-                                //console.log(formTwoResponse)
+
 
                                 //AccidentReportForm
                                 if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-                                    console.log(formTwoResponse.data.Id)
+
                                     updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                         console.log(res)
                                     }).catch(console.log);
@@ -670,6 +676,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         }
     }
+
 
     useEffect(() => {
         if (formData) {

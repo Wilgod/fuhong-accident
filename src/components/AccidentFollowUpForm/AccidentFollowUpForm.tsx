@@ -15,7 +15,8 @@ import useSD from '../../hooks/useSD';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
-import { getServiceUserAccidentById } from '../../api/FetchFuHongList';
+import { getAccidentFollowUpFormById, getAccidentReportFormById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
+import { updateAccidentFollowUpRepotFormById, updateAccidentReportFormById } from '../../api/PostFuHongList';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -30,28 +31,24 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
-    // const [smAD, setSmPicker, smPicker] = useUserInfoAD();// 高級服務經理
-    // const [sptAD, setSptPicker, sptPicker] = useUserInfoAD();// 高級物理治療師
-    // const [sdAD, setSdPicker, sdPicker] = useUserInfoAD();// 服務總監
+
+    const [sptComment, setSptComment] = useState("");
+    const [sdComment, setSdComment] = useState("");
+
+
     const [accidentTime, setAccidentTime] = useState(new Date());
-    const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
-    const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
-    const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
 
     const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
-    const [sptList] = useSPT();
-    const [smList] = useSM();
-    const [sdList] = useSD();
+
+
 
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: "",
         executionPeriod: "",
         followUpMeasures: "",
         remark: "",
-        sdComment: "",
-        sptComment: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -70,8 +67,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         let body = {};
         let error = {};
-
-        body["FormType"] = formType;
 
         if (form.followUpMeasures.trim()) {
             body["FollowUpMeasures"] = form.followUpMeasures;
@@ -101,6 +96,13 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const submitHandler = (event) => {
         //Implement
+        const [body, error] = dataFactory();
+        if (Object.keys(error).length === 0) {
+
+            updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
+
+            }).catch(console.error);
+        }
     }
 
     const draftHandler = (event) => {
@@ -119,15 +121,25 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         //Implement
     }
     const loadData = () => {
-        console.log(parentFormData);
-
+  
+        setAccidentTime(new Date(parentFormData.AccidentTime))
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
 
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
+
         if (parentFormData && parentFormData.Id) {
-            getServiceUserAccidentById(parentFormData.Id).then((serviceUserAccidentResponse) => {
+            getAccidentFollowUpFormById(parentFormData.AccidentFollowUpFormId).then((accidentFollowUpFormRepseonse) => {
+
+
+                setForm({
+                    accidentalFollowUpContinue: accidentFollowUpFormRepseonse.AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
+                    executionPeriod: accidentFollowUpFormRepseonse.ExecutionPeriod,
+                    followUpMeasures: accidentFollowUpFormRepseonse.FollowUpMeasures,
+                    remark: accidentFollowUpFormRepseonse.Remark
+                });
+
 
             }).catch(console.error);
         }
@@ -225,7 +237,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 執行時段 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
                         <div className="col">
-                            <input type="text" className="form-control" name="executionPeriod" onChange={textFieldHandler} />
+                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -241,11 +253,11 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外跟進</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE"} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_FALSE"} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
                             {/* <select className="form-control">
@@ -330,7 +342,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={textFieldHandler} value={form.sptComment} />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -386,7 +398,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" onChange={textFieldHandler} value={form.sdComment} />
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} />
                         </div>
                     </div>
                     <div className="form-row mb-2">

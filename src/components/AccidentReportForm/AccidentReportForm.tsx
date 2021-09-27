@@ -169,9 +169,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
             if (Object.keys(error).length === 0) {
-                console.log(body);
+                
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                    console.log(updateAccidentReportFormResponse);
+                    
                     // Trigger notification workflow;
                 }).catch(console.error);
             }
@@ -246,7 +246,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
-        console.log(parentFormData);
+        
 
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
@@ -267,7 +267,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
 
-                console.log(formTwentyData)
+               
                 //收到「意外填報表」日期
                 if (formTwentyData.ReceivedDate) {
                     setFormReceivedDate(new Date(formTwentyData.ReceivedDate));
@@ -325,7 +325,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
-    console.log(investigator);
+ 
     return (
         <>
             <div>

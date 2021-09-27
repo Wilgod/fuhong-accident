@@ -26,6 +26,32 @@ export async function getServiceUnitByShortForm(serviceUnitShortForm: string) {
     }
 }
 
+export enum FormFlow {
+    SERVICE_USER_ACCIDENT,
+}
+
+const formFlowParser = (formFlow: FormFlow) => {
+    switch (formFlow) {
+        case FormFlow.SERVICE_USER_ACCIDENT:
+            return "Service User Accident";
+        default:
+            throw new Error("formFlowParser Error Exist");
+    }
+}
+
+export async function getLastCaseNo(formFlow: FormFlow) {
+    try {
+        const LIST_NAME = formFlowParser(formFlow);
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created").orderBy("Created", false).top(1).get();
+        console.log(item)
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
 // Form 19
 export async function getServiceUserAccident() {
     try {
@@ -54,17 +80,6 @@ export async function getServiceUserAccidentById(id: number) {
     }
 }
 
-export async function getLastCaseNo() {
-    try {
-        const LIST_NAME = "Service User Accident";
-        const item = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("Created", false).top(1).get();
-
-        return item;
-    } catch (err) {
-        console.error(err);
-        throw new Error("getLastCaseNo failed");
-    }
-}
 
 // Form 20
 export async function getAccidentReportFormById(formId: number) {
