@@ -31,6 +31,7 @@
     "office-ui-fabric-react": "6.214.0",
     "react": "16.8.5",
     "react-bootstrap-table-next": "^4.0.3",
+    "react-bootstrap-table2-paginator": "^2.1.2",
     "react-datepicker": "^4.1.1",
     "react-dom": "16.8.5",
     "react-dropzone": "^11.3.4",

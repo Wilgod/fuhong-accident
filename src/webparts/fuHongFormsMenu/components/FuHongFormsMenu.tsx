@@ -4,7 +4,10 @@ import { IFuHongFormsMenuProps } from './IFuHongFormsMenuProps';
 import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import { sp } from "@pnp/sp";
+import { graph } from "@pnp/graph/presets/all";
 import TodoListComponent from '../../../components/TodoList/TodoListComponent';
+import MainTableComponent from '../../../components/MainTable/MainTableComponent';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -27,6 +30,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   public constructor(props) {
     super(props);
     getCanvasZone();
+
+    sp.setup({ spfxContext: this.props.context });
+    graph.setup({ spfxContext: this.props.context });
 
     this.state = {
       formToggle: false,
@@ -101,7 +107,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
               <div className="mb-3" style={{ fontSize: 19, fontWeight: 600 }}>
                 主頁
               </div>
-              <TodoListComponent />
+              <div className="mb-3">
+                <TodoListComponent context={this.props.context} />
+              </div>
+              <div className="mb-3">
+                <MainTableComponent context={this.props.context} />
+              </div>
             </div>
           )
       }

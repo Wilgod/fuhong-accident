@@ -43,7 +43,6 @@ export async function getLastCaseNo(formFlow: FormFlow) {
     try {
         const LIST_NAME = formFlowParser(formFlow);
         const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created").orderBy("Created", false).top(1).get();
-        console.log(item)
         if (item.length > 0) return item[0];
         return null;
     } catch (err) {
@@ -56,9 +55,8 @@ export async function getLastCaseNo(formFlow: FormFlow) {
 export async function getServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getAll();
-
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+       
         return items;
     } catch (err) {
         console.error(err);
