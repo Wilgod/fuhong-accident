@@ -29,9 +29,8 @@ const formTypeParser = (formType: string, additonalString: string) => {
 }
 
 export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole }: IAccidentFollowUpRepotFormProps) {
-    const [date, setDate] = useState(new Date());
+
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
-        formType: "",
         accidentNatureFall: false,
         accidentNatureChok: false,
         accidentNatureBehavior: false,
@@ -119,7 +118,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         body["EnvFactorNoise"] = form.envFactorNoise
         body["EnvFactorCollision"] = form.envFactorCollision;
         body["EnvFactorHurtByOthers"] = form.envFactorHurtByOthers;
-        body["EvnFactorOther"] = form.envFactorOther;
+        body["EnvFactorOther"] = form.envFactorOther;
         if (form.envFactorOther) {
             if (form.envFactorOtherRemark.trim()) {
                 body["EnvFactorOtherRemark"] = form.envFactorOtherRemark;
@@ -163,34 +162,20 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             //error handling
         }
 
-        if (investigator) {
-            //body["InvestigatorId"] = 
-        } else {
-            //error handling
-        }
-
-        // SPT 
-        if (sPhysicalTherapy) {
-            console.log(sPhysicalTherapy);
-        } else {
-            //error handling
-
-        }
-        // SPTDate
-        // SPTComment
-
-
-        if (serviceManager) {
-            console.log(serviceManager);
-        } else {
-
-        }
-
         return [body, error];
     }
 
     const submitHandler = () => {
-        const data = dataFactory();
+        if (parentFormData.AccidentReportFormId) {
+            const [body, error] = dataFactory();
+            if (Object.keys(error).length === 0) {
+                console.log(body);
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                    console.log(updateAccidentReportFormResponse);
+                    // Trigger notification workflow;
+                }).catch(console.error);
+            }
+        }
     };
 
     const draftHandler = () => {
@@ -198,7 +183,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     };
 
     const cancelHandler = () => {
-        const data = dataFactory();
+        //const data = dataFactory();
     };
 
     const sptApproveHandler = () => {
@@ -300,6 +285,35 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     setServiceManagerEmail(formTwentyData.SM.EMail)
                 }
 
+                setForm({
+                    accidentCauseFactor: formTwentyData.AccidentCauseFactor,
+                    accidentNatureBehavior: formTwentyData.AccidentNatureBehavior,
+                    accidentNatureChok: formTwentyData.AccidentNatureChok,
+                    accidentNatureEnvFactor: formTwentyData.AccidentNatureEnvFactor,
+                    accidentNatureFall: formTwentyData.AccidentNatureFall,
+                    accidentalDiscovery: formTwentyData.AccidentalDiscovery,
+                    accidentNatureOther: formTwentyData.AccidentNatureOther,
+                    accidentalNatureOtherRemark: formTwentyData.AccidentNatureOtherRemark,
+                    envFactorAssistiveEquipment: formTwentyData.EnvFactorAssistiveEquipment,
+                    envFactorCollision: formTwentyData.EnvFactorCollision,
+                    envFactorHurtByOthers: formTwentyData.EnvFactorHurtByOthers,
+                    envFactorInsufficientLight: formTwentyData.EnvFactorInsufficientLight,
+                    envFactorNoise: formTwentyData.EnvFactorNoise,
+                    envFactorNotEnoughSpace: formTwentyData.EnvFactorNotEnoughSpace,
+                    envFactorObstacleItems: formTwentyData.EnvFactorObstacleItems,
+                    envFactorOther: formTwentyData.EnvFactorOther,
+                    envFactorOtherRemark: formTwentyData.EnvFactorOtherRemark,
+                    envFactorSlipperyGround: formTwentyData.EnvFactorSlipperyGround,
+                    envFactorUnevenGround: formTwentyData.EnvFactorUnevenGround,
+                    personalFactorChok: formTwentyData.PersonalFactorChok,
+                    personalFactorEmotional: formTwentyData.PersonalFactorEmotional,
+                    personalFactorImpatient: formTwentyData.PersonalFactorImpatient,
+                    personalFactorTwitch: formTwentyData.PersonalFactorTwitch,
+                    personalFactorUnsteadyWalk: formTwentyData.PersonalFactorUnsteadyWalk,
+                    personalFactorOther: formTwentyData.PersonalFactorOther,
+                    personalFactorOtherRemark: formTwentyData.PersonalFactorOtherRemark,
+                    suggestion: formTwentyData.Suggestion
+                });
             });
         }
     }
@@ -502,7 +516,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他</label>
                             </div>
                             {
-                                form.accidentNatureOther &&
+                                form.envFactorOther &&
                                 <div className="">
                                     <AutosizeTextarea className="form-control" placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} />
                                 </div>

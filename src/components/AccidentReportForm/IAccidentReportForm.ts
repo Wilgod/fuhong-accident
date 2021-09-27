@@ -10,7 +10,6 @@ export interface IAccidentFollowUpRepotFormProps {
 }
 
 export interface IAccidentFollowUpRepotFormStates {
-    formType: string;
     accidentNatureFall: boolean;
     accidentNatureChok: boolean;
     accidentNatureBehavior: boolean;
