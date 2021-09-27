@@ -16,7 +16,8 @@ import useSharePointGroup from '../../hooks/useSharePointGroup';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
 import { getAccidentFollowUpFormById, getAccidentReportFormById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
-import { updateAccidentFollowUpRepotFormById, updateAccidentReportFormById } from '../../api/PostFuHongList';
+import { updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
+import { addMonths } from '../../utils/DateUtils';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -64,7 +65,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
 
     const dataFactory = () => {
-
         let body = {};
         let error = {};
 
@@ -88,19 +88,23 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         if (form.accidentalFollowUpContinue) {
             body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? true : false;
-        }
 
+            if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
+                body["NextDeadline"] = addMonths(new Date(), 6);
+            }
+        }
 
         return [body, error];
     }
-
+    //For SM only
     const submitHandler = (event) => {
         //Implement
         const [body, error] = dataFactory();
         if (Object.keys(error).length === 0) {
 
             updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
-
+                // trigger notification workflow
+                updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" })
             }).catch(console.error);
         }
     }
@@ -111,17 +115,40 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const cancelHandler = (event) => {
         //Implement
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+        window.open(path, "_self");
     }
 
-    const approveHandler = () => {
+    const sptCommentUpdate = () => {
+        // implement
+        //date 
+        //comment
+        const body = {
+            "SPTComment": sptComment,
+            "SPTDate": new Date().toISOString()
+        }
+        updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((res) => {
+            console.log(res);
+        });
+    }
+
+    const sdApproveHandler = () => {
         //Implement
+        const accidentFollowUpReportFormBody = {
+            "SDApproved": true,
+            "SDDate": new Date().toISOString(),
+            "Status": "CLOSED"
+        }
+        updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, accidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
+            // trigger notification workflow
+        }).catch(console.error);
     }
 
-    const rejectHnadler = () => {
+    const sdRejectHandler = () => {
         //Implement
     }
     const loadData = () => {
-  
+
         setAccidentTime(new Date(parentFormData.AccidentTime))
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
@@ -131,16 +158,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         if (parentFormData && parentFormData.Id) {
             getAccidentFollowUpFormById(parentFormData.AccidentFollowUpFormId).then((accidentFollowUpFormRepseonse) => {
-
-
                 setForm({
                     accidentalFollowUpContinue: accidentFollowUpFormRepseonse.AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
                     executionPeriod: accidentFollowUpFormRepseonse.ExecutionPeriod,
                     followUpMeasures: accidentFollowUpFormRepseonse.FollowUpMeasures,
                     remark: accidentFollowUpFormRepseonse.Remark
                 });
-
-
             }).catch(console.error);
         }
     }
@@ -404,8 +427,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     <div className="form-row mb-2">
                         <div className="col-12">
                             <div className="d-flex justify-content-center">
-                                <button className="btn btn-warning mr-3">批准</button>
-                                <button className="btn btn-danger mr-3">拒絕</button>
+                                <button className="btn btn-warning mr-3" onClick={() => sdApproveHandler()}>批准</button>
+                                <button className="btn btn-danger mr-3" onClick={() => sdRejectHandler()}>拒絕</button>
                             </div>
                         </div>
                     </div>

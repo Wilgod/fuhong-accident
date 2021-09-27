@@ -16,6 +16,7 @@ import useSD from '../../hooks/useSD';
 import useSM from '../../hooks/useSM';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
+import { addBusinessDays } from '../../utils/DateUtils';
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -169,9 +170,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
             if (Object.keys(error).length === 0) {
-                
+
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                    
+
                     // Trigger notification workflow;
                 }).catch(console.error);
             }
@@ -184,6 +185,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
     const cancelHandler = () => {
         //const data = dataFactory();
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+        window.open(path, "_self");
     };
 
     const sptApproveHandler = () => {
@@ -212,7 +215,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     const serviceUserAccidentFormBody = {
                         "AccidentFollowUpFormId": accidentFollowUpReportFormResponse.data.Id,
                         "Stage": "3",
-                        "Status": "FOLLOW_UP_CREATED"
+                        "Status": "PENDING",
+                        "NextDeadline": addBusinessDays(new Date(), 6)
                     }
                     updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                         //trigger notification work flow
@@ -246,7 +250,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
-        
+
 
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
@@ -267,7 +271,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
 
-               
+
                 //收到「意外填報表」日期
                 if (formTwentyData.ReceivedDate) {
                     setFormReceivedDate(new Date(formTwentyData.ReceivedDate));
@@ -314,7 +318,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     personalFactorOtherRemark: formTwentyData.PersonalFactorOtherRemark,
                     suggestion: formTwentyData.Suggestion
                 });
-            });
+            }).catch(console.error);
         }
     }
 
@@ -325,7 +329,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
- 
+
     return (
         <>
             <div>

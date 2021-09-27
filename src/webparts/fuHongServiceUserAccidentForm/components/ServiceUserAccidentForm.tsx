@@ -18,7 +18,7 @@ import { createAccidentReportForm, createServiceUserAccident, updateServiceUserA
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
-import { addDays, dateFieldRawHandler } from '../../../utils/DateParser';
+import { addBusinessDays, addDays, addMonths, dateFieldRawHandler } from '../../../utils/DateUtils';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { getSeniorPhysiotherapistByGraph, getServiceDirectorsByGraph, getServiceManagersByGraph, getUserInfoByEmail } from '../../../api/FetchUser';
 import { Role } from '../../../utils/RoleParser';
@@ -39,10 +39,6 @@ if (document.getElementById('workbenchPageContent') != null) {
 if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
-
-// getUserInfoByEmail("jonathan.tsoi@fuhong.org");
-// getUserInfoByEmail("rosetti.to@fuhong.org");
-// getUserInfoByEmail("anita.poon@fuhong.org");
 
 export default function ServiceUserAccidentForm({ context, currentUserRole, formData }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -458,14 +454,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
             body["SMApproved"] = true;
-            body["Status"] = "SM_APPROVED";
+            body["Status"] = "PENDING_SPT_APPROVE";
+            body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else if (status === "SUBMIT") {
-            body["Status"] = "PENDING_APPROVE";
+            body["Status"] = "PENDING_SM_APPROVE";
+            body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else {
             body["Status"] = "DRAFT";
         }
 
-
+        body["Stage"] = "1";
         return [body, error];
     }
 
@@ -498,18 +496,20 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
     const cancelHandler = () => {
         //implement 
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+        window.open(path, "_self");
     }
 
     const smApproveHandler = () => {
         const body = {
             "SMApproved": true,
             "SDComment": sdComment.trim(),
-            "SMDate": smDate.toISOString()
+            "SMDate": smDate.toISOString(),
+            "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+            "Status": "PENDING_SPT_APPROVE"
         };
         updateServiceUserAccidentById(formId, body).then(() => {
             // Update form to stage 1-2
-
-
             // Trigger notification workflow
         }).catch(console.error);
     }
@@ -518,7 +518,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         const body = {
             "SMApproved": false,
             "SDComment": sdComment.trim(),
-            "SMDate": smDate.toISOString()
+            "SMDate": smDate.toISOString(),
+            "Status": "SM_REJECTED"
         };
         updateServiceUserAccidentById(formId, body);
     }
@@ -530,8 +531,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 "SPTComment": sptComment.trim(),
                 "SPTDate": sptDate.toISOString(),
                 "InvestigatorId": investigatorPickerInfo[0].id,
-                "Status": "INVESTIGATE",
-                "Stage": "2"
+                "Status": "PENDING_INVESTIGATE",
+                "Stage": "2",
+                "NextDeadline": addMonths(new Date(), 1).toISOString()
             };
             updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
                 // Create form 20, switch to stage 2]
@@ -550,7 +552,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
                                 // Trigger notification workflow
-
+                                
 
                                 //AccidentReportForm
                                 if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
@@ -575,10 +577,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 "SPTApproved": false,
                 "SPTComment": sptComment.trim(),
                 "SPTDate": sptDate.toISOString(),
-                "InvestigatorId": investigatorPickerInfo[0].id
+                "InvestigatorId": investigatorPickerInfo[0].id,
+                "Status": "SPT_REJECTED"
             };
             updateServiceUserAccidentById(formId, body).then(() => {
-
+                // Trigger notification workflow
             });
         } else {
             // error implementation

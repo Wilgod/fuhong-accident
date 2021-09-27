@@ -11,6 +11,9 @@ export default function MainTableComponent({ context }: IMainTableComponentProps
 
     return (
         <div>
+            <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
+                搜尋
+            </div>
             <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
         </div>
     )
