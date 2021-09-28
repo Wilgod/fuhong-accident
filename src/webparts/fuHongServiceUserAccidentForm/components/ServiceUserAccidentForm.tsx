@@ -1744,7 +1744,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <section className="py-3">
                         <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                             {
-                                pendingSmApprove(currentUserRole, formStatus, formStage) || formInitial(currentUserRole, formStatus) || pendingSptApproveForSPT(currentUserRole, formStatus, formStage) || pendingSptApproveForSD(currentUserRole, formStatus, formStage)
+                                (pendingSmApprove(currentUserRole, formStatus, formStage) || formInitial(currentUserRole, formStatus) || pendingSptApproveForSPT(currentUserRole, formStatus, formStage) || pendingSptApproveForSD(currentUserRole, formStatus, formStage))
                                 &&
                                 <>
                                     <button className="btn btn-warning" onClick={submitHandler}>提交</button>

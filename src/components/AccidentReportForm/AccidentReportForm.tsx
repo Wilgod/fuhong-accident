@@ -16,7 +16,7 @@ import useSD from '../../hooks/useSD';
 import useSM from '../../hooks/useSM';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
-import { addBusinessDays } from '../../utils/DateUtils';
+import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 
 
@@ -223,7 +223,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         "AccidentFollowUpFormId": accidentFollowUpReportFormResponse.data.Id,
                         "Stage": "3",
                         "Status": "PENDING_SM_FILL_IN",
-                        "NextDeadline": addBusinessDays(new Date(), 6)
+                        "NextDeadline": addMonths(new Date(), 6)
                     }
                     updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                         //trigger notification work flow
@@ -736,7 +736,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            stageTwoPendingSptApprove(currentUserRole, formStatus, formStage) || pendingInvestigate(currentUserRole, formStatus, formStage) || stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)
+                            (stageTwoPendingSptApprove(currentUserRole, formStatus, formStage) || pendingInvestigate(currentUserRole, formStatus, formStage) || stageTwoPendingSptApprove(currentUserRole, formStatus, formStage))
                             &&
                             <>
                                 <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
