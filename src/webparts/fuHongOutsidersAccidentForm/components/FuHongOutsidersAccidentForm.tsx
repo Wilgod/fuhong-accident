@@ -10,7 +10,7 @@ import 'react-tabs/style/react-tabs.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import OutsidersAccidentForm from "./OutsidersAccidentForm";
-import { jobTitleParser, Role } from '../../../utils/RoleParser';
+import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { sp } from '@pnp/sp';
 import { graph } from '@pnp/graph';
@@ -47,7 +47,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.PROFESSIONAL
+      currentUserRole: Role.GENERAL
     }
   }
 

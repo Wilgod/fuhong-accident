@@ -12,9 +12,10 @@ import "./react-tabs.css";
 import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
-import { jobTitleParser, Role } from '../../../utils/RoleParser';
+import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { getUserAdByGraph } from '../../../api/FetchUser';
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -47,7 +48,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.PROFESSIONAL,
+      currentUserRole: Role.ADMIN,
       serviceUserAccidentFormData: null,
       stage: ""
     }
@@ -65,19 +66,26 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   }
 
   public componentDidMount() {
-    this.checkRole(); // Testing Only
+    this.checkRole(); // Testing Only 
     this.initialDataByFormId();
+    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      if (value && value.jobTitle) {
+        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
+      }
+    }).catch(console.error);
   }
 
   private async initialDataByFormId() {
     const formId = getQueryParameterNumber("formId");
-    const data = await getServiceUserAccidentById(formId);
-    this.setState({ serviceUserAccidentFormData: data });
+    if (formId) {
+      const data = await getServiceUserAccidentById(formId);
+      this.setState({ serviceUserAccidentFormData: data });
+    }
   }
 
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-
+    console.log(this.state.currentUserRole);
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>

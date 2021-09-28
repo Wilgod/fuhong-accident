@@ -49,6 +49,14 @@ export default function StyledDropzone(props) {
         setUploadedFiles(value => [...value, ...acceptedFiles]);
     }
 
+    const removeHandler = (index) => {
+        setUploadedFiles(value => value.filter((f, i) => index !== i));
+    }
+
+    useEffect(() => {
+        props.selectedFiles(uploadedFiles);
+    }, [uploadedFiles]);
+
     useEffect(() => {
         uploadedFilesHandler();
     }, [acceptedFiles])
@@ -59,7 +67,7 @@ export default function StyledDropzone(props) {
                 <span className="flex-grow-1 text-break">
                     {file.name} - {file.size / 1024 ** 2} MB
                 </span>
-                <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => setUploadedFiles(value => value.filter((f, i) => index !== i))}>
+                <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
                     &times;
                 </span>
             </div>

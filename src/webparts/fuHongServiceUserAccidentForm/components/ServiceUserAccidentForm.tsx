@@ -14,7 +14,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { FormFlow, getLastCaseNo, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
-import { createAccidentReportForm, createServiceUserAccident, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createServiceUserAccident, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
@@ -31,6 +31,7 @@ import useSPT from '../../../hooks/useSPT';
 import useSD from '../../../hooks/useSD';
 import useSM from '../../../hooks/useSM';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
+import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -62,7 +63,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const [date, setDate] = useState(new Date());
 
-
+    const [injuryFiles, setInjuryFiles] = useState([]);
+    const [selectedCctvPhoto, setSelectedCctvPhoto] = useState([]);
 
 
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
@@ -270,7 +272,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.photo) {
             body["PhotoRecord"] = form.photo === "PHOTO_TRUE";
             if (form.photo === "PHOTO_TRUE") {
-                error.photo = "請上傳照片";
+                if (selectedCctvPhoto.length === 0) {
+                    error.photo = "請上傳照片";
+                }
             }
         } else {
             error.photoChoice = "請選擇";
@@ -463,6 +467,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["Status"] = "DRAFT";
         }
 
+
         body["Stage"] = "1";
         return [body, error];
     }
@@ -484,14 +489,29 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 createServiceUserAccident({
                     ...body,
                     "CaseNumber": caseNumber
-                }).then(console.log).catch(console.error);
+                }).then((serviceUserAccidentResponse) => {
+                    if (serviceUserAccidentResponse && serviceUserAccidentResponse.data && serviceUserAccidentResponse.data.Id) {
+
+                        let att = [];
+                        if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                            att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                        }
+
+                        if (injuryFiles.length > 0) {
+                            att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                        }
+
+                        if (att.length > 0) {
+                            // Do seomething
+                            updateServiceUserAccidentAttachmentById(serviceUserAccidentResponse.data.Id, att).then(res => {
+                                if (res) {
+                                    // Do something
+                                }
+                            }).catch(console.error);
+                        }
+                    }
+                }).catch(console.error);
             }).catch(console.error);
-            // getLastCaseNo(FormFlow.SERVICE_USER_ACCIDENT).then((value) => {
-            //     createServiceUserAccident({
-            //         ...body,
-            //         "CaseNumber": caseNumberParser("SUI", serviceUnit, 54)
-            //     }).then(console.log).catch(console.error);
-            // })
         }
     }
     const cancelHandler = () => {
@@ -552,7 +572,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
                                 // Trigger notification workflow
-                                
+
 
                                 //AccidentReportForm
                                 if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
@@ -592,7 +612,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         if (data) {
             setFormId(data.Id);
-
+            console.log(data);
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -967,7 +987,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             {
                                 form.injuredArea.length > 0 &&
-                                <StyledDropzone />
+                                <StyledDropzone selectedFiles={setInjuryFiles} />
                             }
                         </div>
                     </div>
@@ -1101,7 +1121,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {
                                     form.photo === "PHOTO_TRUE" &&
                                     <>
-                                        <StyledDropzone />
+                                        <StyledDropzone selectedFiles={setSelectedCctvPhoto} />
                                         {error.photo && <div className="text-danger">{error.photo}</div>}
                                     </>
                                 }
