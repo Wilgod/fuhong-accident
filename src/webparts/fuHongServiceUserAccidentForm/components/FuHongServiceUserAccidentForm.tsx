@@ -66,20 +66,36 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   }
 
   public componentDidMount() {
-    this.checkRole(); // Testing Only 
-    this.initialDataByFormId();
+
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
+
+      this.initialDataByFormId().then((data) => {
+        if (data && data.Investigator && data.Investigator.EMail) {
+          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.INVESTIGATOR });
+          }
+        }
+        this.checkRole();// Testing Only 
+      }).catch(console.error);
     }).catch(console.error);
+
   }
 
   private async initialDataByFormId() {
-    const formId = getQueryParameterNumber("formId");
-    if (formId) {
-      const data = await getServiceUserAccidentById(formId);
-      this.setState({ serviceUserAccidentFormData: data });
+    try {
+
+      const formId = getQueryParameterNumber("formId");
+      if (formId) {
+        const data = await getServiceUserAccidentById(formId);
+        this.setState({ serviceUserAccidentFormData: data });
+        return data;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("initialDataByFormId error");
     }
   }
 

@@ -18,6 +18,7 @@ import useServiceUser from '../../hooks/useServiceUser';
 import { getAccidentFollowUpFormById, getAccidentReportFormById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
 import { updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
 import { addMonths } from '../../utils/DateUtils';
+import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -42,8 +43,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
-
-
+    const [formStatus, setFormStatus] = useState("");
+    const [formStage, setFormStage] = useState("");
 
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: "",
@@ -137,10 +138,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const accidentFollowUpReportFormBody = {
             "SDApproved": true,
             "SDDate": new Date().toISOString(),
-            "Status": "CLOSED"
         }
         updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, accidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
             // trigger notification workflow
+            updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then((rse) => {
+                // trigger notification workflow
+            }).catch(console.error)
         }).catch(console.error);
     }
 
@@ -148,6 +151,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         //Implement
     }
     const loadData = () => {
+        if (parentFormData.Stage) {
+            setFormStage(parentFormData.Stage);
+        }
+        if (parentFormData.Status) {
+            setFormStatus(parentFormData.Status);
+        }
 
         setAccidentTime(new Date(parentFormData.AccidentTime))
         // Service Unit
@@ -253,21 +262,21 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 意外報告的跟進措施 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} />
+                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 執行時段 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
                         <div className="col">
-                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} />
+                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 備註 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="remark" onChange={textFieldHandler} value={form.remark} />
+                            <AutosizeTextarea className="form-control" name="remark" onChange={textFieldHandler} value={form.remark} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
@@ -276,11 +285,11 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外跟進</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE"} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE"} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_FALSE"} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_FALSE"} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
                             {/* <select className="form-control">
@@ -312,7 +321,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     })
                                 }
                             </select> */}
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} disabled={!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -365,7 +374,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={!stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -421,25 +430,33 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} />
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} disabled={!stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
-                    <div className="form-row mb-2">
-                        <div className="col-12">
-                            <div className="d-flex justify-content-center">
-                                <button className="btn btn-warning mr-3" onClick={() => sdApproveHandler()}>批准</button>
-                                <button className="btn btn-danger mr-3" onClick={() => sdRejectHandler()}>拒絕</button>
+                    {
+                        stageThreePendingSdApprove(currentUserRole, formStatus, formStage) &&
+                        <div className="form-row mb-2">
+                            <div className="col-12">
+                                <div className="d-flex justify-content-center">
+                                    <button className="btn btn-warning mr-3" onClick={() => sdApproveHandler()}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={() => sdRejectHandler()}>拒絕</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </section>
 
                 <hr className="my-4" />
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning" onClick={(event => submitHandler(event))}>提交</button>
-                        <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
+                        {
+                            (stageThreePendingSdApprove(currentUserRole, formStatus, formStage) || stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage) || stageThreePendingSmFillIn(currentUserRole, formStatus, formStage)) &&
+                            <>
+                                <button className="btn btn-warning" onClick={(event => submitHandler(event))}>提交</button>
+                                <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
+                            </>
+                        }
                         <button className="btn btn-secondary" onClick={(event => cancelHandler(event))}>取消</button>
                     </div>
                 </section>

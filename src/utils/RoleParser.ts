@@ -9,7 +9,7 @@ export enum Role {
 }
 
 
-// jobTitle to role
+// jobTitle to role // For testing
 export const jobTitleParser = (jobTitle: string): Role => {
 
     switch (jobTitle) {
