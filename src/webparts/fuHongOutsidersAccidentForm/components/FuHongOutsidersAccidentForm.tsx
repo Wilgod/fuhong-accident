@@ -38,7 +38,7 @@ const getCanvasZone = () => {
 
 
 
-export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, { currentUserRole: Role }> {
+export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, { currentUserRole: Role, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -47,7 +47,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.GENERAL
+      currentUserRole: Role.GENERAL,
+      formSubmitted: false
     }
   }
 
@@ -65,6 +66,10 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     this.checkRole(); // Testing Only
   }
 
+  private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+
+  private formSubmittedHandler = () => this.setState({ formSubmitted: true });
+
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
@@ -79,10 +84,10 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               <OutsidersAccidentForm context={this.props.context} />
             </TabPanel>
             <TabPanel>
-              <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} />
+              <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
             </TabPanel>
             <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} />
+              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
             </TabPanel>
           </Tabs>
         </div>

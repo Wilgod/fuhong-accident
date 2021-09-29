@@ -16,6 +16,7 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { getUserAdByGraph } from '../../../api/FetchUser';
+import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -39,7 +40,7 @@ if (document.querySelector('.CanvasZone') != null) {
 }
 
 
-export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string }> {
+export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -48,9 +49,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.ADMIN,
+      currentUserRole: Role.GENERAL,
       serviceUserAccidentFormData: null,
-      stage: ""
+      stage: "",
+      formSubmitted: false
     }
     console.log("Flow 1");
   }
@@ -98,29 +100,36 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       throw new Error("initialDataByFormId error");
     }
   }
+  private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
+  private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
     console.log(this.state.currentUserRole);
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>
-          <Tabs variant="fullWidth">
-            <TabList>
-              <Tab>服務使用者意外填報表(一)</Tab>
-              <Tab>服務使用者/外界人士意外報告(二)</Tab>
-              <Tab>意外跟進/結束表(三)</Tab>
-            </TabList>
-            <TabPanel>
-              <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} />
-            </TabPanel>
-            <TabPanel>
-              <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} />
-            </TabPanel>
-            <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} />
-            </TabPanel>
-          </Tabs>
+          {
+            this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              <Tabs variant="fullWidth">
+                <TabList>
+                  <Tab>服務使用者意外填報表(一)</Tab>
+                  <Tab>服務使用者/外界人士意外報告(二)</Tab>
+                  <Tab>意外跟進/結束表(三)</Tab>
+                </TabList>
+                <TabPanel>
+                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+              </Tabs>
+          }
         </div>
       </div>
     );

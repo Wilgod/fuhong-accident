@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
@@ -90,8 +90,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         if (form.accidentalFollowUpContinue) {
             body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? true : false;
 
-            if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
-                body["NextDeadline"] = addMonths(new Date(), 6);
+            if (stageThreePendingSdApprove(currentUserRole, formStatus, formStage)) {
+                if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
+                    body["NextDeadline"] = addMonths(new Date(), 6);
+                }
             }
         }
 
@@ -99,19 +101,31 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
     //For SM only
     const submitHandler = (event) => {
-        //Implement
-        const [body, error] = dataFactory();
-        if (Object.keys(error).length === 0) {
+        if (stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage)) {
+            sptCommentUpdate();
+        } else {
+            //Implement
+            const [body, error] = dataFactory();
+
 
             updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
                 // trigger notification workflow
-                updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" })
+                updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
+                    formSubmittedHandler()
+                }).catch(console.error)
             }).catch(console.error);
+
         }
     }
 
     const draftHandler = (event) => {
         // Implement
+        const [body, error] = dataFactory();
+        updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
+            // trigger notification workflow
+            formSubmittedHandler();
+
+        }).catch(console.error);
     }
 
     const cancelHandler = (event) => {
@@ -130,6 +144,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         }
         updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, body).then((res) => {
             console.log(res);
+            formSubmittedHandler();
         });
     }
 
@@ -138,11 +153,21 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const accidentFollowUpReportFormBody = {
             "SDApproved": true,
             "SDDate": new Date().toISOString(),
+            "SDComment": sdComment
         }
         updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, accidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
             // trigger notification workflow
-            updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then((rse) => {
+            const body = {
+                "Status": form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? "PENDING_SD_APPROVE" : "CLOSED",
+            }
+            if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
+                body["NextDeadline"] = addMonths(new Date(), 6).toISOString();
+            } else {
+                body["NextDeadline"] = null;
+            }
+            updateServiceUserAccidentById(parentFormData.Id, body).then((rse) => {
                 // trigger notification workflow
+                formSubmittedHandler();
             }).catch(console.error)
         }).catch(console.error);
     }
@@ -162,6 +187,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
 
+
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
 
@@ -173,6 +199,17 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     followUpMeasures: accidentFollowUpFormRepseonse.FollowUpMeasures,
                     remark: accidentFollowUpFormRepseonse.Remark
                 });
+
+                setSdComment(accidentFollowUpFormRepseonse.SDComment);
+                if (accidentFollowUpFormRepseonse.SMDate) {
+                    setSmDate(new Date(accidentFollowUpFormRepseonse.SMDate));
+                }
+
+                setSptComment(accidentFollowUpFormRepseonse.SPTComment);
+                if (accidentFollowUpFormRepseonse.SPTDate) {
+                    setSmDate(new Date(accidentFollowUpFormRepseonse.SPTDate));
+                }
+
             }).catch(console.error);
         }
     }
@@ -451,11 +488,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            (stageThreePendingSdApprove(currentUserRole, formStatus, formStage) || stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage) || stageThreePendingSmFillIn(currentUserRole, formStatus, formStage)) &&
-                            <>
-                                <button className="btn btn-warning" onClick={(event => submitHandler(event))}>提交</button>
-                                <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
-                            </>
+                            (stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage) || stageThreePendingSmFillIn(currentUserRole, formStatus, formStage)) &&
+                            <button className="btn btn-warning" onClick={(event => submitHandler(event))}>提交</button>
+                        }
+                        {
+                            stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) &&
+                            <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={(event => cancelHandler(event))}>取消</button>
                     </div>

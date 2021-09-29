@@ -18,5 +18,5 @@ export function addBusinessDays(startDate: Date, numberOfDays: number) {
 }
 
 export function addMonths(date: Date, numberOfMonth: number) {
-    return new Date(new Date(date.getTime()).setMonth(new Date(date.getTime()).getMonth() + 1));
+    return new Date(new Date(date.getTime()).setMonth(new Date(date.getTime()).getMonth() + numberOfMonth));
 }

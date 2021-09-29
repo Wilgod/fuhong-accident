@@ -43,6 +43,7 @@ interface IServiceUserAccidentFormProps {
     context: WebPartContext;
     currentUserRole: Role
     formData: any;
+    formSubmittedHandler(): void;
 }
 
 interface IErrorFields {
@@ -83,6 +84,11 @@ interface IErrorFields {
     contactFamilyRelationship?: string;
     contactFamilyName?: string;
     afterTreatmentDescription?: string;
+    serviceUserRecordId?: string;
+    serviceUnit?: string;
+    serviceManager?: string;
+    serviceDirector?: string;
+    spt?: string;
 }
 
 export { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps }

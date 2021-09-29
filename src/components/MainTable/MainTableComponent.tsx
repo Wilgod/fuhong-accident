@@ -31,6 +31,7 @@ const columns = (context) => {
             dataField: 'AccidentTime',
             text: '發生日期',
             formatter: (value, data) => {
+                
                 return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
             }
         },
@@ -65,7 +66,11 @@ const columns = (context) => {
             dataField: 'NextDeadline',
             text: '下個報告到期日',
             formatter: (value, data) => {
-                return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
+                if(value){
+                    return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
+                }else{
+                    return <div>沒有</div>
+                }
             }
         },
         {

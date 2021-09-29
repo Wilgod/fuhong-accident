@@ -30,7 +30,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -105,7 +105,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         body["AccidentNatureEnvFactor"] = form.accidentNatureEnvFactor;
         body["AccidentNatureOther"] = form.accidentNatureOther;
         if (form.accidentNatureOther) {
-            if (form.accidentalNatureOtherRemark.trim()) {
+            if (form.accidentalNatureOtherRemark) {
                 body["AccidentNatureOtherRemark"] = form.accidentalNatureOtherRemark;
             } else {
                 // Error handling
@@ -123,7 +123,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         body["EnvFactorHurtByOthers"] = form.envFactorHurtByOthers;
         body["EnvFactorOther"] = form.envFactorOther;
         if (form.envFactorOther) {
-            if (form.envFactorOtherRemark.trim()) {
+            if (form.envFactorOtherRemark) {
                 body["EnvFactorOtherRemark"] = form.envFactorOtherRemark;
             } else {
                 //Error handling
@@ -137,7 +137,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         body["PersonalFactorTwitch"] = form.personalFactorTwitch;
         body["PersonalFactorOther"] = form.personalFactorOther;
         if (form.personalFactorOther) {
-            if (form.personalFactorOtherRemark.trim()) {
+            if (form.personalFactorOtherRemark) {
                 body["PersonalFactorOtherRemark"] = form.personalFactorOtherRemark;
             } else {
                 //error handling
@@ -145,14 +145,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
 
         //AccidentalDiscovery 意外發現之經過
-        if (form.accidentalDiscovery.trim()) {
+        if (form.accidentalDiscovery) {
             body["AccidentalDiscovery"] = form.accidentalDiscovery;
         } else {
             // error handling 
         }
 
         //AccidentCauseFactor 可能引致意外之因素
-        if (form.accidentCauseFactor.trim()) {
+        if (form.accidentCauseFactor) {
             body["AccidentCauseFactor"] = form.accidentCauseFactor;
         } else {
             // error handling
@@ -171,23 +171,42 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const submitHandler = () => {
+
         if (parentFormData.AccidentReportFormId) {
-            const [body, error] = dataFactory();
-            if (Object.keys(error).length === 0) {
-
-                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-
-                    updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
-                        console.log(updateServiceUserAccidentResponse)
-                        // Trigger notification workflow;
-                    }).catch(console.error)
+            if (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage)) {
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
+                    "SMComment": smComment,
+                    "SMDate": smDate.toISOString()
+                }).then((updateAccidentReportFormResponse) => {
+                    formSubmittedHandler();
                 }).catch(console.error);
+            } else {
+                const [body, error] = dataFactory();
+                if (Object.keys(error).length === 0) {
+
+                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+
+                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
+                            console.log(updateServiceUserAccidentResponse)
+                            // Trigger notification workflow;
+                            formSubmittedHandler();
+                        }).catch(console.error)
+                    }).catch(console.error);
+                }
             }
         }
     };
 
     const draftHandler = () => {
-        const data = dataFactory();
+        if (parentFormData.AccidentReportFormId) {
+            const [body, error] = dataFactory();
+            if (Object.keys(error).length === 0) {
+
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
+        }
     };
 
     const cancelHandler = () => {
@@ -201,8 +220,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         // main form Status
         // sub form spt approved // SPTApproved, comment , date
         // Create Form 21
+        const [body] = dataFactory();
         if (parentFormData && parentFormData.AccidentReportFormId) {
             const accidentReportFormBody = {
+                ...body,
                 "SPTApproved": true,
                 "SPTDate": new Date().toISOString(),
                 "SPTComment": sptComment
@@ -223,10 +244,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         "AccidentFollowUpFormId": accidentFollowUpReportFormResponse.data.Id,
                         "Stage": "3",
                         "Status": "PENDING_SM_FILL_IN",
-                        "NextDeadline": addMonths(new Date(), 6)
+                        "NextDeadline": addMonths(new Date(), 6).toISOString()
                     }
+
                     updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                         //trigger notification work flow
+                        formSubmittedHandler()
                     }).catch(console.error);
                 }).catch(console.error);
             }).catch(console.log);
@@ -236,8 +259,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const sptRejectHandler = () => {
         // main form Status
         // sub form spt approved // SPTApproved, comment , date
+        const [body] = dataFactory();
         if (parentFormData && parentFormData.AccidentReportFormId) {
             const accidentReportFormBody = {
+                ...body,
                 "SPTApproved": false,
                 "SPTDate": new Date().toISOString(),
                 "SPTComment": sptComment
@@ -251,6 +276,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 }
                 updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                     //trigger notification work flow
+                    formSubmittedHandler();
                 }).catch(console.error);
             }).catch(console.error);
         }
@@ -264,12 +290,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData.Stage) {
             setFormStage(parentFormData.Stage);
         }
-
+        
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
 
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
+
+
 
         //調查員
         if (parentFormData.Investigator) {
@@ -300,6 +328,17 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                 if (formTwentyData.SM && formTwentyData.SM.EMail) {
                     setServiceManagerEmail(formTwentyData.SM.EMail)
+                }
+
+                setSmComment(formTwentyData.SMComment);
+                if (formTwentyData.SMDate) {
+                    setSmDate(new Date(formTwentyData.SMDate));
+                }
+
+
+                setSptComment(formTwentyData.SPTComment);
+                if (formTwentyData.SPTDate) {
+                    setSptDate(new Date(formTwentyData.SPTDate));
                 }
 
                 setForm({
@@ -736,17 +775,18 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            (stageTwoPendingSptApprove(currentUserRole, formStatus, formStage) || pendingInvestigate(currentUserRole, formStatus, formStage) || stageTwoPendingSptApprove(currentUserRole, formStatus, formStage))
+                            (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage) || pendingInvestigate(currentUserRole, formStatus, formStage))
                             &&
-                            <>
-                                <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
-                                <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
-                            </>
+                            <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
+                        }
+                        {
+                            pendingInvestigate(currentUserRole, formStatus, formStage) &&
+                            <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                     </div>
                 </section>
-            </div>
+            </div >
         </>
     )
 }
