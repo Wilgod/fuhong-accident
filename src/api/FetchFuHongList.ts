@@ -7,7 +7,7 @@ import "@pnp/sp/items";
 export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("ShortForm", true).get();
         return items;
     } catch (err) {
         console.error(err);
@@ -56,7 +56,7 @@ export async function getServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
-       
+
         return items;
     } catch (err) {
         console.error(err);
@@ -106,5 +106,21 @@ export async function getAccidentFollowUpFormById(formId: number) {
     } catch (err) {
         console.error(err);
         throw new Error("getAccidentFollowUpFormById failed");
+    }
+}
+
+export async function getAllAccidentFollowUpFormByParentId(ParentId: number) {
+    try {
+        const LIST_NAME = "Accident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`ParentFormId eq ${ParentId}`)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SPT", "SD")
+            .orderBy("Created", false)
+            .get();
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllAccidentFollowUpFormByParentId failed");
     }
 }

@@ -801,7 +801,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 <option>請選擇服務單位</option>
                                 {serviceUnitList.map((unit) => {
-                                    return <option value={unit.ShortForm}>{`${unit.Title} - ${unit.ShortForm}`}</option>
+                                    return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
                                 })}
                             </select>
                         </div>
