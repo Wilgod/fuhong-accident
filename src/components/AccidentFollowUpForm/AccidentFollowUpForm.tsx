@@ -19,6 +19,7 @@ import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentF
 import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
+import { ConsoleListener } from '@pnp/pnpjs';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -55,7 +56,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const [accidentFollowUpFormList, setAccidentFollowUpFormList] = useState([]);
     const [selectedAccidentFollowUpFormId, setSelectedAccidentFollowUpFormId] = useState(null);
-    const [isAccidentFormComplete, setIsAccidentFormComplete] = useState(false);
+    const [isSDApproved, setIsSDApproved] = useState(false);
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -93,12 +94,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         if (form.accidentalFollowUpContinue) {
             body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? true : false;
-
-            if (stageThreePendingSdApprove(currentUserRole, formStatus, formStage)) {
-                if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
-                    body["NextDeadline"] = addMonths(new Date(), 6);
-                }
-            }
         }
 
         return [body, error];
@@ -111,64 +106,24 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         } else {
             //Implement
             const [body, error] = dataFactory();
-            if (body["AccidentalFollowUpContinue"] === true) {
-                // Create Form 21 
-                getServiceUserAccidentById(parentFormData.Id).then((getAccidentFollowUpFormByIdRes) => {
-                    let title = "";
-                    if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-                        title = `意外跟進/結束表 - ${getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId.length + 1}`;
-                    } else {
-                        title = `意外跟進/結束表 - 1`;
-                    }
-
-                    const newAccountFollowUpReportFormBody = {
-                        "CaseNumber": parentFormData.CaseNumber,
-                        "ParentFormId": parentFormData.ID,
-                        "SPTId": parentFormData.SPTId,
-                        "SDId": parentFormData.SDId,
-                        "SMId": parentFormData.SMId,
-                        "Title": title
-                    }
-
-                    createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
-                        // get form 19 , add form 21 number to form 19
-
-                        let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
-                        // copy old data
-                        if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-                            accidentFollowUpFormId = [...getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
-                        }
-                        updateServiceUserAccidentById(parentFormData.Id, {
-                            "AccidentFollowUpFormId": {
-                                results: accidentFollowUpFormId
-                            }
-                        }).then((updateServiceUserAccidentFormRes) => {
-                            updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, { "Complete": true }).then((res) => {
-                                formSubmittedHandler();
-                            }).catch(console.error);
-                        }).catch(console.error);
-                    }).catch(console.error);
-                }).catch(console.error);
-            } else {
-                updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
+            // Form 21 SM's part done, and send it to sd and spt.
+            updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
+                //Update 
+                updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
                     // trigger notification workflow
-                    updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
-                        formSubmittedHandler()
-                    }).catch(console.error)
-                }).catch(console.error);
-            }
+                    formSubmittedHandler()
+                }).catch(console.error)
+            }).catch(console.error);
         }
-
     }
 
 
     const draftHandler = (event) => {
-        // Implement
+
         const [body, error] = dataFactory();
         updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
             // trigger notification workflow
             formSubmittedHandler();
-
         }).catch(console.error);
     }
 
@@ -179,9 +134,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
 
     const sptCommentUpdate = () => {
-        // implement
-        //date 
-        //comment
         const body = {
             "SPTComment": sptComment,
             "SPTDate": new Date().toISOString()
@@ -193,35 +145,101 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
 
     const sdApproveHandler = () => {
-        //Implement
-        const accidentFollowUpReportFormBody = {
-            "SDApproved": true,
-            "SDDate": new Date().toISOString(),
-            "SDComment": sdComment
-        }
-        updateAccidentFollowUpRepotFormById(parentFormData.AccidentFollowUpFormId, accidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
-            // trigger notification workflow
-            const body = {
-                "Status": form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE" ? "PENDING_SD_APPROVE" : "CLOSED",
+
+        // Flow:
+        // if continue: 
+        // create new form 19 
+        // status send back to sm
+        // update current form 21 to complete
+        // complete current selected form
+        // if close:
+        // update form 19 status
+        // update form 21 to complete
+
+        const [body, error] = dataFactory();
+        if (body["AccidentalFollowUpContinue"] === true) { // form continue
+            // Get form 19, for AccidentFollowUpFormId[]
+            getServiceUserAccidentById(parentFormData.Id).then((getAccidentFollowUpFormByIdRes) => {
+                let title = "";
+                if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
+                    title = `意外跟進/結束表 - ${getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId.length + 1}`;
+                } else {
+                    title = `意外跟進/結束表 - 1`;
+                }
+
+                const newAccountFollowUpReportFormBody = {
+                    "CaseNumber": parentFormData.CaseNumber,
+                    "ParentFormId": parentFormData.ID,
+                    "SPTId": parentFormData.SPTId,
+                    "SDId": parentFormData.SDId,
+                    "SMId": parentFormData.SMId,
+                    "Title": title
+                }
+                // Create form 21
+                createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
+
+                    // Update form 19 , add new form 21 id to it. Also recount the deadline
+                    let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
+                    if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
+                        accidentFollowUpFormId = [...getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
+                    }
+                    updateServiceUserAccidentById(parentFormData.Id, {
+                        "AccidentFollowUpFormId": {
+                            results: accidentFollowUpFormId
+                        },
+                        "NextDeadline": addMonths(new Date(), 6),
+                        "Status": "PENDING_SM_FILL_IN"
+                    }).then((updateServiceUserAccidentFormRes) => {
+                        // Update current form 21 Status to complete
+
+                        const updateAccidentFollowUpReportFormBody = {
+                            ...body,
+                            "SDApproved": true,
+                            "SDDate": new Date().toISOString(),
+                            "SDComment": sdComment
+                        }
+
+                        updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((res) => {
+                            formSubmittedHandler();
+                            // Trigger notification workflow
+                        }).catch(console.error);
+                    }).catch(console.error);
+                }).catch(console.error);
+            }).catch(console.error);
+        } else {
+            // update form 19 status
+            // update form 21 to complete
+            const updateAccidentFollowUpReportFormBody = {
+                ...body,
+                "SDApproved": true,
+                "SDDate": new Date().toISOString(),
+                "SDComment": sdComment
             }
-            // if (form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE") {
-            //     body["NextDeadline"] = addMonths(new Date(), 6).toISOString();
-            // } else {
-            //     body["NextDeadline"] = null;
-            // }
-            updateServiceUserAccidentById(selectedAccidentFollowUpFormId, body).then((rse) => {
-                // trigger notification workflow
+            updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
+                //Update 
+                updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
+                    // trigger notification workflow
+                    formSubmittedHandler()
+                }).catch(console.error)
+            }).catch(console.error);
+        }
 
-
-                formSubmittedHandler();
-            }).catch(console.error)
-        }).catch(console.error);
     }
 
     const sdRejectHandler = () => {
-        //Implement
-
+        const updateAccidentFollowUpReportFormBody = {
+            "SDApproved": false,
+            "SDDate": new Date().toISOString(),
+            "SDComment": sdComment
+        }
+        updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
+            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SM_FILL_IN" }).then(() => {
+                // trigger notification workflow
+                formSubmittedHandler()
+            }).catch(console.error);
+        }).catch(console.error);
     }
+
     const loadData = () => {
         if (parentFormData.Stage) {
             setFormStage(parentFormData.Stage);
@@ -233,7 +251,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         setAccidentTime(new Date(parentFormData.AccidentTime))
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
- 
+
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
 
@@ -243,7 +261,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 if (accidentFollowUpFormRepseonse && accidentFollowUpFormRepseonse.length > 0) {
                     setSelectedAccidentFollowUpFormId(accidentFollowUpFormRepseonse[0].Id);
 
-                    setIsAccidentFormComplete(accidentFollowUpFormRepseonse[0].Complete);
+                    setIsSDApproved(accidentFollowUpFormRepseonse[0].SDApproved === true ? true : false);
 
                     setForm({
                         accidentalFollowUpContinue: accidentFollowUpFormRepseonse[0].AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
@@ -288,26 +306,28 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const formChangeHandler = (event) => {
         const value = +event.target.value;
+        setSelectedAccidentFollowUpFormId(value);
 
         const [form] = accidentFollowUpFormList.filter((item) => item.ID === value);
-        setIsAccidentFormComplete(form.Complete);
-        setSelectedAccidentFollowUpFormId(value);
+
+        setIsSDApproved(form.SDApproved === true ? true : false);
+
         setForm({
-            accidentalFollowUpContinue: form.AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
-            executionPeriod: form.ExecutionPeriod,
-            followUpMeasures: form.FollowUpMeasures,
-            remark: form.Remark
+            accidentalFollowUpContinue: form.AccidentalFollowUpContinue === null ? null : form.AccidentalFollowUpContinue === true ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
+            executionPeriod: form.ExecutionPeriod || "",
+            followUpMeasures: form.FollowUpMeasures || "",
+            remark: form.Remark || ""
         });
 
-        setSdComment(form.SDComment);
+        setSdComment(form.SDComment || "");
         if (form.SMDate) {
             setSmDate(new Date(form.SMDate));
-        }
+        } else setSmDate(new Date());
 
-        setSptComment(form.SPTComment);
+        setSptComment(form.SPTComment || "");
         if (form.SPTDate) {
             setSmDate(new Date(form.SPTDate));
-        }
+        } else setSmDate(new Date());
     }
 
     useEffect(() => {
@@ -404,21 +424,21 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 意外報告的跟進措施 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 執行時段 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
                         <div className="col">
-                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 備註 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="remark" onChange={textFieldHandler} value={form.remark} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                            <AutosizeTextarea className="form-control" name="remark" onChange={textFieldHandler} value={form.remark} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                         </div>
                     </div>
 
@@ -427,11 +447,11 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外跟進</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE"} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_TRUE"} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={radioButtonHandler} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_FALSE"} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                                <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === "ACCIDENT_FOLLOW_UP_FALSE"} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={radioButtonHandler} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
                         </div>
@@ -458,7 +478,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     })
                                 }
                             </select> */}
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} disabled={isAccidentFormComplete || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} disabled={isSDApproved || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -511,7 +531,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={isAccidentFormComplete || !stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={isSDApproved || !stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -567,12 +587,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} disabled={isAccidentFormComplete || !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} disabled={isSDApproved || !stageThreePendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
                     {
-                        !isAccidentFormComplete && stageThreePendingSdApprove(currentUserRole, formStatus, formStage) &&
+                        !isSDApproved && stageThreePendingSdApprove(currentUserRole, formStatus, formStage) &&
                         <div className="form-row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
@@ -589,7 +609,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            !isAccidentFormComplete &&
+                            !isSDApproved &&
                             <>
                                 {
                                     (stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage) || stageThreePendingSmFillIn(currentUserRole, formStatus, formStage)) &&

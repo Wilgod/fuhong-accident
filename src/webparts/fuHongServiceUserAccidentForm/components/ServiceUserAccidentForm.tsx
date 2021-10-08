@@ -594,7 +594,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             "SMApproved": false,
             "SMComment": smComment.trim(),
             "SMDate": smDate.toISOString(),
-            "Status": "SM_REJECTED"
+            "Status": "SM_VOID"
         };
         updateServiceUserAccidentById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
     }
