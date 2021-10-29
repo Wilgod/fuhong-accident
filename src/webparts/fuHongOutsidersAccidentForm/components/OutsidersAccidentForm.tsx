@@ -10,6 +10,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import * as moment from 'moment';
 import StyledDropzone from "../../../components/Dropzone/Dropzone";
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
+import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAccidentForm';
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -25,28 +26,52 @@ interface IOutsidersAccidentFormProps {
     context: WebPartContext;
 }
 
-interface IOutsidersAccidentFormStates {
-    envFactor: string[];
-    witness: string;
-    police: string;
-    familyContact: string;
-    arrangement: string;
-    photo: string;
-    cctv: string;
-    identity: string;
-}
+
 
 export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFormProps) {
     const [date, setDate] = useState(new Date());
+    const [accidentTime, setAccidentTime] = useState(new Date());
+    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date());
+    const [hospitalArriveTime, setHospitalArriveTime] = useState(new Date());
+    const [hospitalLeaveTime, setHospitalLeaveTime] = useState(new Date());
+    const [policeDatetime, setPoliceDatetime] = useState(new Date());
+    const [familyContactDate, setFamilyContactDate] = useState(new Date());
+
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
-        envFactor: [],
-        witness: "",
-        police: "",
-        familyContact: "",
-        arrangement: "",
-        photo: "",
+        accidentDetail: "",
+        accidentLocation: "",
         cctv: "",
-        identity: ""
+        cctvRecord: null,
+        envAcousticStimulation: false,
+        envCollidedByOthers: false,
+        envHurtByOthers: false,
+        envImproperEquip: false,
+        envInsufficientLight: false,
+        envNotEnoughSpace: false,
+        envObstacleItems: false,
+        envOtherDescription: "",
+        envSlipperyGround: false,
+        envUnevenGround: false,
+        envOther: false,
+        familyContact: false,
+        familyRelationship: "",
+        identity: "",
+        medicalArrangement: "",
+        medicalArrangementHospital: "",
+        otherFactor: "",
+        photoRecord: false,
+        police: false,
+        policeStation: "",
+        serviceUnit: "",
+        serviceUserAge: 0,
+        serviceUserGender: "",
+        serviceUserIdentity: "",
+        serviceUserIdentityOther: "",
+        serviceUserNameEN: "",
+        serviceUserNameTC: "",
+        witness: false,
+        witnessName: "",
+        witnessPhone: ""
     });
 
     const radioButtonHandler = (event) => {
@@ -73,6 +98,12 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         const name = event.target.name;
         const value = event.target.value;
         setForm({ ...form, [name]: value });
+    }
+
+    const dataFactory = () => {
+        const body = {};
+        const error: IErrorFields = {};
+
     }
 
     return (
@@ -243,7 +274,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他</label>
                                 </div>
                                 {
-                                    form.envFactor.indexOf("ENV_OTHER") > -1 &&
+                                    form.envOther &&
                                     <div className="">
                                         <AutosizeTextarea className="form-control" placeholder="請註明" />
                                     </div>
@@ -279,7 +310,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="witness-false">沒有</label>
                             </div>
                             {
-                                form.witness === "witness-true" &&
+                                form.witness &&
                                 <>
                                     <div>
                                         <label className="form-label">證人姓名</label>
@@ -305,7 +336,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-true">有 (上載照片)</label>
                                 </div>
                                 {
-                                    form.photo === "PHOTO_TRUE" &&
+                                    form.photoRecord &&
                                     <StyledDropzone />
                                 }
                                 <div className="form-check">
@@ -364,7 +395,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_EMERGENCY_REJECT">拒絕就診</label>
                             </div>
                             {
-                                form.arrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT" &&
+                                form.medicalArrangement &&
                                 <>
                                     <div className="">
                                         <label className="form-label">醫院名稱</label>
@@ -413,7 +444,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有</label>
                             </div>
                             {
-                                form.police === "police-true" &&
+                                form.police &&
                                 <>
                                     <div>
                                         <label className="form-label">日期和時間</label>
@@ -449,7 +480,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="family-false">沒有</label>
                             </div>
                             {
-                                form.familyContact === "family-true" &&
+                                form.familyContact &&
                                 <>
                                     <div>
                                         <label className="form-label">通知家屬日期及時間</label>
