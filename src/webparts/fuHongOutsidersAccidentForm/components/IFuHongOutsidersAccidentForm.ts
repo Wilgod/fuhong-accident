@@ -3,9 +3,6 @@ import { StringIterator } from 'lodash';
 import { Role } from '../../../utils/RoleParser';
 
 export interface IOutsidersAccidentFormStates {
-
-    cctv: string;
-    identity: string;
     serviceUnit: string;
     serviceUserNameTC: string;
     serviceUserNameEN: string;
@@ -38,6 +35,7 @@ export interface IOutsidersAccidentFormStates {
     policeStation: string;
     familyContact: boolean;
     familyRelationship: string;
+    insuranceCaseNo: string;
 }
 
 export interface IErrorFields {

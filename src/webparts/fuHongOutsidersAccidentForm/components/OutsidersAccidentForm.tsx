@@ -13,6 +13,8 @@ import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTexta
 import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAccidentForm';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
+import useServiceUnit from '../../../hooks/useServiceUnits';
+import { createOutsiderAccidentForm } from '../../../api/PostFuHongList';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -25,23 +27,30 @@ if (document.querySelector('.CanvasZone') != null) {
 
 interface IOutsidersAccidentFormProps {
     context: WebPartContext;
+    formSubmittedHandler(): void;
 }
 
 
 
-export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler }: IOutsidersAccidentFormProps) {
     const [date, setDate] = useState(new Date());
     const [accidentTime, setAccidentTime] = useState(new Date());
     const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date());
     const [hospitalArriveTime, setHospitalArriveTime] = useState(new Date());
     const [hospitalLeaveTime, setHospitalLeaveTime] = useState(new Date());
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
+    const [smDate, setSmDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(new Date());
+    const [sptDate, setSptDate] = useState(new Date());
+    const [smComment, setSmComment] = useState("");
+    const [sdComment, setSdComment] = useState("");
+    const [sptComment, setSptComment] = useState("");
+
     const [familyContactDate, setFamilyContactDate] = useState(new Date());
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
-        cctv: "",
         cctvRecord: null,
         envAcousticStimulation: false,
         envCollidedByOthers: false,
@@ -56,7 +65,6 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         envOther: false,
         familyContact: undefined,
         familyRelationship: "",
-        identity: "",
         medicalArrangement: "",
         medicalArrangementHospital: "",
         otherFactor: "",
@@ -72,10 +80,12 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         serviceUserNameTC: "",
         witness: undefined,
         witnessName: "",
-        witnessPhone: ""
+        witnessPhone: "",
+        insuranceCaseNo: ""
     });
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
+    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -89,21 +99,19 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
         setForm({ ...form, [name]: value });
     }
 
-
-
-    const checkboxHandler = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        const arr = form[name];
-        if (Array.isArray(arr)) {
-            if (arr.indexOf(value) > -1) {
-                const result = arr.filter((item) => item !== value);
-                setForm({ ...form, [name]: result });
-            } else {
-                setForm({ ...form, [name]: [...arr, value] });
-            }
-        }
-    }
+    // const checkboxHandler = (event) => {
+    //     const name = event.target.name;
+    //     const value = event.target.value;
+    //     const arr = form[name];
+    //     if (Array.isArray(arr)) {
+    //         if (arr.indexOf(value) > -1) {
+    //             const result = arr.filter((item) => item !== value);
+    //             setForm({ ...form, [name]: result });
+    //         } else {
+    //             setForm({ ...form, [name]: [...arr, value] });
+    //         }
+    //     }
+    // }
 
     const selectionHandler = (event) => {
         const name = event.target.name;
@@ -126,6 +134,58 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
     const dataFactory = () => {
         const body = {};
         const error: IErrorFields = {};
+
+
+        if (serviceUnit) {
+            body["ServiceUnit"] = serviceUnit
+        } else {
+            error["ServiceUnit"] = true;
+        }
+
+        // user info 
+        if (form.serviceUserNameTC) {
+            body["ServiceUserNameTC"] = form.serviceUserNameTC;
+        } else {
+            error["ServiceUserNameTC"] = true;
+        }
+
+        if (form.serviceUserNameEN) {
+            body["ServiceUserNameEN"] = form.serviceUserNameEN;
+        } else {
+            error["ServiceUserNameEN"] = true;
+        }
+
+        if (form.serviceUserAge) {
+            body["ServiceUserAge"] = form.serviceUserAge;
+        } else {
+            error["ServiceUserAge"] = true;
+        }
+
+        if (form.serviceUserGender) {
+            body["ServiceUserGender"] = form.serviceUserGender;
+        } else {
+            error["ServiceUserGender"] = true;
+        }
+
+        if (form.serviceUserIdentity) {
+            body["ServiceUserIdentity"] = form.serviceUserIdentity;
+            if (form.serviceUserIdentity === "others") {
+                if (form.serviceUserIdentityOther) {
+                    body["ServiceUserIdentityOther"] = form.serviceUserIdentityOther;
+                } else {
+                    error["ServiceUserIdentity"] = true;
+                }
+            }
+        } else {
+            error["ServiceUserIdentity"] = true;
+        }
+
+        body["AccidentTime"] = accidentTime.toISOString();
+        if (form.accidentLocation) {
+            body["AccidentLocation"] = form.accidentLocation;
+        } else {
+            error["AccidentLocation"] = true;
+        }
 
         // 環境因素
         body["EnvSlipperyGround"] = form.envSlipperyGround;
@@ -228,18 +288,41 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
             } else {
                 error["FamilyRelationship"] = true;
             }
-        } else {
-            error["FamilyContact"];
+        } else if (form.familyContact === undefined) {
+            error["FamilyContact"] = true;
         }
 
         console.log(body);
         return [body, error];
     }
 
+    const submitHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+        console.log(body);
+        console.log(error)
+    }
+
+    const draftHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+        console.log(body);
+        createOutsiderAccidentForm(body).then((res) => {
+            console.log(res);
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+
+    const cancelHandler = () => {
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+        window.open(path, "_self");
+    }
+
     useEffect(() => {
         setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
     }, []);
 
+    console.log(serviceUnit);
     return (
         <>
             <div>
@@ -256,14 +339,17 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control">
+                            <select className="form-control" value={serviceUnit} onChange={(event) => setServiceUnit(event.target.value)}>
                                 <option>請選擇服務單位</option>
+                                {serviceUnitList.map((unit) => {
+                                    return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
+                                })}
                             </select>
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="insuranceCaseNo" value={form.insuranceCaseNo} onChange={inputFieldHandler} />
                         </div>
                     </div>
                 </section>
@@ -278,12 +364,12 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (中文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} />
                         </div>
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (英文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} />
                         </div>
                     </div>
 
@@ -291,17 +377,17 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" min={0} />
+                            <input type="number" className="form-control" min={0} name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-male" value="male" />
+                                <input className="form-check-input" type="radio" id="gender-male" onClick={() => setForm({ ...form, serviceUserGender: "male" })} checked={form.serviceUserGender === "male"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female" />
+                                <input className="form-check-input" type="radio" id="gender-female" onClick={() => setForm({ ...form, serviceUserGender: "female" })} checked={form.serviceUserGender === "female"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>
                             </div>
                         </div>
@@ -311,7 +397,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 身份*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control" name="identity" value={form.identity} onChange={selectionHandler}>
+                            <select className="form-control" name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler}>
                                 <option value="">請選擇</option>
                                 <option value="visitor">訪客</option>
                                 <option value="family">家屬</option>
@@ -320,9 +406,9 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 <option value="others">其他</option>
                             </select>
                             {
-                                form.identity === "others" &&
+                                form.serviceUserIdentity === "others" &&
                                 <div className="mt-2">
-                                    <input type="text" className="form-control" placeholder="請註明" />
+                                    <input type="text" className="form-control" placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -346,7 +432,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 地點 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>地點</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={inputFieldHandler} />
                         </div>
                     </div>
                 </section>
@@ -667,7 +753,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-md-4">
-                        <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
+                            <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
                         </div>
                     </div>
                 </section>
@@ -697,13 +783,13 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} dateFormat="yyyy/MM/dd" readOnly />
+                            <DatePicker className="form-control" selected={smDate} onChange={(date) => setSmDate(date)} dateFormat="yyyy/MM/dd" readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -740,13 +826,13 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={(date) => setSdDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
                         </div>
                     </div>
                     {/* <div className="form-row row mb-2">
@@ -779,7 +865,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 日期 */}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sptDate} onChange={(date) => setSptDate(date)} readOnly />
                         </div>
                     </div>
 
@@ -787,7 +873,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sptComment} onChange={(event) => setSptComment(event.target.value)} />
                         </div>
                     </div>
 
@@ -802,7 +888,7 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
                                 personSelectionLimit={1}
                                 ensureUser={true}
                                 isRequired={false}
-                                selectedItems={(e) => { console }}
+                                selectedItems={(e) => { console.log(e) }}
                                 showHiddenInUI={false} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} px-0`}>填寫</label>
@@ -823,9 +909,9 @@ export default function OutsidersAccidentForm({ context }: IOutsidersAccidentFor
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success">草稿</button>
-                        <button className="btn btn-secondary">取消</button>
+                        <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                        <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                     </div>
                 </section>
             </div>

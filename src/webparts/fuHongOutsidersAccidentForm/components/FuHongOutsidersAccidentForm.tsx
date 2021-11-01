@@ -14,6 +14,7 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { sp } from '@pnp/sp';
 import { graph } from '@pnp/graph';
+import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -74,22 +75,27 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
-          <Tabs variant="fullWidth">
-            <TabList>
-              <Tab>外界人士意外填報表(一)</Tab>
-              <Tab>服務使用者/外界人士意外報告(二)</Tab>
-              <Tab>意外跟進/結束表(三)</Tab>
-            </TabList>
-            <TabPanel>
-              <OutsidersAccidentForm context={this.props.context} />
-            </TabPanel>
-            <TabPanel>
-              <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
-            </TabPanel>
-            <TabPanel>
-              <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
-            </TabPanel>
-          </Tabs>
+          {
+            this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              <Tabs variant="fullWidth">
+                <TabList>
+                  <Tab>外界人士意外填報表(一)</Tab>
+                  <Tab>服務使用者/外界人士意外報告(二)</Tab>
+                  <Tab>意外跟進/結束表(三)</Tab>
+                </TabList>
+                <TabPanel>
+                  <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={null} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+              </Tabs>
+          }
         </div>
       </div>
     );

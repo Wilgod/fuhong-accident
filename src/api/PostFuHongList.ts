@@ -102,3 +102,16 @@ export async function updateAccidentFollowUpRepotFormById(id: number, body: any)
         throw new Error("updateAccidentFollowUpRepotForm failed");
     }
 }
+
+// Form 22
+// Create
+export async function createOutsiderAccidentForm(body: any) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("createOutsiderAccidentForm failed");
+    }
+}
