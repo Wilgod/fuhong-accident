@@ -9,6 +9,10 @@ import "./react-tabs.css";
 import OtherIncidentReport from "./OtherIncidentReport";
 import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/IncidentFollowUpForm";
 import "./custom.css";
+import { sp } from "@pnp/sp";
+import { graph } from "@pnp/graph/presets/all";
+import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
+
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -31,12 +35,30 @@ const getCanvasZone = () => {
   }
 }
 
+
+
 export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, {}> {
   public constructor(props) {
     super(props);
     getCanvasZone();
+
+    sp.setup({ spfxContext: this.props.context });
+    graph.setup({ spfxContext: this.props.context });
+
+    this.state = {
+      currentUserRole: Role.GENERAL,
+      serviceUserAccidentFormData: null,
+      stage: "",
+      formSubmitted: false
+    }
+
     console.log("Flow 5");
   }
+
+  private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+
+  private formSubmittedHandler = () => this.setState({ formSubmitted: true });
+
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
       <div className={styles.fuHongOtherIncidentReport}>
@@ -47,7 +69,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
               <Tab>事故跟進/結束報告</Tab>
             </TabList>
             <TabPanel>
-              <OtherIncidentReport context={this.props.context} styles={styles} />
+              <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
             </TabPanel>
             <TabPanel>
               <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} />

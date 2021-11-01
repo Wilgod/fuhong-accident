@@ -6,31 +6,54 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import Header from "../../../components/Header/Header";
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import useServiceUnit from '../../../hooks/useServiceUnits';
+import { IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHongOtherIncidentReport';
 
-interface IOtherIncidentReportProps {
-    context: WebPartContext;
-    styles: any;
 
-}
-
-interface IOtherIncidentReportStates {
-    reportedByNews: string;
-    police: string;
-    notifyFamily: string;
-    medical: string;
-    meeting: string;
-    response: string;
-}
 
 export default function OtherIncidentReport({ context, styles }: IOtherIncidentReportProps) {
     const [form, setForm] = useState<IOtherIncidentReportStates>({
-        reportedByNews: "",
-        police: "",
-        notifyFamily: "",
-        medical: "",
-        meeting: "",
-        response: ""
+        insuranceCaseNo: "",
+        incidentLocation: "",
+        mediaReports: undefined,
+        mediaReportsDescription: "",
+        incidentDescription: "",
+        guardian: undefined,
+        police: undefined,
+        medicalArrangement: undefined,
+        carePlan: undefined,
+        needResponse: undefined,
+        carePlanNoDescription: "",
+        carePlanYesDescription: "",
+        followUpPlan: "",
+        guardianDescription: "",
+        guardianRelationship: "",
+        guardianStaff: "",
+        immediateFollowUp: "",
+        medicalArrangmentDetail: "",
+        needResponseDetail: "",
+        policeReportNumber: "",
+        serviceUserAgeOne: 0,
+        serviceUserAgeThree: 0,
+        serviceUserAgeTwo: 0,
+        serviceUserGenderOne: "",
+        serviceUserGenderThree: "",
+        serviceUserGenderTwo: "",
+        staffGenderOne: "",
+        staffGenderThree: "",
+        staffGenderTwo: "",
+        staffPositionOne: "",
+        staffPositionThree: "",
+        staffPositionTwo: ""
     });
+
+    const [incidentTime, setIncidentTime] = useState(new Date());
+    const [policeDatetime, setPoliceDatetime] = useState(new Date());
+    const [guardianDatetime, setGuardianDatetime] = useState(new Date());
+    //IncidentTime
+    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+
+
     const [date, setDate] = useState(new Date());
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -58,6 +81,17 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
         setForm({ ...form, [name]: value });
     }
 
+    const inputFieldHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
+    console.log(serviceUnitList);
+
+    const dataFactory = () => {
+
+    }
+
     return (
         <>
             <div>
@@ -75,8 +109,11 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control">
+                            <select className="form-control" value={serviceUnit} onChange={(event) => setServiceUnit(event.target.value)}>
                                 <option>請選擇服務單位</option>
+                                {serviceUnitList.map((unit) => {
+                                    return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
+                                })}
                             </select>
                         </div>
                         {/* 保險公司備案編號 */}
@@ -88,7 +125,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold">
                             <h5>事故資料</h5>
                         </div>
@@ -120,29 +157,29 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故被傳媒報導</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_true" value="REPORTED_BY_NEWS_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_true" value="REPORTED_BY_NEWS_TRUE" onChange={() => setForm({ ...form, mediaReports: true })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="reportedByNews_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_false" value="REPORTED_BY_NEWS_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_false" value="REPORTED_BY_NEWS_FALSE" onChange={() => setForm({ ...form, mediaReports: false })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="reportedByNews_false">否</label>
                             </div>
                             {
-                                form.reportedByNews === "REPORTED_BY_NEWS_TRUE" &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                form.mediaReports &&
+                                <AutosizeTextarea className="form-control" placeholder="請註明" name="mediaReportsDescription" value={form.mediaReportsDescription} onChange={inputFieldHandler} />
                             }
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故的描述</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler} />
                         </div>
                     </div>
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <h5>有關服務使用者的資料 (如適用)</h5>
                         </div>
@@ -204,7 +241,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 </section>
 
                 <section className="mb-4">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <h5>有關職員的資料 (如適用)</h5>
                         </div>
@@ -266,7 +303,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 </section>
 
                 <section className="mb-4">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <h5>跟進行動</h5>
                         </div>
@@ -283,7 +320,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有</label>
                             </div>
                             {
-                                form.police === "POLICE_TRUE" &&
+                                form.police &&
                                 <>
                                     <div>
                                         <label className="form-label">報警日期和時間</label>
@@ -299,12 +336,12 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                     </div>
                                     <div>
                                         <label className="form-label">報案編號</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler} />
                                     </div>
                                 </>
                             }
                             {
-                                form.police === "POLICE_FALSE" &&
+                                form.police &&
                                 <AutosizeTextarea className="form-control" placeholder="請註明" />
                             }
                         </div>
@@ -322,7 +359,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notify-family-false">沒有</label>
                             </div>
                             {
-                                form.notifyFamily === "NOTIFY_FAMILY_TRUE" &&
+                                form.guardian === true &&
                                 <>
                                     <div>
                                         <label className="form-label">通知日期和時間</label>
@@ -346,7 +383,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                     </div>
                                 </>
                             }
-                            {form.notifyFamily === "NOTIFY_FAMILY_FALSE" &&
+                            {form.guardian === false &&
                                 <div>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
@@ -366,7 +403,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="medical-false">沒有</label>
                             </div>
                             {
-                                form.medical === "MEDICAL_TRUE" &&
+                                form.medicalArrangement &&
                                 <div>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
@@ -386,13 +423,13 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="meeting-false">沒有</label>
                             </div>
                             {
-                                form.meeting === "MEETING_TRUE" &&
+                                form.carePlan === true &&
                                 <div>
                                     <AutosizeTextarea className="form-control" placeholder="請註明，包括日期" />
                                 </div>
                             }
                             {
-                                form.meeting === "MEETING_FALSE" &&
+                                form.carePlan === false &&
                                 <div>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
@@ -412,7 +449,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="response-false">否</label>
                             </div>
                             {
-                                form.response === "RESPONSE_TRUE" &&
+                                form.needResponse &&
                                 <div>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
                                 </div>
@@ -485,7 +522,7 @@ export default function OtherIncidentReport({ context, styles }: IOtherIncidentR
                 <hr className="my-4" />
 
                 <section className="mb-4">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
