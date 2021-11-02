@@ -131,6 +131,19 @@ export async function createOtherIncidentReport(body: any) {
 }
 
 
+//Form 25
+//Create
+export async function createSpecialIncidentReportAllowance(body: any) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("createSpecialIncidentReportAllowance failed");
+    }
+}
+
 //Form 26
 //Create
 export async function createIncidentFollowUpForm(body: any) {

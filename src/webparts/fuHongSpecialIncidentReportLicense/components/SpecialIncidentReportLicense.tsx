@@ -74,6 +74,12 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
         }
     }
 
+    const inputFieldHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setForm({ ...form, [name]: value });
+    }
+
     return (
         <>
             <div>

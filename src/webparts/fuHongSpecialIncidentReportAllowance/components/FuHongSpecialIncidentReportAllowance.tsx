@@ -75,7 +75,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <SpecialIncidentReportAllowance context={this.props.context} styles={styles} />
+                  <SpecialIncidentReportAllowance context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
                 </TabPanel>
                 <TabPanel>
                   <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} formSubmittedHandler={this.formSubmittedHandler} />

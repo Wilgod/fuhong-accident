@@ -6,11 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
+import { createSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
 
 
 interface ISpecialIncidentReportAllowanceProps {
     context: WebPartContext;
     styles: any;
+    formSubmittedHandler(): void;
 }
 
 interface IAccidentCategoryAbuseDetails {
@@ -34,7 +36,7 @@ const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍�
 
 
 
-export default function SpecialIncidentReportAllowance({ context, styles }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler }: ISpecialIncidentReportAllowanceProps) {
     const [isPrintMode, setPrintMode] = useState(false);
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         accidentCategory: "",
@@ -50,6 +52,12 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         status: "",
         person: ""
     });
+    const [incidentDate, setIncidentDate] = useState(new Date());
+
+    const [smDate, setSmDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(new Date());
+    const [smComment, setSmComment] = useState("");
+    const [sdComment, setSdComment] = useState("");
 
     const [date, setDate] = useState(new Date());
 
@@ -96,6 +104,39 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
         if (status || person) setForm({ ...form, accidentCategory: "ACCIDENT_CATEGORY_ABUSE" })
     }
 
+    const dataFactory = () => {
+        let body = {};
+        let error = {};
+        return [body, error];
+    }
+
+    const submitHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory()
+        console.log(body);
+        console.log(error);
+        createSpecialIncidentReportAllowance(body).then(res => {
+            console.log(res)
+            //formSubmittedHandler();
+        }).catch(console.error);
+    }
+
+    const draftHandler = (event) => {
+        event.preventDefault();
+        const [body] = dataFactory()
+        console.log(body);
+        createSpecialIncidentReportAllowance(body).then(res => {
+            console.log(res)
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+
+    const cancelHandler = () => {
+        //implement 
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+        window.open(path, "_self");
+    }
+
     useEffect(() => {
         accidentCategoryHandler()
     }, [form.accidentCategory])
@@ -103,6 +144,8 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
     useEffect(() => {
         accidentCategoryAbuseHandler()
     }, [accidentCategoryAbuseDetails.status, accidentCategoryAbuseDetails.person])
+
+
 
     return (
         <>
@@ -144,7 +187,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                             致:
                         </div>
                         <div className="col" >
-                            <div className="row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                            <div className="form-row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "none" : "line-through"}` }}>
                                 <div className="col-auto mr-auto">
                                     津貼科
                                 </div>
@@ -204,7 +247,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>報告單位資料</h5>
                         </div>
@@ -243,7 +286,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>特別事故資料</h5>
                         </div>
@@ -382,7 +425,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>有關服務使用者的資料 (如適用)</h5>
                         </div>
@@ -444,7 +487,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5><span style={{ cursor: "help" }} title={footNoteTwo}>有關職員<sup>2</sup></span>的資料 (如適用)</h5>
                         </div>
@@ -506,7 +549,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>跟進行動</h5>
                         </div>
@@ -729,7 +772,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                 <hr className="my-4" />
 
                 <section className="mb-4">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
@@ -750,13 +793,13 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={smDate} onChange={(date) => setSmDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<br />服務經理評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -819,7 +862,7 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="row my-2">
@@ -836,12 +879,11 @@ export default function SpecialIncidentReportAllowance({ context, styles }: ISpe
 
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning">提交</button>
-                        <button className="btn btn-success">草稿</button>
-                        <button className="btn btn-secondary">取消</button>
+                        <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                        <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                     </div>
                 </section>
-
                 {
                     isPrintMode &&
                     <>
