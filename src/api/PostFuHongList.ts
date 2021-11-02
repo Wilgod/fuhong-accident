@@ -115,3 +115,17 @@ export async function createOutsiderAccidentForm(body: any) {
         throw new Error("createOutsiderAccidentForm failed");
     }
 }
+
+
+//Form 23
+//Create
+export async function createOtherIncidentReport(body: any) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("createOtherIncidentReport failed");
+    }
+}

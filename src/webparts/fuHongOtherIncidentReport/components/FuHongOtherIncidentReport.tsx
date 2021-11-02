@@ -12,6 +12,7 @@ import "./custom.css";
 import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
+import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -37,7 +38,7 @@ const getCanvasZone = () => {
 
 
 
-export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, {}> {
+export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -63,18 +64,23 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     return (
       <div className={styles.fuHongOtherIncidentReport}>
         <div className={styles.container}>
-          <Tabs variant="fullWidth">
-            <TabList>
-              <Tab>其他事故呈報表</Tab>
-              <Tab>事故跟進/結束報告</Tab>
-            </TabList>
-            <TabPanel>
-              <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
-            </TabPanel>
-            <TabPanel>
-              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} />
-            </TabPanel>
-          </Tabs>
+          {
+            this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              <Tabs variant="fullWidth">
+                <TabList>
+                  <Tab>其他事故呈報表</Tab>
+                  <Tab>事故跟進/結束報告</Tab>
+                </TabList>
+                <TabPanel>
+                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} />
+                </TabPanel>
+              </Tabs>
+          }
         </div>
       </div>
     );

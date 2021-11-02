@@ -27,6 +27,7 @@ export interface IOtherIncidentReportStates {
     staffPositionTwo: string;
     staffPositionThree: string;
     police: boolean;
+    policeDescription: string;
     policeReportNumber: string;
     guardian: boolean;
     guardianDescription: string;
