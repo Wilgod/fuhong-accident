@@ -129,3 +129,17 @@ export async function createOtherIncidentReport(body: any) {
         throw new Error("createOtherIncidentReport failed");
     }
 }
+
+
+//Form 26
+//Create
+export async function createIncidentFollowUpForm(body: any) {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("createIncidentFollowUpForm failed");
+    }
+}

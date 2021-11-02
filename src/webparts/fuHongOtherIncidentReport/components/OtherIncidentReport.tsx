@@ -56,6 +56,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
 
+    const [smDate, setSmDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(new Date());
+    const [sdComment, setSdComment] = useState("");
+    const [smComment, setSmComment] = useState("");
+
     const [date, setDate] = useState(new Date());
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -507,11 +512,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} />
+                                <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} />
+                                <input className="form-check-input" type="radio" name="police" id="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有</label>
                             </div>
                             {
@@ -521,8 +526,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                         <label className="form-label">報警日期和時間</label>
                                         <DatePicker
                                             className="form-control"
-                                            selected={date}
-                                            onChange={(date) => setDate(date)}
+                                            selected={policeDatetime}
+                                            onChange={(date) => setPoliceDatetime(date)}
                                             showTimeSelect
                                             timeFormat="p"
                                             timeIntervals={15}
@@ -747,7 +752,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="form-row row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="form-row row mb-2">
@@ -802,7 +807,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <div className="col-12 col-md-5">
                             <DatePicker
                                 className="form-control"
-                                selected={new Date()}
+                                selected={sdDate}
+                                onChange={(date) => setSdDate(date)}
                                 dateFormat="yyyy/MM/dd"
                                 readOnly
                             />
@@ -811,7 +817,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="row my-2">

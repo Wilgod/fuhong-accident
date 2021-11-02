@@ -77,7 +77,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
                   <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} />
                 </TabPanel>
               </Tabs>
           }

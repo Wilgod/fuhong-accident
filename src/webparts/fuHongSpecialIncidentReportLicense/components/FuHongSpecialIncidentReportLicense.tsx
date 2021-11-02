@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "react-datepicker/dist/react-datepicker.css";
 import SpecialIncidentReportLicense from './SpecialIncidentReportLicense';
 import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/IncidentFollowUpForm";
+import { sp } from "@pnp/sp";
+import { graph } from "@pnp/graph/presets/all";
+import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import "./react-tabs.css";
 import "./custom.css";
 
@@ -37,7 +40,22 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
     super(props);
     getCanvasZone();
     console.log("Flow 4");
+
+    sp.setup({ spfxContext: this.props.context });
+    graph.setup({ spfxContext: this.props.context });
+
+    this.state = {
+      currentUserRole: Role.GENERAL,
+      serviceUserAccidentFormData: null,
+      stage: "",
+      formSubmitted: false
+    }
   }
+
+
+  private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+
+  private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongSpecialIncidentReportLicenseProps> {
     return (
@@ -52,7 +70,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
               <SpecialIncidentReportLicense context={this.props.context} styles={styles} />
             </TabPanel>
             <TabPanel>
-              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"}/>
+              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} />
             </TabPanel>
 
           </Tabs>

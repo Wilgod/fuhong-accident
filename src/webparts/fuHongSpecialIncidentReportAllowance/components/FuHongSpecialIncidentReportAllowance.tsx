@@ -9,8 +9,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import SpecialIncidentReportAllowance from './SpecialIncidentReportAllowance';
 import IncidentFollowUpForm from "../../../components/IncidentFollowUpForm/IncidentFollowUpForm";
+import { sp } from "@pnp/sp";
+import { graph } from "@pnp/graph/presets/all";
+import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import "./react-tabs.css";
 import "./custom.css";
+import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
+
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -33,30 +38,50 @@ const getCanvasZone = () => {
   }
 }
 
-export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, {}> {
+export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
     console.log("Flow 3");
+
+    sp.setup({ spfxContext: this.props.context });
+    graph.setup({ spfxContext: this.props.context });
+
+    this.state = {
+      currentUserRole: Role.GENERAL,
+      serviceUserAccidentFormData: null,
+      stage: "",
+      formSubmitted: false
+    }
   }
+
+
+  private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
+
+  private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongSpecialIncidentReportAllowanceProps> {
 
     return (
       <div className={styles.fuHongSpecialIncidentReportAllowance}>
         <div className={styles.container}>
-          <Tabs variant="fullWidth">
-            <TabList>
-              <Tab>特別事故報告(津貼科)</Tab>
-              <Tab>事故跟進/結束報告</Tab>
-            </TabList>
-            <TabPanel>
-              <SpecialIncidentReportAllowance context={this.props.context} styles={styles} />
-            </TabPanel>
-            <TabPanel>
-              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} />
-            </TabPanel>
-          </Tabs>
+          {
+            this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              <Tabs variant="fullWidth">
+                <TabList>
+                  <Tab>特別事故報告(津貼科)</Tab>
+                  <Tab>事故跟進/結束報告</Tab>
+                </TabList>
+                <TabPanel>
+                  <SpecialIncidentReportAllowance context={this.props.context} styles={styles} />
+                </TabPanel>
+                <TabPanel>
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+              </Tabs>
+          }
         </div>
       </div>
     );
