@@ -641,17 +641,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={() => setForm({ ...form, needResponse: true })} checked={form.needResponse === true} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="response-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={() => setForm({ ...form, needResponse: false })} checked={form.needResponse === false} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="response-false">否</label>
                             </div>
                             {
-                                form.needResponse &&
+                                form.needResponse === true &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="needResponseDetail" value={form.needResponseDetail} onChange={inputFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -660,14 +660,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="form-row row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="immediateFollowUp" value={form.immediateFollowUp} onChange={inputFieldHandler} />
                         </div>
                     </div>
 
                     <div className="form-row row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>跟進計劃</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler} />
                         </div>
                     </div>
                 </section>
