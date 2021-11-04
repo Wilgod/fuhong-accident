@@ -6,54 +6,86 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
+import { ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 
-interface ISpecialIncidentReportLicenseProps {
-    context: WebPartContext;
-    styles: any;
-}
-
-interface ISpecialIncidentReportLicenseStates {
-    unusalIncident: string;
-    police: string;
-    policeInvestigate: string;
-    residentMissing: string;
-    residentMissingReason: string;
-    residentMissingFound: string;
-    residentAbuse: string[];
-    abuser: string;
-    referrals: string;
-    residentAbusePolice: string;
-    disputePolice: string;
-    seriousMedicalIncident: string;
-    otherSeriousIncident: string;
-    otherIncident: string;
-    tenantGender: string;
-    notified: String;
-}
 
 export default function SpecialIncidentReportLicense({ context, styles }: ISpecialIncidentReportLicenseProps) {
     const [isPrintMode, setPrintMode] = useState(false);
     const [form, setForm] = useState<ISpecialIncidentReportLicenseStates>({
-        unusalIncident: "",
-        police: "",
-        policeInvestigate: "",
+        abuser: "",
+        abuserDescription: "",
+        abuser_police: undefined,
+        abuser_policeCaseNo: "",
+        abuser_policeDate: new Date(),
+        affectedAge: 0,
+        affectedDetail: "",
+        affectedFollowUp: "",
+        affectedGender: "",
+        affectedIdCardNo: "",
+        affectedMedicalRecord: "",
+        affectedName: "",
+        conflict: "",
+        conflictDescription: "",
+        conflict_policeCaseNo: "",
+        conflict_policeDate: new Date(),
+        found: undefined,
+        foundDate: new Date(),
+        notYetFoundDayCount: 0,
+        medicalRecords: "",
+        ra_body: false,
+        ra_mental: false,
+        ra_negligent: false,
+        ra_embezzleProperty: false,
+        ra_abandoned: false,
+        ra_sexualAssault: false,
+        ra_other: false,
+        ra_otherDescription: "",
+        guardian: undefined,
+        guardianName: "",
+        guardianRelation: "",
+        guardianStaff: "",
+        guardianDate: new Date(),
+        homesManagerName: "",
+        homesName: "",
+        insuranceCaseNo: "",
+        medicalIncident: "",
+        mi_description: "",
+        missingPoliceDate: new Date(),
+        missingPoliceReportNo: "",
+        other: undefined,
+        otherDescription: "",
+        otherIncident: "",
+        police: undefined,
+        policeDatetime: new Date(),
+        policeInvestigate: undefined,
+        policeInvestigateDate: new Date(),
+        policeReportNumber: "",
+        referDate: new Date(),
+        referServiceUnit: "",
+        referSocialWorker: undefined,
+        residentAge: 0,
+        residentGender: "",
         residentMissing: "",
         residentMissingReason: "",
-        residentMissingFound: "",
-        residentAbuse: [],
-        abuser: "",
-        referrals: "",
-        residentAbusePolice: "",
-        disputePolice: "",
-        seriousMedicalIncident: "",
-        otherSeriousIncident: "",
-        otherIncident: "",
-        tenantGender: "",
-        notified: "",
+        residentName: "",
+        residentRoomNo: "",
+        responsibleName: "",
+        unusalIncideintGeneral: "",
+        unusalIncideintIncident: "",
+        unusalIncident: ""
     });
+
+    const [incidentTime, setIncidentTime] = useState(new Date());
+
     const [date, setDate] = useState(new Date());
+    const [smDate, setSmDate] = useState(new Date());
+    const [smComment, setSmComment] = useState("");
+    const [sdDate, setSdDate] = useState(new Date());
+    const [sdComment, setSdComment] = useState("");
+
     const [extraFile, setExtraFile] = useState<FileList>(null);
     const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
+
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -175,7 +207,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>特別事故類別</h5>
                         </div>
@@ -186,7 +218,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <div className="col">
 
                             <div className="form-check">
-                                <input className="form-check-input " type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院後死亡</label>
                             </div>
                             {
@@ -241,7 +273,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">已報警求助</label>
                             </div>
                             {
-                                form.police === "POLICE_TRUE" &&
+                                form.police &&
                                 <>
                                     <div className="mb-1">
                                         <label>報警日期</label>
@@ -269,7 +301,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-true">有</label>
                             </div>
                             {
-                                form.policeInvestigate === "POLICE_INVESTIGATE_TRUE" &&
+                                form.policeInvestigate === true &&
                                 <>
                                     <div className="mb-1">
                                         <label>調查日期和時間</label>
@@ -334,7 +366,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-true">已尋回</label>
                             </div>
                             {
-                                form.residentMissingFound === "RESIDENT_MISSING_FOUND_TRUE" &&
+                                form.residentMissing === "RESIDENT_MISSING_FOUND_TRUE" &&
                                 <div className="d-flex align-items-center">
                                     <label className="mr-3">尋回日期</label>
                                     <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
@@ -345,7 +377,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-false">仍未尋回</label>
                             </div>
                             {
-                                form.residentMissingFound === "RESIDENT_MISSING_FOUND_FALSE" &&
+                                form.residentMissing === "RESIDENT_MISSING_FOUND_FALSE" &&
                                 <div className="d-flex align-items-center">
                                     由失蹤日計起至呈報日，已失蹤
                                     <div className="input-group mb-3">
@@ -373,36 +405,36 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" value="RESIDENT_ABUSE_BODY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" checked={form.ra_body === true} onClick={() => setForm({ ...form, ra_body: !form.ra_body })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-body">身體虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" value="RESIDENT_ABUSE_MENTAL" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" checked={form.ra_mental === true} onClick={() => setForm({ ...form, ra_mental: !form.ra_mental })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-mental">精神虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" value="RESIDENT_ABUSE_NEGLIGENT" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" checked={form.ra_negligent === true} onClick={() => setForm({ ...form, ra_negligent: !form.ra_negligent })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-negligent">疏忽照顧</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-embezzle-property" value="RESIDENT_ABUSE_EMBEZZLE_PROPERTY" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-embezzle-property" checked={form.ra_embezzleProperty === true} onClick={() => setForm({ ...form, ra_embezzleProperty: !form.ra_embezzleProperty })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-embezzle-property">侵吞財產</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-abandoned" value="RESIDENT_ABUSE_ABANDONED" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-abandoned" checked={form.ra_abandoned === true} onClick={() => setForm({ ...form, ra_abandoned: !form.ra_abandoned })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-abandoned">遺棄</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-sexual-assault" value="RESIDENT_ABUSE_SEXUAL_ASSAULT" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-sexual-assault" checked={form.ra_sexualAssault === true} onClick={() => setForm({ ...form, ra_sexualAssault: !form.ra_sexualAssault })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-sexual-assault">非禮／性侵犯</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" value="RESIDENT_ABUSE_OTHER" onClick={checkboxHandler} />
+                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" checked={form.ra_other === true} onClick={() => setForm({ ...form, ra_other: !form.ra_other })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-other">其他</label>
                             </div>
                             {
-                                form.residentAbuse.indexOf("RESIDENT_ABUSE_OTHER") > -1 &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                form.other &&
+                                <AutosizeTextarea className="form-control" placeholder="請註明" name="ra_otherDescription" value={form.ra_otherDescription} onChange={inputFieldHandler} />
                             }
                         </div>
                     </div>
@@ -439,23 +471,23 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3b)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="referrals" id="referrals-false" value="REFERRALS_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="referrals" id="referrals-true" value="REFERRALS_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="referrals" id="referrals-true" checked={form.referSocialWorker === true} onClick={() => setForm({ ...form, referSocialWorker: true })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-true">已轉介社工</label>
                             </div>
                             {
-                                form.referrals === "REFERRALS_TRUE" &&
+                                form.referSocialWorker &&
                                 <>
                                     <div className="">
                                         <label>轉介日期</label>
-                                        <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                        <DatePicker className="form-control" selected={form.referDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, referDate: date })} />
                                     </div>
                                     <div className="">
                                         <label>服務單位</label>
-                                        <input type="text" className="form-control" />
+                                        <input type="text" className="form-control" name="referServiceUnit" value={form.referServiceUnit} onChange={inputFieldHandler} />
                                     </div>
                                 </>
                             }
@@ -466,15 +498,15 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-false" value="RESIDENT_ABUSE_POLICE_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" value="RESIDENT_ABUSE_POLICE_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: true })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-true">已報警求助</label>
                             </div>
                             {
-                                form.residentAbusePolice === "RESIDENT_ABUSE_POLICE_TRUE" &&
+                                form.abuser_police &&
                                 <>
                                     <div className="mb-1">
                                         <label>報警日期</label>
@@ -494,42 +526,42 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(4) 院舍內有爭執事件以致需要報警求助</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-tenant">住客與住客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-staff">住客與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-guest">住客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-staff">員工與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-guest">員工與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-guest-and-guest">訪客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="disputePolice" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="conflict" name="disputePolice" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-other">其他 (請註明)</label>
                             </div>
                             {
-                                form.disputePolice === "DISPUTE_POLICE_OTHER" &&
+                                form.conflict === "DISPUTE_POLICE_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                    <AutosizeTextarea placeholder="請註明" className="form-control" value={form.conflictDescription} onChange={inputFieldHandler} name="conflictDescription" />
                                 </div>
                             }
                             <div className="mb-1">
                                 <label>報警日期</label>
-                                <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                <DatePicker className="form-control" selected={form.conflict_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, conflict_policeDate: date })} />
                             </div>
                             <div>
                                 <label>報案編號</label>
@@ -543,25 +575,25 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）</label>
                         <div className="col">
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-mistake">住客誤服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-over-or-missed">住客漏服或多服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-counter-drug">住客服用成藥或非處方藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="seriousMedicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-other">其他</label>
                             </div>
                             {
-                                form.seriousMedicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
+                                form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                    <AutosizeTextarea placeholder="請註明" className="form-control" name="mi_description" value={form.mi_description} onChange={inputFieldHandler} />
                                 </div>
                             }
                         </div>
@@ -572,56 +604,59 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(6) 其他重大特別事故以致影響院舍日常運作</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-power-supply">停止電力供應</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-building">樓宇破損或結構問題</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-fire">火警</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-water-supply">停止食水供應</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="otherSeriousIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" onChange={radioButtonHandler} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-other">水浸／山泥傾瀉／其他天災意外</label>
                             </div>
-                            {
-                                form.otherSeriousIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
+                            {/* {
+                                form.otherIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
                                 <div className="">
                                     <AutosizeTextarea placeholder="請註明" className="form-control" />
                                 </div>
-                            }
+                            } */}
                         </div>
                     </div>
+
 
                     <div className="form-row mb-2">
                         {/* (7) 其他 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(7) 其他</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-true" value="OTHER_INCIDENT_TRUE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-true" checked={form.other === true} onClick={() => setForm({ ...form, other: true })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-false" value="OTHER_INCIDENT_FALSE" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-false" checked={form.other === false} onClick={() => setForm({ ...form, other: false })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-false">沒有</label>
                             </div>
                             {
-                                form.otherIncident === "OTHER_INCIDENT_TRUE" &&
-                                <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                form.other &&
+                                <AutosizeTextarea placeholder="請註明" className="form-control" value={form.otherDescription} onChange={inputFieldHandler} name="otherDescription" />
                             }
                         </div>
                     </div>
                 </section>
 
+
+
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>住客及家屬情況</h5>
                         </div>
@@ -664,7 +699,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-true">已通知住客監護人／保證人／家人／親屬</label>
                             </div>
                             {
-                                form.notified === "NOTIFIED_TRUE" &&
+                                form.guardian === true &&
                                 <>
                                     <div className="row my-2">
                                         {/* 姓名 */}
@@ -712,7 +747,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬</label>
                             </div>
                             {
-                                form.notified === "NOTIFIED_FALSE" &&
+                                form.guardian === false &&
                                 <>
                                     <label>原因:</label>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" />
@@ -735,7 +770,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                             <input type="text" className="form-control" />
                         </div>
                     </div>
-                    <div className="form-row row mb-2">
+                    <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>填報日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
@@ -750,7 +785,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                 </section>
 
                 <section className="mb-5">
-                    <div className="row mb-3">
+                    <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>殘疾人士院舍特別事故報告 (附頁)</h5>
                         </div>
@@ -865,7 +900,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
@@ -887,13 +922,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" selected={date} onChange={(date) => setDate(date)} dateFormat={"yyyy/MM/dd"} readOnly />
+                            <DatePicker className="form-control" selected={smDate} onChange={(date) => setSmDate(date)} dateFormat={"yyyy/MM/dd"} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -909,7 +944,7 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                 <hr className="my-4" />
 
                 <section className="mb-5">
-                    <div className="row mb-2">
+                    <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
                             <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
                         </div>
@@ -930,13 +965,13 @@ export default function SpecialIncidentReportLicense({ context, styles }: ISpeci
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={date} onChange={(date) => setDate(date)} readOnly />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={sdDate} onChange={(date) => setSdDate(date)} readOnly />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} />
                         </div>
                     </div>
                     {/* <div className="form-row row mb-2">

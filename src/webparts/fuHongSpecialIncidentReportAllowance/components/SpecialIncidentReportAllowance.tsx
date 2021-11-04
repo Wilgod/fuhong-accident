@@ -60,12 +60,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     });
     const [incidentTime, setIncidentTime] = useState(new Date());
 
+    const [date, setDate] = useState(new Date());
     const [smDate, setSmDate] = useState(new Date());
     const [sdDate, setSdDate] = useState(new Date());
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
 
-    const [date, setDate] = useState(new Date());
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
     const [guardianDatetime, setGuardianDatetime] = useState(new Date());
 

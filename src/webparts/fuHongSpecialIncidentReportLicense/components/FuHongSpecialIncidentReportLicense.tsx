@@ -13,6 +13,7 @@ import { graph } from "@pnp/graph/presets/all";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import "./react-tabs.css";
 import "./custom.css";
+import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -35,7 +36,7 @@ const getCanvasZone = () => {
   }
 }
 
-export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, {}> {
+export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -61,19 +62,23 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
     return (
       <div className={styles.fuHongSpecialIncidentReportLicense}>
         <div className={styles.container}>
-          <Tabs variant="fullWidth">
-            <TabList>
-              <Tab>特別事故報告(牌照事務處)</Tab>
-              <Tab>事故跟進/結束報告</Tab>
-            </TabList>
-            <TabPanel>
-              <SpecialIncidentReportLicense context={this.props.context} styles={styles} />
-            </TabPanel>
-            <TabPanel>
-              <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} />
-            </TabPanel>
-
-          </Tabs>
+          {
+            this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              <Tabs variant="fullWidth">
+                <TabList>
+                  <Tab>特別事故報告(牌照事務處)</Tab>
+                  <Tab>事故跟進/結束報告</Tab>
+                </TabList>
+                <TabPanel>
+                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+                <TabPanel>
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} />
+                </TabPanel>
+              </Tabs>
+          }
         </div>
       </div>
     );
