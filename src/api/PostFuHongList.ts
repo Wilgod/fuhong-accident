@@ -130,6 +130,19 @@ export async function createOtherIncidentReport(body: any) {
     }
 }
 
+//Form 24
+//Create
+export async function createSpecialIncidentReportLicense(body: any) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("createSpecialIncidentReportLicense failed");
+    }
+}
+
 
 //Form 25
 //Create
