@@ -213,10 +213,118 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         //(2a)
         body["Found"] = form.found;
-        if (form.found) {
-
+        if (form.found === true) {
+            body["FoundDate"] = form.foundDate.toISOString();
+        } else if (form.found === false) {
+            body["NotYetFoundDayCount"] = form.notYetFoundDayCount;
         } else {
             error["Found"] = true;
+        }
+
+        //(2b) 失蹤住客病歷
+        if (form.medicalRecords) {
+            body["MedicalRecords"] = form.medicalRecords;
+        } else {
+            error["MedicalRecords"] = true;
+        }
+
+        //(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱
+        body["RA_Body"] = form.ra_body;
+        body["RA_Mental"] = form.ra_mental;
+        body["RA_Negligent"] = form.ra_negligent;
+        body["RA_EmbezzleProperty"] = form.ra_embezzleProperty;
+        body["RA_Abandoned"] = form.ra_abandoned;
+        body["RA_SexualAssault"] = form.ra_sexualAssault;
+        body["RA_Other"] = form.ra_other;
+        if (form.ra_other === true) {
+            if (form.ra_otherDescription) {
+                body["RA_OtherDescription"] = form.ra_otherDescription;
+            } else {
+                error["RA_OtherDescription"] = true;
+            }
+        }
+
+        // {/* (3a) 施虐者／懷疑施虐者的身份 */}
+        if (form.abuser) {
+            body["Abuser"] = form.abuser;
+            if (form.abuser === "ABUSER_OTHER") {
+                if (form.abuserDescription) {
+                    body["AbuserDescription"] = form.abuserDescription;
+                } else {
+                    error["AbuserDescription"] = true
+                }
+            }
+        } else {
+            error["Abuser"] = true;
+        }
+
+        // {/* (3b)*/}
+        form["ReferSocialWorker"] = form.referSocialWorker;
+        if (form.referSocialWorker) {
+            body["ReferDate"] = form.referDate.toISOString();
+            if (form.referServiceUnit) {
+                body["ReferServiceUnit"] = form.referServiceUnit;
+            }
+        } else if (form.referSocialWorker === undefined) {
+            error["ReferSocialWorker"] = true;
+        }
+
+        // {/* (3c)*/}
+        body["Abuser_Police"] = form.abuser_police;
+        if (form.abuser_police) {
+            body["Abuser_PoliceDate"] = form.abuser_policeDate.toISOString();
+            if (form.abuser_policeCaseNo) {
+                body["Abuser_PoliceCaseNo"] = form.abuser_policeCaseNo;
+            }
+        } else if (form.abuser_police === undefined) {
+            error["Abuser_Police"] = true;
+        }
+
+        //{/* (4) 院舍內有爭執事件以致需要報警求助 */}
+        if (form.conflict) {
+            body["Conflict"] = form.conflict;
+            if (form.conflict === "DISPUTE_POLICE_OTHER") {
+                if (form.conflictDescription) {
+                    body["ConflictDescription"] = form.conflictDescription;
+                } else {
+                    error["ConflictDescription"] = form.conflictDescription;
+                }
+            }
+        } else {
+            error["Conflict"] = true;
+        }
+        body["Conflict_PoliceDate"] = form.conflict_policeDate;
+        body["Conflict_PoliceCaseNo"] = form.conflict_policeCaseNo;
+
+        // {/* (5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」） */}
+        if (form.medicalIncident) {
+            body["MedicalIncident"] = form.medicalIncident;
+            if (form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER") {
+                if (form.mi_description) {
+                    body["MI_Description"] = form.mi_description;
+                } else {
+                    error["MI_Description"] = true;
+                }
+            }
+        } else {
+            error["MedicalIncident"] = true;
+        }
+
+        //  {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
+        body["OtherIncident"] = form.otherIncident
+        // if (form.otherIncident) {
+        // } else {
+        //     error["OtherIncident"] = true;
+        // }
+        body["Other"] = form.other;
+        if (form.other) {
+            if (form.otherDescription) {
+                body["OtherDescription"] = form.otherDescription;
+            } else {
+                error["OtherDescription"] = true;
+            }
+        } else if (form.other === undefined) {
+            error["Other"] = true;
         }
 
         return [body, error];
@@ -532,7 +640,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* (2b) 失蹤住客病歷 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2b) 失蹤住客病歷</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" />
+                            <AutosizeTextarea className="form-control" name="medicalRecords" value={form.medicalRecords} onChange={inputFieldHandler} />
                         </div>
                     </div>
 
@@ -569,7 +677,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-other">其他</label>
                             </div>
                             {
-                                form.other &&
+                                form.ra_other &&
                                 <AutosizeTextarea className="form-control" placeholder="請註明" name="ra_otherDescription" value={form.ra_otherDescription} onChange={inputFieldHandler} />
                             }
                         </div>
@@ -597,7 +705,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             {
                                 form.abuser === "ABUSER_OTHER" &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" />
+                                <AutosizeTextarea className="form-control" placeholder="請註明" name="abuserDescription" value={form.abuserDescription} onChange={inputFieldHandler} />
                             }
                         </div>
                     </div>
@@ -629,6 +737,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
+
                     <div className="form-row mb-2">
                         {/* (3c)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
@@ -638,7 +747,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: true })} />
+                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === true} onClick={() => setForm({ ...form, abuser_police: true })} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-true">已報警求助</label>
                             </div>
                             {
@@ -646,11 +755,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="mb-1">
                                         <label>報警日期</label>
-                                        <DatePicker className="form-control" selected={date} dateFormat="yyyy/MM/dd" onChange={setDate} />
+                                        <DatePicker className="form-control" selected={form.abuser_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, abuser_policeDate: date })} />
                                     </div>
                                     <div>
                                         <label>報案編號</label>
-                                        <input className="form-control" />
+                                        <input className="form-control" name="abuser_policeCaseNo" value={form.abuser_policeCaseNo} onChange={inputFieldHandler} />
                                     </div>
                                 </>
                             }
@@ -701,7 +810,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             <div>
                                 <label>報案編號</label>
-                                <input className="form-control" />
+                                <input className="form-control" name="conflict_policeCaseNo" value={form.conflict_policeCaseNo} onChange={inputFieldHandler} />
                             </div>
                         </div>
                     </div>
