@@ -8,6 +8,10 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { createSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
 import { IAccidentCategoryAbuseDetails, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
+import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
+import useUserInfo from '../../../hooks/useUserInfo';
+import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
+import { IUser } from '../../../interface/IUser';
 
 
 
@@ -65,10 +69,21 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [sdDate, setSdDate] = useState(new Date());
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
+    const [sdPhoneNo, setSdPhoneNo] = useState("");
+    const [userInfo, setCurrentUserEmail] = useUserInfo();
+    const [sdInfo, setSDEmail] = useUserInfo();
+    const [smInfo, setSMEmail] = useUserInfo();
+
+    const { departments, setHrDepartment } = useDepartmentMangers();
 
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
     const [guardianDatetime, setGuardianDatetime] = useState(new Date());
 
+    const CURRENT_USER: IUser = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -308,6 +323,39 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         accidentCategoryAbuseHandler()
     }, [accidentCategoryAbuseDetails.status, accidentCategoryAbuseDetails.person])
 
+    // Get current User info in ad
+    useEffect(() => {
+        setCurrentUserEmail(CURRENT_USER.email);
+    }, []);
+
+    // Find SD && SM
+    useEffect(() => {
+        if (userInfo && userInfo.hr_deptid) {
+            setHrDepartment(userInfo.hr_deptid);
+        } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            setHrDepartment("CSWATC(D)");
+        }
+    }, [userInfo]);
+
+    // Get SD & SM
+    useEffect(() => {
+        if (Array.isArray(departments) && departments.length) {
+            const dept = departments[0];
+            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                setSMEmail(dept.hr_deptmgr);
+            }
+
+            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                setSDEmail(dept.hr_sd);
+            }
+        }
+    }, [departments]);
+
+    useEffect(() => {
+        if (sdInfo && sdInfo.phone) {
+            setSdPhoneNo(sdInfo.phone);
+        }
+    }, [sdInfo]);
 
 
     return (
@@ -912,7 +960,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={sdPhoneNo} onChange={(event) => {
+                                setSdPhoneNo(event.target.value);
+                            }} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -945,7 +995,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -953,7 +1003,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -993,7 +1044,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -1001,17 +1052,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console.log }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={sdInfo && sdInfo.Title || ""} disabled />
                         </div>
                     </div>
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" value={sdPhoneNo} onChange={(event) => setSdPhoneNo(event.target.value)} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">

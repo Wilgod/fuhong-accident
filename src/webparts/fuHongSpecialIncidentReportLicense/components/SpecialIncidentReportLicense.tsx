@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import Header from "../../../components/Header/Header";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,9 +9,18 @@ import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTexta
 import { ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 import { inputProperties } from 'office-ui-fabric-react';
 import { createSpecialIncidentReportLicense } from '../../../api/PostFuHongList';
+import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
+import useUserInfo from '../../../hooks/useUserInfo';
+import { IUser } from '../../../interface/IUser';
+import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
 
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler }: ISpecialIncidentReportLicenseProps) {
+    const [userInfo, setCurrentUserEmail] = useUserInfo();
+    const [sdInfo, setSDEmail] = useUserInfo();
+    const [smInfo, setSMEmail] = useUserInfo();
+
+    const { departments, setHrDepartment } = useDepartmentMangers();
     const [isPrintMode, setPrintMode] = useState(false);
     const [form, setForm] = useState<ISpecialIncidentReportLicenseStates>({
         abuser: "",
@@ -79,7 +88,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     });
 
     const [incidentTime, setIncidentTime] = useState(new Date());
-
+    const [currentUser, setCurrentUser] = useState(null);
 
     const [date, setDate] = useState(new Date());
     const [smDate, setSmDate] = useState(new Date());
@@ -89,6 +98,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const [extraFile, setExtraFile] = useState<FileList>(null);
     const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
+
+    const CURRENT_USER: IUser = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -355,6 +370,37 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
         window.open(path, "_self");
     }
+
+    // Get current User info in ad
+    useEffect(() => {
+        setCurrentUserEmail(CURRENT_USER.email);
+    }, []);
+
+    // Find SD && SM
+    useEffect(() => {
+        if (userInfo && userInfo.hr_deptid) {
+            setHrDepartment(userInfo.hr_deptid);
+        } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            setHrDepartment("CSWATC(D)");
+        }
+    }, [userInfo]);
+
+    // Get SD & SM
+    useEffect(() => {
+        if (Array.isArray(departments) && departments.length) {
+            const dept = departments[0];
+            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                setSMEmail(dept.hr_deptmgr);
+            }
+
+            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                setSDEmail(dept.hr_sd);
+            }
+        }
+    }, [departments]);
+
+    console.log(smInfo);
+    console.log(sdInfo);
 
     return (
         <>
@@ -1155,7 +1201,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -1163,7 +1209,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1198,7 +1245,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* SD */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -1206,7 +1253,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">

@@ -11,6 +11,8 @@ import { IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHong
 import { createOtherIncidentReport } from '../../../api/PostFuHongList';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
+import useUserInfo from '../../../hooks/useUserInfo';
+import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler }: IOtherIncidentReportProps) {
     const [form, setForm] = useState<IOtherIncidentReportStates>({
@@ -62,6 +64,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [smComment, setSmComment] = useState("");
 
     const [date, setDate] = useState(new Date());
+    const [userInfo, setCurrentUserEmail] = useUserInfo();
+    const [sdInfo, setSDEmail] = useUserInfo();
+    const [smInfo, setSMEmail] = useUserInfo();
+    const { departments, setHrDepartment } = useDepartmentMangers();
+
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -291,6 +298,34 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     useEffect(() => {
         setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
     }, []);
+
+    // Get current User info in ad
+    useEffect(() => {
+        setCurrentUserEmail(CURRENT_USER.email);
+    }, []);
+
+    // Find SD && SM
+    useEffect(() => {
+        if (userInfo && userInfo.hr_deptid) {
+            setHrDepartment(userInfo.hr_deptid);
+        } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            setHrDepartment("CSWATC(D)");
+        }
+    }, [userInfo]);
+
+    // Get SD & SM
+    useEffect(() => {
+        if (Array.isArray(departments) && departments.length) {
+            const dept = departments[0];
+            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                setSMEmail(dept.hr_deptmgr);
+            }
+
+            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                setSDEmail(dept.hr_sd);
+            }
+        }
+    }, [departments]);
 
     return (
         <>
@@ -734,7 +769,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -742,7 +777,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">

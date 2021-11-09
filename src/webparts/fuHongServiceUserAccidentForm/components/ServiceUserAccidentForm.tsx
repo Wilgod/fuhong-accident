@@ -33,6 +33,8 @@ import useSM from '../../../hooks/useSM';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptApproveForSD } from '../permissionConfig';
+import useUserInfo from '../../../hooks/useUserInfo';
+import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -65,6 +67,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [insuranceNumber, setInsuranceNumber] = useState("");
     const [injuryFiles, setInjuryFiles] = useState([]);
     const [selectedCctvPhoto, setSelectedCctvPhoto] = useState([]);
+    const [userInfo, setCurrentUserEmail] = useUserInfo();
+    const [sdInfo, setSDEmail] = useUserInfo();
+    const [smInfo, setSMEmail] = useUserInfo();
+    const { departments, setHrDepartment } = useDepartmentMangers();
 
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
@@ -787,6 +793,34 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
     }, [formData]);
+
+    // Get current User info in ad
+    useEffect(() => {
+        setCurrentUserEmail(CURRENT_USER.email);
+    }, []);
+
+    // Find SD && SM
+    useEffect(() => {
+        if (userInfo && userInfo.hr_deptid) {
+            setHrDepartment(userInfo.hr_deptid);
+        } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            setHrDepartment("CSWATC(D)");
+        }
+    }, [userInfo]);
+
+    // Get SD & SM
+    useEffect(() => {
+        if (Array.isArray(departments) && departments.length) {
+            const dept = departments[0];
+            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                setSMEmail(dept.hr_deptmgr);
+            }
+
+            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                setSDEmail(dept.hr_sd);
+            }
+        }
+    }, [departments])
 
     return (
         <>
@@ -1650,14 +1684,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={serviceManger && [serviceManger.mail]}
                             /> */}
-                            <select className={`custom-select  ${error.serviceManager ? "is-invalid" : ""}`} value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                            {/* <select className={`custom-select  ${error.serviceManager ? "is-invalid" : ""}`} value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 <option>請選擇服務經理</option>
                                 {
                                     smList.map((sm) => {
                                         return <option value={sm.mail}>{sm.displayName}</option>
                                     })
                                 }
-                            </select>
+                            </select> */}
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1706,14 +1741,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={serviceDirector && [serviceDirector.mail]}
                             /> */}
-                            <select className={`custom-select  ${error.serviceDirector ? "is-invalid" : ""}`} value={serviceDirectorEmail} onChange={(event) => setServiceDirectorEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                            {/* <select className={`custom-select  ${error.serviceDirector ? "is-invalid" : ""}`} value={serviceDirectorEmail} onChange={(event) => setServiceDirectorEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 <option>請選擇服務總監</option>
                                 {
                                     sdList.map((sd) => {
                                         return <option value={sd.mail}>{sd.displayName}</option>
                                     })
                                 }
-                            </select>
+                            </select> */}
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">

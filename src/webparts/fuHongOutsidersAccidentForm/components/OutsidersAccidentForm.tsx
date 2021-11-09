@@ -15,6 +15,8 @@ import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import { createOutsiderAccidentForm } from '../../../api/PostFuHongList';
+import useUserInfo from '../../../hooks/useUserInfo';
+import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -45,6 +47,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [sptComment, setSptComment] = useState("");
+
+    const [userInfo, setCurrentUserEmail] = useUserInfo();
+    const [sdInfo, setSDEmail] = useUserInfo();
+    const [smInfo, setSMEmail] = useUserInfo();
+    const { departments, setHrDepartment } = useDepartmentMangers();
 
     const [familyContactDate, setFamilyContactDate] = useState(new Date());
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
@@ -321,6 +328,34 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
     useEffect(() => {
         setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
     }, []);
+
+    // Get current User info in ad
+    useEffect(() => {
+        setCurrentUserEmail(CURRENT_USER.email);
+    }, []);
+
+    // Find SD && SM
+    useEffect(() => {
+        if (userInfo && userInfo.hr_deptid) {
+            setHrDepartment(userInfo.hr_deptid);
+        } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            setHrDepartment("CSWATC(D)");
+        }
+    }, [userInfo]);
+
+    // Get SD & SM
+    useEffect(() => {
+        if (Array.isArray(departments) && departments.length) {
+            const dept = departments[0];
+            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                setSMEmail(dept.hr_deptmgr);
+            }
+
+            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                setSDEmail(dept.hr_sd);
+            }
+        }
+    }, [departments]);
 
     console.log(serviceUnit);
     return (
@@ -771,7 +806,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -779,7 +814,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -814,7 +850,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
                         {/* SD */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
                         <div className="col-12 col-md-4">
-                            <PeoplePicker
+                            {/* <PeoplePicker
                                 context={context}
                                 titleText=""
                                 showtooltip={false}
@@ -822,7 +858,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler }:
                                 ensureUser={true}
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
-                                showHiddenInUI={false} />
+                                showHiddenInUI={false} /> */}
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
