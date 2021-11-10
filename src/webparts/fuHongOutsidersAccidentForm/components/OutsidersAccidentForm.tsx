@@ -486,7 +486,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     }
 
     const loadData = async (data: any) => {
-        console.log(data)
+
         if (data) {
             setFormId(data.Id);
             setFormStatus(data.Status);

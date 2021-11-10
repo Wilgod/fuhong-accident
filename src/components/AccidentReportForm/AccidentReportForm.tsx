@@ -15,7 +15,7 @@ import useSPT from '../../hooks/useSPT';
 import useSD from '../../hooks/useSD';
 import useSM from '../../hooks/useSM';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
-import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
+import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentForm } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 
@@ -185,12 +185,18 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 if (Object.keys(error).length === 0) {
 
                     updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-
-                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
-                            console.log(updateServiceUserAccidentResponse)
-                            // Trigger notification workflow;
-                            formSubmittedHandler();
-                        }).catch(console.error)
+                        if (formType === "SERVICE_USER") {
+                            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
+                                console.log(updateServiceUserAccidentResponse)
+                                // Trigger notification workflow;
+                                formSubmittedHandler();
+                            }).catch(console.error)
+                        } else {
+                            updateOutsiderAccidentForm(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
+                                console.log(updateOutsiderAccidentResponse);
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        }
                     }).catch(console.error);
                 }
             }
@@ -201,10 +207,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
             if (Object.keys(error).length === 0) {
-
-                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                    formSubmittedHandler();
-                }).catch(console.error);
+                if (formType === "SERVICE_USER") {
+                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    updateOutsiderAccidentForm(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
             }
         }
     };
@@ -241,16 +252,23 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                     // Update main form status and stage 3
                     const serviceUserAccidentFormBody = {
-                        "AccidentFollowUpFormId": accidentFollowUpReportFormResponse.data.Id,
+                        "AccidentFollowUpFormId": {
+                            results: [accidentFollowUpReportFormResponse.data.Id]
+                        },
                         "Stage": "3",
                         "Status": "PENDING_SM_FILL_IN",
                         "NextDeadline": addMonths(new Date(), 6).toISOString()
                     }
-
-                    updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
-                        //trigger notification work flow
-                        formSubmittedHandler()
-                    }).catch(console.error);
+                    if (formType === "SERVICE_USER") {
+                        updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
+                            //trigger notification work flow
+                            formSubmittedHandler()
+                        }).catch(console.error);
+                    } else {
+                        updateOutsiderAccidentForm(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
+                            formSubmittedHandler()
+                        }).catch(console.error);
+                    }
                 }).catch(console.error);
             }).catch(console.log);
         }
@@ -281,7 +299,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             }).catch(console.error);
         }
     }
-
+    console.log(parentFormData)
     const loadData = () => {
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)
@@ -290,7 +308,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         if (parentFormData.Stage) {
             setFormStage(parentFormData.Stage);
         }
-        
+
         // Service Unit
         setServiceUnitByShortForm(parentFormData.ServiceUnit);
 
@@ -434,12 +452,22 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameEN ? `${serviceUser.NameEN}` : ""}`} />
+                            {
+                                formType === "SERVICE_USER" ?
+                                    <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameEN ? `${serviceUser.NameEN}` : ""}`} />
+                                    :
+                                    <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameEN || ""}`} />
+                            }
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
+                            {
+                                formType === "SERVICE_USER" ?
+                                    <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
+                                    :
+                                    <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
+                            }
                         </div>
                     </div>
 
@@ -447,12 +475,22 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.Age ? `${serviceUser.Age}` : ""}`} />
+                            {
+                                formType === "SERVICE_USER" ?
+                                    <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.Age ? `${serviceUser.Age}` : ""}`} />
+                                    :
+                                    <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserAge || ""} `} />
+                            }
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={serviceUser && serviceUser.Gender === "Male" ? "男" : "女"} />
+                            {
+                                formType === "SERVICE_USER" ?
+                                    <input type="text" className="form-control" readOnly value={serviceUser && serviceUser.Gender === "Male" ? "男" : "女"} />
+                                    :
+                                    <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.ServiceUserGender === "male" ? "男" : "女"} />
+                            }
                         </div>
                     </div>
 
