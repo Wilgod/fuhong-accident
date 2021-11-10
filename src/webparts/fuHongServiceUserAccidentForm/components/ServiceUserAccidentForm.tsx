@@ -770,12 +770,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
 
             if (data.SM) {
-                setServiceManagerEmail(data.SM.EMail);
+                setSMEmail(data.SM.EMail);
+                // setServiceManagerEmail(data.SM.EMail);
                 //    setSmDate(new Date(data.SMDate));
             }
 
             if (data.SD) {
-                setServiceDirectorEmail(data.SD.EMail);
+                setSDEmail(data.SD.EMail);
+                // setServiceDirectorEmail(data.SD.EMail);
                 //setSdDate(new Date(data.SDDate));
             }
 

@@ -87,7 +87,6 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
 
   private async initialDataByFormId() {
     try {
-
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getOutsiderAccidentById(formId);
@@ -105,6 +104,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
+
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>

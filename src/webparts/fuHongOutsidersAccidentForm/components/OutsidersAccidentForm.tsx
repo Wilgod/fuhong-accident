@@ -14,17 +14,17 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createOutsiderAccidentForm, updateOutsiderAccidentForm } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentForm } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
-import { FormFlow } from '../../../api/FetchFuHongList';
+import { FormFlow, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
 import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
 import { formInitial } from '../permissionConfig';
 import { pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
-import { addBusinessDays } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -396,9 +396,203 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         window.open(path, "_self");
     }
 
+    const smApproveHandler = (event) => {
+        const [body, error] = dataFactory("");
+        if (Object.keys(error).length > 0) {
+            setError(error);
+        } else {
+            updateOutsiderAccidentForm(formId, {
+                ...body,
+                "SMApproved": true,
+                "SMComment": smComment.trim(),
+                "SMDate": smDate.toISOString(),
+                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                "Status": "PENDING_SPT_APPROVE"
+            }).then((res) => {
+                // Update form to stage 1-2
+                // Trigger notification workflow
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
+    }
+
+    const smRejectHandler = (event) => {
+        const body = {
+            "SMApproved": false,
+            "SMComment": smComment.trim(),
+            "SMDate": smDate.toISOString(),
+            "Status": "SM_VOID"
+        };
+        updateOutsiderAccidentForm(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+    }
+
+    const sptApproveHandler = (event) => {
+        const [body, error] = dataFactory("");
+        if (Object.keys(error).length > 0) {
+            setError(error);
+        } else {
+            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                const serviceAccidentUserFormBody = {
+                    ...body,
+                    "SPTApproved": true,
+                    "SPTComment": sptComment.trim(),
+                    "SPTDate": sptDate.toISOString(),
+                    "InvestigatorId": investigatorPickerInfo[0].id,
+                    "Status": "PENDING_INVESTIGATE",
+                    "Stage": "2",
+                    "NextDeadline": addMonths(new Date(), 1).toISOString()
+                };
+                updateOutsiderAccidentForm(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                    // Create form 20, switch to stage 2]
+                    if (formOneResponse) {
+                        getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
+                            if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
+                                let accidentTime = outsiderAccidentForm.AccidentTime
+                                const accidentReportFormBody = {
+                                    "CaseNumber": outsiderAccidentForm.CaseNumber,
+                                    "ParentFormId": outsiderAccidentForm.Id,
+                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                    "ReceivedDate": new Date().toISOString(), // 交付日期
+                                    "SPTId": outsiderAccidentForm.SPTId,
+                                    "SMId": outsiderAccidentForm.SMId,
+                                    "InvestigatorId": outsiderAccidentForm.InvestigatorId
+                                }
+                                createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                    // Trigger notification workflow
+
+
+                                    //AccidentReportForm
+                                    if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+
+                                        updateOutsiderAccidentForm(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                            console.log(res)
+                                            formSubmittedHandler()
+                                        }).catch(console.error);
+                                    }
+                                })
+                            }
+                        }).catch(console.error);
+                    }
+                });
+            } else {
+                // error implementation
+            }
+        }
+    }
+
+    const sptRejectHandler = (event) => {
+
+    }
+
+    const loadData = async (data: any) => {
+        console.log(data)
+        if (data) {
+            setFormId(data.Id);
+            setFormStatus(data.Status);
+            setFormStage(data.Stage);
+
+            setSmComment(data.SMComment);
+            if (data.SMDate) {
+                setSmDate(new Date(data.SMDate));
+            }
+
+            setSdComment(data.SDComment)
+            if (data.SDDate) {
+                setSdDate(new Date(data.SDDate));
+            }
+
+            setSptComment(data.SPTComment)
+            if (data.SPTDate) {
+                setSptDate(new Date(data.SPTDate));
+            }
+
+            setServiceUnit(data.ServiceUnit);
+
+            setAccidentTime(new Date(data.AccidentTime));
+
+            if (data.Author) {
+                setReporter([{ secondaryText: data.Author.EMail, id: data.Author.Id }]);
+            }
+
+            if (data.Created) {
+                setReportDate(new Date(data.Created));
+            }
+
+            if (data.Investigator) {
+                setInvestigator([{ secondaryText: data.Investigator.EMail, id: data.Investigator.Id }]);
+            }
+
+            if (data.SPT) {
+                setSPhysicalTherapyEmail(data.SPT.EMail)
+                // setSptDate(new Date(data.SPTDate));
+            }
+
+            if (data.SM) {
+                setSMEmail(data.SM.EMail);
+                // setServiceManagerEmail(data.SM.EMail);
+                //    setSmDate(new Date(data.SMDate));
+            }
+
+            if (data.SD) {
+                setSDEmail(data.SD.EMail);
+                // setServiceDirectorEmail(data.SD.EMail);
+                //setSdDate(new Date(data.SDDate));
+            }
+
+            if (data.Attachments) {
+                // getServiceUserAccidentAllAttachmentById(data.Id).then((value) => {
+                //     console.log(value)
+                // }).catch(console.error);
+            }
+
+            setFamilyContactDate(new Date(data.FamilyContactDate));
+            setPoliceDatetime(new Date(data.PoliceDatetime));
+            setForm({
+                accidentDetail: data.AccidentDetail,
+                accidentLocation: data.AccidentLocation,
+                cctvRecord: data.CctvRecord,
+                envAcousticStimulation: data.EnvAcousticStimulation,
+                envCollidedByOthers: data.EnvCollidedByOthers,
+                envHurtByOthers: data.EnvHurtByOthers,
+                envImproperEquip: data.EnvImproperEquip,
+                envInsufficientLight: data.EnvInsufficientLight,
+                envNotEnoughSpace: data.EnvNotEnoughSpace,
+                envObstacleItems: data.EnvObstacleItems,
+                envOther: data.EnvOther,
+                envOtherDescription: data.EnvOtherDescription,
+                envSlipperyGround: data.EnvSlipperyGround,
+                envUnevenGround: data.EnvUnevenGround,
+                familyContact: data.FamilyContact,
+                familyRelationship: data.FamilyRelationship,
+                insuranceCaseNo: data.InsuranceCaseNo || "",
+                medicalArrangement: data.MedicalArrangement,
+                medicalArrangementHospital: data.MedicalArrangementHospital,
+                otherFactor: data.OtherFactor,
+                photoRecord: data.PhotoRecord,
+                police: data.Police,
+                policeStation: data.PoliceStation,
+                serviceUnit: data.ServiceUnit,
+                serviceUserAge: data.ServiceUserAge,
+                serviceUserGender: data.ServiceUserGender,
+                serviceUserIdentity: data.ServiceUserIdentity,
+                serviceUserIdentityOther: data.ServiceUserIdentityOther,
+                serviceUserNameEN: data.ServiceUserNameEN,
+                serviceUserNameTC: data.ServiceUserNameTC,
+                witness: data.Witness,
+                witnessName: data.WitnessName,
+                witnessPhone: data.WitnessPhone
+            })
+        }
+    }
+
     useEffect(() => {
-        setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
-    }, []);
+        if (formData) {
+            loadData(formData);
+        } else {
+            setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
+        }
+    }, [formData]);
 
     // Get current User info in ad
     useEffect(() => {
@@ -433,7 +627,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
     }, [departments]);
 
-    console.log(serviceUnit);
+
     return (
         <>
             <div>
@@ -680,11 +874,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <div className={`${styles.buttonLabel} mt-3`}>CCTV紀錄</div>
                             <div className="pl-2">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={() => setForm({ ...form, cctvRecord: false })} checked={form.cctvRecord === false} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={() => setForm({ ...form, cctvRecord: false })} checked={form.cctvRecord === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
                                 {
@@ -732,7 +926,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div className="">
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className="form-control" value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} />
+                                        <input type="text" className="form-control" value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                     <div className="">
                                         <label className="form-label">到達時間</label>
@@ -916,8 +1110,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <div className="form-row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3">批准</button>
-                                    <button className="btn btn-danger mr-3">拒絕</button>
+                                    <button className="btn btn-warning mr-3" onClick={smApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={smRejectHandler}>拒絕</button>
                                 </div>
                             </div>
                         </div>
@@ -1007,7 +1201,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pl-0 pt-xl-0 `}>｢意外報告 (二)｣交由</label>
                         <div className="col-12 col-md-4">
                             {
-                                true ?
+                                !pendingSptApproveForSPT(currentUserRole, formStatus, formStage) ?
                                     <input type="text" className="form-control" value={(investigator && investigator.displayName) || ""} disabled />
                                     :
                                     <PeoplePicker
@@ -1031,8 +1225,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <div className="form-row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3">批准</button>
-                                    <button className="btn btn-danger mr-3">拒絕</button>
+                                    <button className="btn btn-warning mr-3" onClick={sptApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={sptRejectHandler}>拒絕</button>
                                 </div>
                             </div>
                         </div>
