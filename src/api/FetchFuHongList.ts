@@ -28,12 +28,24 @@ export async function getServiceUnitByShortForm(serviceUnitShortForm: string) {
 
 export enum FormFlow {
     SERVICE_USER_ACCIDENT,
+    OUTSIDER_ACCIDENT,
+    OTHER_INCIDENT,
+    SPECIAL_INCIDENT_ALLOWANCE,
+    SPECIAL_INCIDENT_LICENSE
 }
 
 const formFlowParser = (formFlow: FormFlow) => {
     switch (formFlow) {
         case FormFlow.SERVICE_USER_ACCIDENT:
             return "Service User Accident";
+        case FormFlow.OUTSIDER_ACCIDENT:
+            return "Outsider Accident Form";
+        case FormFlow.OTHER_INCIDENT:
+            return "Other Incident Report";
+        case FormFlow.SPECIAL_INCIDENT_ALLOWANCE:
+            return "Special Incident Report Allowance";
+        case FormFlow.SPECIAL_INCIDENT_LICENSE:
+            return "Special Incident Report License";
         default:
             throw new Error("formFlowParser Error Exist");
     }
@@ -42,7 +54,7 @@ const formFlowParser = (formFlow: FormFlow) => {
 export async function getLastCaseNo(formFlow: FormFlow) {
     try {
         const LIST_NAME = formFlowParser(formFlow);
-        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created").orderBy("Created", false).top(1).get();
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created", "ServiceUnit").orderBy("Created", false).top(1).get();
         if (item.length > 0) return item[0];
         return null;
     } catch (err) {
@@ -122,5 +134,20 @@ export async function getAllAccidentFollowUpFormByParentId(ParentId: number) {
     } catch (err) {
         console.error(err);
         throw new Error("getAllAccidentFollowUpFormByParentId failed");
+    }
+}
+
+// Form 22
+export async function getOutsiderAccidentById(id: number) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
+            .expand("Author", "SM", "SPT", "SD", "Investigator").get();
+
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getOutsiderAccidentById failed");
     }
 }

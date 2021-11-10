@@ -1,19 +1,30 @@
 import { useState, useEffect } from "react";
-import { getUserInfoByEmailInUserInfoAD, getDepartmentByShortName } from "../api/FetchUser";
+import { getUserInfoByEmailInUserInfoAD, getDepartmentByShortName, getUserInfoByEmail } from "../api/FetchUser";
 
 export default function useUserInfo() {
-    const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [userInfo, setUserInfo] = useState<any>();
-
+    const [spUserInfo, setSpUserInfo] = useState<any>();
     useEffect(() => {
-        getUserInfoByEmailInUserInfoAD(currentUserEmail).then((userInfos) => {
-            if (Array.isArray(userInfos) && userInfos.length > 0) {
-                const [user] = userInfos;
-                console.log(user);
-                setUserInfo(user);
-            }
-        }).catch(console.error);
-    }, [currentUserEmail]);
+        if (email) {
+            // UserInfoAd list
+            getUserInfoByEmailInUserInfoAD(email).then((userInfos) => {
+                if (Array.isArray(userInfos) && userInfos.length > 0) {
+                    const [user] = userInfos;
+                    setUserInfo(user);
+                }
+            }).catch(console.error);
 
-    return [userInfo, setCurrentUserEmail];
+            // SharePoint 
+            getUserInfoByEmail(email).then((res) => {
+                setSpUserInfo(res);
+            }).catch(console.error);
+
+        } else {
+            setUserInfo(null);
+            setSpUserInfo(null);
+        }
+    }, [email]);
+
+    return [userInfo, setEmail, spUserInfo];
 }

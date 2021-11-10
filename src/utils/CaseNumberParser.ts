@@ -53,6 +53,14 @@ const formFlowShortFormParser = (formFlow: FormFlow) => {
     switch (formFlow) {
         case FormFlow.SERVICE_USER_ACCIDENT:
             return "SUI";
+        case FormFlow.OUTSIDER_ACCIDENT:
+            return "PUI";
+        case FormFlow.OTHER_INCIDENT:
+            return "OIN";
+        case FormFlow.SPECIAL_INCIDENT_ALLOWANCE:
+            return "SID";
+        case FormFlow.SPECIAL_INCIDENT_LICENSE:
+            return "SIH";
         default:
             throw new Error("formFlowParser Error Exist");
     }
@@ -60,7 +68,7 @@ const formFlowShortFormParser = (formFlow: FormFlow) => {
 
 export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string) => {
     try {
-        const lastCase = await getLastCaseNo(FormFlow.SERVICE_USER_ACCIDENT); // case order number
+        const lastCase = await getLastCaseNo(formFlow); // case order number
         const currentFinancialYear = getCurrentFinancialYear();
         const caseType = formFlowShortFormParser(formFlow);
         if (lastCase && lastCase.CaseNumber) {
@@ -69,7 +77,7 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
                 const [caseType, caseNumberRemain] = caseNumberSplit;
                 const financialYear = caseNumberRemain.substring(0, 4);
                 if (financialYear === currentFinancialYear) {
-                    const caseOrder = parseInt(caseNumberRemain.substring(7));
+                    const caseOrder = parseInt(caseNumberRemain.substring(4 + lastCase.ServiceUnit.length));
                     if (isNaN(caseOrder) === false) {
                         return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(caseOrder + 1)}`;
                     }
