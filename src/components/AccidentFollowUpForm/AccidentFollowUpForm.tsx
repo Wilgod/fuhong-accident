@@ -15,8 +15,8 @@ import useSD from '../../hooks/useSD';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
-import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentFollowUpFormByParentId, getServiceUserAccidentById } from '../../api/FetchFuHongList';
-import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById } from '../../api/PostFuHongList';
+import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentFollowUpFormByParentId, getOutsiderAccidentById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
+import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentForm } from '../../api/PostFuHongList';
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
@@ -109,10 +109,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             // Form 21 SM's part done, and send it to sd and spt.
             updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, body).then((AccidentFollowUpReportFormResponse) => {
                 //Update 
-                updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
-                    // trigger notification workflow
-                    formSubmittedHandler()
-                }).catch(console.error)
+                if (formType === "SERVICE_USER") {
+                    updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
+                        // trigger notification workflow
+                        formSubmittedHandler();
+                    }).catch(console.error)
+                } else {
+                    updateOutsiderAccidentForm(parentFormData.Id, { "Status": "PENDING_SD_APPROVE" }).then(() => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
             }).catch(console.error);
         }
     }
@@ -159,53 +165,103 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const [body, error] = dataFactory();
         if (body["AccidentalFollowUpContinue"] === true) { // form continue
             // Get form 19, for AccidentFollowUpFormId[]
-            getServiceUserAccidentById(parentFormData.Id).then((getAccidentFollowUpFormByIdRes) => {
-                let title = "";
-                if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-                    title = `意外跟進/結束表 - ${getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId.length + 1}`;
-                } else {
-                    title = `意外跟進/結束表 - 1`;
-                }
-
-                const newAccountFollowUpReportFormBody = {
-                    "CaseNumber": parentFormData.CaseNumber,
-                    "ParentFormId": parentFormData.ID,
-                    "SPTId": parentFormData.SPTId,
-                    "SDId": parentFormData.SDId,
-                    "SMId": parentFormData.SMId,
-                    "Title": title
-                }
-                // Create form 21
-                createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
-
-                    // Update form 19 , add new form 21 id to it. Also recount the deadline
-                    let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
+            if (formType === "SERVICE_USER") {
+                getServiceUserAccidentById(parentFormData.Id).then((getAccidentFollowUpFormByIdRes) => {
+                    let title = "";
                     if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-                        accidentFollowUpFormId = [...getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
+                        title = `意外跟進/結束表 - ${getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId.length + 1}`;
+                    } else {
+                        title = `意外跟進/結束表 - 1`;
                     }
-                    updateServiceUserAccidentById(parentFormData.Id, {
-                        "AccidentFollowUpFormId": {
-                            results: accidentFollowUpFormId
-                        },
-                        "NextDeadline": addMonths(new Date(), 6),
-                        "Status": "PENDING_SM_FILL_IN"
-                    }).then((updateServiceUserAccidentFormRes) => {
-                        // Update current form 21 Status to complete
 
-                        const updateAccidentFollowUpReportFormBody = {
-                            ...body,
-                            "SDApproved": true,
-                            "SDDate": new Date().toISOString(),
-                            "SDComment": sdComment
+                    const newAccountFollowUpReportFormBody = {
+                        "CaseNumber": parentFormData.CaseNumber,
+                        "ParentFormId": parentFormData.ID,
+                        "SPTId": parentFormData.SPTId,
+                        "SDId": parentFormData.SDId,
+                        "SMId": parentFormData.SMId,
+                        "Title": title
+                    }
+                    // Create form 21
+                    createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
+
+                        // Update form 19 , add new form 21 id to it. Also recount the deadline
+                        let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
+                        if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
+                            accidentFollowUpFormId = [...getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
                         }
+                        updateServiceUserAccidentById(parentFormData.Id, {
+                            "AccidentFollowUpFormId": {
+                                results: accidentFollowUpFormId
+                            },
+                            "NextDeadline": addMonths(new Date(), 6),
+                            "Status": "PENDING_SM_FILL_IN"
+                        }).then((updateServiceUserAccidentFormRes) => {
+                            // Update current form 21 Status to complete
 
-                        updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((res) => {
-                            formSubmittedHandler();
-                            // Trigger notification workflow
+                            const updateAccidentFollowUpReportFormBody = {
+                                ...body,
+                                "SDApproved": true,
+                                "SDDate": new Date().toISOString(),
+                                "SDComment": sdComment
+                            }
+
+                            updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((res) => {
+                                formSubmittedHandler();
+                                // Trigger notification workflow
+                            }).catch(console.error);
                         }).catch(console.error);
                     }).catch(console.error);
                 }).catch(console.error);
-            }).catch(console.error);
+            } else {
+                getOutsiderAccidentById(parentFormData.Id).then((getOutsiderAccidentResponse) => {
+                    let title = "";
+                    if (getOutsiderAccidentResponse.AccidentFollowUpFormId) {
+                        title = `意外跟進/結束表 - ${getOutsiderAccidentResponse.AccidentFollowUpFormId.length + 1}`;
+                    } else {
+                        title = `意外跟進/結束表 - 1`;
+                    }
+
+                    const newAccountFollowUpReportFormBody = {
+                        "CaseNumber": parentFormData.CaseNumber,
+                        "ParentFormId": parentFormData.ID,
+                        "SPTId": parentFormData.SPTId,
+                        "SDId": parentFormData.SDId,
+                        "SMId": parentFormData.SMId,
+                        "Title": title
+                    }
+                    // Create form 21
+                    createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
+
+                        // Update form 19 , add new form 21 id to it. Also recount the deadline
+                        let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
+                        if (getOutsiderAccidentResponse.AccidentFollowUpFormId) {
+                            accidentFollowUpFormId = [...getOutsiderAccidentResponse.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
+                        }
+                        updateOutsiderAccidentForm(parentFormData.Id, {
+                            "AccidentFollowUpFormId": {
+                                results: accidentFollowUpFormId
+                            },
+                            "NextDeadline": addMonths(new Date(), 6),
+                            "Status": "PENDING_SM_FILL_IN"
+                        }).then((updateOutsiderAccidentFormRes) => {
+                            // Update current form 21 Status to complete
+
+                            const updateOutsiderFollowUpReportFormBody = {
+                                ...body,
+                                "SDApproved": true,
+                                "SDDate": new Date().toISOString(),
+                                "SDComment": sdComment
+                            }
+
+                            updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateOutsiderFollowUpReportFormBody).then((res) => {
+                                formSubmittedHandler();
+                                // Trigger notification workflow
+                            }).catch(console.error);
+                        }).catch(console.error);
+                    }).catch(console.error);
+                }).catch(console.error);
+            }
         } else {
             // update form 19 status
             // update form 21 to complete
@@ -394,7 +450,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 發生意外者姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>發生意外者姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
+                            {
+                                formType === "SERVICE_USER" ?
+                                    <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
+                                    :
+                                    <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
+                            }
                         </div>
                     </div>
                     <div className="form-row">
