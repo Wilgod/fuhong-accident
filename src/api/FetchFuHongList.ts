@@ -138,6 +138,18 @@ export async function getAllAccidentFollowUpFormByParentId(ParentId: number) {
 }
 
 // Form 22
+export async function getOutsiderAccident() {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccident failed");
+    }
+}
+
 export async function getOutsiderAccidentById(id: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
@@ -151,3 +163,4 @@ export async function getOutsiderAccidentById(id: number) {
         throw new Error("getOutsiderAccidentById failed");
     }
 }
+

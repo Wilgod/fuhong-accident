@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getServiceUserAccident } from "../api/FetchFuHongList";
+import { getOutsiderAccident, getServiceUserAccident } from "../api/FetchFuHongList";
 
 
 export default function useFetchAllForms() {
@@ -7,7 +7,8 @@ export default function useFetchAllForms() {
     useEffect(() => {
         const initial = async () => {
             const serviceUserAccidentData = await getServiceUserAccident();
-            setResult(serviceUserAccidentData);
+            const outsiderAccidentData = await getOutsiderAccident();
+            setResult([...serviceUserAccidentData, ...outsiderAccidentData]);
         }
         initial();
     }, [])

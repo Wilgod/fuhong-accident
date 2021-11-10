@@ -74,13 +74,13 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         let body = {};
         let error = {};
 
-        if (form.followUpMeasures.trim()) {
+        if (form.followUpMeasures) {
             body["FollowUpMeasures"] = form.followUpMeasures;
         } else {
             // error handling;
         }
 
-        if (form.executionPeriod.trim()) {
+        if (form.executionPeriod) {
             body["ExecutionPeriod"] = form.executionPeriod;
         } else {
             //error handling
