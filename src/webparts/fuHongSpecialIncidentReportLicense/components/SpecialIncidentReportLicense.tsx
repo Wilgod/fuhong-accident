@@ -15,7 +15,7 @@ import { IUser } from '../../../interface/IUser';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
 
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler }: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportLicenseProps) {
     const [userInfo, setCurrentUserEmail] = useUserInfo();
     const [sdInfo, setSDEmail] = useUserInfo();
     const [smInfo, setSMEmail] = useUserInfo();

@@ -20,7 +20,7 @@ const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍�
 
 
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportAllowanceProps) {
     const [isPrintMode, setPrintMode] = useState(false);
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         toDepartment: "",

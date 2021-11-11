@@ -141,6 +141,18 @@ export async function createOtherIncidentReport(body: any) {
     }
 }
 
+//Update
+export async function updateOtherIncidentReport(id: number, body: any) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateOtherIncidentReport failed");
+    }
+}
+
 //Form 24
 //Create
 export async function createSpecialIncidentReportLicense(body: any) {
@@ -154,6 +166,17 @@ export async function createSpecialIncidentReportLicense(body: any) {
     }
 }
 
+//Update
+export async function updateSpecialIncidentReportLicense(id: number, body: any) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateSpecialIncidentReportLicense failed");
+    }
+}
 
 //Form 25
 //Create
@@ -168,6 +191,18 @@ export async function createSpecialIncidentReportAllowance(body: any) {
     }
 }
 
+//Update
+export async function updateSpecialIncidentReportAllowance(id: number, body: any) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateSpecialIncidentReportAllowance failed");
+    }
+}
+
 //Form 26
 //Create
 export async function createIncidentFollowUpForm(body: any) {
@@ -178,5 +213,17 @@ export async function createIncidentFollowUpForm(body: any) {
     } catch (err) {
         console.error(err);
         throw new Error("createIncidentFollowUpForm failed");
+    }
+}
+
+//Update
+export async function updateIncidentFollowUpForm(id: number, body: any) {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(body);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateIncidentFollowUpForm failed");
     }
 }

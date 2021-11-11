@@ -14,7 +14,7 @@ import { IUser } from '../../../interface/IUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData }: IOtherIncidentReportProps) {
     const [form, setForm] = useState<IOtherIncidentReportStates>({
         insuranceCaseNo: "",
         incidentLocation: "",

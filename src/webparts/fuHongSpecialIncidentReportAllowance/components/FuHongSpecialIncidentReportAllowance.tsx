@@ -15,6 +15,9 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import "./react-tabs.css";
 import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
+import { getUserAdByGraph } from '../../../api/FetchUser';
+import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
+import { getSpecialIncidentReportAllowanceById } from '../../../api/FetchFuHongList';
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -38,20 +41,61 @@ const getCanvasZone = () => {
   }
 }
 
-export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
+export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, { currentUserRole: Role, specialIncidentReportAllowanceFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
-    console.log("Flow 3");
 
     sp.setup({ spfxContext: this.props.context });
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
       currentUserRole: Role.GENERAL,
-      serviceUserAccidentFormData: null,
+      specialIncidentReportAllowanceFormData: null,
       stage: "",
       formSubmitted: false
+    }
+    console.log("Flow 3");
+  }
+
+  public componentDidMount() {
+    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      if (value && value.jobTitle) {
+        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
+      }
+
+      this.initialDataByFormId().then((data) => {
+        if (data && data.Investigator && data.Investigator.EMail) {
+          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.INVESTIGATOR });
+          }
+        }
+        this.checkRole();// Testing Only 
+      }).catch(console.error);
+    }).catch(console.error);
+  }
+
+  private checkRole = () => {
+    const queryParameter = getQueryParameterString("role");
+    if (queryParameter) {
+      const role = jobTitleParser(queryParameter);
+      this.setState({
+        currentUserRole: role
+      });
+    }
+  }
+
+  private async initialDataByFormId() {
+    try {
+      const formId = getQueryParameterNumber("formId");
+      if (formId) {
+        const data = await getSpecialIncidentReportAllowanceById(formId);
+        this.setState({ specialIncidentReportAllowanceFormData: data });
+        return data;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("initialDataByFormId error");
     }
   }
 
@@ -75,10 +119,10 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <SpecialIncidentReportAllowance context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
+                  <SpecialIncidentReportAllowance context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} formData={this.state.specialIncidentReportAllowanceFormData} currentUserRole={this.state.currentUserRole} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} formSubmittedHandler={this.formSubmittedHandler} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.specialIncidentReportAllowanceFormData} currentUserRole={this.state.currentUserRole} />
                 </TabPanel>
               </Tabs>
           }

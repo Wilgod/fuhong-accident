@@ -68,7 +68,6 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   }
 
   public componentDidMount() {
-
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
@@ -83,12 +82,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
-
   }
 
   private async initialDataByFormId() {
     try {
-
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
@@ -100,6 +97,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       throw new Error("initialDataByFormId error");
     }
   }
+  
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });

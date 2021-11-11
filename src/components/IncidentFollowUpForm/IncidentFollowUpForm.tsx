@@ -7,12 +7,15 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import * as moment from 'moment';
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 import { createIncidentFollowUpForm } from '../../api/PostFuHongList';
+import { Role } from '../../utils/RoleParser';
 
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
     styles: any;
     formType: string;
     formSubmittedHandler(): void;
+    currentUserRole: Role;
+    parentFormData: any;
 }
 
 interface IIncidentFollowUpFormStates {
@@ -20,6 +23,7 @@ interface IIncidentFollowUpFormStates {
     executionPeriod: string;
     remark: string;
     incidentFollowUpContinue: boolean;
+
 }
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -31,7 +35,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData }: IIncidentFollowUpFormProps) {
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         followUpMeasures: "",
         executionPeriod: "",

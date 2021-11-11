@@ -1,9 +1,12 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { Role } from "../../../utils/RoleParser";
 
 export interface ISpecialIncidentReportLicenseProps {
     context: WebPartContext;
     styles: any;
     formSubmittedHandler(): void;
+    currentUserRole: Role;
+    formData: any;
 }
 
 export interface ISpecialIncidentReportLicenseStates {

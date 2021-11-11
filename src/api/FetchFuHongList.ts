@@ -164,3 +164,98 @@ export async function getOutsiderAccidentById(id: number) {
     }
 }
 
+//Form 23
+export async function getOtherIncidentReport() {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccident failed");
+    }
+}
+
+export async function getOtherIncidentReportById(id: number) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const items = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "PreparationStaff/Id", "PreparationStaff/EMail", 'PreparationStaff/Title', "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "SM", "PreparationStaff").get();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getOtherIncidentReportById failed");
+    }
+}
+
+//Form 24
+export async function getSpecialIncidentReportLicense() {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSpecialIncidentReportLicense failed");
+    }
+}
+
+export async function getSpecialIncidentReportLicenseById(id: number) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const items = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "SM", "SD",).get();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSpecialIncidentReportLicenseById failed");
+    }
+}
+
+//Form 25
+export async function getSpecialIncidentReportAllowance() {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSpecialIncidentReportAllowance failed");
+    }
+}
+
+export async function getSpecialIncidentReportAllowanceById(id: number) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const items = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "SM", "SD",).get();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSpecialIncidentReportAllowanceById failed");
+    }
+}
+
+//Form 26
+export async function getIncidentFollowUpFormById(id: number) {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "SM", "SD",).get();
+
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccident failed");
+    }
+}

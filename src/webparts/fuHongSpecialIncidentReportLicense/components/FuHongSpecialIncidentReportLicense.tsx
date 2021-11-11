@@ -14,6 +14,9 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import "./react-tabs.css";
 import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
+import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
+import { getSpecialIncidentReportLicenseById } from '../../../api/FetchFuHongList';
+import { getUserAdByGraph } from '../../../api/FetchUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -36,7 +39,7 @@ const getCanvasZone = () => {
   }
 }
 
-export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
+export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, { currentUserRole: Role, specialINcidentReportLicenseData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -47,12 +50,52 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
 
     this.state = {
       currentUserRole: Role.GENERAL,
-      serviceUserAccidentFormData: null,
+      specialINcidentReportLicenseData: null,
       stage: "",
       formSubmitted: false
     }
   }
 
+  public componentDidMount() {
+    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      if (value && value.jobTitle) {
+        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
+      }
+
+      this.initialDataByFormId().then((data) => {
+        if (data && data.Investigator && data.Investigator.EMail) {
+          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.INVESTIGATOR });
+          }
+        }
+        this.checkRole();// Testing Only 
+      }).catch(console.error);
+    }).catch(console.error);
+  }
+
+  private checkRole = () => {
+    const queryParameter = getQueryParameterString("role");
+    if (queryParameter) {
+      const role = jobTitleParser(queryParameter);
+      this.setState({
+        currentUserRole: role
+      });
+    }
+  }
+
+  private async initialDataByFormId() {
+    try {
+      const formId = getQueryParameterNumber("formId");
+      if (formId) {
+        const data = await getSpecialIncidentReportLicenseById(formId);
+        this.setState({ specialINcidentReportLicenseData: data });
+        return data;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("initialDataByFormId error");
+    }
+  }
 
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
@@ -72,10 +115,10 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
+                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={null} />
                 </TabPanel>
               </Tabs>
           }

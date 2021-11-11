@@ -13,6 +13,9 @@ import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
+import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
+import { getUserAdByGraph } from '../../../api/FetchUser';
+import { getOtherIncidentReportById } from '../../../api/FetchFuHongList';
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -38,7 +41,7 @@ const getCanvasZone = () => {
 
 
 
-export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
+export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, { currentUserRole: Role, otherIncidentReportFormData: any, stage: string, formSubmitted: boolean }> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -48,12 +51,55 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
 
     this.state = {
       currentUserRole: Role.GENERAL,
-      serviceUserAccidentFormData: null,
+      otherIncidentReportFormData: null,
       stage: "",
       formSubmitted: false
     }
 
     console.log("Flow 5");
+  }
+
+  private checkRole = () => {
+    const queryParameter = getQueryParameterString("role");
+    if (queryParameter) {
+      const role = jobTitleParser(queryParameter);
+      this.setState({
+        currentUserRole: role
+      });
+    }
+  }
+
+  public componentDidMount() {
+    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      if (value && value.jobTitle) {
+        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
+      }
+
+      this.initialDataByFormId().then((data) => {
+        if (data && data.Investigator && data.Investigator.EMail) {
+          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.INVESTIGATOR });
+          }
+        }
+        this.checkRole();// Testing Only 
+      }).catch(console.error);
+    }).catch(console.error);
+  }
+
+  private async initialDataByFormId() {
+    try {
+
+      const formId = getQueryParameterNumber("formId");
+      if (formId) {
+
+        const data = await getOtherIncidentReportById(formId);
+        this.setState({ otherIncidentReportFormData: data });
+        return data;
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error("initialDataByFormId error");
+    }
   }
 
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
@@ -74,10 +120,10 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} />
+                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} />
                 </TabPanel>
               </Tabs>
           }

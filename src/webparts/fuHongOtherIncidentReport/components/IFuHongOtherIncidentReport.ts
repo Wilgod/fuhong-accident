@@ -6,6 +6,8 @@ export interface IOtherIncidentReportProps {
     context: WebPartContext;
     styles: any;
     formSubmittedHandler(): void;
+    currentUserRole: Role;
+    formData: any;
 }
 
 export interface IOtherIncidentReportStates {
