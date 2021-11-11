@@ -44,6 +44,7 @@ export interface IOtherIncidentReportStates {
     needResponseDetail: string;
     immediateFollowUp: string;
     followUpPlan: string;
+    preparationStaffPhone: string;
 }
 
 export interface IErrorFields {

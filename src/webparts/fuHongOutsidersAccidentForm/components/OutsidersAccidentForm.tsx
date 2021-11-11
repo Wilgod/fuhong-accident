@@ -22,8 +22,7 @@ import { FormFlow, getOutsiderAccidentById } from '../../../api/FetchFuHongList'
 import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
-import { formInitial } from '../permissionConfig';
-import { pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
+import { formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 
 if (document.getElementById('workbenchPageContent') != null) {
