@@ -17,7 +17,7 @@ import { Role } from '../../../utils/RoleParser';
 import { adminUpdateInsuranceNumber, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
-import { addBusinessDays } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -341,7 +341,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }
 
     // Save
-    const sdSumbitHadnler = (event) => {
+    const sdSumbitHandler = (event) => {
         event.preventDefault();
 
         const [body, error] = dataFactory();
@@ -349,7 +349,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             ...body,
             "SDComment": sdComment,
             "SDDate": new Date().toISOString(),
-            "SDPhone": sdPhone
+            "SDPhone": sdPhone,
+            "NextDeadline": addMonths(new Date(), 1).toISOString(),
         }).then((res) => {
             console.log(res);
             formSubmittedHandler();
@@ -1134,7 +1135,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         }
                         {
                             pendingSdApprove(currentUserRole, formStatus, formStage) &&
-                            <button className="btn btn-warning" onClick={sdSumbitHadnler}>儲存</button>
+                            <button className="btn btn-warning" onClick={sdSumbitHandler}>儲存</button>
                         }
                         {
                             pendingSmApprove(currentUserRole, formStatus, formStage) &&

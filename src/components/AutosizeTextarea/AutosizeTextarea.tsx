@@ -19,6 +19,10 @@ export default function Textarea({ ...props }: IAutosizeTextareaProps) {
         autosize(textareaRef.current);
     }, []);
 
+    useLayoutEffect(() => {
+        autosize.update(textareaRef.current);
+    }, [props.value])
+
     return (
         <textarea ref={textareaRef} {...props} />
     )
