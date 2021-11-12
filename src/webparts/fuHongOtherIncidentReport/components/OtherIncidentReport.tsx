@@ -8,13 +8,13 @@ import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTexta
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import { IErrorFields, IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHongOtherIncidentReport';
-import { createOtherIncidentReport } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport } from '../../../api/PostFuHongList';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { Role } from '../../../utils/RoleParser';
-import { formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
+import { adminUpdateInsuranceNumber, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
@@ -117,7 +117,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setForm({ ...form, [name]: value });
     }
 
-    const dataFactory = (status: string) => {
+    const dataFactory = () => {
         let body = {};
         let error = {};
 
@@ -174,7 +174,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         body["ServiceUserAgeTwo"] = form.serviceUserAgeTwo;
 
         //(c) 服務使用者 (三，如有)
-        body["StaffGenderThree"] = form.serviceUserGenderThree;
+        body["ServiceUserGenderThree"] = form.serviceUserGenderThree;
         body["ServiceUserAgeThree"] = form.serviceUserAgeThree;
 
         //(a) 職員 ( 一 )*
@@ -288,20 +288,19 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         }
 
         //擬備人員
-        body["PreparationStaffId"] = CURRENT_USER.id;
         body["PreparationStaffPhone"] = form.preparationStaffPhone;
-        body["PreparationDate"] = preparationDate;
 
         body["SMId"] = spSmInfo.Id;
 
         body["SDId"] = spSdInfo.Id;
+
         console.log(body);
         return [body, error]
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory("Submit")
+        const [body, error] = dataFactory()
         if (Object.keys(error).length > 0) {
             console.log(error);
             setError(error);
@@ -314,8 +313,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     ...body,
                     "Status": status,
                     "Stage": "1",
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "CaseNumber": caseNumber
+                    "NextDeadline": addBusinessDays(preparationDate, 3).toISOString(),
+                    "CaseNumber": caseNumber,
+                    "PreparationDate": new Date().toISOString(),
+                    "PreparationStaffId": CURRENT_USER.id
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
@@ -326,8 +327,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const draftHandler = (event) => {
         event.preventDefault();
-        const [body] = dataFactory("Draft")
-        console.log(body);
+        const [body] = dataFactory()
         createOtherIncidentReport(body).then(res => {
             console.log(res)
             formSubmittedHandler();
@@ -339,8 +339,113 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
         window.open(path, "_self");
     }
-    console.log(formData);
-    console.log()
+
+    // Save
+    const sdSumbitHadnler = (event) => {
+        event.preventDefault();
+
+        const [body, error] = dataFactory();
+        updateOtherIncidentReport(formData.Id, {
+            ...body,
+            "SDComment": sdComment,
+            "SDDate": new Date().toISOString(),
+            "SDPhone": sdPhone
+        }).then((res) => {
+            console.log(res);
+            formSubmittedHandler();
+        });
+    }
+
+    const sdApproveHandler = (event) => {
+        event.preventDefault();
+
+        if (confirm("確認批准 ?")) {
+            const [body, error] = dataFactory();
+            createIncidentFollowUpForm({
+                "ParentFormId": formData.Id,
+                "CaseNumber": formData.CaseNumber,
+                "SMId": formData.SMId,
+                "SDId": formData.SDId,
+                "Title": "事故跟主/結束報告 - 1"
+            }).then((incidentFollowUpRes) => {
+
+                updateOtherIncidentReport(formData.Id, {
+                    ...body,
+                    "NextDeadline": addBusinessDays(preparationDate, 28).toISOString(),
+                    "SDComment": sdComment,
+                    "SDDate": new Date().toISOString(),
+                    "Stage": "2",
+                    "Status": "PENDING_SM_FILL_IN",
+                    "SDPhone": sdPhone,
+                    "FollowUpFormsId": {
+                        "results": [incidentFollowUpRes.data.Id]
+                    }
+                }).then((otherIncidentReportRes) => {
+                    console.log(otherIncidentReportRes);
+                    formSubmittedHandler();
+                });
+            }).catch(console.error);
+        }
+    }
+    // void , return to last step
+    const sdRejectHandler = (event) => {
+        event.preventDefault();
+        console.log("sdRejectHandler")
+
+    }
+
+
+    //Amend form information only
+    const smSumbitHadnler = (event) => {
+        event.preventDefault();
+        console.log("smSumbitHadnler")
+        const [body, error] = dataFactory();
+        updateOtherIncidentReport(formData.Id, {
+            ...body,
+            "SMComment": smComment,
+            "SMDate": new Date().toISOString(),
+        }).then(res => {
+            console.log(res);
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+
+
+    const smApproveHandler = (event) => {
+        event.preventDefault();
+
+        if (confirm("確認批准 ?")) {
+            let status = "PENDING_SD_APPROVE";
+            const [body, error] = dataFactory();
+            updateOtherIncidentReport(formData.Id, {
+                ...body,
+                "Status": status,
+                "SMDate": new Date().toISOString(),
+                "SMComment": smComment
+            }).then(res => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
+    }
+
+    const smRejectHandler = (event) => {
+        event.preventDefault();
+        console.log("smRejectHandler");
+        // implement;
+    }
+    // fill in the insurance number
+    const adminSubmitHandler = (event) => {
+        event.preventDefault();
+        updateOtherIncidentReport(formData.Id, {
+            "InsuranceCaseNo": form.insuranceCaseNo
+        }).then(res => {
+            console.log(res);
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+
+
     const loadData = async (data: any) => {
         if (data) {
             setIncidentTime(new Date(data.IncidentTime));
@@ -376,6 +481,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
             if (data.serviceUnit) {
                 setServiceUnit(data.serviceUnit);
+            }
+
+            if (data.SDPhone) {
+                setSdPhone(data.SDPhone);
             }
 
             setForm({
@@ -432,27 +541,31 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     // Find SD && SM
     useEffect(() => {
-        if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
-            setHrDepartment("CHH");
-            setServiceUnit("CHH");
-            return;
-        }
+        if (formInitial(currentUserRole, formStatus)) {
+            if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+                setHrDepartment("CHH");
+                setServiceUnit("CHH");
+                return;
+            }
 
-        if (userInfo && userInfo.hr_deptid) {
-            setHrDepartment(userInfo.hr_deptid);
+            if (userInfo && userInfo.hr_deptid) {
+                setHrDepartment(userInfo.hr_deptid);
+            }
         }
     }, [userInfo]);
 
     // Get SD & SM
     useEffect(() => {
-        if (Array.isArray(departments) && departments.length) {
-            const dept = departments[0];
-            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
-                setSMEmail(dept.hr_deptmgr);
-            }
+        if (formInitial(currentUserRole, formStatus)) {
+            if (Array.isArray(departments) && departments.length) {
+                const dept = departments[0];
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                    setSMEmail(dept.hr_deptmgr);
+                }
 
-            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                setSDEmail(dept.hr_sd);
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    setSDEmail(dept.hr_sd);
+                }
             }
         }
     }, [departments]);
@@ -485,7 +598,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="insuranceCaseNo" value={form.insuranceCaseNo} onChange={inputFieldHandler} disabled={currentUserRole !== Role.ADMIN} />
+                            <input type="text" className="form-control" name="insuranceCaseNo" value={form.insuranceCaseNo} onChange={inputFieldHandler} disabled={!adminUpdateInsuranceNumber(currentUserRole, formStatus)} />
                         </div>
                     </div>
                 </section>
@@ -878,7 +991,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="preparationStaffPhone" placeholder={reporter && reporter.mobilePhone || ""} value={form.preparationStaffPhone} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                            <input type="text" className="form-control" name="preparationStaffPhone" placeholder={reporter && reporter.mobilePhone || ""} value={form.preparationStaffPhone} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus)} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -932,8 +1045,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <div className="form-row row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3">批准</button>
-                                    <button className="btn btn-danger mr-3">拒絕</button>
+                                    <button className="btn btn-warning mr-3" onClick={smApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={smRejectHandler}>拒絕</button>
                                 </div>
                             </div>
                         </div>
@@ -1000,8 +1113,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <div className="row my-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3">批准</button>
-                                    <button className="btn btn-danger mr-3">拒絕</button>
+                                    <button className="btn btn-warning mr-3" onClick={sdApproveHandler}>批准</button>
+                                    <button className="btn btn-danger mr-3" onClick={sdRejectHandler}>拒絕</button>
                                 </div>
                             </div>
                         </div>
@@ -1009,11 +1122,28 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 </section>
 
                 <hr className="my-4" />
-
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
-                        <button className="btn btn-warning" onClick={submitHandler}>提交</button>
-                        <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                        }
+                        {
+                            adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                            <button className="btn btn-warning" onClick={adminSubmitHandler}>儲存</button>
+                        }
+                        {
+                            pendingSdApprove(currentUserRole, formStatus, formStage) &&
+                            <button className="btn btn-warning" onClick={sdSumbitHadnler}>儲存</button>
+                        }
+                        {
+                            pendingSmApprove(currentUserRole, formStatus, formStage) &&
+                            <button className="btn btn-warning" onClick={smSumbitHadnler}>儲存</button>
+                        }
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                     </div>
                 </section>

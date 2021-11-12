@@ -26,3 +26,10 @@ export const pendingSdApprove = (currentUserRole: Role, status: string, stage: s
     }
     return false;
 }
+
+export const adminUpdateInsuranceNumber = (currentUserRole: Role, status: string): boolean => {
+    if (currentUserRole === Role.ADMIN && status !== "" && status !== "DRAFT") {
+        return true;
+    }
+    return false;
+}

@@ -259,3 +259,19 @@ export async function getIncidentFollowUpFormById(id: number) {
         throw new Error("getServiceUserAccident failed");
     }
 }
+
+export async function getAllIncidentFollowUpFormByParentId(ParentId: number) {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`ParentFormId eq ${ParentId}`)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SD")
+            .orderBy("Created", false)
+            .get();
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllIncidentFollowUpFormByParentId failed");
+    }
+}
