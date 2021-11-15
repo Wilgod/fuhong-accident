@@ -194,10 +194,9 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 "Completed": true,
                 "SDComment": sdComment,
                 "SDDate": new Date().toISOString(),
-
             }).then((updateIncidentFollowUpFormRes) => {
                 updateOtherIncidentReport(parentFormData.Id, {
-                    Status: "Completed"
+                    Status: "CLOSED"
                 }).then((updateOtherIncidentReportRes) => {
                     console.log(updateOtherIncidentReportRes)
                     formSubmittedHandler();

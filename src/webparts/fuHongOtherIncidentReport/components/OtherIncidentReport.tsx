@@ -341,7 +341,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }
 
     // Save
-    const sdSumbitHandler = (event) => {
+    const sdSubmitHandler = (event) => {
         event.preventDefault();
 
         const [body, error] = dataFactory();
@@ -392,12 +392,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const sdRejectHandler = (event) => {
         event.preventDefault();
         console.log("sdRejectHandler")
+        updateOtherIncidentReport
 
     }
 
 
     //Amend form information only
-    const smSumbitHadnler = (event) => {
+    const smSubmitHadnler = (event) => {
         event.preventDefault();
         console.log("smSumbitHadnler")
         const [body, error] = dataFactory();
@@ -1135,11 +1136,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         }
                         {
                             pendingSdApprove(currentUserRole, formStatus, formStage) &&
-                            <button className="btn btn-warning" onClick={sdSumbitHandler}>儲存</button>
+                            <button className="btn btn-warning" onClick={sdSubmitHandler}>儲存</button>
                         }
                         {
                             pendingSmApprove(currentUserRole, formStatus, formStage) &&
-                            <button className="btn btn-warning" onClick={smSumbitHadnler}>儲存</button>
+                            <button className="btn btn-warning" onClick={smSubmitHadnler}>儲存</button>
                         }
                         {
                             formInitial(currentUserRole, formStatus) &&

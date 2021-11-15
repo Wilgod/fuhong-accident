@@ -12,7 +12,7 @@ import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { IUser } from '../../../interface/IUser';
-
+import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApprove } from "../permissionConfig";
 
 
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
@@ -70,9 +70,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [sdPhoneNo, setSdPhoneNo] = useState("");
-    const [userInfo, setCurrentUserEmail] = useUserInfo();
-    const [sdInfo, setSDEmail] = useUserInfo();
-    const [smInfo, setSMEmail] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
 
     const { departments, setHrDepartment } = useDepartmentMangers();
 

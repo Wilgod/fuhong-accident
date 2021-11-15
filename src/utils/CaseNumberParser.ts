@@ -69,6 +69,7 @@ const formFlowShortFormParser = (formFlow: FormFlow) => {
 export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string) => {
     try {
         const lastCase = await getLastCaseNo(formFlow); // case order number
+        console.log(lastCase);
         const currentFinancialYear = getCurrentFinancialYear();
         const caseType = formFlowShortFormParser(formFlow);
         if (lastCase && lastCase.CaseNumber) {

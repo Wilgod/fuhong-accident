@@ -60,11 +60,13 @@ export interface ISpecialIncidentReportLicenseStates {
     residentAge: number;
     residentGender: string;
     residentRoomNo: string;
+
     guardian: boolean;
     guardianName: string;
     guardianRelation: string;
     guardianStaff: string;
     guardianDate: Date;
+    guardianReason: string;
     affectedName: string;
     affectedIdCardNo: string;
     affectedGender: string
@@ -72,5 +74,9 @@ export interface ISpecialIncidentReportLicenseStates {
     affectedMedicalRecord: string;
     affectedDetail: string;
     affectedFollowUp: string;
+
+}
+
+export interface IErrorFields {
 
 }

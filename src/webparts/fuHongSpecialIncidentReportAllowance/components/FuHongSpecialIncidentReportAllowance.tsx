@@ -19,7 +19,6 @@ import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getSpecialIncidentReportAllowanceById } from '../../../api/FetchFuHongList';
 
-
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
