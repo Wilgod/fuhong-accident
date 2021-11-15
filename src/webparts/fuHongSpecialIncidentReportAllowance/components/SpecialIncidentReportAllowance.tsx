@@ -6,22 +6,23 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
-import { createSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
-import { IAccidentCategoryAbuseDetails, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
+import { createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
+import { IAccidentCategoryAbuseDetails, IErrorFields, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
 import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { IUser } from '../../../interface/IUser';
 import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApprove } from "../permissionConfig";
 
-
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-
-
 export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportAllowanceProps) {
     const [isPrintMode, setPrintMode] = useState(false);
+
+    const [formStage, setFormStage] = useState("");
+    const [formStatus, setFormStatus] = useState("");
+    const [error, setError] = useState<IErrorFields>()
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         toDepartment: "",
         incidentLocation: "",
@@ -58,6 +59,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         accidentCategory: "",
         abusiveNature: ""
     });
+
     const [accidentCategoryAbuseDetails, setAccidentCategoryAbuseDetails] = useState<IAccidentCategoryAbuseDetails>({
         status: "",
         person: ""
@@ -313,6 +315,60 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         //implement 
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
         window.open(path, "_self");
+    }
+
+    const smApproveHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+        if (Object.keys(error).length > 0) {
+            setError(error);
+        } else {
+
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body
+            }).then((res) => {
+
+            }).catch(console.error);
+        }
+    }
+
+    const smRejectHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+        if (Object.keys(error).length > 0) {
+            setError(error);
+        } else {
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body
+            }).then((res) => {
+
+            }).catch(console.error);
+        }
+    }
+
+    const smSubmitHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+
+        if (Object.keys(error).length > 0) {
+            setError(error);
+        } else {
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body
+            }).then((res) => {
+
+            }).catch(console.error);
+        }
+    }
+
+    const sdApproveHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
+    }
+
+    const sdRejectHandler = (event) => {
+        event.preventDefault();
+        const [body, error] = dataFactory();
     }
 
     useEffect(() => {

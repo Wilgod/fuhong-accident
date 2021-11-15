@@ -50,3 +50,7 @@ export interface ISpecialIncidentReportAllowanceStates {
     accidentCategory: string;
     abusiveNature: string;
 }
+
+export interface IErrorFields {
+    
+}

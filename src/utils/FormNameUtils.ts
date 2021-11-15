@@ -21,9 +21,9 @@ export const caseNumberToSitePageParser = (caseType) => {
             return "ServiceUserAccident.aspx";
         case "PUI":
             return "OutsidersAccident.aspx";
-        case "SIH":
-            return "SpecialIncidentReportAllowance.aspx";
         case "SID":
+            return "SpecialIncidentReportAllowance.aspx";
+        case "SIH":
             return "SpecialIncidentReportLicense.aspx";
         case "OIN":
             return "OtherIncidentReport.aspx";
