@@ -64,7 +64,7 @@ export interface ISpecialIncidentReportLicenseStates {
     guardian: boolean;
     guardianName: string;
     guardianRelation: string;
-    guardianStaff: string;
+   
     guardianDate: Date;
     guardianReason: string;
     affectedName: string;

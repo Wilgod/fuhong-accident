@@ -19,6 +19,7 @@ import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
+import useSharePointGroup from '../../../hooks/useSharePointGroup';
 
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -64,7 +65,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         guardian: undefined,
         guardianName: "",
         guardianRelation: "",
-        guardianStaff: "",
+
         guardianDate: new Date(),
         guardianReason: "",
         homesManagerName: "",
@@ -109,7 +110,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [sdComment, setSdComment] = useState("");
 
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
-
+    const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
     const [extraFile, setExtraFile] = useState<FileList>(null);
     const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
 
@@ -366,9 +367,15 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         body["ResidentGender"] = form.residentGender;
         body["ResidentRoomNo"] = form.residentRoomNo;
         body["Guardian"] = form.guardian;
+        if (form.guardian === true) {
+            if (spNotifyStaff && spNotifyStaff.Id) {
+
+                body["GuardianStaffId"] = spNotifyStaff.Id;
+            }
+        }
         body["GuardianName"] = form.guardianName;
         body["GuardianRelation"] = form.guardianRelation;
-        // body["GuardianStaff"] = form.guardianStaff
+        body["GuardianReason"] = form.guardianReason;
         body["GuarrdianDate"] = form.guardianDate.toISOString();
 
 
@@ -403,6 +410,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     "SMId": spSmInfo.Id,
                     "SDDate": sdDate.toISOString(),
                     "SMDate": smDate.toISOString(),
+
                 }).then((res) => {
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -421,6 +429,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     "SMId": spSmInfo.Id,
                     "SDDate": sdDate.toISOString(),
                     "SMDate": smDate.toISOString(),
+
                 }).then((res) => {
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -513,6 +522,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const smApproveHandler = (event) => {
         event.preventDefault();
+        console.log(formData.Id)
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory();
             updateSpecialIncidentReportLicense(formData.Id, {
@@ -536,7 +546,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const loadData = () => {
         if (formData) {
-            console.log('formData', formData);
+
+
             setIncidentTime(new Date(formData.IncidentTime));
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
@@ -550,6 +561,93 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (formData.SDComment) {
                 setSdDate(new Date(formData.SDDate));
             }
+
+            if (formData.Author) {
+                setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            }
+
+            if (formData.SM) {
+                setSMEmail(formData.SM.EMail)
+            }
+
+            if (formData.SD) {
+                setSDEmail(formData.SD.EMail)
+            }
+
+            if (formData.ServiceUnit) {
+                setServiceUnit(formData.ServiceUnit);
+            }
+
+            setReportDate(new Date(formData.Created));
+            if (formData.GuardianStaff) {
+                setNotifyStaff(formData.GuardianStaff.EMail);
+            }
+
+            setForm({
+                abuser: formData.Abuser,
+                abuserDescription: formData.AbuserDescription,
+                abuser_police: formData.Abuser_Police,
+                abuser_policeCaseNo: formData.Abuser_PoliceCaseNo,
+                abuser_policeDate: formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : new Date(),
+                affectedAge: formData.AffectedAge,
+                affectedDetail: formData.AffectedDetail,
+                affectedFollowUp: formData.AffectedFollowUp,
+                affectedGender: formData.AffectedGender,
+                affectedIdCardNo: formData.AffectedIdCardNo,
+                affectedMedicalRecord: formData.AffectedMedicalRecord,
+                affectedName: formData.AffectedName,
+                conflict: formData.Conflict,
+                conflictDescription: formData.ConflictDescription,
+                conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
+                conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : new Date(),
+                found: formData.Found,
+                foundDate: formData.FoundDate ? new Date(formData.FoundDate) : new Date(),
+                guardian: formData.Guardian,
+                guardianName: formData.GuardianName,
+                guardianRelation: formData.GuardianRelation,
+                guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : new Date(),
+                guardianReason: formData.GuardianReason,
+                insuranceCaseNo: formData.InsuranceCaseNo,
+                homesManagerName: formData.HomesManagerName,
+                homesManagerTel: formData.HomesManagerTel,
+                homesName: formData.HomesName,
+                medicalIncident: formData.MedicalIncident,
+                medicalRecords: formData.MedicalRecords,
+                mi_description: formData.MI_Description,
+                missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : new Date(),
+                missingPoliceReportNo: formData.MissingPoliceReportNo,
+                notYetFoundDayCount: formData.NotYetFoundDayCount,
+                other: formData.Other,
+                otherDescription: formData.OtherDescription,
+                otherIncident: formData.OtherIncident,
+                police: formData.Police,
+                policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : new Date(),
+                policeInvestigate: formData.PoliceInvestigate,
+                policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date(),
+                policeReportNumber: formData.PoliceReportNumber,
+                ra_abandoned: formData.RA_Abandoned,
+                ra_body: formData.RA_Body,
+                ra_embezzleProperty: formData.RA_EmbezzleProperty,
+                ra_mental: formData.RA_Mental,
+                ra_negligent: formData.RA_Negligent,
+                ra_other: formData.RA_Other,
+                ra_otherDescription: formData.RA_OtherDescription,
+                ra_sexualAssault: formData.RA_SexualAssault,
+                referDate: formData.ReferDate ? new Date(formData.ReferDate) : new Date(),
+                referServiceUnit: formData.ReferServiceUnit,
+                referSocialWorker: formData.ReferSocialWorker,
+                residentAge: formData.ResidentAge,
+                residentGender: formData.ResidentGender,
+                residentMissing: formData.ResidentMissing,
+                residentMissingReason: formData.ResidentMissingReason,
+                residentName: formData.ResidentName,
+                residentRoomNo: formData.ResidentRoomNo,
+                responsibleName: formData.ResponsibleName,
+                unusalIncideintGeneral: formData.UnusalIncideintGeneral,
+                unusalIncideintIncident: formData.UnusalIncideintIncident,
+                unusalIncident: formData.UnusalIncident
+            })
+
         }
     }
 
@@ -600,6 +698,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
         }
     }, [departments]);
+
+    useEffect(() => {
+        if (notifyStaff && notifyStaff.mail) {
+            setNotifyStaffEmail(notifyStaff.mail)
+        }
+    }, [notifyStaff])
+
 
     return (
         <>
@@ -692,6 +797,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 timeFormat="p"
                                 timeIntervals={15}
                                 dateFormat="yyyy/MM/dd h:mm aa"
+                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
                             />
                         </div>
                         {
@@ -1212,12 +1318,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(7) 其他</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-true" checked={form.other === true} onClick={() => setForm({ ...form, other: true })}
+                                <input className="form-check-input" type="radio" name="other" id="other-incident-true" checked={form.other === true} onClick={() => setForm({ ...form, other: true })}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-false" checked={form.other === false} onClick={() => setForm({ ...form, other: false })}
+                                <input className="form-check-input" type="radio" name="other" id="other-incident-false" checked={form.other === false} onClick={() => setForm({ ...form, other: false })}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-false">沒有</label>
                             </div>
@@ -1312,6 +1418,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                                 resolveDelay={1000}
                                                 selectedItems={setNotifyStaff}
                                                 defaultSelectedUsers={notifyStaff && [notifyStaff.mail]}
+                                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
                                             />
                                         </div>
                                         {/* 負責通知的員工職位 */}
@@ -1333,21 +1440,23 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                                 timeFormat="p"
                                                 timeIntervals={15}
                                                 dateFormat="yyyy/MM/dd h:mm aa"
-                                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && formInitial(currentUserRole, formStatus)}
+                                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
                                             />
                                         </div>
                                     </div>
                                 </>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="notified" id="notified-false" value="NOTIFIED_FALSE" onClick={(event) => setForm({ ...form, guardian: false })} checked={form.guardian === false} />
+                                <input className="form-check-input" type="radio" name="notified" id="notified-false" value="NOTIFIED_FALSE" onClick={(event) => setForm({ ...form, guardian: false })} checked={form.guardian === false}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬</label>
                             </div>
                             {
                                 form.guardian === false &&
                                 <>
                                     <label>原因:</label>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.guardianReason} onChange={inputFieldHandler} name="guardianReason" />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.guardianReason} onChange={inputFieldHandler} name="guardianReason"
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </>
                             }
                         </div>
@@ -1536,7 +1645,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     {

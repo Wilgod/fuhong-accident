@@ -208,8 +208,8 @@ export async function getSpecialIncidentReportLicenseById(id: number) {
     try {
         const LIST_NAME = "Special Incident Report License";
         const items = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
-            .expand("Author", "SM", "SD",).get();
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title', "GuardianStaff/Id", "GuardianStaff/EMail", 'GuardianStaff/Title')
+            .expand("Author", "SM", "SD", "GuardianStaff").get();
 
         return items;
     } catch (err) {

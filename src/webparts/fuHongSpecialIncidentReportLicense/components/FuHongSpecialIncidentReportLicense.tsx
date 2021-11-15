@@ -118,7 +118,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                   <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={null} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} />
                 </TabPanel>
               </Tabs>
           }

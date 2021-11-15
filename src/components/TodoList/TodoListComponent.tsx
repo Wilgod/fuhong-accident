@@ -43,7 +43,13 @@ const columns = (context) => {
             dataField: 'AccidentTime',
             text: '發生日期',
             formatter: (value, data) => {
-                return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
+                let date = value;
+                if (data.AccidentTime) {
+                    date = data.AccidentTime;
+                } else {
+                    date = data.IncidentTime;
+                }
+                return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
             }
         },
         {

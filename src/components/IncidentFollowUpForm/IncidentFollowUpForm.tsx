@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
-import { createIncidentFollowUpForm, updateIncidentFollowUpForm, updateOtherIncidentReport } from '../../api/PostFuHongList';
+import { createIncidentFollowUpForm, updateIncidentFollowUpForm, updateOtherIncidentReport, updateSpecialIncidentReportLicense } from '../../api/PostFuHongList';
 import { Role } from '../../utils/RoleParser';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
@@ -40,6 +40,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
 }
 
 export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData }: IIncidentFollowUpFormProps) {
+
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         followUpMeasures: "",
         executionPeriod: "",
@@ -141,14 +142,23 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     "CaseNumber": parentFormData.CaseNumber,
                     "Title": `事故跟主/結束報告 - ${parentFormData.FollowUpFormsId.length + 1}`
                 }).then((createIncidentFollowUpFormRes) => {
+                    console.log(createIncidentFollowUpFormRes);
                     if (formType === "OTHER_INCIDENT") {
-                        console.log(createIncidentFollowUpFormRes);
                         updateOtherIncidentReport(parentFormData.Id, {
                             "FollowUpFormsId": {
                                 "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
                             },
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
-                        }).then((updateOtherIncidentReport) => {
+                        }).then((updateOtherIncidentReportRes) => {
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
+                        updateSpecialIncidentReportLicense(parentFormData.Id, {
+                            "FollowUpFormsId": {
+                                "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
+                            },
+                            "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                        }).then((updateSpecialIncidentReportLicenseRes) => {
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -156,20 +166,25 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 }).catch(console.error);
             }).catch(console.error);
         } else {
-            if (formType === "OTHER_INCIDENT") {
-                updateIncidentFollowUpForm(selectedIncidentFollowUpFormId, {
-                    ...body,
-                    "SMDate": new Date().toISOString()
-                }).then((updateIncidentFollowUpFormRes) => {
+            updateIncidentFollowUpForm(selectedIncidentFollowUpFormId, {
+                ...body,
+                "SMDate": new Date().toISOString()
+            }).then((updateIncidentFollowUpFormRes) => {
+                if (formType === "OTHER_INCIDENT") {
                     updateOtherIncidentReport(parentFormData.Id, {
                         "Status": "PENDING_SD_APPROVE"
                     }).then((updateOtherIncidentReportRes) => {
                         formSubmittedHandler();
                     }).catch(console.error);
-                }).catch(console.error);
-            }
+                } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
+                    updateSpecialIncidentReportLicense(parentFormData.Id, {
+                        "Status": "PENDING_SD_APPROVE"
+                    }).then(() => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            }).catch(console.error);
         }
-
     }
 
     const smSaveHandler = (event) => {
@@ -195,12 +210,21 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 "SDComment": sdComment,
                 "SDDate": new Date().toISOString(),
             }).then((updateIncidentFollowUpFormRes) => {
-                updateOtherIncidentReport(parentFormData.Id, {
-                    Status: "CLOSED"
-                }).then((updateOtherIncidentReportRes) => {
-                    console.log(updateOtherIncidentReportRes)
-                    formSubmittedHandler();
-                }).catch(console.error);
+                if (formType === "OTHER_INCIDENT") {
+                    updateOtherIncidentReport(parentFormData.Id, {
+                        Status: "CLOSED"
+                    }).then((updateOtherIncidentReportRes) => {
+                        console.log(updateOtherIncidentReportRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
+                    updateSpecialIncidentReportLicense(parentFormData.Id, {
+                        Status: "CLOSED"
+                    }).then((updateSpecialIncidentReportLicenseRes) => {
+                        console.log(updateSpecialIncidentReportLicenseRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
             }).catch(console.error);
         }
     }
@@ -224,7 +248,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     }
 
     const loadData = () => {
-
+        console.log(parentFormData)
         if (parentFormData) {
             setInsuranceCaseNo(parentFormData.InsuranceCaseNo);
             setCaseNo(parentFormData.CaseNumber);

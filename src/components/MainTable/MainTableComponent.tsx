@@ -71,7 +71,7 @@ const columns = (context) => {
             dataField: 'NextDeadline',
             text: '下個報告到期日',
             formatter: (value, data) => {
-                if (value) {
+                if (data && data.Status === "CLOSED") {
                     return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
                 } else {
                     return <div>沒有</div>
