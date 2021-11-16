@@ -104,7 +104,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
 
         return [body, error];
     }
-
+    console.log(selectedIncidentFollowUpFormId)
 
     const draftHandler = (event) => {
         event.preventDefault();
@@ -159,6 +159,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             },
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateSpecialIncidentReportLicenseRes) => {
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
+                        updateSpecialIncidentReportAllowance(parentFormData.Id, {
+                            "FollowUpFormsId": {
+                                "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
+                            },
+                            "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                        }).then((updateSpecialIncidentReportAllowanceRes) => {
+                            console.log("SPECIAL_INCIDENT_REPORT_ALLOWANCE")
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -232,7 +242,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
-                        "Status": "PENDING_SD_APPROVE"
+                        "Status": "CLOSED"
                     }).then(() => {
                         formSubmittedHandler();
                     }).catch(console.error);

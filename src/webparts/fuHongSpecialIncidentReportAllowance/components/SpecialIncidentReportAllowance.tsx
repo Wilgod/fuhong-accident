@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
-import { createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
 import { IAccidentCategoryAbuseDetails, IErrorFields, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
 import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -152,6 +152,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const dataFactory = () => {
         let body = {};
         let error = {};
+
 
         //致部門
         body["ToDepartment"] = form.toDepartment;
@@ -332,9 +333,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         body["ReporterPhone"] = reporterPhone;
 
 
+
         return [body, error];
     }
-    console.log(form.guardian);
+
     const loadData = () => {
         console.log(formData);
         if (formData) {
@@ -342,6 +344,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             setFormStage(formData.Stage);
             setIncidentTime(new Date(formData.IncidentTime));
 
+            if (formData.ServiceUnit) {
+                setServiceUnit(formData.ServiceUnit);
+            }
             setSmComment(formData.SMComment);
             if (formData.SMDate) {
                 setSmDate(new Date(formData.SMDate));
@@ -417,7 +422,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 staffPositionThree: formData.StaffPositionThree,
                 toDepartment: formData.ToDepartment
             })
-
         }
     }
 
@@ -436,6 +440,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "Stage": "1",
                     "SDId": spSdInfo.Id,
                     "SMId": spSmInfo.Id,
+                    "ServiceUnit": serviceUnit
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
@@ -451,7 +456,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "Status": "PENDING_SM_APPROVE",
                     "Stage": "1",
                     "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id
+                    "SMId": spSmInfo.Id,
+                    "ServiceUnit": serviceUnit
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
@@ -466,7 +472,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         console.log(body);
         if (formStatus === "DRAFT") {
             updateSpecialIncidentReportAllowance(formData.Id, {
-                ...body
+                ...body,
+                "ServiceUnit": serviceUnit
             }).then(res => {
                 console.log(res)
                 formSubmittedHandler();
@@ -474,7 +481,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         } else {
             createSpecialIncidentReportAllowance({
                 ...body,
-                "Status": "DRAFT"
+                "Status": "DRAFT",
+                "ServiceUnit": serviceUnit
             }).then(res => {
                 console.log(res)
                 formSubmittedHandler();
@@ -502,65 +510,97 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const smApproveHandler = (event) => {
         event.preventDefault();
         const [body, error] = dataFactory();
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-
-            updateSpecialIncidentReportAllowance(formData.Id, {
-                ...body
-            }).then((res) => {
-
-            }).catch(console.error);
+        if (confirm("確認批准 ?")) {
+            if (Object.keys(error).length > 0) {
+                setError(error);
+            } else {
+                updateSpecialIncidentReportAllowance(formData.Id, {
+                    ...body,
+                    "Status": "PENDING_SD_APPROVE",
+                    "SMDate": new Date().toISOString(),
+                    "SMComment": smComment
+                }).then((res) => {
+                    console.log(res);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
         }
     }
 
     const smRejectHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            updateSpecialIncidentReportAllowance(formData.Id, {
-                ...body
-            }).then((res) => {
 
-            }).catch(console.error);
-        }
+        // const [body, error] = dataFactory();
+        // if (confirm("確認拒絕 ?")) {
+        //     if (Object.keys(error).length > 0) {
+        //         setError(error);
+        //     } else {
+        //         updateSpecialIncidentReportAllowance(formData.Id, {
+        //             ...body
+        //         }).then((res) => {
+        //             console.log(res);
+        //             formSubmittedHandler();
+        //         }).catch(console.error);
+        //     }
+        // }
     }
 
     const smSubmitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
+        const [body] = dataFactory();
 
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            updateSpecialIncidentReportAllowance(formData.Id, {
-                ...body
-            }).then((res) => {
+        updateSpecialIncidentReportAllowance(formData.Id, {
+            ...body,
+            "SMComment": smComment,
+            "SMDate": new Date().toISOString()
+        }).then((res) => {
+            console.log(res);
+            formSubmittedHandler();
+        }).catch(console.error);
 
-            }).catch(console.error);
-        }
     }
 
     const sdApproveHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
-        updateSpecialIncidentReportAllowance(formData.Id, {
-            "SMDate": new Date().toISOString()
-        }).then((res) => {
+        if (confirm("確認批准 ?")) {
 
-        }).catch(console.error);
+            createIncidentFollowUpForm({
+                "ParentFormId": formData.Id,
+                "CaseNumber": formData.CaseNumber,
+                "SMId": formData.SMId,
+                "SDId": formData.SDId,
+                "Title": "事故跟主/結束報告 - 1"
+            }).then((incidentFollowUpRes) => {
+                updateSpecialIncidentReportAllowance(formData.Id, {
+                    "NextDeadline": addBusinessDays(new Date(), 28).toISOString(),
+                    "SDDate": new Date().toISOString(),
+                    "SDComment": sdComment,
+                    "Stage": "2",
+                    "Status": "PENDING_SM_FILL_IN",
+                    "FollowUpFormsId": {
+                        "results": [incidentFollowUpRes.data.Id]
+                    },
+                    "SDPhone": sdPhoneNo
+                }).then((res) => {
+                    console.log(res);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }).catch(console.error);
+        }
     }
 
     const sdRejectHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
-        updateSpecialIncidentReportAllowance(formData.Id, {
-            "SMDate": new Date().toISOString()
-        }).then((res) => {
-
-        }).catch(console.error);
+        // if (confirm("確認拒絕 ?")) {
+        //     updateSpecialIncidentReportAllowance(formData.Id, {
+        //         "SMDate": new Date().toISOString(),
+        //         "SMComment": smComment,
+        //         "SDPhone": sdPhoneNo
+        //     }).then((res) => {
+        //         console.log(res);
+        //         formSubmittedHandler();
+        //     }).catch(console.error);
+        // }
     }
 
     useEffect(() => {
@@ -605,7 +645,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             }
         }
     }, [userInfo]);
-
+    console.log(serviceUnit);
     // Get SD & SM
     useEffect(() => {
         if (Array.isArray(departments) && departments.length) {
@@ -650,7 +690,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row row">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>致部門</label>
                         <div className="col">
-                            <select className="form-control" name={"toDepartment"} onChange={selectionHandler} value={form.toDepartment}>
+                            <select className="form-control" name={"toDepartment"} onChange={selectionHandler} value={form.toDepartment}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}>
                                 <option value="">請選擇部門</option>
                                 <option value="ALLOWANCE_SECTION">津貼科</option>
                                 <option value="ELDERLY_SERVICES_DIVISION">安老服務科</option>
@@ -741,14 +782,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         {/* 單位名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>單位名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={serviceUnit} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 聯絡電話 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>聯絡電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" />
+                            <input type="text" className="form-control" disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                         {/* 負責職員姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>負責職員姓名</label>
@@ -789,7 +830,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生地點</label>
                         <div className="col">
-                            <input type="text" className="form-control" name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler} />
+                            <input type="text" className="form-control" name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
 
@@ -797,31 +839,37 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故類別</label>
                         <div className="col">
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-unusual-death">服務使用者不尋常死亡／嚴重受傷導致死亡</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-missing" value="ACCIDENT_CATEGORY_MISSING" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-missing" value="ACCIDENT_CATEGORY_MISSING" onChange={radioButtonHandler}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-missing">服務使用者失踪而需要報警求助</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} checked={form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE"} />
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} checked={form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE"}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-abuse" >
                                     已
                                     <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"} />
+                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"}
+                                            disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-establish" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>確立</label>
                                     </span>
                                     ／
                                     <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-doubt" value="ACCIDENT_CATEGORY_STATUS_DOUBT" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT"} />
+                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-doubt" value="ACCIDENT_CATEGORY_STATUS_DOUBT" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT"}
+                                            disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-doubt" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>懷疑</label>
                                     </span>
                                     &nbsp;
 
                                     有服務使用者被
                                     <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-staff" value="ACCIDENT_CATEGORY_PERSON_STAFF" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF"} />
+                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-staff" value="ACCIDENT_CATEGORY_PERSON_STAFF" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF"}
+                                            disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-staff">
                                             <span style={{ cursor: "help", textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }} title={footNoteTwo}>職員<sup>2</sup></span>
                                         </label>
@@ -829,7 +877,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                                     ／
                                     <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-other" value="ACCIDENT_CATEGORY_PERSON_OTHER" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER"} />
+                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-other" value="ACCIDENT_CATEGORY_PERSON_OTHER" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER"}
+                                            disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-other" style={{ textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }}>其他服務使用者</label>
                                     </span>
 
@@ -844,39 +893,47 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                         <label className={`col-12 col-form-label ${styles.fieldTitle} pt-xl-0`}>虐待性質</label>
                                         <div className="col">
                                             <div className="form-check form-check-inline mr-3">
-                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" checked={form.abusive_body === true} onClick={() => setForm({ ...form, abusive_body: !form.abusive_body })} />
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" checked={form.abusive_body === true} onClick={() => setForm({ ...form, abusive_body: !form.abusive_body })}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abusive-nature-body">身體虐待</label>
                                             </div>
                                             <div className="form-check form-check-inline mr-3">
-                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-sexual-assault" value="ABUSIVE_NATURE_SEXUAL_ASSAULT" checked={form.abusive_sexual} onClick={() => setForm({ ...form, abusive_sexual: !form.abusive_sexual })} />
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-sexual-assault" value="ABUSIVE_NATURE_SEXUAL_ASSAULT" checked={form.abusive_sexual} onClick={() => setForm({ ...form, abusive_sexual: !form.abusive_sexual })}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abusive-nature-sexual-assault">性侵犯</label>
                                             </div>
                                             <div className="form-check form-check-inline mr-3">
-                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-mental" value="ABUSIVE_NATURE_MENTAL" checked={form.abusive_mental} onClick={() => setForm({ ...form, abusive_mental: !form.abusive_mental })} />
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-mental" value="ABUSIVE_NATURE_MENTAL" checked={form.abusive_mental} onClick={() => setForm({ ...form, abusive_mental: !form.abusive_mental })}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abusive-nature-mental">精神虐待</label>
                                             </div>
                                             <div className="form-check form-check-inline mr-3">
-                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-negligent-care" value="ABUSIVE_NATURE_NEGLIGENT_CARE" checked={form.abusive_negligent} onClick={() => setForm({ ...form, abusive_negligent: !form.abusive_negligent })} />
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-negligent-care" value="ABUSIVE_NATURE_NEGLIGENT_CARE" checked={form.abusive_negligent} onClick={() => setForm({ ...form, abusive_negligent: !form.abusive_negligent })}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abusive-nature-negligent-care">疏忽照顧</label>
                                             </div>
                                             <div className="form-check mb-2">
-                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-other" value="ABUSIVE_NATURE_OTHER" checked={form.abusive_other} onClick={() => setForm({ ...form, abusive_other: !form.abusive_other })} />
+                                                <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-other" value="ABUSIVE_NATURE_OTHER" checked={form.abusive_other} onClick={() => setForm({ ...form, abusive_other: !form.abusive_other })}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abusive-nature-other">其他 (請註明)</label>
                                             </div>
                                             {
                                                 form.abusive_other &&
-                                                <AutosizeTextarea className="form-control" placeholder="請註明" value={form.abusiveDescription} name="abusiveDescription" onChange={inputFieldHandler} />
+                                                <AutosizeTextarea className="form-control" placeholder="請註明" value={form.abusiveDescription} name="abusiveDescription" onChange={inputFieldHandler}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                             }
                                         </div>
                                     </div>
                                 </div>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler} />
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler}
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
                             </div>
 
