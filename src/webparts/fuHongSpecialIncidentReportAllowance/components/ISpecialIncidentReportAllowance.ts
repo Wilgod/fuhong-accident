@@ -48,9 +48,14 @@ export interface ISpecialIncidentReportAllowanceStates {
     immediateFollowUp: string;
     followUpPlan: string;
     accidentCategory: string;
-    abusiveNature: string;
+    abusive_body: boolean;
+    abusive_sexual: boolean;
+    abusive_mental: boolean;
+    abusive_negligent: boolean;
+    abusive_other: boolean;
+    abusiveDescription: string;
 }
 
 export interface IErrorFields {
-    
+
 }

@@ -558,7 +558,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
 
             setSdComment(formData.SDComment);
-            if (formData.SDComment) {
+            if (formData.SDDate) {
                 setSdDate(new Date(formData.SDDate));
             }
 

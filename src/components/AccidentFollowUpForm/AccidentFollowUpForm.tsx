@@ -15,7 +15,7 @@ import useSD from '../../hooks/useSD';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
-import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentFollowUpFormByParentId, getOutsiderAccidentById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
+import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentFollowUpFormByCaseNumber, getAllAccidentFollowUpFormByParentId, getOutsiderAccidentById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentForm } from '../../api/PostFuHongList';
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
@@ -312,28 +312,28 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         setServiceUserRecordId(parentFormData.ServiceUserId);
 
         if (parentFormData && parentFormData.Id) {
-            getAllAccidentFollowUpFormByParentId(parentFormData.Id).then((accidentFollowUpFormRepseonse) => {
-                setAccidentFollowUpFormList(accidentFollowUpFormRepseonse);
-                if (accidentFollowUpFormRepseonse && accidentFollowUpFormRepseonse.length > 0) {
-                    setSelectedAccidentFollowUpFormId(accidentFollowUpFormRepseonse[0].Id);
+            getAllAccidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((accidentFollowUpFormRepseonseRes) => {
+                setAccidentFollowUpFormList(accidentFollowUpFormRepseonseRes);
+                if (accidentFollowUpFormRepseonseRes && accidentFollowUpFormRepseonseRes.length > 0) {
+                    setSelectedAccidentFollowUpFormId(accidentFollowUpFormRepseonseRes[0].Id);
 
-                    setIsSDApproved(accidentFollowUpFormRepseonse[0].SDApproved === true ? true : false);
+                    setIsSDApproved(accidentFollowUpFormRepseonseRes[0].SDApproved === true ? true : false);
 
                     setForm({
-                        accidentalFollowUpContinue: accidentFollowUpFormRepseonse[0].AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
-                        executionPeriod: accidentFollowUpFormRepseonse[0].ExecutionPeriod,
-                        followUpMeasures: accidentFollowUpFormRepseonse[0].FollowUpMeasures,
-                        remark: accidentFollowUpFormRepseonse[0].Remark
+                        accidentalFollowUpContinue: accidentFollowUpFormRepseonseRes[0].AccidentalFollowUpContinue ? "ACCIDENT_FOLLOW_UP_TRUE" : "ACCIDENT_FOLLOW_UP_FALSE",
+                        executionPeriod: accidentFollowUpFormRepseonseRes[0].ExecutionPeriod,
+                        followUpMeasures: accidentFollowUpFormRepseonseRes[0].FollowUpMeasures,
+                        remark: accidentFollowUpFormRepseonseRes[0].Remark
                     });
 
-                    setSdComment(accidentFollowUpFormRepseonse[0].SDComment);
-                    if (accidentFollowUpFormRepseonse[0].SMDate) {
-                        setSmDate(new Date(accidentFollowUpFormRepseonse[0].SMDate));
+                    setSdComment(accidentFollowUpFormRepseonseRes[0].SDComment);
+                    if (accidentFollowUpFormRepseonseRes[0].SMDate) {
+                        setSmDate(new Date(accidentFollowUpFormRepseonseRes[0].SMDate));
                     }
 
-                    setSptComment(accidentFollowUpFormRepseonse[0].SPTComment);
-                    if (accidentFollowUpFormRepseonse[0].SPTDate) {
-                        setSmDate(new Date(accidentFollowUpFormRepseonse[0].SPTDate));
+                    setSptComment(accidentFollowUpFormRepseonseRes[0].SPTComment);
+                    if (accidentFollowUpFormRepseonseRes[0].SPTDate) {
+                        setSmDate(new Date(accidentFollowUpFormRepseonseRes[0].SPTDate));
                     }
                 }
             }).catch(console.error);

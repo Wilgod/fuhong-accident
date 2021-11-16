@@ -121,11 +121,11 @@ export async function getAccidentFollowUpFormById(formId: number) {
     }
 }
 
-export async function getAllAccidentFollowUpFormByParentId(ParentId: number) {
+export async function getAllAccidentFollowUpFormByParentId(parentId: number) {
     try {
         const LIST_NAME = "Accident Follow Up Form";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`ParentFormId eq ${ParentId}`)
+            .filter(`ParentFormId eq ${parentId}`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
             .expand("Author", "SM", "SPT", "SD")
             .orderBy("Created", false)
@@ -134,6 +134,22 @@ export async function getAllAccidentFollowUpFormByParentId(ParentId: number) {
     } catch (err) {
         console.error(err);
         throw new Error("getAllAccidentFollowUpFormByParentId failed");
+    }
+}
+
+export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string) {
+    try {
+        const LIST_NAME = "Accident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`ParentFormId eq ${caseNumber}`)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SD")
+            .orderBy("Created", false)
+            .get();
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllAccidentFollowUpFormByCaseNumber failed");
     }
 }
 
@@ -221,7 +237,7 @@ export async function getSpecialIncidentReportLicenseById(id: number) {
 //Form 25
 export async function getSpecialIncidentReportAllowance() {
     try {
-        const LIST_NAME = "Other Incident Report";
+        const LIST_NAME = "Special Incident Report Allowance";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
 
         return items;
@@ -233,10 +249,12 @@ export async function getSpecialIncidentReportAllowance() {
 
 export async function getSpecialIncidentReportAllowanceById(id: number) {
     try {
-        const LIST_NAME = "Other Incident Report";
+        const LIST_NAME = "Special Incident Report Allowance";
         const items = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
-            .expand("Author", "SM", "SD",).get();
+            .getById(id)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
+            .expand("Author", "SM", "SD",)
+            .get();
 
         return items;
     } catch (err) {
@@ -248,7 +266,7 @@ export async function getSpecialIncidentReportAllowanceById(id: number) {
 //Form 26
 export async function getIncidentFollowUpFormById(id: number) {
     try {
-        const LIST_NAME = "Incident Follow Up Form";
+        const LIST_NAME = "Special Incident Report Allowance";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
             .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", "SM/Id", "SM/EMail", 'SM/Title')
             .expand("Author", "SM", "SD",).get();
@@ -260,11 +278,11 @@ export async function getIncidentFollowUpFormById(id: number) {
     }
 }
 
-export async function getAllIncidentFollowUpFormByParentId(ParentId: number) {
+export async function getAllIncidentFollowUpFormByParentId(parentId: number) {
     try {
         const LIST_NAME = "Incident Follow Up Form";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`ParentFormId eq ${ParentId}`)
+            .filter(`ParentFormId eq ${parentId}`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
             .expand("Author", "SM", "SD")
             .orderBy("Created", false)
@@ -273,5 +291,21 @@ export async function getAllIncidentFollowUpFormByParentId(ParentId: number) {
     } catch (err) {
         console.error(err);
         throw new Error("getAllIncidentFollowUpFormByParentId failed");
+    }
+}
+
+export async function getAllIncidentFollowUpFormByCaseNumber(caseNumber: string) {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`ParentFormId eq ${caseNumber}`)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SD")
+            .orderBy("Created", false)
+            .get();
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllIncidentFollowUpFormByCaseNumber failed");
     }
 }

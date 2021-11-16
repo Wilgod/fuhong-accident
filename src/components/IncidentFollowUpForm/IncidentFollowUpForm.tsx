@@ -6,10 +6,10 @@ import DatePicker from "react-datepicker";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import * as moment from 'moment';
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
-import { createIncidentFollowUpForm, updateIncidentFollowUpForm, updateOtherIncidentReport, updateSpecialIncidentReportLicense } from '../../api/PostFuHongList';
+import { createIncidentFollowUpForm, updateIncidentFollowUpForm, updateOtherIncidentReport, updateSpecialIncidentReportAllowance, updateSpecialIncidentReportLicense } from '../../api/PostFuHongList';
 import { Role } from '../../utils/RoleParser';
 import useUserInfo from '../../hooks/useUserInfo';
-import { getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
+import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 
@@ -182,6 +182,12 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     }).then(() => {
                         formSubmittedHandler();
                     }).catch(console.error);
+                } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
+                    updateSpecialIncidentReportAllowance(parentFormData.Id, {
+                        "Status": "PENDING_SD_APPROVE"
+                    }).then(() => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
                 }
             }).catch(console.error);
         }
@@ -224,6 +230,12 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         console.log(updateSpecialIncidentReportLicenseRes)
                         formSubmittedHandler();
                     }).catch(console.error);
+                } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
+                    updateSpecialIncidentReportAllowance(parentFormData.Id, {
+                        "Status": "PENDING_SD_APPROVE"
+                    }).then(() => {
+                        formSubmittedHandler();
+                    }).catch(console.error);
                 }
             }).catch(console.error);
         }
@@ -254,10 +266,10 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             setCaseNo(parentFormData.CaseNumber);
 
             if (Array.isArray(parentFormData.FollowUpFormsId) && parentFormData.FollowUpFormsId.length > 0) {
-                getAllIncidentFollowUpFormByParentId(parentFormData.Id).then((incidentFollowUpFormByParentIdRes) => {
-                    if (Array.isArray(incidentFollowUpFormByParentIdRes) && incidentFollowUpFormByParentIdRes.length > 0) {
-                        setIncidentFollowUpFormList(incidentFollowUpFormByParentIdRes);
-                        setSelectedIncidentFollowUpFormId(incidentFollowUpFormByParentIdRes[0].Id);
+                getAllIncidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((getAllIncidentFollowUpFormByCaseNumberRes) => {
+                    if (Array.isArray(getAllIncidentFollowUpFormByCaseNumberRes) && getAllIncidentFollowUpFormByCaseNumberRes.length > 0) {
+                        setIncidentFollowUpFormList(getAllIncidentFollowUpFormByCaseNumberRes);
+                        setSelectedIncidentFollowUpFormId(getAllIncidentFollowUpFormByCaseNumberRes[0].Id);
                     }
                 }).catch(console.error);
             }
