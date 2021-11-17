@@ -8,6 +8,9 @@ import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 import MainTableComponent from '../../../components/MainTable/MainTableComponent';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { getAllServiceUnit } from '../../../api/FetchUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -17,9 +20,15 @@ if (document.querySelector('.CanvasZone') != null) {
   (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
+interface IFuHongFormsMenu {
+  formToggle: boolean;
+  screenNav: string;
+  searchDateStart: Date;
+  searchDateEnd: Date;
+  serviceUnitList: any[];
+}
 
-
-export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, { formToggle: boolean, screenNav: string }> {
+export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenu> {
 
   private SERVICE_USER_ACCIDENT = "ServiceUserAccident"; // form 19
   private OUTSIDERS_ACCIDENT = "OutsidersAccident"; //form 22
@@ -36,8 +45,20 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     this.state = {
       formToggle: false,
-      screenNav: ""
+      screenNav: "",
+      searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+      searchDateEnd: new Date(),
+      serviceUnitList: []
     }
+  }
+
+  public componentDidMount() {
+    this.initialState();
+  }
+
+  private initialState = async () => {
+    const serviceUnitList = await getAllServiceUnit();
+    this.setState({ serviceUnitList });
   }
 
   private formToggleHandler = (event) => {
@@ -50,13 +71,15 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     this.setState({ screenNav: nav });
   }
 
+
+
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
     const ItemComponent = (href, name) => {
       return <a className="text-decoration-none" href={href + ".aspx"} target="_blank" data-interception="off">
         {name}
       </a>
     }
-
+    console.log(this.state.serviceUnitList);
     const formList = () => {
       return <ul>
         <li>{ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}</li>
@@ -75,16 +98,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       )
     }
 
-
-
     const navigationMenu = () => {
       return <div className={`${styles.navigationMenu}`}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>主頁</div>
         <div className={`${styles.child}`} onClick={this.formToggleHandler}>
           表格
-          {
-            this.state.formToggle && formList()
-          }
+          {this.state.formToggle && formList()}
         </div>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "REPORT")}>報告</div>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "STAT")}>統計資料</div>
@@ -109,6 +128,92 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
               </div>
               <div className="mb-3">
                 <TodoListComponent context={this.props.context} />
+              </div>
+              <div className="mb-3">
+                <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
+                  搜尋
+                </div>
+                <div className="row">
+                  <div className="col" >
+                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                      發生日期
+                    </div>
+                    <div className="d-flex flex-column py-1">
+                      <div className="mb-3 d-flex">
+                        <div className="mr-3">
+                          由
+                        </div>
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateStart} onChange={(date) => this.setState({ searchDateStart: date })} />
+                      </div>
+                      <div className="d-flex">
+                        <div className="mr-3">
+                          至
+                        </div>
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateEnd} onChange={(date) => this.setState({ searchDateEnd: date })} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col" >
+                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                      服務單位
+                    </div>
+                    {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
+
+                    </div> */}
+                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                      <option value="ALL">--- 所有 ---</option>
+                      {this.state.serviceUnitList.map((item) => {
+                        if (item && item.Title) {
+                          return <option value={item.Title}>{item.Title}</option>
+                        }
+                      })}
+                    </select>
+                  </div>
+                  <div className="col" >
+                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                      意外/事故
+                    </div>
+                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                      <option value="ALL">--- 所有 ---</option>
+                      <option value="SUI">服務使用者意外</option>
+                      <option value="PUI">外界人士意外</option>
+                      <option value="SIH">特別事故(牌照事務處)</option>
+                      <option value="SID">特別事故(津貼科)</option>
+                      <option value="OIN">其他事故</option>
+                    </select>
+                  </div>
+                  <div className="col" >
+                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                      顯示狀態
+                    </div>
+                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                      <option value="PROCESSING">跟進中個案</option>
+                      <option value="CLOSED">已結束個案</option>
+                      <option value="ALL">所有狀態</option>
+                    </select>
+                  </div>
+                  <div className="col" >
+                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                      過期未交報告
+                    </div>
+                    <div className="form-check">
+                      <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-3">
+                <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }} >
+                  關鍵字
+                </div>
+                <div className="row">
+                  <div className="col-10">
+                    <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" />
+                  </div>
+                  <div className="col">
+                    <button type="button" className="btn btn-primary">搜尋</button>
+                  </div>
+                </div>
               </div>
               <div className="mb-3">
                 <MainTableComponent context={this.props.context} />

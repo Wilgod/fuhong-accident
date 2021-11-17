@@ -46,6 +46,19 @@ export async function getDepartmentByShortName(shortName: string) {
     }
 }
 
+export async function getAllServiceUnit() {
+    try {
+        const LIST_NAME = "SM SD Mapping";
+        const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
+        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc").orderBy("Title", true).getAll();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw Error("getDepartmentByShortName error");
+    }
+}
+
+
 export async function getUserAdByGraph(email: string) {
     try {
         const matchingUser = await graph.users.getById(email)();
