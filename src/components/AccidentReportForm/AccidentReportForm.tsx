@@ -15,7 +15,7 @@ import useSPT from '../../hooks/useSPT';
 import useSD from '../../hooks/useSD';
 import useSM from '../../hooks/useSM';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
-import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentForm } from '../../api/PostFuHongList';
+import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 
@@ -171,9 +171,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const submitHandler = () => {
-
         if (parentFormData.AccidentReportFormId) {
+
             if (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage)) {
+                // SM
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
                     "SMDate": smDate.toISOString()
@@ -181,9 +182,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
+                // Investigator 
                 const [body, error] = dataFactory();
                 if (Object.keys(error).length === 0) {
-
                     updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
@@ -192,7 +193,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 formSubmittedHandler();
                             }).catch(console.error)
                         } else {
-                            updateOutsiderAccidentForm(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
+                            updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
                                 console.log(updateOutsiderAccidentResponse);
                                 formSubmittedHandler();
                             }).catch(console.error);
@@ -212,7 +213,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
-                    updateOutsiderAccidentForm(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
+                    updateOutsiderAccidentFormById(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -231,72 +232,77 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         // main form Status
         // sub form spt approved // SPTApproved, comment , date
         // Create Form 21
-        const [body] = dataFactory();
-        if (parentFormData && parentFormData.AccidentReportFormId) {
-            const accidentReportFormBody = {
-                ...body,
-                "SPTApproved": true,
-                "SPTDate": new Date().toISOString(),
-                "SPTComment": sptComment
-            }
-            updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
-                // Create Accident Follow Up Report Form
-                const accidentFollowUpReportFormBody = {
-                    "SPTId": parentFormData.SPTId,
-                    "SMId": parentFormData.SMId,
-                    "SDId": parentFormData.SDId,
-                    "CaseNumber": parentFormData.CaseNumber,
-                    "ParentFormId": parentFormData.Id
-                };
-                createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
+        if (confirm("確認批准 ?")) {
+            const [body] = dataFactory();
+            if (parentFormData && parentFormData.AccidentReportFormId) {
+                const accidentReportFormBody = {
+                    ...body,
+                    "SPTApproved": true,
+                    "SPTDate": new Date().toISOString(),
+                    "SPTComment": sptComment
+                }
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
+                    // Create Accident Follow Up Report Form
+                    const accidentFollowUpReportFormBody = {
+                        "SPTId": parentFormData.SPTId,
+                        "SMId": parentFormData.SMId,
+                        "SDId": parentFormData.SDId,
+                        "CaseNumber": parentFormData.CaseNumber,
+                        "ParentFormId": parentFormData.Id
+                    };
+                    createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
 
-                    // Update main form status and stage 3
-                    const serviceUserAccidentFormBody = {
-                        "AccidentFollowUpFormId": {
-                            results: [accidentFollowUpReportFormResponse.data.Id]
-                        },
-                        "Stage": "3",
-                        "Status": "PENDING_SM_FILL_IN",
-                        "NextDeadline": addMonths(new Date(), 6).toISOString()
-                    }
-                    if (formType === "SERVICE_USER") {
-                        updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
-                            //trigger notification work flow
-                            formSubmittedHandler()
-                        }).catch(console.error);
-                    } else {
-                        updateOutsiderAccidentForm(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
-                            formSubmittedHandler()
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
-            }).catch(console.log);
+                        // Update main form status and stage 3
+                        const serviceUserAccidentFormBody = {
+                            "AccidentFollowUpFormId": {
+                                results: [accidentFollowUpReportFormResponse.data.Id]
+                            },
+                            "Stage": "3",
+                            "Status": "PENDING_SM_FILL_IN",
+                            "NextDeadline": addMonths(new Date(), 6).toISOString()
+                        }
+                        if (formType === "SERVICE_USER") {
+                            updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
+                                //trigger notification work flow
+                                formSubmittedHandler()
+                            }).catch(console.error);
+                        } else {
+                            updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
+                                formSubmittedHandler()
+                            }).catch(console.error);
+                        }
+                    }).catch(console.error);
+                }).catch(console.log);
+            }
         }
     }
 
     const sptRejectHandler = () => {
         // main form Status
         // sub form spt approved // SPTApproved, comment , date
-        const [body] = dataFactory();
-        if (parentFormData && parentFormData.AccidentReportFormId) {
-            const accidentReportFormBody = {
-                ...body,
-                "SPTApproved": false,
-                "SPTDate": new Date().toISOString(),
-                "SPTComment": sptComment
-            }
-            updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
-                // Update main form status and stage
-                // Update main form status and stage 3
-                const serviceUserAccidentFormBody = {
-                    "Stage": "2",
-                    "Status": "CASE_REJECTED"
+        if (confirm("確認拒絕 ?")) {
+
+            const [body] = dataFactory();
+            if (parentFormData && parentFormData.AccidentReportFormId) {
+                const accidentReportFormBody = {
+                    ...body,
+                    "SPTApproved": false,
+                    "SPTDate": new Date().toISOString(),
+                    "SPTComment": sptComment
                 }
-                updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
-                    //trigger notification work flow
-                    formSubmittedHandler();
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
+                    // Update main form status and stage
+                    // Update main form status and stage 3
+                    const serviceUserAccidentFormBody = {
+                        "Stage": "2",
+                        "Status": "CASE_REJECTED"
+                    }
+                    updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
+                        //trigger notification work flow
+                        formSubmittedHandler();
+                    }).catch(console.error);
                 }).catch(console.error);
-            }).catch(console.error);
+            }
         }
     }
     console.log(parentFormData)

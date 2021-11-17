@@ -14,7 +14,7 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentForm } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentFormById } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
@@ -218,7 +218,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
         body["EnvOther"] = true;
         if (form.envOther === true) {
-            if (form.envOtherDescription.trim()) {
+            if (form.envOtherDescription) {
                 body["EnvOtherDescription"] = form.envOtherDescription;
             } else {
                 error["EnvOtherDescription"] === true;
@@ -272,7 +272,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             body["MedicalArrangement"] = form.medicalArrangement;
             // 急症室
             if (form.medicalArrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT") {
-                if (form.medicalArrangementHospital.trim()) {
+                if (form.medicalArrangementHospital) {
                     body["MedicalArrangementHospital"] = form.medicalArrangementHospital;
                 } else {
                     error["MedicalArrangementHospital"] = true;
@@ -289,7 +289,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (form.police === true) {
             body["PoliceDatetime"] = policeDatetime.toISOString();
 
-            if (form.policeStation.trim()) {
+            if (form.policeStation) {
                 body["PoliceStation"] = form.policeStation;
             } else {
                 error["PoliceStation"] = true;
@@ -301,7 +301,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         body["FamilyContact"] = form.familyContact;
         if (form.familyContact === true) {
             body["FamilyContactDate"] = familyContactDate.toISOString();
-            if (form.familyRelationship.trim()) {
+            if (form.familyRelationship) {
                 body["FamilyRelationship"] = form.familyRelationship;
             } else {
                 error["FamilyRelationship"] = true;
@@ -343,7 +343,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         console.log(body);
         console.log(error);
         if (currentUserRole === Role.ADMIN) {
-            updateOutsiderAccidentForm(formId, {
+            updateOutsiderAccidentFormById(formId, {
                 "InsuranceCaseNo": form.insuranceCaseNo
             }).then((res) => {
                 // Update form to stage 1-2
@@ -352,8 +352,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 formSubmittedHandler();
             }).catch(console.error);
         } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage)) {
-            updateOutsiderAccidentForm(formId, {
-                "SDComment": sdComment.trim(),
+            updateOutsiderAccidentFormById(formId, {
+                "SDComment": sdComment,
                 "SDDate": sdDate.toISOString(),
             }).then((res) => {
                 // Update form to stage 1-2
@@ -381,13 +381,25 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
     }
 
+
+    // const adminSubmitHanlder = (event) => {
+    //     event.preventDefault();
+    // }
+
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
-        createOutsiderAccidentForm(body).then((res) => {
-            console.log(res);
-            formSubmittedHandler();
-        }).catch(console.error);
+        if (formStatus === "DRAFT") {
+            updateOutsiderAccidentFormById(formData.Id, body).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            createOutsiderAccidentForm(body).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
 
     function cancelHandler() {
@@ -396,92 +408,103 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     }
 
     const smApproveHandler = (event) => {
-        const [body, error] = dataFactory("");
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            updateOutsiderAccidentForm(formId, {
-                ...body,
-                "SMApproved": true,
-                "SMComment": smComment.trim(),
-                "SMDate": smDate.toISOString(),
-                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                "Status": "PENDING_SPT_APPROVE"
-            }).then((res) => {
-                // Update form to stage 1-2
-                // Trigger notification workflow
-                console.log(res);
-                formSubmittedHandler();
-            }).catch(console.error);
+        if (confirm("確認批准 ?")) {
+            const [body, error] = dataFactory("");
+
+            if (Object.keys(error).length > 0) {
+                setError(error);
+            } else {
+                updateOutsiderAccidentFormById(formId, {
+                    ...body,
+                    "SMApproved": true,
+                    "SMComment": smComment,
+                    "SMDate": smDate.toISOString(),
+                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                    "Status": "PENDING_SPT_APPROVE"
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
         }
     }
 
     const smRejectHandler = (event) => {
-        const body = {
-            "SMApproved": false,
-            "SMComment": smComment.trim(),
-            "SMDate": smDate.toISOString(),
-            "Status": "SM_VOID"
-        };
-        updateOutsiderAccidentForm(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+        if (confirm("確認拒絕 ?")) {
+
+            const body = {  
+                "SMApproved": false,
+                "SMComment": smComment,
+                "SMDate": smDate.toISOString(),
+                "Status": "SM_VOID"
+            };
+            updateOutsiderAccidentFormById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+        }
     }
 
     const sptApproveHandler = (event) => {
-        const [body, error] = dataFactory("");
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-                const serviceAccidentUserFormBody = {
-                    ...body,
-                    "SPTApproved": true,
-                    "SPTComment": sptComment.trim(),
-                    "SPTDate": sptDate.toISOString(),
-                    "InvestigatorId": investigatorPickerInfo[0].id,
-                    "Status": "PENDING_INVESTIGATE",
-                    "Stage": "2",
-                    "NextDeadline": addMonths(new Date(), 1).toISOString()
-                };
-                updateOutsiderAccidentForm(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
-                    // Create form 20, switch to stage 2]
-                    if (formOneResponse) {
-                        getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
-                            if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
-                                let accidentTime = outsiderAccidentForm.AccidentTime
-                                const accidentReportFormBody = {
-                                    "CaseNumber": outsiderAccidentForm.CaseNumber,
-                                    "ParentFormId": outsiderAccidentForm.Id,
-                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
-                                    "ReceivedDate": new Date().toISOString(), // 交付日期
-                                    "SPTId": outsiderAccidentForm.SPTId,
-                                    "SMId": outsiderAccidentForm.SMId,
-                                    "InvestigatorId": outsiderAccidentForm.InvestigatorId
-                                }
-                                createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
-                                    // Trigger notification workflow
+        if (confirm("確認批准 ?")) {
 
-
-                                    //AccidentReportForm
-                                    if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-
-                                        updateOutsiderAccidentForm(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
-                                            console.log(res)
-                                            formSubmittedHandler()
-                                        }).catch(console.error);
-                                    }
-                                })
-                            }
-                        }).catch(console.error);
-                    }
-                });
+            const [body, error] = dataFactory("");
+            if (Object.keys(error).length > 0) {
+                setError(error);
             } else {
-                // error implementation
+                if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                    const serviceAccidentUserFormBody = {
+                        ...body,
+                        "SPTApproved": true,
+                        "SPTComment": sptComment,
+                        "SPTDate": sptDate.toISOString(),
+                        "InvestigatorId": investigatorPickerInfo[0].id,
+                        "Status": "PENDING_INVESTIGATE",
+                        "Stage": "2",
+                        "NextDeadline": addMonths(new Date(), 1).toISOString()
+                    };
+                    updateOutsiderAccidentFormById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                        // Create form 20, switch to stage 2]
+                        if (formOneResponse) {
+                            getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
+                                if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
+                                    let accidentTime = outsiderAccidentForm.AccidentTime
+                                    const accidentReportFormBody = {
+                                        "CaseNumber": outsiderAccidentForm.CaseNumber,
+                                        "ParentFormId": outsiderAccidentForm.Id,
+                                        "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                        "ReceivedDate": new Date().toISOString(), // 交付日期
+                                        "SPTId": outsiderAccidentForm.SPTId,
+                                        "SMId": outsiderAccidentForm.SMId,
+                                        "InvestigatorId": outsiderAccidentForm.InvestigatorId
+                                    }
+                                    createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                        // Trigger notification workflow
+
+
+                                        //AccidentReportForm
+                                        if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+
+                                            updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                                console.log(res)
+                                                formSubmittedHandler()
+                                            }).catch(console.error);
+                                        }
+                                    })
+                                }
+                            }).catch(console.error);
+                        }
+                    });
+                } else {
+                    // error implementation
+                }
             }
         }
     }
 
     const sptRejectHandler = (event) => {
+        if (confirm("確認拒絕 ?")) {
 
+        }
     }
 
     const loadData = async (data: any) => {

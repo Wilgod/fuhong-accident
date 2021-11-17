@@ -141,7 +141,7 @@ export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string)
     try {
         const LIST_NAME = "Accident Follow Up Form";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`ParentFormId eq '${caseNumber}'`)
+            .filter(`CaseNumber eq '${caseNumber}'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
             .expand("Author", "SM", "SD")
             .orderBy("Created", false)

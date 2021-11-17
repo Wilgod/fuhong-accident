@@ -117,7 +117,7 @@ export async function createOutsiderAccidentForm(body: any) {
 }
 
 // Update 
-export async function updateOutsiderAccidentForm(id: number, body: any) {
+export async function updateOutsiderAccidentFormById(id: number, body: any) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(body);
