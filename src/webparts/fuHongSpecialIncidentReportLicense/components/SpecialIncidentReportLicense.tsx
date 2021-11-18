@@ -98,6 +98,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         unusalIncideintIncident: "",
         unusalIncident: ""
     });
+    console.log(departments);
+
 
     const [incidentTime, setIncidentTime] = useState(new Date());
     const [currentUser, setCurrentUser] = useState(null);
@@ -688,18 +690,29 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     // Get SD & SM
     useEffect(() => {
-        if (Array.isArray(departments) && departments.length) {
-            const dept = departments[0];
-            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
-                setSMEmail(dept.hr_deptmgr);
-            }
+        if (formInitial(currentUserRole, formStatus)) {
+            if (Array.isArray(departments) && departments.length) {
+                const dept = departments[0];
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                    setSMEmail(dept.hr_deptmgr);
+                }
 
-            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                setSDEmail(dept.hr_sd);
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    setSDEmail(dept.hr_sd);
+                }
+
+                setForm({ ...form, homesName: dept.su_name_tc || "", homesManagerTel: dept.su_phone || "" });
             }
         }
     }, [departments]);
 
+    useEffect(() => {
+        if (smInfo) {
+            setForm({ ...form, homesManagerName: smInfo.Name })
+        }
+    }, [smInfo])
+
+    console.log(form.homesName)
     useEffect(() => {
         if (notifyStaff && notifyStaff.mail) {
             setNotifyStaffEmail(notifyStaff.mail)
@@ -1506,7 +1519,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={form.homesName} disabled />
+                            <input type="text" className="form-control" value={form.homesName} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">
@@ -1517,7 +1530,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 timeFormat="p"
                                 timeIntervals={15}
                                 dateFormat="yyyy/MM/dd h:mm aa"
-                                readOnly
+                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
                             />
                         </div>
                     </div>
