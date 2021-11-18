@@ -330,7 +330,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory()
-        createOtherIncidentReport(body).then(res => {
+        createOtherIncidentReport({
+            ...body,
+            "Title": "OIN"
+        }).then(res => {
             console.log(res)
             formSubmittedHandler();
         }).catch(console.error);

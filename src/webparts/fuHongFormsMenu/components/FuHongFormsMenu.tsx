@@ -26,6 +26,10 @@ interface IFuHongFormsMenu {
   screenNav: string;
   searchDateStart: Date;
   searchDateEnd: Date;
+  searchServiceUnit: string[];
+  searchFormType: string[];
+  searchFormStatus: string;
+  searchExpired: string;
   serviceUnitList: any[];
 }
 
@@ -50,7 +54,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       screenNav: "",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
-      serviceUnitList: []
+      serviceUnitList: [],
+      searchExpired: "",
+      searchFormStatus: "",
+      searchFormType: [],
+      searchServiceUnit: []
     }
   }
 
@@ -170,7 +178,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
                       <option value="ALL">--- 所有 ---</option>
-                      {this.state.serviceUnitList.map((item) => {
+                      {this.state.serviceUnitList.sort((a, b) => {
+                        return a.Title.localeCompare(b.Title)
+                      }).map((item) => {
                         if (item && item.Title) {
                           return <option value={item.Title}>{item.Title}</option>
                         }
@@ -224,7 +234,17 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                 </div>
               </div>
               <div className="mb-3">
-                <MainTableComponent context={this.props.context} />
+                <MainTableComponent
+                  context={this.props.context}
+                  searchExpired={this.state.searchExpired}
+                  dateRange={{
+                    start: this.state.searchDateStart,
+                    end: this.state.searchDateEnd
+                  }}
+                  searchFormStatus={this.state.searchFormStatus}
+                  searchFormType={this.state.searchFormType}
+                  searchServiceUnit={this.state.searchServiceUnit}
+                />
               </div>
             </div>
           )

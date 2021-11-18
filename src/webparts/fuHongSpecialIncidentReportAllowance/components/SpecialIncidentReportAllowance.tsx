@@ -490,7 +490,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (formStatus === "DRAFT") {
             updateSpecialIncidentReportAllowance(formData.Id, {
                 ...body,
-                "ServiceUnit": serviceUnit
+                "ServiceUnit": serviceUnit,
+                "Title": "SID"
             }).then(res => {
                 console.log(res)
                 formSubmittedHandler();
@@ -499,7 +500,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             createSpecialIncidentReportAllowance({
                 ...body,
                 "Status": "DRAFT",
-                "ServiceUnit": serviceUnit
+                "ServiceUnit": serviceUnit,
+                "Title": "SID"
             }).then(res => {
                 console.log(res)
                 formSubmittedHandler();

@@ -448,7 +448,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         createSpecialIncidentReportLicense({
             ...body,
-            "Status": "DRAFT"
+            "Status": "DRAFT",
+            "Title": "SIH"
         }).then((res) => {
             formSubmittedHandler();
         }).catch(console.error);
@@ -503,7 +504,6 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         const [body, error] = dataFactory();
         // updateSpecialIncidentReportLicense(formData.Id, {
         //     ...body,
-
         // }).then(res => {
 
         // }).catch(console.error);

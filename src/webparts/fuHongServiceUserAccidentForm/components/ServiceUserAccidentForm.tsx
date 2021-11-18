@@ -238,9 +238,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["UnwellAfterInjuredChoices"] = JSON.stringify(form.uncomfortable);
 
                     if (form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1) {
-                        body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
-                    } else {
-                        error.uncomfortableOtherRemark = "請填寫";
+                        if (form.uncomfortableOtherRemark) {
+                            body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
+
+                        } else {
+                            error.uncomfortableOtherRemark = "請填寫";
+
+                        }
                     }
 
                     if (form.uncomfortableDescription) {
@@ -495,11 +499,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["Stage"] = "1";
         return [body, error];
     }
-
+    console.log(form.uncomfortable)
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
-        createServiceUserAccident(body).then((res) => {
+        createServiceUserAccident({
+            ...body,
+            "Title": "SUI"
+        }).then((res) => {
             console.log(res);
             formSubmittedHandler();
         }).catch(console.error);

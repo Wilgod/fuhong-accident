@@ -390,12 +390,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
         if (formStatus === "DRAFT") {
-            updateOutsiderAccidentFormById(formData.Id, body).then((res) => {
+            updateOutsiderAccidentFormById(formData.Id, {
+                ...body,
+                "Title": "PUI"
+            }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
-            createOutsiderAccidentForm(body).then((res) => {
+            createOutsiderAccidentForm({
+                ...body,
+                "Title": "PUI"
+            }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();
             }).catch(console.error);

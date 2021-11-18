@@ -115,7 +115,7 @@ const columns = (context) => {
             dataField: 'NextDeadline',
             text: '下個報告到期日',
             formatter: (value, data) => {
-                if (data && data.Status === "CLOSED") {
+                if (data && (data.Status === "CLOSED" || data.Status === "DRAFT")) {
                     return <div>沒有</div>
                 } else {
                     return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
@@ -149,6 +149,10 @@ const columns = (context) => {
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
                     formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
+                } else if (data && data.title) {
+                    formLink = path + caseNumberToSitePageParser(data.Title.toupperCase()) + `?formId=${value}`;
+                } else {
+                    return null;
                 }
 
                 return <div className="d-flex justify-content-center">
