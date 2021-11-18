@@ -80,7 +80,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const { departments, setHrDepartment } = useDepartmentMangers();
 
-
+    console.log(sdInfo);
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -478,13 +478,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             if (data.SM) {
                 setSMEmail(data.SM.EMail);
             }
-
+            console.log(data);
             if (data.SD) {
+                console.log(data.SD.EMail)
                 setSDEmail(data.SD.EMail);
             }
 
-            if (data.serviceUnit) {
-                setServiceUnit(data.serviceUnit);
+            if (data.ServiceUnit) {
+                setServiceUnit(data.ServiceUnit);
             }
 
             if (data.SDPhone) {

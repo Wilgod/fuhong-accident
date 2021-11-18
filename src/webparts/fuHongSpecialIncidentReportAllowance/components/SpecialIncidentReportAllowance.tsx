@@ -617,6 +617,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     // Get current User info in ad
     useEffect(() => {
+
         if (formData) {
             loadData();
         } else {
@@ -649,14 +650,16 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     // Get SD & SM
     useEffect(() => {
-        if (Array.isArray(departments) && departments.length) {
-            const dept = departments[0];
-            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
-                setSMEmail(dept.hr_deptmgr);
-            }
+        if (formInitial(currentUserRole, formStatus)) {
+            if (Array.isArray(departments) && departments.length) {
+                const dept = departments[0];
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                    setSMEmail(dept.hr_deptmgr);
+                }
 
-            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                setSDEmail(dept.hr_sd);
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    setSDEmail(dept.hr_sd);
+                }
             }
         }
     }, [departments]);

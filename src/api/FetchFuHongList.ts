@@ -246,8 +246,8 @@ export async function getOtherIncidentReportById(id: number) {
     try {
         const LIST_NAME = "Other Incident Report";
         const items = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "PreparationStaff/Id", "PreparationStaff/EMail", 'PreparationStaff/Title', "SM/Id", "SM/EMail", 'SM/Title')
-            .expand("Author", "SM", "PreparationStaff").get();
+            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "PreparationStaff/Id", "PreparationStaff/EMail", 'PreparationStaff/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title',)
+            .expand("Author", "SM", "PreparationStaff", "SD").get();
 
         return items;
     } catch (err) {

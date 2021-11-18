@@ -691,6 +691,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setFormId(data.Id);
             setFormStatus(data.Status);
             setFormStage(data.Stage);
+
+            if (data.ServiceUnit) {
+                setServiceUnit(data.ServiceUnit);
+            }
+
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -812,29 +817,34 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     // Find SD && SM
     useEffect(() => {
         // Testing data;
-        if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
-            setHrDepartment("CHH");
-            setServiceUnit("CHH");
-            return;
-        }
+        if (formInitial(currentUserRole, formStatus)) {
+            if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+                setHrDepartment("CHH");
+                setServiceUnit("CHH");
+                return;
+            }
 
-        if (userInfo && userInfo.hr_deptid) {
-            setHrDepartment(userInfo.hr_deptid);
-            setServiceUnit(userInfo.hr_deptid);
+            if (userInfo && userInfo.hr_deptid) {
+                setHrDepartment(userInfo.hr_deptid);
+                setServiceUnit(userInfo.hr_deptid);
+            }
         }
     }, [userInfo]);
 
     // Get SD & SM
     useEffect(() => {
-        if (Array.isArray(departments) && departments.length) {
-            const dept = departments[0];
+        if (formInitial(currentUserRole, formStatus)) {
 
-            if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
-                setSMEmail(dept.hr_deptmgr);
-            }
+            if (Array.isArray(departments) && departments.length) {
+                const dept = departments[0];
 
-            if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                setSDEmail(dept.hr_sd);
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                    setSMEmail(dept.hr_deptmgr);
+                }
+
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    setSDEmail(dept.hr_sd);
+                }
             }
         }
     }, [departments])
