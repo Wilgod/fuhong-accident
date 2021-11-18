@@ -6,19 +6,28 @@ export default function useUserInfo() {
     const [userInfo, setUserInfo] = useState<any>();
     const [spUserInfo, setSpUserInfo] = useState<any>();
     useEffect(() => {
+
         if (email) {
             // UserInfoAd list
-            getUserInfoByEmailInUserInfoAD(email).then((userInfos) => {
-                if (Array.isArray(userInfos) && userInfos.length > 0) {
-                    const [user] = userInfos;
+            getUserInfoByEmailInUserInfoAD(email).then((userInfosRes) => {
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    const [user] = userInfosRes;
                     setUserInfo(user);
                 }
-            }).catch(console.error);
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
 
             // SharePoint 
-            getUserInfoByEmail(email).then((res) => {
-                setSpUserInfo(res);
-            }).catch(console.error);
+            getUserInfoByEmail(email).then((getUserInfoByEmailRes) => {
+                setSpUserInfo(getUserInfoByEmailRes);
+            }).catch((err) => {
+                console.error('useUserInfo error')
+                console.error(err)
+            });
 
         } else {
             setUserInfo(null);

@@ -2,10 +2,11 @@ import * as React from 'react'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import useServiceUnit from '../../hooks/useServiceUnits';
-import useFetchAllForms from '../../hooks/useServiceUserAccidentForm';
+
 import { IMainTableComponentProps } from './IMainTableComponent';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
+import useFetchAllForms from '../../hooks/useFetchAllForms';
 export default function MainTableComponent({ context }: IMainTableComponentProps) {
     const [data] = useFetchAllForms();
 
@@ -38,6 +39,29 @@ const columns = (context) => {
                     date = data.IncidentTime;
                 }
                 return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
+            },
+            sort: true,
+            sortFunc: (a, b, order, dataField, rowA, rowB) => {
+                let aTime = new Date().getTime();
+                let bTime = new Date().getTime();
+
+                if (rowA.AccidentTime) {
+                    aTime = new Date(rowA.AccidentTime).getTime();
+                } else {
+                    aTime = new Date(rowA.IncidentTime).getTime();
+                }
+
+
+                if (rowB.AccidentTime) {
+                    bTime = new Date(rowB.AccidentTime).getTime();
+                } else {
+                    bTime = new Date(rowB.IncidentTime).getTime();
+                }
+
+                if (order === 'asc') {
+                    return bTime - aTime;
+                }
+                return aTime - bTime; // desc
             }
         },
         {
@@ -59,12 +83,24 @@ const columns = (context) => {
         {
             dataField: 'Status',
             text: '狀態',
+            sort: true
         },
         {
             dataField: 'Modified',
             text: '最後更新報告',
             formatter: (value, data) => {
                 return <div> {moment(new Date(value)).format("YYYY-MM-DD")}</div>
+            },
+            sort: true,
+            sortFunc: (a, b, order, dataField, rowA, rowB) => {
+                let aTime = new Date(rowA.Modified).getTime();
+                let bTime = new Date(rowB.Modified).getTime();
+
+
+                if (order === 'asc') {
+                    return bTime - aTime;
+                }
+                return aTime - bTime; // desc
             }
         },
         {
@@ -76,6 +112,25 @@ const columns = (context) => {
                 } else {
                     return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
                 }
+            },
+            sort: true,
+            sortFunc: (a, b, order, dataField, rowA, rowB) => {
+                let aTime = new Date(rowA.NextDeadline || new Date().getTime()).getTime();
+                let bTime = new Date(rowB.NextDeadline || new Date().getTime()).getTime();
+
+                if (rowA.Status === "CLOSED") {
+                    aTime = new Date(new Date().setFullYear(1970)).getTime();
+                }
+
+                if (rowA.Status === "CLOSED") {
+                    bTime = new Date(new Date().setFullYear(1970)).getTime();
+                }
+
+
+                if (order === 'asc') {
+                    return bTime - aTime;
+                }
+                return aTime - bTime; // desc
             }
         },
         {

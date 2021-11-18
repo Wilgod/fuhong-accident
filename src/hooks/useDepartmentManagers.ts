@@ -1,7 +1,7 @@
 // return service director
 
 import { useState, useEffect } from "react";
-import { getUserInfoByEmailInUserInfoAD, getDepartmentByShortName } from "../api/FetchUser";
+import { getDepartmentByShortName } from "../api/FetchUser";
 
 
 export default function useDepartmentMangers() {
@@ -10,6 +10,7 @@ export default function useDepartmentMangers() {
 
     useEffect(() => {
         if (hrDepartment) {
+            console.log(hrDepartment);
             getDepartmentByShortName(hrDepartment).then((res) => {
                 setDepartments(res);
             }).catch(console.error);

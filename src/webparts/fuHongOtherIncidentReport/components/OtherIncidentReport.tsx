@@ -77,7 +77,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+
     const { departments, setHrDepartment } = useDepartmentMangers();
+
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -552,6 +554,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
+                setServiceUnit(userInfo.hr_deptid);
             }
         }
     }, [userInfo]);
@@ -561,7 +564,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         if (formInitial(currentUserRole, formStatus)) {
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
+                console.log(dept);
                 if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                    console.log("hi");
                     setSMEmail(dept.hr_deptmgr);
                 }
 
@@ -1029,7 +1034,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1082,7 +1087,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled />
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">

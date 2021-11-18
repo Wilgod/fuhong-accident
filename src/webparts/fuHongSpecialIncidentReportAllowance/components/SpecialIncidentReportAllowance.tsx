@@ -642,10 +642,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
+                setServiceUnit(userInfo.hr_deptid);
             }
         }
     }, [userInfo]);
-    console.log(serviceUnit);
+
     // Get SD & SM
     useEffect(() => {
         if (Array.isArray(departments) && departments.length) {
@@ -1375,7 +1376,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1427,7 +1428,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 isRequired={false}
                                 selectedItems={(e) => { console.log }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">

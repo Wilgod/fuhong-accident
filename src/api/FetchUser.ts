@@ -37,7 +37,7 @@ export async function getUserInfoByEmailInUserInfoAD(email: string) {
 export async function getDepartmentByShortName(shortName: string) {
     try {
         const LIST_NAME = "SM SD Mapping";
-        const URL = "https://fuhongsociety.sharepoint.com/sites/Portal";
+        const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`Title eq '${shortName}'`).top(1).orderBy("Modified", false).get();
         return result;
     } catch (err) {

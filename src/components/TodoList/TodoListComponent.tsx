@@ -1,14 +1,22 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next';
-import useFetchAllForms from '../../hooks/useServiceUserAccidentForm';
+import useFetchAllForms from '../../hooks/useFetchAllForms';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { ITodoListComponentProps } from './ITodoListComponent';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import * as moment from 'moment';
+import { IUser } from '../../interface/IUser';
+import useFetchUserJob from '../../hooks/useFetchUserJob';
 
 export default function TodoListComponent({ context }: ITodoListComponentProps) {
-    const [data] = useFetchAllForms();
+    const CURRENT_USER: IUser = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
+    const [data] = useFetchUserJob(CURRENT_USER.id);
+
 
     return (
         <div>
@@ -50,6 +58,29 @@ const columns = (context) => {
                     date = data.IncidentTime;
                 }
                 return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
+            },
+            sort: true,
+            sortFunc: (a, b, order, dataField, rowA, rowB) => {
+                let aTime = new Date().getTime();
+                let bTime = new Date().getTime();
+
+                if (rowA.AccidentTime) {
+                    aTime = new Date(rowA.AccidentTime).getTime();
+                } else {
+                    aTime = new Date(rowA.IncidentTime).getTime();
+                }
+
+
+                if (rowB.AccidentTime) {
+                    bTime = new Date(rowB.AccidentTime).getTime();
+                } else {
+                    bTime = new Date(rowB.IncidentTime).getTime();
+                }
+
+                if (order === 'asc') {
+                    return bTime - aTime;
+                }
+                return aTime - bTime; // desc
             }
         },
         {

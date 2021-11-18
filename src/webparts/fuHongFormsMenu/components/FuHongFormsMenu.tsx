@@ -11,6 +11,7 @@ import MainTableComponent from '../../../components/MainTable/MainTableComponent
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAllServiceUnit } from '../../../api/FetchUser';
+import { IUser } from '../../../interface/IUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -36,6 +37,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private SPECIAL_INCIDENT_REPORT_ALLOWANCE = "SpecialIncidentReportAllowance"; // form 24
   private SPECIAL_INCIDENT_REPORT_LICENSE = "SpecialIncidentReportLicense"; //form 25
   private SITE_CONTENT = `${this.props.context.pageContext.web.absoluteUrl}/_layouts/15/viewlsts.aspx?view=14`;
+
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -50,6 +52,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       searchDateEnd: new Date(),
       serviceUnitList: []
     }
+  }
+
+  private CURRENT_USER: IUser = {
+    email: this.props.context.pageContext.legacyPageContext.userEmail,
+    name: this.props.context.pageContext.legacyPageContext.userDisplayName,
+    id: this.props.context.pageContext.legacyPageContext.userId,
   }
 
   public componentDidMount() {
@@ -79,7 +87,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         {name}
       </a>
     }
-    console.log(this.state.serviceUnitList);
+
     const formList = () => {
       return <ul>
         <li>{ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}</li>

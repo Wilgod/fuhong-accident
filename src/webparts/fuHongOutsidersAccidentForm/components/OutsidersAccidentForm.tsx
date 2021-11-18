@@ -434,7 +434,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const smRejectHandler = (event) => {
         if (confirm("確認拒絕 ?")) {
 
-            const body = {  
+            const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
                 "SMDate": smDate.toISOString(),
@@ -632,6 +632,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
         if (userInfo && userInfo.hr_deptid) {
             setHrDepartment(userInfo.hr_deptid);
+            setServiceUnit(userInfo.hr_deptid);
         }
     }, [userInfo]);
 
@@ -1114,7 +1115,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""} `.trim()} disabled={true} />
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1161,7 +1162,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim()} disabled={true} />
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
