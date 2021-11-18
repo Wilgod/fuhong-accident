@@ -180,7 +180,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         //意外發生地點
-        if (form.accidentLocation.trim().length > 0) {
+        if (form.accidentLocation) {
             body["AccidentLocation"] = form.accidentLocation;
         } else {
             error.accidentLocation = "ACCIDENT_LOCATION_ERROR";
@@ -198,13 +198,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["Circumstance"] = form.patientAcciedntScenario;
 
             if (form.patientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY")
-                if (form.scenarioOutsideActivityRemark.trim()) {
+                if (form.scenarioOutsideActivityRemark) {
                     body["CircumstanceLocation"] = form.scenarioOutsideActivityRemark.trim();
                 } else {
                     error.scenarioOutsideActivityRemark = "請填寫";
                 }
             if (form.patientAcciedntScenario === "SCENARIO_OTHER") {
-                if (form.scenarioOtherRemark.trim()) {
+                if (form.scenarioOtherRemark) {
                     body["CircumstanceOtherRemark"] = form.scenarioOtherRemark.trim();
                 } else {
                     error.scenarioOtherRemark = "請填寫"
@@ -306,7 +306,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.envFactor.length > 0) {
             body["ObserveEnvironmentFactor"] = JSON.stringify(form.envFactor);
             if (form.envFactor.indexOf("ENV_OTHER") > -1) {
-                if (form.enviromentalFactorOtherRemark.trim()) {
+                if (form.enviromentalFactorOtherRemark) {
                     body["ObserveEnvironmentFactorOther"] = form.enviromentalFactorOtherRemark.trim();
                 } else {
                     error.evnFactorOtherRemark = "請註明";
@@ -320,7 +320,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.personalFactor.length > 0) {
             body["ObservePersonalFactor"] = JSON.stringify(form.personalFactor);
             if (form.personalFactor.indexOf("PERSONAL_OTHER") > -1) {
-                if (form.personalFactorOtherRemark.trim()) {
+                if (form.personalFactorOtherRemark) {
                     body["ObservePersonalFactorOther"] = form.personalFactorOtherRemark.trim();
                 } else {
                     error.personalFactorOtherRemark = "請註明";
@@ -331,14 +331,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         //事發過程
-        if (form.accidentDetail.trim()) {
+        if (form.accidentDetail) {
             body["AccidentDetail"] = form.accidentDetail.trim();
         } else {
             error.accidentDetail = "請填寫";
         }
 
         //服務單位即時治療/處理
-        if (form.treatmentAfterAccident.trim()) {
+        if (form.treatmentAfterAccident) {
             body["TreatmentAfterAccident"] = form.treatmentAfterAccident.trim();
         } else {
             error.treatmentAfterAccident = "請填寫";
@@ -349,14 +349,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["MedicalArrangement"] = form.arrangement;
             //醫院名稱
             if (form.arrangement.indexOf("ARRANGEMENT_EMERGENCY_DEPARTMENT") > -1) {
-                if (form.medicalArrangementHospital.trim()) {
+                if (form.medicalArrangementHospital) {
                     body["MedicalArrangementHospital"] = form.medicalArrangementHospital.trim();
 
                     //到達時間
                     body["MedicalArrangementDate"] = medicalArrangementDate.toISOString();
 
                     // 提供予服務使用者的治療
-                    if (form.medicalArrangementTreatment.trim()) {
+                    if (form.medicalArrangementTreatment) {
                         body["MedicalArrangementTreatment"] = form.medicalArrangementTreatment.trim();
                     } else {
                         error.medicalArrangementTreatment = "請填寫";
@@ -375,7 +375,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["StayInHospital"] = form.isStayInHospital;
             //醫院名稱
             if (form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE") {
-                if (form.stayInHospitalName.trim()) {
+                if (form.stayInHospitalName) {
                     body["StayInHospitalName"] = form.stayInHospitalName;
                 } else {
                     error.isStayInHospitalName = "請填寫";
@@ -393,14 +393,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 body["CalledPoliceDate"] = policeDate.toISOString();
 
                 //報案編號
-                if (form.policeReportNumber.trim()) {
+                if (form.policeReportNumber) {
                     body["CalledPoliceReportNumber"] = form.policeReportNumber.trim();
                 } else {
                     error.policeReportNumber = "請填寫";
                 }
 
                 //警署
-                if (form.policeStation.trim()) {
+                if (form.policeStation) {
                     body["CalledPoliceStation"] = form.policeStation.trim();
                 } else {
                     error.policeStation = "請填寫";
@@ -414,7 +414,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.contingencyMeasure) {
             body["ContingencyMeasure"] = form.contingencyMeasure;
             if (form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE") {
-                if (form.contingencyMeasureRemark.trim()) {
+                if (form.contingencyMeasureRemark) {
                     body["ContingencyMeasureRemark"] = form.contingencyMeasureRemark.trim();
                 } else {
                     error.contingencyMeasureRemark = "請填寫";
@@ -428,14 +428,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["ContactFamilyDate"] = contactFamilyDate.toISOString();
 
         //與服務使用者關係
-        if (form.contactFamilyRelationship.trim()) {
+        if (form.contactFamilyRelationship) {
             body["ContactFamilyRelationship"] = form.contactFamilyRelationship.trim();
         } else {
             error.contactFamilyRelationship = "請填寫";
         }
 
         //家屬姓名
-        if (form.contactFamilyName.trim()) {
+        if (form.contactFamilyName) {
             body["ContactFamilyName"] = form.contactFamilyName.trim();
         } else {
             error.contactFamilyName = "請填寫";
@@ -447,7 +447,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         //服務使用者經診治後情況
-        if (form.afterTreatmentDescription.trim()) {
+        if (form.afterTreatmentDescription) {
             body["AfterTreatmentDescription"] = form.afterTreatmentDescription.trim();
         } else {
             error.afterTreatmentDescription = "請填寫";
@@ -519,7 +519,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }).catch(console.error);
         } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage)) {
             updateServiceUserAccidentById(formId, {
-                "SDComment": sdComment.trim(),
+                "SDComment": sdComment,
                 "SDDate": sdDate.toISOString(),
             }).then((res) => {
                 // Update form to stage 1-2
@@ -583,104 +583,113 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         //     "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
         //     "Status": "PENDING_SPT_APPROVE"
         // };
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            updateServiceUserAccidentById(formId, {
-                ...body,
-                "SMApproved": true,
-                "SMComment": smComment.trim(),
-                "SMDate": smDate.toISOString(),
-                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                "Status": "PENDING_SPT_APPROVE"
-            }).then((res) => {
-                // Update form to stage 1-2
-                // Trigger notification workflow
-                console.log(res);
-                formSubmittedHandler();
-            }).catch(console.error);
+        if (confirm("確認批准 ?")) {
+
+            if (Object.keys(error).length > 0) {
+                setError(error);
+            } else {
+                updateServiceUserAccidentById(formId, {
+                    ...body,
+                    "SMApproved": true,
+                    "SMComment": smComment,
+                    "SMDate": smDate.toISOString(),
+                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                    "Status": "PENDING_SPT_APPROVE"
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
         }
     }
 
     const smRejectHandler = () => {
-        const body = {
-            "SMApproved": false,
-            "SMComment": smComment.trim(),
-            "SMDate": smDate.toISOString(),
-            "Status": "SM_VOID"
-        };
-        updateServiceUserAccidentById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+        if (confirm("確認拒絕 ?")) {
+            const body = {
+                "SMApproved": false,
+                "SMComment": smComment,
+                "SMDate": smDate.toISOString(),
+                "Status": "SM_VOID"
+            };
+            updateServiceUserAccidentById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+        }
     }
 
     const sptApproveHandler = () => {
-        const [body, error] = dataFactory("");
-        if (Object.keys(error).length > 0) {
-            setError(error);
-        } else {
-            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-                const serviceAccidentUserFormBody = {
-                    ...body,
-                    "SPTApproved": true,
-                    "SPTComment": sptComment.trim(),
-                    "SPTDate": sptDate.toISOString(),
-                    "InvestigatorId": investigatorPickerInfo[0].id,
-                    "Status": "PENDING_INVESTIGATE",
-                    "Stage": "2",
-                    "NextDeadline": addMonths(new Date(), 1).toISOString()
-                };
-                updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
-                    // Create form 20, switch to stage 2]
-                    if (formOneResponse) {
-                        getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
-                            if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
-                                let accidentTime = serviceUserAccidentForm.AccidentTime
-                                const accidentReportFormBody = {
-                                    "CaseNumber": serviceUserAccidentForm.CaseNumber,
-                                    "ParentFormId": serviceUserAccidentForm.Id,
-                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
-                                    "ReceivedDate": new Date().toISOString(), // 交付日期
-                                    "SPTId": serviceUserAccidentForm.SPTId,
-                                    "SMId": serviceUserAccidentForm.SMId,
-                                    "InvestigatorId": serviceUserAccidentForm.InvestigatorId
-                                }
-                                createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
-                                    // Trigger notification workflow
-
-
-                                    //AccidentReportForm
-                                    if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-
-                                        updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
-                                            console.log(res)
-                                            formSubmittedHandler()
-                                        }).catch(console.error);
-                                    }
-                                })
-                            }
-                        }).catch(console.error);
-                    }
-                });
+        if (confirm("確認批准 ?")) {
+            const [body, error] = dataFactory("");
+            if (Object.keys(error).length > 0) {
+                setError(error);
             } else {
-                // error implementation
+                if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                    const serviceAccidentUserFormBody = {
+                        ...body,
+                        "SPTApproved": true,
+                        "SPTComment": sptComment,
+                        "SPTDate": sptDate.toISOString(),
+                        "InvestigatorId": investigatorPickerInfo[0].id,
+                        "Status": "PENDING_INVESTIGATE",
+                        "Stage": "2",
+                        "NextDeadline": addMonths(new Date(), 1).toISOString()
+                    };
+                    updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                        // Create form 20, switch to stage 2]
+                        if (formOneResponse) {
+                            getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
+                                if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
+                                    let accidentTime = serviceUserAccidentForm.AccidentTime
+                                    const accidentReportFormBody = {
+                                        "CaseNumber": serviceUserAccidentForm.CaseNumber,
+                                        "ParentFormId": serviceUserAccidentForm.Id,
+                                        "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                        "ReceivedDate": new Date().toISOString(), // 交付日期
+                                        "SPTId": serviceUserAccidentForm.SPTId,
+                                        "SMId": serviceUserAccidentForm.SMId,
+                                        "InvestigatorId": serviceUserAccidentForm.InvestigatorId
+                                    }
+                                    createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                        // Trigger notification workflow
+
+
+                                        //AccidentReportForm
+                                        if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+
+                                            updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                                console.log(res)
+                                                formSubmittedHandler()
+                                            }).catch(console.error);
+                                        }
+                                    })
+                                }
+                            }).catch(console.error);
+                        }
+                    });
+                } else {
+                    // error implementation
+                }
             }
         }
     }
 
     const sptRejectHandler = () => {
-        if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-            const body = {
-                "SPTApproved": false,
-                "SPTComment": sptComment.trim(),
-                "SPTDate": sptDate.toISOString(),
-                "InvestigatorId": investigatorPickerInfo[0].id,
-                "Status": "SPT_REJECTED"
-            };
-            updateServiceUserAccidentById(formId, body).then(() => {
-                // Trigger notification workflow
-                formSubmittedHandler();
-            }).catch(console.error);
-        } else {
-            // error implementation
+        if (confirm("確認拒絕 ?")) {
+            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                const body = {
+                    "SPTApproved": false,
+                    "SPTComment": sptComment,
+                    "SPTDate": sptDate.toISOString(),
+                    "InvestigatorId": investigatorPickerInfo[0].id,
+                    "Status": "SPT_REJECTED"
+                };
+                updateServiceUserAccidentById(formId, body).then(() => {
+                    // Trigger notification workflow
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                // error implementation
+            }
         }
     }
 

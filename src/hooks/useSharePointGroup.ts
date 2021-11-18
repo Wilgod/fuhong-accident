@@ -4,7 +4,7 @@ import { getUserInfoByEmail } from "../api/FetchUser";
 export default function useSharePointGroup() {
     const [user, setUser] = useState(null);
     const [email, setEmail] = useState(null);
-    console.log(email);
+
     useEffect(() => {
         if (email) {
             getUserInfoByEmail(email).then(setUser).catch(console.error);

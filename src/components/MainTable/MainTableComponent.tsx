@@ -7,8 +7,16 @@ import { IMainTableComponentProps } from './IMainTableComponent';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import useFetchAllForms from '../../hooks/useFetchAllForms';
+import { IUser } from '../../interface/IUser';
 export default function MainTableComponent({ context }: IMainTableComponentProps) {
-    const [data] = useFetchAllForms();
+
+    const CURRENT_USER: IUser = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
+
+    const [data] = useFetchAllForms(CURRENT_USER.id);
 
     return (
         <div>

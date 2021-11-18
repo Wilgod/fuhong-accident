@@ -79,6 +79,25 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             this.setState({ currentUserRole: Role.INVESTIGATOR });
           }
         }
+
+        if (data && data.SM && data.SM.EMail) {
+          if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+          }
+        }
+
+        if (data && data.SD && data.SD.EMail) {
+          if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+          }
+        }
+
+        if (data && data.SPT && data.SPT.EMail) {
+          if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+          }
+        }
+
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
@@ -97,7 +116,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       throw new Error("initialDataByFormId error");
     }
   }
-  
+
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });

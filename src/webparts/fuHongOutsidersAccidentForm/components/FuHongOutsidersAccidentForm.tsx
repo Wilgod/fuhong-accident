@@ -79,6 +79,25 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             this.setState({ currentUserRole: Role.INVESTIGATOR });
           }
         }
+
+        if (data && data.SM && data.SM.EMail) {
+          if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+          }
+        }
+
+        if (data && data.SD && data.SD.EMail) {
+          if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+          }
+        }
+
+        if (data && data.SPT && data.SPT.EMail) {
+          if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+          }
+        }
+
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);

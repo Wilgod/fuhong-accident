@@ -72,6 +72,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         abusiveDescription: ""
     });
 
+    const [reportOrg, setReportOrg] = useState("");//機構名稱
+    const [reportPhone, setReportPhone] = useState(""); //聯絡電話
+    const [suTcName, setSuTcName] = useState("");//單位名稱
+    const [reportAddress, setReportAddress] = useState(""); //單位地址
+
     const [accidentCategoryAbuseDetails, setAccidentCategoryAbuseDetails] = useState<IAccidentCategoryAbuseDetails>({
         status: "",
         person: ""
@@ -93,7 +98,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
     const [guardianDatetime, setGuardianDatetime] = useState(new Date());
-
+    console.log(departments);
+    console.log(userInfo);
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -422,6 +428,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 staffPositionThree: formData.StaffPositionThree,
                 toDepartment: formData.ToDepartment
             })
+            if (formData.OrgName) setReportOrg(formData.OrgName);
+            if (formData.OrgPhone) setReportPhone(formData.OrgPhone);
+            if (formData.OrgAddress) setReportAddress(formData.OrgAddress);
+            if (formData.OrgSUName) setSuTcName(formData.OrgSUName);
+
         }
     }
 
@@ -430,6 +441,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         const [body, error] = dataFactory()
         console.log(body);
         console.log(error);
+
+        body["OrgName"] = reportOrg;
+        body["OrgPhone"] = reportPhone;
+        body["OrgAddress"] = reportAddress;
+        body["OrgSUName"] = suTcName;
+
         if (formStatus === "DRAFT") {
             caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
                 updateSpecialIncidentReportAllowance(formData.Id, {
@@ -648,6 +665,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         }
     }, [userInfo]);
 
+
     // Get SD & SM
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
@@ -660,6 +678,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
                     setSDEmail(dept.hr_sd);
                 }
+
+                if (dept && dept.su_name_tc) {
+                    setSuTcName(dept.su_name_tc);
+                    setReportAddress(dept.su_name_tc);
+                }
+                setReportOrg("扶康會");
+
+                if (dept && dept.su_phone) {
+                    setReportPhone(dept.su_phone);
+                }
+
             }
         }
     }, [departments]);
@@ -781,31 +810,35 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         {/* 事故性質 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>機構名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" value={reportOrg} onChange={(event) => setReportOrg(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                         {/* 單位名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>單位名稱</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={serviceUnit} />
+                            <input type="text" className="form-control" value={suTcName} onChange={(event) => setSuTcName(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 聯絡電話 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>聯絡電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                            <input type="text" className="form-control" value={reportPhone} onChange={(event) => setReportPhone(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                         {/* 負責職員姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>負責職員姓名</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" readOnly value={reporter && reporter.displayName || ""} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         {/* 單位地址 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>單位地址</label>
                         <div className="col">
-                            <input type="text" className="form-control" readOnly />
+                            <input type="text" className="form-control" value={reportAddress} onChange={(event) => setReportAddress(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
                 </section>

@@ -64,10 +64,12 @@ export async function getLastCaseNo(formFlow: FormFlow) {
 }
 
 // Form 19
-export async function getServiceUserAccident() {
+export async function getServiceUserAccident(spId: number) {
     try {
         const LIST_NAME = "Service User Accident";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId})`)
+            .getAll();
 
         return items;
     } catch (err) {
@@ -170,10 +172,12 @@ export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string)
 }
 
 // Form 22
-export async function getOutsiderAccident() {
+export async function getOutsiderAccident(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId})`)
+            .getAll();
 
         return items;
     } catch (err) {
@@ -214,10 +218,12 @@ export async function getOutsiderAccidentById(id: number) {
 }
 
 //Form 23
-export async function getOtherIncidentReport() {
+export async function getOtherIncidentReport(spId: number) {
     try {
         const LIST_NAME = "Other Incident Report";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId})`)
+            .getAll();
 
         return items;
     } catch (err) {
@@ -257,11 +263,11 @@ export async function getOtherIncidentReportById(id: number) {
 }
 
 //Form 24
-export async function getSpecialIncidentReportLicense() {
+export async function getSpecialIncidentReportLicense(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report License";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`Status ne 'DRAFT'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId})`)
             .getAll();
 
         return items;
@@ -302,10 +308,12 @@ export async function getSpecialIncidentReportLicenseById(id: number) {
 }
 
 //Form 25
-export async function getSpecialIncidentReportAllowance() {
+export async function getSpecialIncidentReportAllowance(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").getAll();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId})`)
+            .getAll();
 
         return items;
     } catch (err) {
