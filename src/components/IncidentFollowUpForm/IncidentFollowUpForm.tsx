@@ -476,7 +476,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000}
                             /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname} ${smInfo && smInfo.Firstname}`.trim()} disabled />
+                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -510,7 +510,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 showtooltip={false}
                                 principalTypes={[PrincipalType.User]}
                                 resolveDelay={1000} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname} ${sdInfo && sdInfo.Firstname}`.trim()} disabled />
+                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""}`.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled />
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
