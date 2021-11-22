@@ -39,6 +39,8 @@ const columns = (context) => {
                 if (value) {
                     const [caseType] = value.split("-");
                     return caseNumberToFormNameParser(caseType);
+                } else if (data && data.Title) {
+                    return caseNumberToFormNameParser(data.Title);
                 }
             }
         },
@@ -91,6 +93,10 @@ const columns = (context) => {
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
                     formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
+                } else if (data && data.Title) {
+                    formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
+                } else {
+                    return null;
                 }
 
                 return <div className="d-flex justify-content-center">

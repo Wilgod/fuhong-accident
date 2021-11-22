@@ -35,7 +35,8 @@ const Container = styled.div`
 
 
 export default function StyledDropzone(props) {
-    const [uploadedFiles, setUploadedFiles] = useState([]);
+    console.log(props.uploadedFiles)
+    const [files, setFiles] = useState([]);
     const {
         getRootProps,
         getInputProps,
@@ -46,22 +47,22 @@ export default function StyledDropzone(props) {
     } = useDropzone({ accept: 'image/*' });
 
     const uploadedFilesHandler = () => {
-        setUploadedFiles(value => [...value, ...acceptedFiles]);
+        setFiles(value => [...value, ...acceptedFiles]);
     }
 
     const removeHandler = (index) => {
-        setUploadedFiles(value => value.filter((f, i) => index !== i));
+        setFiles(value => value.filter((f, i) => index !== i));
     }
 
     useEffect(() => {
-        props.selectedFiles(uploadedFiles);
-    }, [uploadedFiles]);
+        props.selectedFiles(files);
+    }, [files]);
 
     useEffect(() => {
         uploadedFilesHandler();
     }, [acceptedFiles])
 
-    const files = uploadedFiles.map((file, index) => {
+    const FilesComponent = files.map((file, index) => {
         return <li key={`${file.name}_${index}`}>
             <div className="d-flex">
                 <span className="flex-grow-1 text-break">
@@ -74,6 +75,20 @@ export default function StyledDropzone(props) {
         </li>
     });
 
+    const UploadedFilesComponent = Array.isArray(props.uploadedFiles) && props.uploadedFiles.map((file, index) => {
+        const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
+
     return (
         <div >
             <Container {...getRootProps({ isDragActive, isDragAccept, isDragReject })}>
@@ -83,12 +98,19 @@ export default function StyledDropzone(props) {
             {
                 files.length > 0 &&
                 <aside>
-                    <h6>Files</h6>
-                    <ul>{files}</ul>
+                    <h6>準備上存檔案</h6>
+                    <ul>{FilesComponent}</ul>
+                </aside>
+            }
+            {
+                Array.isArray(props.uploadedFiles) && props.uploadedFiles.length > 0 &&
+                <aside >
+                    <h6>已上存檔案</h6>
+                    <ul>{UploadedFilesComponent}</ul>
                 </aside>
             }
 
-        </div>
+        </div >
     );
 }
 

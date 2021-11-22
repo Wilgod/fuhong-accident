@@ -14,7 +14,7 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentFormById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
@@ -24,6 +24,7 @@ import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
 import { formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
+import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -104,6 +105,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -330,7 +332,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             body["Status"] = "PENDING_SM_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else if (status === "DRAFT") {
-            body["Status"] = "DRAFT";
+            // body["Status"] = "DRAFT";
         }
 
         body["Stage"] = "1";
@@ -369,13 +371,53 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Draft update havent implement
                 caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceUnit).then((caseNubmer) => {
                     console.log(caseNubmer);
-                    createOutsiderAccidentForm({
-                        ...body,
-                        "CaseNumber": caseNubmer
-                    }).then(res => {
-                        console.log(res);
-                        formSubmittedHandler();
-                    }).catch(console.error);
+
+                    if (formStatus === "DRAFT") {
+                        updateOutsiderAccidentFormById(formData.Id, {
+                            ...body,
+                            "CaseNumber": caseNubmer
+                        }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                            console.log(updateOutsiderAccidentFormByIdRes)
+                            // Photo upload implement
+                            let att = [];
+                            if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                                att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                            }
+
+                            if (att.length > 0) {
+                                await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                    if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                                    }
+                                }).catch(console.error);
+                            }
+                            formSubmittedHandler();
+                        })
+                    } else {
+                        createOutsiderAccidentForm({
+                            ...body,
+                            "CaseNumber": caseNubmer
+                        }).then(async createOutsiderAccidentFormRes => {
+                            if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
+                                console.log(createOutsiderAccidentFormRes);
+                                // Photo upload implement
+                                let att = [];
+                                if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                                    att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                                }
+
+                                if (att.length > 0) {
+                                    await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                        if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                                        }
+                                    }).catch(console.error);
+                                }
+                            }
+
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
                 }).catch(console.error);
             }
         }
@@ -392,7 +434,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (formStatus === "DRAFT") {
             updateOutsiderAccidentFormById(formData.Id, {
                 ...body,
-                "Title": "PUI"
+                "Title": "PUI",
+                "Status": "DRAFT"
             }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();
@@ -400,7 +443,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
             createOutsiderAccidentForm({
                 ...body,
-                "Title": "PUI"
+                "Title": "PUI",
+                "Status": "DRAFT"
             }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();

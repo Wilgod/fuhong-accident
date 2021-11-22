@@ -68,7 +68,7 @@ export async function getServiceUserAccident(spId: number) {
     try {
         const LIST_NAME = "Service User Accident";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId})`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT' `)
             .getAll();
 
         return items;
@@ -82,7 +82,7 @@ export async function getServiceUserAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Service User Accident";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.
-            filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT' and Status ne 'CLOSED'`)
+            filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
@@ -176,7 +176,7 @@ export async function getOutsiderAccident(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId})`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT'`)
             .getAll();
 
         return items;
@@ -190,7 +190,7 @@ export async function getOutsiderAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT' and Status ne 'CLOSED'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
@@ -222,7 +222,7 @@ export async function getOtherIncidentReport(spId: number) {
     try {
         const LIST_NAME = "Other Incident Report";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId})`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
             .getAll();
 
         return items;
@@ -236,7 +236,7 @@ export async function getOtherIncidentReportBySPId(spId: number) {
     try {
         const LIST_NAME = "Other Incident Report";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT' and Status ne 'CLOSED'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
             .expand("SM", "SD", "Author")
             .getAll();
@@ -281,7 +281,7 @@ export async function getSpecialIncidentReportLicenseBySPId(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report License";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT' and Status ne 'CLOSED'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
             .expand("SM", "SD", "Author")
             .getAll();
@@ -312,7 +312,7 @@ export async function getSpecialIncidentReportAllowance(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId})`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
             .getAll();
 
         return items;
@@ -326,7 +326,7 @@ export async function getSpecialIncidentReportAllowanceBySPId(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT' and Status ne 'CLOSED'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
             .expand("SM", "SD", "Author")
             .getAll();

@@ -35,6 +35,7 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptApproveForSD } from '../permissionConfig';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
+import { ContactFolder } from '@pnp/graph/contacts';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -67,7 +68,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sdList] = useSD();
     const [insuranceNumber, setInsuranceNumber] = useState("");
     const [injuryFiles, setInjuryFiles] = useState([]);
+    const [uploadedInjuryFiles, setUploadedInjuryFiles] = useState([]);
     const [selectedCctvPhoto, setSelectedCctvPhoto] = useState([]);
+    const [uploadedCctvPhoto, setUploadedCctvPhoto] = useState([]);
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
@@ -240,10 +243,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     if (form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1) {
                         if (form.uncomfortableOtherRemark) {
                             body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
-
                         } else {
                             error.uncomfortableOtherRemark = "請填寫";
-
                         }
                     }
 
@@ -253,7 +254,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         error.uncomfortableDescription = "請填寫";
                     }
                 } else {
-                    error.uncomfortableOtherRemark = "請選擇";
+                    error.uncomfortable = "請選擇";
                 }
             } else if (form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_FALSE") {
                 // do nothing
@@ -273,9 +274,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["UnsafeBehaviorsChoices"] = JSON.stringify(form.behavior);
 
                     if (form.behavior.indexOf("BEHAVIOR_OTHER") > -1) {
-                        body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
-                    } else {
-                        error.behaviorOtherRemark = "請填寫";
+                        if (form.behaviorOtherRemark) {
+                            body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
+
+                        } else {
+                            error.behaviorOtherRemark = "請填寫";
+                        }
                     }
                 } else {
                     error.behavior = "請選擇";
@@ -288,11 +292,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         //相片及CCTV紀錄
         if (form.photo) {
             body["PhotoRecord"] = form.photo === "PHOTO_TRUE";
-            if (form.photo === "PHOTO_TRUE") {
-                if (selectedCctvPhoto.length === 0) {
-                    error.photo = "請上傳照片";
-                }
-            }
+            // if (form.photo === "PHOTO_TRUE") {
+            //     if (selectedCctvPhoto.length === 0) {
+            //         error.photo = "請上傳照片";
+            //     }
+            // }
         } else {
             error.photoChoice = "請選擇";
         }
@@ -492,25 +496,77 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["Status"] = "PENDING_SM_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else if (status === "DRAFT") {
-            body["Status"] = "DRAFT";
+            // body["Status"] = "DRAFT";
         }
-
 
         body["Stage"] = "1";
         return [body, error];
     }
-    console.log(form.uncomfortable)
+
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
-        createServiceUserAccident({
-            ...body,
-            "Title": "SUI"
-        }).then((res) => {
-            console.log(res);
-            formSubmittedHandler();
-        }).catch(console.error);
+        if (formStatus === "DRAFT") {
+            updateServiceUserAccidentById(formData.Id, {
+                ...body,
+                "Title": "SUI",
+                "Status": "DRAFT"
+            }).then(async (updateServiceUserAccidentByIdRes) => {
+                console.log(updateServiceUserAccidentByIdRes);
+                let att = [];
+                if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                    att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                }
+
+                if (injuryFiles.length > 0) {
+                    att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                }
+
+                if (att.length > 0) {
+                    // Do seomething
+                    await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                        if (updateServiceUserAccidentAttachmentByIdRes) {
+                            // Do something
+                        }
+                    }).catch(console.error);
+                }
+
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            createServiceUserAccident({
+                ...body,
+                "Title": "SUI",
+                "Status": "DRAFT"
+            }).then(async (createServiceUserAccidentRes) => {
+
+                console.log(createServiceUserAccidentRes);
+                if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+                    let att = [];
+
+                    if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                        att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                    }
+
+                    if (injuryFiles.length > 0) {
+                        att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                    }
+
+                    if (att.length > 0) {
+                        // Do seomething
+                        await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                            if (updateServiceUserAccidentAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
+                }
+
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
+
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -541,16 +597,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setError(error);
                 return;
             } else {
-                // Draft update havent implement
-
                 caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
-                    createServiceUserAccident({
-                        ...body,
-                        "CaseNumber": caseNumber
-                    }).then(async (serviceUserAccidentResponse) => {
-                        if (serviceUserAccidentResponse && serviceUserAccidentResponse.data && serviceUserAccidentResponse.data.Id) {
-
-                            // Attachement
+                    if (formStatus === "DRAFT") {
+                        updateServiceUserAccidentById(formData.Id, {
+                            ...body,
+                            "CaseNumber": caseNumber
+                        }).then(async (updateServiceUserAccidentByIdRes) => {
                             let att = [];
                             if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                                 att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
@@ -562,15 +614,43 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                             if (att.length > 0) {
                                 // Do seomething
-                                await updateServiceUserAccidentAttachmentById(serviceUserAccidentResponse.data.Id, att).then(res => {
-                                    if (res) {
+                                await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                    if (updateServiceUserAccidentAttachmentByIdRes) {
                                         // Do something
                                     }
                                 }).catch(console.error);
                             }
-                        }
-                        formSubmittedHandler();
-                    }).catch(console.error);
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else {
+                        createServiceUserAccident({
+                            ...body,
+                            "CaseNumber": caseNumber
+                        }).then(async (createServiceUserAccidentRes) => {
+                            if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+
+                                // Attachement
+                                let att = [];
+                                if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                                    att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                                }
+
+                                if (injuryFiles.length > 0) {
+                                    att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                                }
+
+                                if (att.length > 0) {
+                                    // Do seomething
+                                    await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                        if (updateServiceUserAccidentAttachmentByIdRes) {
+                                            // Do something
+                                        }
+                                    }).catch(console.error);
+                                }
+                            }
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
                 }).catch(console.error);
             }
         }
@@ -717,23 +797,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 accidentLocation: data.AccidentLocation || "",
                 afterTreatmentDescription: data.AfterTreatmentDescription || "",
                 behaviorSwitch: data.UnsafeBehaviors || "",
-                behavior: JSON.parse(data.UnsafeBehaviorsChoices),
+                behavior: JSON.parse(data.UnsafeBehaviorsChoices) || [],
                 behaviorOtherRemark: data.UnsafeBehaviorsOther || "",
                 serviceUserUncomfort: data.UnwellAfterInjured,
-                uncomfortable: JSON.parse(data.UnwellAfterInjuredChoices),
+                uncomfortable: JSON.parse(data.UnwellAfterInjuredChoices) || [],
                 uncomfortableDescription: data.UnwellAfterInjuredDescription,
                 uncomfortableOtherRemark: data.UnwellAfterInjuredOther,
                 cctv: data.CctvRecord ? "CCTV_TRUE" : "CCTV_FALSE",
                 photo: data.PhotoRecord ? "PHOTO_TRUE" : "PHOTO_FALSE",
                 contactFamilyName: data.ContactFamilyName,
                 contactFamilyRelationship: data.ContactFamilyRelationship,
-                personalFactor: JSON.parse(data.ObservePersonalFactor),
+                personalFactor: JSON.parse(data.ObservePersonalFactor) || [],
                 personalFactorOtherRemark: data.ObservePersonalFactorOther,
-                envFactor: JSON.parse(data.ObserveEnvironmentFactor),
+                envFactor: JSON.parse(data.ObserveEnvironmentFactor) || [],
                 enviromentalFactorOtherRemark: data.ObserveEnvironmentFactorOther,
                 contingencyMeasure: data.ContingencyMeasure,
                 contingencyMeasureRemark: data.ContingencyMeasureRemark,
-                injuredArea: JSON.parse(data.InjuredArea),
+                injuredArea: JSON.parse(data.InjuredArea) || [],
                 injuredAreaOther: data.InjuredAreaOtherRemark,
                 arrangement: data.MedicalArrangement || "",
                 medicalArrangementHospital: data.MedicalArrangementHospital,
@@ -748,6 +828,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
                 scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
             });
+
             setSmComment(data.SMComment);
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));
@@ -808,13 +889,28 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
 
             if (data.Attachments) {
-                getServiceUserAccidentAllAttachmentById(data.Id).then((value) => {
-                    console.log(value)
+                getServiceUserAccidentAllAttachmentById(data.Id).then((attchementsRes) => {
+                    let injuryAttachments = [];
+                    let cctvAttachments = [];
+                    attchementsRes.forEach((att) => {
+                        const splitPosition = att.FileName.indexOf("-");
+                        const attachmentType = att.FileName.substr(0, splitPosition)
+                        if (attachmentType === "CCTV") {
+                            cctvAttachments.push(att);
+                        } else if (attachmentType === "INJURY") {
+                            injuryAttachments.push(att);
+                        };
+                    });
+
+                    setUploadedInjuryFiles(injuryAttachments);
+                    setUploadedCctvPhoto(cctvAttachments);
                 }).catch(console.error);
             }
         }
     }
 
+    console.log(uploadedInjuryFiles);
+    console.log(uploadedCctvPhoto);
 
     useEffect(() => {
         if (formData) {
@@ -1150,7 +1246,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             {
                                 form.injuredArea.length > 0 &&
-                                <StyledDropzone selectedFiles={setInjuryFiles} />
+                                <StyledDropzone selectedFiles={setInjuryFiles} uploadedFiles={uploadedInjuryFiles} />
                             }
                         </div>
                     </div>
@@ -1284,7 +1380,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {
                                     form.photo === "PHOTO_TRUE" &&
                                     <>
-                                        <StyledDropzone selectedFiles={setSelectedCctvPhoto} />
+                                        <StyledDropzone selectedFiles={setSelectedCctvPhoto} uploadedFiles={uploadedCctvPhoto} />
                                         {error.photo && <div className="text-danger">{error.photo}</div>}
                                     </>
                                 }
@@ -1518,6 +1614,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     {error.isStayInHospitalName && <div className="text-danger">{error.isStayInHospitalName}</div>}
                                 </div>
                             }
+                            {error.isStayInHospital && <div className="text-danger">{error.isStayInHospital}</div>}
                         </div>
                     </div>
 

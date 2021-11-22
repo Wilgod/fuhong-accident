@@ -29,6 +29,28 @@ export async function getServiceUserAccidentAllAttachmentById(id: number) {
     }
 }
 
+export async function updateOutsidersAccidentFormAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles.addMultiple(attachments);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateOutsidersAccidentFormAttachmentById failed");
+    }
+}
+
+export async function getOutsidersAccidentFormById(id: number) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getOutsidersAccidentFormById failed");
+    }
+}
+
 // Form 19
 // Create
 export async function createServiceUserAccident(body: any) {
