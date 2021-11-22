@@ -51,6 +51,28 @@ export async function getOutsidersAccidentAllAttachmentById(id: number) {
     }
 }
 
+export async function updateSpecialIncidentReportLicenseAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles.addMultiple(attachments);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateOutsidersAccidentFormAttachmentById failed");
+    }
+}
+
+export async function getSpecialIncidentReportLicenseAllAttachmentById(id: number) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSpecialIncidentReportLicenseAllAttachmentById failed");
+    }
+}
+
 // Form 19
 // Create
 export async function createServiceUserAccident(body: any) {

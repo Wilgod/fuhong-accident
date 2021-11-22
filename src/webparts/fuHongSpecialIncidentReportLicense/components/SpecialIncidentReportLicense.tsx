@@ -8,7 +8,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { IErrorFields, ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 import { inputProperties } from 'office-ui-fabric-react';
-import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, updateSpecialIncidentReportLicense } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById } from '../../../api/PostFuHongList';
 import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
@@ -20,6 +20,8 @@ import { FormFlow } from '../../../api/FetchFuHongList';
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
+import { IAttachmentFileInfo } from '@pnp/sp/attachments';
+import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -98,7 +100,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         unusalIncideintIncident: "",
         unusalIncident: ""
     });
-    console.log(departments);
+
 
 
     const [incidentTime, setIncidentTime] = useState(new Date());
@@ -115,6 +117,33 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
     const [extraFile, setExtraFile] = useState<FileList>(null);
     const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
+    console.log(extraFile);
+
+    const uploadFile = async (id: number) => {
+        try {
+            let att: IAttachmentFileInfo[] = [];
+            if (extraFile.length > 0) {
+                att = [...att, {
+                    "name": `EXTRA-${extraFile[0].name}`,
+                    "content": extraFile[0]
+                }];
+            }
+
+            if (form.unusalIncident === "UNUSAL_INCIDENT_COURT" && subpoenaFile.length > 0) {
+                // att = [...att, ...attachmentsFilesFormatParser(subpoenaFile, "SUBPOENA")];
+                att = [...att, {
+                    "name": `SUBPOENA-${subpoenaFile[0].name}`,
+                    "content": subpoenaFile[0]
+                }];
+            }
+            
+            await updateSpecialIncidentReportLicenseAttachmentById(id, att);
+        } catch (err) {
+            console.error(err);
+            throw new Error("uploadFile error");
+        }
+
+    }
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -399,45 +428,36 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         console.log(body);
         console.log(error);
 
-        if (formData && formData.Id) {
-            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceUnit).then((caseNumber) => {
-                console.log(caseNumber)
+        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceUnit).then((caseNumber) => {
+            console.log(caseNumber)
+            const extra = {
+                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                "Status": "PENDING_SM_APPROVE",
+                "Stage": "1",
+                "CaseNumber": caseNumber,
+                "SDId": spSdInfo.Id,
+                "SMId": spSmInfo.Id,
+                "SDDate": sdDate.toISOString(),
+                "SMDate": smDate.toISOString(),
+            }
+            if (formStatus === "DRAFT") {
                 updateSpecialIncidentReportLicense(formData.Id, {
                     ...body,
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "Status": "PENDING_SM_APPROVE",
-                    "Stage": "1",
-                    "CaseNumber": caseNumber,
-                    "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id,
-                    "SDDate": sdDate.toISOString(),
-                    "SMDate": smDate.toISOString(),
-
-                }).then((res) => {
+                    ...extra
+                }).then(async (res) => {
+                    await uploadFile(formData.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
-            }).catch(console.error);
-        } else {
-            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceUnit).then((caseNumber) => {
-                console.log(caseNumber)
-
+            } else {
                 createSpecialIncidentReportLicense({
                     ...body,
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "Status": "PENDING_SM_APPROVE",
-                    "Stage": "1",
-                    "CaseNumber": caseNumber,
-                    "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id,
-                    "SDDate": sdDate.toISOString(),
-                    "SMDate": smDate.toISOString(),
-
-                }).then((res) => {
+                    ...extra
+                }).then(async (createSpecialIncidentReportLicenseRes) => {
+                    await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
-            }).catch(console.error);
-        }
-
+            }
+        }).catch(console.error);
     }
 
     const draftHandler = (event) => {
@@ -445,14 +465,27 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         const [body] = dataFactory()
         console.log(body);
         console.log(error);
+        if (formStatus === "DRAFT") {
+            updateSpecialIncidentReportLicense(formData.Id, {
+                ...body,
+                "Status": "DRAFT",
+                "Title": "SIH"
+            }).then(async (updateSpecialIncidentReportLicenseRes) => {
+                console.log(updateSpecialIncidentReportLicenseRes);
+                await uploadFile(formData.Id);
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            createSpecialIncidentReportLicense({
+                ...body,
+                "Status": "DRAFT",
+                "Title": "SIH"
+            }).then(async (createSpecialIncidentReportLicenseRes) => {
+                await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
 
-        createSpecialIncidentReportLicense({
-            ...body,
-            "Status": "DRAFT",
-            "Title": "SIH"
-        }).then((res) => {
-            formSubmittedHandler();
-        }).catch(console.error);
     }
 
     const cancelHandler = () => {
@@ -712,7 +745,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }, [smInfo])
 
-    console.log(form.homesName)
+
     useEffect(() => {
         if (notifyStaff && notifyStaff.mail) {
             setNotifyStaffEmail(notifyStaff.mail)
@@ -746,7 +779,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
-                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => setExtraFile(event.target.files)} />
+                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => {
+                                                    setExtraFile(event.target.files)
+                                                }} />
                                                 <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                             </div>
                                             {
@@ -880,7 +915,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 form.unusalIncident === "UNUSAL_INCIDENT_COURT" &&
                                 <div className="input-group mb-2">
                                     <div className="custom-file">
-                                        <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => setSubpoenaFile(event.target.files)}
+                                        <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => {
+                                            setSubpoenaFile(event.target.files)
+                                        }}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                     </div>
