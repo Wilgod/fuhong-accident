@@ -127,6 +127,20 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         id: context.pageContext.legacyPageContext.userId,
     }
 
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
+
     const textHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -601,7 +615,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     if (formStatus === "DRAFT") {
                         updateServiceUserAccidentById(formData.Id, {
                             ...body,
-                            "CaseNumber": caseNumber
+                            "CaseNumber": caseNumber,
+                            "Title": "SUI"
                         }).then(async (updateServiceUserAccidentByIdRes) => {
                             let att = [];
                             if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
@@ -625,7 +640,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     } else {
                         createServiceUserAccident({
                             ...body,
-                            "CaseNumber": caseNumber
+                            "CaseNumber": caseNumber,
+                            "Title": "SUI"
                         }).then(async (createServiceUserAccidentRes) => {
                             if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
 
@@ -1246,7 +1262,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             {
                                 form.injuredArea.length > 0 &&
-                                <StyledDropzone selectedFiles={setInjuryFiles} uploadedFiles={uploadedInjuryFiles} />
+                                <>
+                                    <StyledDropzone selectedFiles={setInjuryFiles} />
+                                    {
+                                        uploadedInjuryFiles.length > 0 &&
+                                        <aside>
+                                            <h6>已上存檔案</h6>
+                                            <ul>{UploadedFilesComponent(uploadedInjuryFiles)}</ul>
+                                        </aside>
+                                    }
+                                </>
                             }
                         </div>
                     </div>
@@ -1380,8 +1405,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {
                                     form.photo === "PHOTO_TRUE" &&
                                     <>
-                                        <StyledDropzone selectedFiles={setSelectedCctvPhoto} uploadedFiles={uploadedCctvPhoto} />
-                                        {error.photo && <div className="text-danger">{error.photo}</div>}
+                                        <StyledDropzone selectedFiles={setSelectedCctvPhoto} />
+                                        {
+                                            uploadedInjuryFiles.length > 0 &&
+                                            <aside>
+                                                <h6>已上存檔案</h6>
+                                                <ul>{UploadedFilesComponent(uploadedCctvPhoto)}</ul>
+                                            </aside>
+                                        }
+                                        {/* {error.photo && <div className="text-danger">{error.photo}</div>} */}
                                     </>
                                 }
                                 <div className="form-check">

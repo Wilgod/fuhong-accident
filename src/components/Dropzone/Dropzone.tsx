@@ -75,19 +75,19 @@ export default function StyledDropzone(props) {
         </li>
     });
 
-    const UploadedFilesComponent = Array.isArray(props.uploadedFiles) && props.uploadedFiles.map((file, index) => {
-        const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
-        return <li key={`${file.FileName}_${index}`}>
-            <div className="d-flex">
-                <span className="flex-grow-1 text-break">
-                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
-                </span>
-                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
-                    &times;
-                </span> */}
-            </div>
-        </li>
-    })
+    // const UploadedFilesComponent = Array.isArray(props.uploadedFiles) && props.uploadedFiles.map((file, index) => {
+    //     const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
+    //     return <li key={`${file.FileName}_${index}`}>
+    //         <div className="d-flex">
+    //             <span className="flex-grow-1 text-break">
+    //                 <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+    //             </span>
+    //             {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+    //                 &times;
+    //             </span> */}
+    //         </div>
+    //     </li>
+    // })
 
     return (
         <div >
@@ -102,13 +102,13 @@ export default function StyledDropzone(props) {
                     <ul>{FilesComponent}</ul>
                 </aside>
             }
-            {
+            {/* {
                 Array.isArray(props.uploadedFiles) && props.uploadedFiles.length > 0 &&
                 <aside >
                     <h6>已上存檔案</h6>
                     <ul>{UploadedFilesComponent}</ul>
                 </aside>
-            }
+            } */}
 
         </div >
     );

@@ -14,7 +14,7 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
@@ -67,6 +67,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [sptList] = useSPT();
     const [familyContactDate, setFamilyContactDate] = useState(new Date());
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
+    const [uploadedPhotoRecordFiles, setUploadedPhotoRecordFiles] = useState([]);
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
@@ -112,6 +113,21 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         name: context.pageContext.legacyPageContext.userDisplayName,
         id: context.pageContext.legacyPageContext.userId,
     }
+
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
+
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -218,7 +234,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         body["EnvHurtByOthers"] = form.envHurtByOthers;
         body["EnvImproperEquip"] = form.envImproperEquip;
 
-        body["EnvOther"] = true;
+        body["EnvOther"] = form.envOther;
         if (form.envOther === true) {
             if (form.envOtherDescription) {
                 body["EnvOtherDescription"] = form.envOtherDescription;
@@ -364,20 +380,41 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
-            if (Object.keys(error).length > 0) {
-                setError(error);
-                return;
-            } else {
-                // Draft update havent implement
-                caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceUnit).then((caseNubmer) => {
-                    console.log(caseNubmer);
 
-                    if (formStatus === "DRAFT") {
-                        updateOutsiderAccidentFormById(formData.Id, {
-                            ...body,
-                            "CaseNumber": caseNubmer
-                        }).then(async (updateOutsiderAccidentFormByIdRes) => {
-                            console.log(updateOutsiderAccidentFormByIdRes)
+            // Draft update havent implement
+            caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceUnit).then((caseNubmer) => {
+                console.log(caseNubmer);
+
+                if (formStatus === "DRAFT") {
+                    updateOutsiderAccidentFormById(formData.Id, {
+                        ...body,
+                        "CaseNumber": caseNubmer,
+                        "Title": "PUI"
+                    }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                        console.log(updateOutsiderAccidentFormByIdRes)
+                        // Photo upload implement
+                        let att = [];
+                        if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                            att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                        }
+
+                        if (att.length > 0) {
+                            await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                    console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                                }
+                            }).catch(console.error);
+                        }
+                        formSubmittedHandler();
+                    })
+                } else {
+                    createOutsiderAccidentForm({
+                        ...body,
+                        "CaseNumber": caseNubmer,
+                        "Title": "PUI"
+                    }).then(async createOutsiderAccidentFormRes => {
+                        if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
+                            console.log(createOutsiderAccidentFormRes);
                             // Photo upload implement
                             let att = [];
                             if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
@@ -385,41 +422,19 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }
 
                             if (att.length > 0) {
-                                await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                     if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes)
                                     }
                                 }).catch(console.error);
                             }
-                            formSubmittedHandler();
-                        })
-                    } else {
-                        createOutsiderAccidentForm({
-                            ...body,
-                            "CaseNumber": caseNubmer
-                        }).then(async createOutsiderAccidentFormRes => {
-                            if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
-                                console.log(createOutsiderAccidentFormRes);
-                                // Photo upload implement
-                                let att = [];
-                                if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
-                                    att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
-                                }
+                        }
 
-                                if (att.length > 0) {
-                                    await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
-                                        if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes)
-                                        }
-                                    }).catch(console.error);
-                                }
-                            }
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            }).catch(console.error);
 
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
-            }
         }
     }
 
@@ -436,8 +451,22 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 ...body,
                 "Title": "PUI",
                 "Status": "DRAFT"
-            }).then((res) => {
-                console.log(res);
+            }).then(async (updateOutsiderAccidentFormByIdRes) => {
+
+                let att = [];
+
+                if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                    att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                }
+
+                if (att.length > 0) {
+                    await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                        if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                            console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                        }
+                    }).catch(console.error);
+                }
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -445,8 +474,23 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 ...body,
                 "Title": "PUI",
                 "Status": "DRAFT"
-            }).then((res) => {
-                console.log(res);
+            }).then(async (createOutsiderAccidentFormRes) => {
+                console.log(createOutsiderAccidentFormRes);
+                if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
+                    let att = [];
+
+                    if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                        att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                    }
+
+                    if (att.length > 0) {
+                        await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                            if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                            }
+                        }).catch(console.error);
+                    }
+                }
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -655,6 +699,20 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 witnessName: data.WitnessName,
                 witnessPhone: data.WitnessPhone
             })
+        }
+
+        if (data.Attachments) {
+            getOutsidersAccidentAllAttachmentById(data.Id).then((attchementsRes) => {
+                let cctvAttachment = [];
+                attchementsRes.forEach((att) => {
+                    const splitPosition = att.FileName.indexOf("-");
+                    const attachmentType = att.FileName.substr(0, splitPosition)
+                    if (attachmentType === "CCTV") {
+                        cctvAttachment.push(att);
+                    }
+                });
+                setUploadedPhotoRecordFiles(cctvAttachment);
+            }).catch(console.error)
         }
     }
 
@@ -937,7 +995,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 </div>
                                 {
                                     form.photoRecord &&
-                                    <StyledDropzone selectedFiles={setSelectedPhotoRecordFiles} />
+                                    <>
+                                        <StyledDropzone selectedFiles={setSelectedPhotoRecordFiles} />
+                                        {
+                                            uploadedPhotoRecordFiles.length > 0 &&
+                                            <aside>
+                                                <h6>已上存檔案</h6>
+                                                <ul>
+                                                    {UploadedFilesComponent(uploadedPhotoRecordFiles)}
+                                                </ul>
+                                            </aside>
+                                        }
+                                    </>
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photoRecord" id="photo-false" value="PHOTO_FALSE" onClick={() => setForm({ ...form, photoRecord: false })} checked={form.photoRecord === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />

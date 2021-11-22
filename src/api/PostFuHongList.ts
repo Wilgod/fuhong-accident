@@ -40,11 +40,11 @@ export async function updateOutsidersAccidentFormAttachmentById(id: number, atta
     }
 }
 
-export async function getOutsidersAccidentFormById(id: number) {
+export async function getOutsidersAccidentAllAttachmentById(id: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
-        return true;
+        return result;
     } catch (err) {
         console.error(err);
         throw new Error("getOutsidersAccidentFormById failed");
