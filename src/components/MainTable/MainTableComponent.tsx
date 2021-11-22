@@ -149,8 +149,8 @@ const columns = (context) => {
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
                     formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
-                } else if (data && data.title) {
-                    formLink = path + caseNumberToSitePageParser(data.Title.toupperCase()) + `?formId=${value}`;
+                } else if (data && data.Title) {
+                    formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
                 } else {
                     return null;
                 }
