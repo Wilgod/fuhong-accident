@@ -309,34 +309,61 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         } else {
             console.log(body);
             let status = "PENDING_SM_APPROVE"
+
             caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceUnit).then((caseNumber) => {
                 console.log(caseNumber)
-                createOtherIncidentReport({
-                    ...body,
+                const extra = {
                     "Status": status,
                     "Stage": "1",
                     "NextDeadline": addBusinessDays(preparationDate, 3).toISOString(),
                     "CaseNumber": caseNumber,
                     "PreparationDate": new Date().toISOString(),
-                    "PreparationStaffId": CURRENT_USER.id
-                }).then(res => {
-                    console.log(res)
-                    formSubmittedHandler();
-                }).catch(console.error);
+                    "PreparationStaffId": CURRENT_USER.id,
+                    "Title": "OIN"
+                }
+                if (formStatus === "DRAFT") {
+                    updateOtherIncidentReport(formData.Id, {
+                        ...body,
+                        ...extra
+                    }).then((updateOtherIncidentReportRes) => {
+                        console.log(updateOtherIncidentReportRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    createOtherIncidentReport({
+                        ...body,
+                        ...extra
+                    }).then(createOtherIncidentReportRes => {
+                        console.log(createOtherIncidentReportRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
             });
         }
     }
 
     const draftHandler = (event) => {
         event.preventDefault();
-        const [body] = dataFactory()
-        createOtherIncidentReport({
-            ...body,
-            "Title": "OIN"
-        }).then(res => {
-            console.log(res)
-            formSubmittedHandler();
-        }).catch(console.error);
+        const [body] = dataFactory();
+        if (formStatus === "DRAFT") {
+            updateOtherIncidentReport(formData.Id, {
+                ...body,
+                "Title": "OIN",
+                "Status": "DRAFT"
+            }).then((updateOtherIncidentReportRes) => {
+                console.log(updateOtherIncidentReportRes);
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            createOtherIncidentReport({
+                ...body,
+                "Title": "OIN",
+                "Status": "DRAFT"
+            }).then(res => {
+                console.log(res)
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
 
     const cancelHandler = () => {
