@@ -50,7 +50,7 @@ export async function getAllServiceUnit() {
     try {
         const LIST_NAME = "SM SD Mapping";
         const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
-        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc").orderBy("Title", true).getAll();
+        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc", "location").orderBy("Title", true).top(300).get();
         return result;
     } catch (err) {
         console.error(err);

@@ -36,6 +36,7 @@ import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptAppro
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
+import useServiceUserUnit from '../../../hooks/useServiceUserUnit';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -61,7 +62,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
-    // const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUserUnit();
     const [serviceUnit, setServiceUnit] = useState("");
     const [sptList] = useSPT();
     const [smList] = useSM();
@@ -179,7 +180,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             // Implement Error handling
             error.serviceUserRecordId = "Please Select";
         }
-        //服務單位
+        //填寫人服務單位
         body["ServiceUnit"] = serviceUnit;
         // if (serviceUnit) {
         //     body["ServiceUnit"] = serviceUnit;
@@ -188,6 +189,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         //     error.serviceUnit = "Please Select"
         // }
 
+        // body["ServiceUserUnit"] = patientServiceUnit
 
         //意外發生日期和時間
         if (accidentTime) {
@@ -925,8 +927,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
-    console.log(uploadedInjuryFiles);
-    console.log(uploadedCctvPhoto);
 
     useEffect(() => {
         if (formData) {
@@ -949,12 +949,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
                 setHrDepartment("CHH");
                 setServiceUnit("CHH");
+                setPatientServiceUnit("CHH")
                 return;
             }
 
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
+                setPatientServiceUnit(userInfo.hr_deptid);
             }
         }
     }, [userInfo]);
@@ -995,7 +997,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 })}
                             </select> */}
                             {/* <input type="text" className="form-control" value={userInfo && userInfo.hr_location || ""} disabled /> */}
-                            <input type="text" className="form-control" value={serviceUnit || ""} disabled />
+                            {/* <input type="text" className="form-control" value={serviceUnit || ""} disabled /> */}
+                            <select className="custom-select" value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                            >
+                                {
+                                    serviceUserUnitList.map((item) => {
+                                        return <option value={item.Title}>{item.Title}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
@@ -1267,7 +1278,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     {
                                         uploadedInjuryFiles.length > 0 &&
                                         <aside>
-                                            <h6>已上存檔案</h6>
+                                            <h6>已上傳檔案</h6>
                                             <ul>{UploadedFilesComponent(uploadedInjuryFiles)}</ul>
                                         </aside>
                                     }
@@ -1833,6 +1844,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職級</label>
                         <div className="col-12 col-xl-4">
                             <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
+                        </div>
+                        <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
+                        <div className="col-12 col-xl-5">
+                            <input type="text" className="form-control" value={serviceUnit || ""} disabled />
                         </div>
                     </div>
                 </section>
