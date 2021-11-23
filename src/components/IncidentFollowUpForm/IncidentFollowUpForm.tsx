@@ -254,6 +254,11 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const sdRejectHanlder = (event) => {
         event.preventDefault();
         console.log("sdRejectHanlder")
+        // if (confirm("確認拒絕 ?")) {
+        //     updateIncidentFollowUpForm(formData.Id, {
+        //         body:
+        //     })
+        // }
     }
 
     const sdSaveHandler = (event) => {

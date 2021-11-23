@@ -551,20 +551,19 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const smRejectHandler = (event) => {
         event.preventDefault();
+        if (spSmInfo.Email === formData.Author.EMail) return;
+        const [body, error] = dataFactory();
+        if (confirm("確認拒絕 ?")) {
 
-        // const [body, error] = dataFactory();
-        // if (confirm("確認拒絕 ?")) {
-        //     if (Object.keys(error).length > 0) {
-        //         setError(error);
-        //     } else {
-        //         updateSpecialIncidentReportAllowance(formData.Id, {
-        //             ...body
-        //         }).then((res) => {
-        //             console.log(res);
-        //             formSubmittedHandler();
-        //         }).catch(console.error);
-        //     }
-        // }
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body,
+                "Status": ""
+            }).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+
+        }
     }
 
     const smSubmitHandler = (event) => {
@@ -613,16 +612,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const sdRejectHandler = (event) => {
         event.preventDefault();
-        // if (confirm("確認拒絕 ?")) {
-        //     updateSpecialIncidentReportAllowance(formData.Id, {
-        //         "SMDate": new Date().toISOString(),
-        //         "SMComment": smComment,
-        //         "SDPhone": sdPhoneNo
-        //     }).then((res) => {
-        //         console.log(res);
-        //         formSubmittedHandler();
-        //     }).catch(console.error);
-        // }
+        if (confirm("確認拒絕 ?")) {
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                "SMDate": new Date().toISOString(),
+                "SMComment": smComment,
+                "SDPhone": sdPhoneNo,
+                "Status": "PENDING_SM_APPROVE"
+            }).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
 
     useEffect(() => {

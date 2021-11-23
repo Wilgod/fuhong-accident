@@ -431,8 +431,19 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const sdRejectHandler = (event) => {
         event.preventDefault();
         console.log("sdRejectHandler")
-        updateOtherIncidentReport
+        if (confirm("確認拒絕 ?")) {
 
+
+            const [body, error] = dataFactory();
+            updateOtherIncidentReport(formData.Id, {
+                ...body,
+                "SMComment": smComment,
+                "SMDate": new Date().toISOString(),
+                "Status": "PENDING_SM_APPROVE"
+            }).then((res) => {
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
 
 
@@ -472,8 +483,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const smRejectHandler = (event) => {
         event.preventDefault();
-        console.log("smRejectHandler");
-        // implement;
+        if (spSmInfo.Email === formData.Author.EMail) return;
+        if (confirm("確認拒絕 ?")) {
+
+            const [body, error] = dataFactory();
+            updateOtherIncidentReport(formData.Id, {
+                ...body,
+                "Status": ""
+            }).then((res) => {
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
     }
     // fill in the insurance number
     const adminSubmitHandler = (event) => {

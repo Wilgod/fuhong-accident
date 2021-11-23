@@ -557,12 +557,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     }
 
     const sdRejectHandler = () => {
-        const [body, error] = dataFactory();
-        // updateSpecialIncidentReportLicense(formData.Id, {
-        //     ...body,
-        // }).then(res => {
+        if (confirm("確認拒絕 ?")) {
+            const [body, error] = dataFactory();
 
-        // }).catch(console.error);
+            updateSpecialIncidentReportLicense(formData.Id, {
+                ...body,
+                "Status": "PENDING_SM_APPROVE"
+            }).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+
+        }
     }
 
     const smSubmitHandler = () => {
@@ -596,10 +602,21 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     }
 
     const smRejectHandler = () => {
-        // const [body, error] = dataFactory();
-        // updateSpecialIncidentReportLicense(formData.Id, body).then(res => {
 
-        // }).catch(console.error);
+        if (spSmInfo.Email === formData.Author.EMail) return;
+
+        if (confirm("確認拒絕 ?")) {
+            const [body, error] = dataFactory();
+
+            updateSpecialIncidentReportLicense(formData.Id, {
+                ...body,
+                "Status": ""
+            }).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+
+        }
     }
 
     const loadData = () => {

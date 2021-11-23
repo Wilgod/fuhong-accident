@@ -537,12 +537,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const smRejectHandler = (event) => {
         if (confirm("確認拒絕 ?")) {
-
+            if (spSmInfo.Email === formData.Author.EMail) return;
             const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
                 "SMDate": smDate.toISOString(),
-                "Status": "SM_VOID"
+                "Status": ""
             };
             updateOutsiderAccidentFormById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
         }
@@ -550,7 +550,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const sptApproveHandler = (event) => {
         if (confirm("確認批准 ?")) {
-
             const [body, error] = dataFactory("");
             if (Object.keys(error).length > 0) {
                 setError(error);
@@ -607,7 +606,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const sptRejectHandler = (event) => {
         if (confirm("確認拒絕 ?")) {
-
+            const body = {
+                "SPTApproved": false,
+                "SPTComment": sptComment,
+                "SPTDate": new Date().toISOString(),
+                "InvestigatorId": investigatorPickerInfo[0].id,
+                "Status": "PENDING_SM_APPROVE"
+            };
+            updateOutsiderAccidentFormById(formId, body).then(() => {
+                formSubmittedHandler();
+            }).catch(console.error);
         }
     }
 

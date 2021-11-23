@@ -295,7 +295,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     // Update main form status and stage 3
                     const serviceUserAccidentFormBody = {
                         "Stage": "2",
-                        "Status": "CASE_REJECTED"
+                        "Status": "PENDING_INVESTIGATE"
                     }
                     updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                         //trigger notification work flow

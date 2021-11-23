@@ -189,7 +189,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         //     error.serviceUnit = "Please Select"
         // }
 
-        // body["ServiceUserUnit"] = patientServiceUnit
+        body["ServiceUserUnit"] = patientServiceUnit
 
         //意外發生日期和時間
         if (accidentTime) {
@@ -608,29 +608,53 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             let [body, error] = dataFactory("SUBMIT");
             console.log(error);
-            if (Object.keys(error).length > 0) {
-                setError(error);
-                return;
-            } else {
-                caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
-                    let extraBody = {
-                        "CaseNumber": caseNumber,
-                        "Title": "SUI"
-                    };
-                    //SM Auto approve go to next step
-                    if (CURRENT_USER.email === spSmInfo.Email) {
-                        extraBody["SMApproved"] = true;
-                        extraBody["SMComment"] = smComment;
-                        extraBody["SMDate"] = new Date().toISOString();
-                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
-                        extraBody["Status"] = "PENDING_SPT_APPROVE"
-                    }
 
-                    if (formStatus === "DRAFT") {
-                        updateServiceUserAccidentById(formData.Id, {
-                            ...body,
-                            ...extraBody
-                        }).then(async (updateServiceUserAccidentByIdRes) => {
+            caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
+                let extraBody = {
+                    "CaseNumber": caseNumber,
+                    "Title": "SUI"
+                };
+                //SM Auto approve go to next step
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["SMApproved"] = true;
+                    extraBody["SMComment"] = smComment;
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                    extraBody["Status"] = "PENDING_SPT_APPROVE"
+                }
+
+                if (formStatus === "DRAFT") {
+                    updateServiceUserAccidentById(formData.Id, {
+                        ...body,
+                        ...extraBody
+                    }).then(async (updateServiceUserAccidentByIdRes) => {
+                        let att = [];
+                        if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                            att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                        }
+
+                        if (injuryFiles.length > 0) {
+                            att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                        }
+
+                        if (att.length > 0) {
+                            // Do seomething
+                            await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                if (updateServiceUserAccidentAttachmentByIdRes) {
+                                    // Do something
+                                }
+                            }).catch(console.error);
+                        }
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    createServiceUserAccident({
+                        ...body,
+                        ...extraBody
+                    }).then(async (createServiceUserAccidentRes) => {
+                        if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+
+                            // Attachement
                             let att = [];
                             if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                                 att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
@@ -642,45 +666,18 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                             if (att.length > 0) {
                                 // Do seomething
-                                await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
                                     if (updateServiceUserAccidentAttachmentByIdRes) {
                                         // Do something
                                     }
                                 }).catch(console.error);
                             }
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    } else {
-                        createServiceUserAccident({
-                            ...body,
-                            ...extraBody
-                        }).then(async (createServiceUserAccidentRes) => {
-                            if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+                        }
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            }).catch(console.error);
 
-                                // Attachement
-                                let att = [];
-                                if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
-                                    att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
-                                }
-
-                                if (injuryFiles.length > 0) {
-                                    att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
-                                }
-
-                                if (att.length > 0) {
-                                    // Do seomething
-                                    await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
-                                        if (updateServiceUserAccidentAttachmentByIdRes) {
-                                            // Do something
-                                        }
-                                    }).catch(console.error);
-                                }
-                            }
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
-            }
         }
     }
     const cancelHandler = () => {
@@ -721,12 +718,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     const smRejectHandler = () => {
+        if (spSmInfo.Email === formData.Author.EMail) return;
         if (confirm("確認拒絕 ?")) {
             const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
                 "SMDate": smDate.toISOString(),
-                "Status": "SM_VOID"
+                "Status": ""
             };
             updateServiceUserAccidentById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
         }
@@ -794,9 +792,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 const body = {
                     "SPTApproved": false,
                     "SPTComment": sptComment,
-                    "SPTDate": sptDate.toISOString(),
+                    "SPTDate": new Date().toISOString(),
                     "InvestigatorId": investigatorPickerInfo[0].id,
-                    "Status": "SPT_REJECTED"
+                    "Status": "PENDING_SM_APPROVE"
                 };
                 updateServiceUserAccidentById(formId, body).then(() => {
                     // Trigger notification workflow
@@ -818,6 +816,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
             if (data.ServiceUnit) {
                 setServiceUnit(data.ServiceUnit);
+            }
+
+            if (data.ServiceUserUnit) {
+                setPatientServiceUnit(data.ServiceUserUnit);
             }
 
             setForm({
