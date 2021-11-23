@@ -98,8 +98,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
     const [guardianDatetime, setGuardianDatetime] = useState(new Date());
-    console.log(departments);
-    console.log(userInfo);
+
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -158,6 +157,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const dataFactory = () => {
         let body = {};
         let error = {};
+
+        body["OrgName"] = reportOrg;
+        body["OrgPhone"] = reportPhone;
+        body["OrgAddress"] = reportAddress;
+        body["OrgSUName"] = suTcName;
 
 
         //致部門
@@ -344,7 +348,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     }
 
     const loadData = () => {
-        console.log(formData);
+        console.log("loadData", formData);
         if (formData) {
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
@@ -442,45 +446,37 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         console.log(body);
         console.log(error);
 
-        body["OrgName"] = reportOrg;
-        body["OrgPhone"] = reportPhone;
-        body["OrgAddress"] = reportAddress;
-        body["OrgSUName"] = suTcName;
 
-        if (formStatus === "DRAFT") {
-            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
+        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
+            const extra = {
+                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                "CaseNumber": caseNumber,
+                "Status": "PENDING_SM_APPROVE",
+                "Stage": "1",
+                "SDId": spSdInfo.Id,
+                "SMId": spSmInfo.Id,
+                "ServiceUnit": serviceUnit
+            }
+            if (formStatus === "DRAFT") {
                 updateSpecialIncidentReportAllowance(formData.Id, {
                     ...body,
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "CaseNumber": caseNumber,
-                    "Status": "PENDING_SM_APPROVE",
-                    "Stage": "1",
-                    "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id,
-                    "ServiceUnit": serviceUnit
+                    ...extra
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
                 }).catch(console.error);
-            }).catch(console.error);
-
-        } else {
-            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
+            } else {
                 createSpecialIncidentReportAllowance({
                     ...body,
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "CaseNumber": caseNumber,
-                    "Status": "PENDING_SM_APPROVE",
-                    "Stage": "1",
-                    "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id,
-                    "ServiceUnit": serviceUnit
+                    ...extra
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
                 }).catch(console.error);
-            }).catch(console.error);
-        }
+            }
+        }).catch(console.error);
+
+
     }
 
     const draftHandler = (event) => {

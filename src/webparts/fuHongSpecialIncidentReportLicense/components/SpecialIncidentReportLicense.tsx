@@ -8,7 +8,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { IErrorFields, ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 import { inputProperties } from 'office-ui-fabric-react';
-import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, getSpecialIncidentReportLicenseAllAttachmentById, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById } from '../../../api/PostFuHongList';
 import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
@@ -67,7 +67,6 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         guardian: undefined,
         guardianName: "",
         guardianRelation: "",
-
         guardianDate: new Date(),
         guardianReason: "",
         homesManagerName: "",
@@ -117,26 +116,27 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
     const [extraFile, setExtraFile] = useState<FileList>(null);
     const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
-    console.log(extraFile);
+    const [uploadedExtraFile, setUploadedExtraFile] = useState([]);
+    const [uploadedSubpoenaFile, setUploadedSubpoenaFile] = useState([]);
 
     const uploadFile = async (id: number) => {
         try {
             let att: IAttachmentFileInfo[] = [];
-            if (extraFile.length > 0) {
+            if (extraFile && extraFile.length > 0) {
                 att = [...att, {
                     "name": `EXTRA-${extraFile[0].name}`,
                     "content": extraFile[0]
                 }];
             }
 
-            if (form.unusalIncident === "UNUSAL_INCIDENT_COURT" && subpoenaFile.length > 0) {
+            if (form.unusalIncident === "UNUSAL_INCIDENT_COURT" && subpoenaFile && subpoenaFile.length > 0) {
                 // att = [...att, ...attachmentsFilesFormatParser(subpoenaFile, "SUBPOENA")];
                 att = [...att, {
                     "name": `SUBPOENA-${subpoenaFile[0].name}`,
                     "content": subpoenaFile[0]
                 }];
             }
-            
+
             await updateSpecialIncidentReportLicenseAttachmentById(id, att);
         } catch (err) {
             console.error(err);
@@ -150,6 +150,21 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         name: context.pageContext.legacyPageContext.userDisplayName,
         id: context.pageContext.legacyPageContext.userId,
     }
+
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName.substr(file.FileName.indexOf("-") + 1);
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
+
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -580,8 +595,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     }
 
     const loadData = () => {
+        console.log(formData)
         if (formData) {
-
 
             setIncidentTime(new Date(formData.IncidentTime));
             setFormStatus(formData.Status);
@@ -683,9 +698,28 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 unusalIncident: formData.UnusalIncident
             })
 
+            if (formData.Attachments) {
+                getSpecialIncidentReportLicenseAllAttachmentById(formData.Id).then((attachementsRes) => {
+                    let extra = [];
+                    let subpoena = [];
+                    attachementsRes.forEach((att) => {
+                        const splitPosition = att.FileName.indexOf("-");
+                        const attachmentType = att.FileName.substr(0, splitPosition);
+                        if (attachmentType === "EXTRA") {
+                            extra.push(att);
+                        } else if (attachmentType === "SUBPOENA") {
+                            subpoena.push(att);
+                        }
+
+                        setUploadedExtraFile(extra);
+                        setUploadedSubpoenaFile(subpoena)
+                    })
+                }).catch(console.error);
+            }
+
         }
     }
-
+    console.log(form.unusalIncident)
     useEffect(() => {
         setCurrentUserEmail(CURRENT_USER.email);
     }, [])
@@ -779,9 +813,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
-                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => {
-                                                    setExtraFile(event.target.files)
-                                                }} />
+                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => { setExtraFile(event.target.files) }}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                                 <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                             </div>
                                             {
@@ -791,6 +824,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                                 </div>
                                             }
                                         </div>
+                                        {uploadedExtraFile.length > 0 &&
+                                            <aside>
+                                                <h6>已上傳檔案</h6>
+                                                <ul>{UploadedFilesComponent(uploadedExtraFile)}</ul>
+                                            </aside>
+                                        }
                                     </div>
                             }
                         </div>
@@ -877,7 +916,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院後死亡</label>
                             </div>
                             {
@@ -890,12 +929,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-suicide" value="UNUSAL_INCIDENT_SUICIDE" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-suicide">在院舍內自殺及送院後死亡</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-other" value="UNUSAL_INCIDENT_OTHER" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-other">其他不尋常死亡／事故</label>
                             </div>
                             {
@@ -908,29 +947,35 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-court" value="UNUSAL_INCIDENT_COURT" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-court">接獲死因裁判法庭要求出庭的傳票<br />(請夾附傳票副本並在附頁說明詳情)</label>
                             </div>
                             {
                                 form.unusalIncident === "UNUSAL_INCIDENT_COURT" &&
-                                <div className="input-group mb-2">
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => {
-                                            setSubpoenaFile(event.target.files)
-                                        }}
-                                            disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
-                                    </div>
-                                    {
-                                        subpoenaFile && subpoenaFile.length > 0 &&
-                                        <div className="input-group-append">
-                                            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile(null)}
-                                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && formInitial(currentUserRole, formStatus)}>
-                                                清除
-                                            </button>
+                                <>
+                                    <div className="input-group mb-2">
+                                        <div className="custom-file">
+                                            <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => { setSubpoenaFile(event.target.files) }}
+                                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                         </div>
+                                        {
+                                            subpoenaFile && subpoenaFile.length > 0 &&
+                                            <div className="input-group-append">
+                                                <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile(null)}
+                                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && formInitial(currentUserRole, formStatus)}>
+                                                    清除
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                    {uploadedSubpoenaFile.length > 0 &&
+                                        <aside>
+                                            <h6>已上傳檔案</h6>
+                                            <ul>{UploadedFilesComponent(uploadedSubpoenaFile)}</ul>
+                                        </aside>
                                     }
-                                </div>
+                                </>
                             }
                         </div>
                     </div>
