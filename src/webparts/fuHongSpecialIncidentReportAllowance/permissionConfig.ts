@@ -11,6 +11,14 @@ export const formInitial = (currentUserRole: Role, status: string): boolean => {
     return false;
 }
 
+//Draft / init
+export const formInitBySm = (currentUserEmail: string, smEmail: string, status: string): boolean => {
+    if ((status === "" || status === "DRAFT") && currentUserEmail === smEmail) {
+        return true;
+    }
+    return false;
+}
+
 //Stage 1 / PENDING_SM_APPROVE
 export const pendingSmApprove = (currentUserRole: Role, status: string, stage: string): boolean => {
     if (stage === "1" && status === "PENDING_SM_APPROVE" && currentUserRole === Role.SERVICE_MANAGER) {

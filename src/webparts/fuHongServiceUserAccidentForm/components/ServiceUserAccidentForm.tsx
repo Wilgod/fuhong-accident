@@ -32,7 +32,7 @@ import useSD from '../../../hooks/useSD';
 import useSM from '../../../hooks/useSM';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
-import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptApproveForSD } from '../permissionConfig';
+import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptApproveForSD, formInitBySm } from '../permissionConfig';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
@@ -583,7 +583,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
-
     const submitHandler = (event) => {
         event.preventDefault();
 
@@ -607,18 +606,30 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
-            const [body, error] = dataFactory("SUBMIT");
+            let [body, error] = dataFactory("SUBMIT");
             console.log(error);
             if (Object.keys(error).length > 0) {
                 setError(error);
                 return;
             } else {
                 caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
+                    let extraBody = {
+                        "CaseNumber": caseNumber,
+                        "Title": "SUI"
+                    };
+                    //SM Auto approve go to next step
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["SMApproved"] = true;
+                        extraBody["SMComment"] = smComment;
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                        extraBody["Status"] = "PENDING_SPT_APPROVE"
+                    }
+
                     if (formStatus === "DRAFT") {
                         updateServiceUserAccidentById(formData.Id, {
                             ...body,
-                            "CaseNumber": caseNumber,
-                            "Title": "SUI"
+                            ...extraBody
                         }).then(async (updateServiceUserAccidentByIdRes) => {
                             let att = [];
                             if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
@@ -642,8 +653,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     } else {
                         createServiceUserAccident({
                             ...body,
-                            "CaseNumber": caseNumber,
-                            "Title": "SUI"
+                            ...extraBody
                         }).then(async (createServiceUserAccidentRes) => {
                             if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
 
@@ -1893,7 +1903,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {

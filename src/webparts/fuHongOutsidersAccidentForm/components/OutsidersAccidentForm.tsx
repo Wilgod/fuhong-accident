@@ -22,7 +22,7 @@ import { FormFlow, getOutsiderAccidentById } from '../../../api/FetchFuHongList'
 import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
-import { formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
+import { formInitBySm, formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 
@@ -384,12 +384,23 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             // Draft update havent implement
             caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceUnit).then((caseNubmer) => {
                 console.log(caseNubmer);
+                let extraBody = {
+                    "CaseNumber": caseNubmer,
+                    "Title": "PUI"
+                }
+
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["SMApproved"] = true;
+                    extraBody["SMComment"] = smComment;
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                    extraBody["Status"] = "PENDING_SPT_APPROVE";
+                }
 
                 if (formStatus === "DRAFT") {
                     updateOutsiderAccidentFormById(formData.Id, {
                         ...body,
-                        "CaseNumber": caseNubmer,
-                        "Title": "PUI"
+                        ...extraBody
                     }).then(async (updateOutsiderAccidentFormByIdRes) => {
                         console.log(updateOutsiderAccidentFormByIdRes)
                         // Photo upload implement
@@ -410,8 +421,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 } else {
                     createOutsiderAccidentForm({
                         ...body,
-                        "CaseNumber": caseNubmer,
-                        "Title": "PUI"
+                        ...extraBody
                     }).then(async createOutsiderAccidentFormRes => {
                         if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
                             console.log(createOutsiderAccidentFormRes);
@@ -1244,7 +1254,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {

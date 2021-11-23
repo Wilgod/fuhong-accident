@@ -12,7 +12,7 @@ import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { IUser } from '../../../interface/IUser';
-import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApprove } from "../permissionConfig";
+import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApprove, formInitBySm } from "../permissionConfig";
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
@@ -448,7 +448,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
 
         caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
-            const extra = {
+            let extraBody = {
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
                 "CaseNumber": caseNumber,
                 "Status": "PENDING_SM_APPROVE",
@@ -457,10 +457,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "SMId": spSmInfo.Id,
                 "ServiceUnit": serviceUnit
             }
+
+            if (CURRENT_USER.email === spSmInfo.Email) {
+                extraBody["Status"] = "PENDING_SD_APPROVE";
+                extraBody["SMDate"] = new Date().toISOString();
+                extraBody["SMComment"] = smComment;
+            }
+
             if (formStatus === "DRAFT") {
                 updateSpecialIncidentReportAllowance(formData.Id, {
                     ...body,
-                    ...extra
+                    ...extraBody
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
@@ -468,7 +475,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             } else {
                 createSpecialIncidentReportAllowance({
                     ...body,
-                    ...extra
+                    ...extraBody
                 }).then(res => {
                     console.log(res)
                     formSubmittedHandler();
@@ -1420,7 +1427,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<br />服務經理評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {

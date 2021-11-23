@@ -14,7 +14,7 @@ import { IUser } from '../../../interface/IUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { Role } from '../../../utils/RoleParser';
-import { adminUpdateInsuranceNumber, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
+import { adminUpdateInsuranceNumber, formInitBySm, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
@@ -312,7 +312,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
             caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceUnit).then((caseNumber) => {
                 console.log(caseNumber)
-                const extra = {
+                const extraBody = {
                     "Status": status,
                     "Stage": "1",
                     "NextDeadline": addBusinessDays(preparationDate, 3).toISOString(),
@@ -321,10 +321,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     "PreparationStaffId": CURRENT_USER.id,
                     "Title": "OIN"
                 }
+
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment
+                }
+
                 if (formStatus === "DRAFT") {
                     updateOtherIncidentReport(formData.Id, {
                         ...body,
-                        ...extra
+                        ...extraBody
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
                         formSubmittedHandler();
@@ -332,7 +339,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 } else {
                     createOtherIncidentReport({
                         ...body,
-                        ...extra
+                        ...extraBody
                     }).then(createOtherIncidentReportRes => {
                         console.log(createOtherIncidentReportRes)
                         formSubmittedHandler();
@@ -449,11 +456,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         event.preventDefault();
 
         if (confirm("確認批准 ?")) {
-            let status = "PENDING_SD_APPROVE";
+
             const [body, error] = dataFactory();
             updateOtherIncidentReport(formData.Id, {
                 ...body,
-                "Status": status,
+                "Status": "PENDING_SD_APPROVE",
                 "SMDate": new Date().toISOString(),
                 "SMComment": smComment
             }).then(res => {
@@ -1075,7 +1082,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="form-row row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {

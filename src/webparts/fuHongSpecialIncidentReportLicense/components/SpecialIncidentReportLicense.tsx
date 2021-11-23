@@ -13,7 +13,7 @@ import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../
 import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
-import { pendingSmApprove, pendingSdApprove, adminUpdateInsuranceNumber, formInitial } from "../../fuHongSpecialIncidentReportAllowance/permissionConfig";
+import { pendingSmApprove, pendingSdApprove, adminUpdateInsuranceNumber, formInitial, formInitBySm } from "../../fuHongSpecialIncidentReportAllowance/permissionConfig";
 import { addBusinessDays } from '../../../utils/DateUtils';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
@@ -445,7 +445,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceUnit).then((caseNumber) => {
             console.log(caseNumber)
-            const extra = {
+            const extraBody = {
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
                 "Status": "PENDING_SM_APPROVE",
                 "Stage": "1",
@@ -455,10 +455,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "SDDate": sdDate.toISOString(),
                 "SMDate": smDate.toISOString(),
             }
+
+            if (CURRENT_USER.email === spSmInfo.Email) {
+                extraBody["Status"] = "PENDING_SD_APPROVE";
+                extraBody["SMDate"] = new Date().toISOString();
+                extraBody["SMComment"] = smComment;
+
+            }
+
             if (formStatus === "DRAFT") {
                 updateSpecialIncidentReportLicense(formData.Id, {
                     ...body,
-                    ...extra
+                    ...extraBody
                 }).then(async (res) => {
                     await uploadFile(formData.Id);
                     formSubmittedHandler();
@@ -466,7 +474,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             } else {
                 createSpecialIncidentReportLicense({
                     ...body,
-                    ...extra
+                    ...extraBody
                 }).then(async (createSpecialIncidentReportLicenseRes) => {
                     await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
                     formSubmittedHandler();
@@ -1741,7 +1749,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={smComment}
+                                onChange={(event) => setSmComment(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {
