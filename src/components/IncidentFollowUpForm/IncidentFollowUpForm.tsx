@@ -217,7 +217,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
 
     const sdApproveHandler = (event) => {
         event.preventDefault();
-        console.log("sdApproveHandler")
+
         const [body] = dataFactory()
         if (confirm("確認批准 ?")) {
             updateIncidentFollowUpForm(selectedIncidentFollowUpFormId, {
@@ -253,12 +253,37 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
 
     const sdRejectHanlder = (event) => {
         event.preventDefault();
-        console.log("sdRejectHanlder")
-        // if (confirm("確認拒絕 ?")) {
-        //     updateIncidentFollowUpForm(formData.Id, {
-        //         body:
-        //     })
-        // }
+
+        if (confirm("確認拒絕 ?")) {
+            if (formType === "OTHER_INCIDENT") {
+                updateOtherIncidentReport(parentFormData.Id, {
+                    "Status": "PENDING_SM_FILL_IN",
+                    "SDDate": new Date().toISOString(),
+                    "SDComment": sdComment,
+                }).then((updateOtherIncidentReportRes) => {
+                    console.log(updateOtherIncidentReportRes)
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
+                updateSpecialIncidentReportLicense(parentFormData.Id, {
+                    "Status": "PENDING_SM_FILL_IN",
+                    "SDDate": new Date().toISOString(),
+                    "SDComment": sdComment,
+                }).then((updateSpecialIncidentReportLicenseRes) => {
+                    console.log(updateSpecialIncidentReportLicenseRes);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
+                updateSpecialIncidentReportAllowance(parentFormData.Id, {
+                    "Status": "PENDING_SM_FILL_IN",
+                    "SDDate": new Date().toISOString(),
+                    "SDComment": sdComment,
+                }).then((updateSpecialIncidentReportAllowance) => {
+                    console.log(updateSpecialIncidentReportAllowance);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
+        }
     }
 
     const sdSaveHandler = (event) => {

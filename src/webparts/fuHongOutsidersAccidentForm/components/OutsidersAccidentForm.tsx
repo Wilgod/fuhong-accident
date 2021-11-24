@@ -776,6 +776,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
     }, [departments]);
 
+    useEffect(() => {
+        if (Array.isArray(sptList) && sptList.length > 0) {
+            setSPhysicalTherapyEmail(sptList[0].mail);
+        }
+    }, [sptList]);
 
     return (
         <>
@@ -1252,7 +1257,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+                            {
+                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                        <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
+                                        <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+                            }
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1300,7 +1314,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 isRequired={false}
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            {
+                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                    >
+                                        <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
+                                        <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            }
+
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1333,8 +1358,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 高級物理治療師姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
-                            <select className={`custom-select  `} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
-                                <option>請選擇高級物理治療師</option>
+                            <select className={`custom-select  `} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 {
                                     sptList.map((spt) => {
                                         return <option value={spt.mail}>{spt.displayName}</option>

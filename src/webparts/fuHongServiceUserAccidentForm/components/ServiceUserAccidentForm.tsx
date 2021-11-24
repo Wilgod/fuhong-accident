@@ -28,8 +28,6 @@ import { intellectualDisabilityParser } from '../../../utils/IntellectualDisabil
 import { getQueryParameterNumber } from '../../../utils/UrlQueryHelper';
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import useSPT from '../../../hooks/useSPT';
-import useSD from '../../../hooks/useSD';
-import useSM from '../../../hooks/useSM';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptApproveForSD, formInitBySm } from '../permissionConfig';
@@ -57,16 +55,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
     const [contactStaff, setContactStaff, contactStaffPickerInfo] = useUserInfoAD();//負責通知家屬的職員姓名
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
-    const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
-    const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
+    // const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
+    // const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUserUnit();
     const [serviceUnit, setServiceUnit] = useState("");
     const [sptList] = useSPT();
-    const [smList] = useSM();
-    const [sdList] = useSD();
     const [insuranceNumber, setInsuranceNumber] = useState("");
     const [injuryFiles, setInjuryFiles] = useState([]);
     const [uploadedInjuryFiles, setUploadedInjuryFiles] = useState([]);
@@ -991,6 +987,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }, [departments])
 
+    useEffect(() => {
+        if (Array.isArray(sptList) && sptList.length > 0) {
+            setSPhysicalTherapyEmail(sptList[0].mail);
+        }
+    }, [sptList]);
 
     return (
         <>
@@ -1814,7 +1815,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* (4.4) 服務使用者經治後情況 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後情況</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${error.afterTreatmentDescription ? "is-invalid" : ""}`} name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className={`form-control ${error.afterTreatmentDescription ? "is-invalid" : ""}`} name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                             {/* {error.afterTreatmentDescription && <div className="text-danger">{error.afterTreatmentDescription}</div>} */}
                         </div>
                     </div>
@@ -1895,7 +1897,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     })
                                 }
                             </select> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+
+                            {
+                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                        <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
+                                        <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+                            }
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1953,7 +1965,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     })
                                 }
                             </select> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            {
+                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                    >
+                                        <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
+                                        <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            }
                         </div>
                         <label className={`col-12 col-xl-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-xl-5">
@@ -1997,8 +2019,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={sPhysicalTherapy && [sPhysicalTherapy.mail]}
                             /> */}
-                            <select className={`custom-select  ${error.spt ? "is-invalid" : ""}`} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
-                                <option>請選擇高級物理治療師</option>
+                            <select className={`custom-select  ${error.spt ? "is-invalid" : ""}`} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 {
                                     sptList.map((spt) => {
                                         return <option value={spt.mail}>{spt.displayName}</option>

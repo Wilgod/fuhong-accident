@@ -89,19 +89,23 @@ export async function getServiceDirectorsByGraph() {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("Get User AD By Graph error");
+        throw Error("getServiceDirectorsByGraph error");
     }
 }
 
 // SPT
 export async function getSeniorPhysiotherapistByGraph() {
     try {
-        const result = await graph.users.filter(`jobTitle eq 'Senior Physiotherapist'`).get();
-
+        let query = `jobTitle eq 'Senior Physiotherapist'`
+        
+        // Testing account
+        if (true) {
+            query += ` or mail eq 't_cms_spt@fuhong.org'`;
+        }
+        const result = await graph.users.filter(query).get();
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("Get User AD By Graph error");
+        throw Error("getSeniorPhysiotherapistByGraph error");
     }
 }
-

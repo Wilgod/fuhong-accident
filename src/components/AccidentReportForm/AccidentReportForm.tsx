@@ -11,9 +11,6 @@ import { Role } from '../../utils/RoleParser';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
-import useSPT from '../../hooks/useSPT';
-import useSD from '../../hooks/useSD';
-import useSM from '../../hooks/useSM';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
@@ -80,8 +77,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
 
-    const [sptList] = useSPT();
-    const [smList] = useSM();
 
     const textFieldHandler = (event) => {
         const name = event.target.name;

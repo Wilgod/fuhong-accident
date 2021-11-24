@@ -10,7 +10,6 @@ export default function useDepartmentMangers() {
 
     useEffect(() => {
         if (hrDepartment) {
-            console.log(hrDepartment);
             getDepartmentByShortName(hrDepartment).then((res) => {
                 setDepartments(res);
             }).catch(console.error);
