@@ -59,7 +59,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [sptComment, setSptComment] = useState("");
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
-
+    const [serviceLocation, setServiceLocation] = useState("");
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
@@ -382,11 +382,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
 
             // Draft update havent implement
-            caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceUnit).then((caseNubmer) => {
+            caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNubmer) => {
                 console.log(caseNubmer);
                 let extraBody = {
                     "CaseNumber": caseNubmer,
-                    "Title": "PUI"
+                    "Title": "PUI",
+                    "ServiceLocation": serviceLocation
                 }
 
                 if (CURRENT_USER.email === spSmInfo.Email) {
@@ -515,23 +516,21 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory("");
 
-            if (Object.keys(error).length > 0) {
-                setError(error);
-            } else {
-                updateOutsiderAccidentFormById(formId, {
-                    ...body,
-                    "SMApproved": true,
-                    "SMComment": smComment,
-                    "SMDate": smDate.toISOString(),
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "Status": "PENDING_SPT_APPROVE"
-                }).then((res) => {
-                    // Update form to stage 1-2
-                    // Trigger notification workflow
-                    console.log(res);
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
+
+            updateOutsiderAccidentFormById(formId, {
+                ...body,
+                "SMApproved": true,
+                "SMComment": smComment,
+                "SMDate": smDate.toISOString(),
+                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                "Status": "PENDING_SPT_APPROVE"
+            }).then((res) => {
+                // Update form to stage 1-2
+                // Trigger notification workflow
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+
         }
     }
 
@@ -551,55 +550,51 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const sptApproveHandler = (event) => {
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory("");
-            if (Object.keys(error).length > 0) {
-                setError(error);
-            } else {
-                if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-                    const serviceAccidentUserFormBody = {
-                        ...body,
-                        "SPTApproved": true,
-                        "SPTComment": sptComment,
-                        "SPTDate": sptDate.toISOString(),
-                        "InvestigatorId": investigatorPickerInfo[0].id,
-                        "Status": "PENDING_INVESTIGATE",
-                        "Stage": "2",
-                        "NextDeadline": addMonths(new Date(), 1).toISOString()
-                    };
-                    updateOutsiderAccidentFormById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
-                        // Create form 20, switch to stage 2]
-                        if (formOneResponse) {
-                            getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
-                                if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
-                                    let accidentTime = outsiderAccidentForm.AccidentTime
-                                    const accidentReportFormBody = {
-                                        "CaseNumber": outsiderAccidentForm.CaseNumber,
-                                        "ParentFormId": outsiderAccidentForm.Id,
-                                        "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
-                                        "ReceivedDate": new Date().toISOString(), // 交付日期
-                                        "SPTId": outsiderAccidentForm.SPTId,
-                                        "SMId": outsiderAccidentForm.SMId,
-                                        "InvestigatorId": outsiderAccidentForm.InvestigatorId
-                                    }
-                                    createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
-                                        // Trigger notification workflow
 
-
-                                        //AccidentReportForm
-                                        if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-
-                                            updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
-                                                console.log(res)
-                                                formSubmittedHandler()
-                                            }).catch(console.error);
-                                        }
-                                    })
+            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                const serviceAccidentUserFormBody = {
+                    ...body,
+                    "SPTApproved": true,
+                    "SPTComment": sptComment,
+                    "SPTDate": sptDate.toISOString(),
+                    "InvestigatorId": investigatorPickerInfo[0].id,
+                    "Status": "PENDING_INVESTIGATE",
+                    "Stage": "2",
+                    "NextDeadline": addMonths(new Date(), 1).toISOString()
+                };
+                updateOutsiderAccidentFormById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                    // Create form 20, switch to stage 2]
+                    if (formOneResponse) {
+                        getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
+                            if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
+                                let accidentTime = outsiderAccidentForm.AccidentTime
+                                const accidentReportFormBody = {
+                                    "CaseNumber": outsiderAccidentForm.CaseNumber,
+                                    "ParentFormId": outsiderAccidentForm.Id,
+                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                    "ReceivedDate": new Date().toISOString(), // 交付日期
+                                    "SPTId": outsiderAccidentForm.SPTId,
+                                    "SMId": outsiderAccidentForm.SMId,
+                                    "InvestigatorId": outsiderAccidentForm.InvestigatorId
                                 }
-                            }).catch(console.error);
-                        }
-                    });
-                } else {
-                    // error implementation
-                }
+                                createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                    // Trigger notification workflow
+
+
+                                    //AccidentReportForm
+                                    if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+
+                                        updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                            console.log(res)
+                                            formSubmittedHandler()
+                                        }).catch(console.error);
+                                    }
+                                })
+                            }
+                        }).catch(console.error);
+                    }
+                });
+
             }
         }
     }
@@ -759,6 +754,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (userInfo && userInfo.hr_deptid) {
             setHrDepartment(userInfo.hr_deptid);
             setServiceUnit(userInfo.hr_deptid);
+            setServiceLocation(userInfo.hr_location);
         }
     }, [userInfo]);
 
@@ -1258,7 +1254,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
                             {
-                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                         <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
@@ -1315,7 +1311,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 selectedItems={(e) => { console }}
                                 showHiddenInUI={false} /> */}
                             {
-                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                     >

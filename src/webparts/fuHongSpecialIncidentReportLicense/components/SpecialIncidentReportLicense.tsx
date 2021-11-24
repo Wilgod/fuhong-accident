@@ -27,7 +27,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
-
+    const [serviceLocation, setServiceLocation] = useState("");
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
@@ -443,7 +443,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         console.log(body);
         console.log(error);
 
-        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceUnit).then((caseNumber) => {
+        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
             console.log(caseNumber)
             const extraBody = {
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
@@ -454,6 +454,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "SMId": spSmInfo.Id,
                 "SDDate": sdDate.toISOString(),
                 "SMDate": smDate.toISOString(),
+                "ServiceLocation": serviceLocation
             }
 
             if (CURRENT_USER.email === spSmInfo.Email) {
@@ -776,6 +777,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
+                setServiceLocation(userInfo.hr_location);
             }
         }
     }, [userInfo]);

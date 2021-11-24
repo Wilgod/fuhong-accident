@@ -62,6 +62,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUserUnit();
     const [serviceUnit, setServiceUnit] = useState("");
+    const [serviceLocation, setServiceLocation] = useState("");
     const [sptList] = useSPT();
     const [insuranceNumber, setInsuranceNumber] = useState("");
     const [injuryFiles, setInjuryFiles] = useState([]);
@@ -605,10 +606,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let [body, error] = dataFactory("SUBMIT");
             console.log(error);
 
-            caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceUnit).then((caseNumber) => {
+            caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                console.log(caseNumber)
                 let extraBody = {
                     "CaseNumber": caseNumber,
-                    "Title": "SUI"
+                    "Title": "SUI",
+                    "ServiceLocation": serviceLocation
                 };
                 //SM Auto approve go to next step
                 if (CURRENT_USER.email === spSmInfo.Email) {
@@ -693,23 +696,21 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         // };
         if (confirm("確認批准 ?")) {
 
-            if (Object.keys(error).length > 0) {
-                setError(error);
-            } else {
-                updateServiceUserAccidentById(formId, {
-                    ...body,
-                    "SMApproved": true,
-                    "SMComment": smComment,
-                    "SMDate": smDate.toISOString(),
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "Status": "PENDING_SPT_APPROVE"
-                }).then((res) => {
-                    // Update form to stage 1-2
-                    // Trigger notification workflow
-                    console.log(res);
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
+
+            updateServiceUserAccidentById(formId, {
+                ...body,
+                "SMApproved": true,
+                "SMComment": smComment,
+                "SMDate": smDate.toISOString(),
+                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                "Status": "PENDING_SPT_APPROVE"
+            }).then((res) => {
+                // Update form to stage 1-2
+                // Trigger notification workflow
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
+
         }
     }
 
@@ -722,83 +723,80 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 "SMDate": smDate.toISOString(),
                 "Status": ""
             };
-            updateServiceUserAccidentById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+            updateServiceUserAccidentById(formId, body).then((res) => {
+                console.log(res);
+                formSubmittedHandler()
+            }).catch(console.error);
         }
     }
 
     const sptApproveHandler = () => {
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory("");
-            if (Object.keys(error).length > 0) {
-                setError(error);
-            } else {
-                if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-                    const serviceAccidentUserFormBody = {
-                        ...body,
-                        "SPTApproved": true,
-                        "SPTComment": sptComment,
-                        "SPTDate": sptDate.toISOString(),
-                        "InvestigatorId": investigatorPickerInfo[0].id,
-                        "Status": "PENDING_INVESTIGATE",
-                        "Stage": "2",
-                        "NextDeadline": addMonths(new Date(), 1).toISOString()
-                    };
-                    updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
-                        // Create form 20, switch to stage 2]
-                        if (formOneResponse) {
-                            getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
-                                if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
-                                    let accidentTime = serviceUserAccidentForm.AccidentTime
-                                    const accidentReportFormBody = {
-                                        "CaseNumber": serviceUserAccidentForm.CaseNumber,
-                                        "ParentFormId": serviceUserAccidentForm.Id,
-                                        "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
-                                        "ReceivedDate": new Date().toISOString(), // 交付日期
-                                        "SPTId": serviceUserAccidentForm.SPTId,
-                                        "SMId": serviceUserAccidentForm.SMId,
-                                        "InvestigatorId": serviceUserAccidentForm.InvestigatorId
-                                    }
-                                    createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
-                                        // Trigger notification workflow
 
-
-                                        //AccidentReportForm
-                                        if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-
-                                            updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
-                                                console.log(res)
-                                                formSubmittedHandler()
-                                            }).catch(console.error);
-                                        }
-                                    })
+            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
+                const serviceAccidentUserFormBody = {
+                    ...body,
+                    "SPTApproved": true,
+                    "SPTComment": sptComment,
+                    "SPTDate": sptDate.toISOString(),
+                    "InvestigatorId": investigatorPickerInfo[0].id,
+                    "Status": "PENDING_INVESTIGATE",
+                    "Stage": "2",
+                    "NextDeadline": addMonths(new Date(), 1).toISOString()
+                };
+                updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
+                    // Create form 20, switch to stage 2]
+                    if (formOneResponse) {
+                        getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
+                            if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
+                                let accidentTime = serviceUserAccidentForm.AccidentTime
+                                const accidentReportFormBody = {
+                                    "CaseNumber": serviceUserAccidentForm.CaseNumber,
+                                    "ParentFormId": serviceUserAccidentForm.Id,
+                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                    "ReceivedDate": new Date().toISOString(), // 交付日期
+                                    "SPTId": serviceUserAccidentForm.SPTId,
+                                    "SMId": serviceUserAccidentForm.SMId,
+                                    "InvestigatorId": serviceUserAccidentForm.InvestigatorId
                                 }
-                            }).catch(console.error);
-                        }
-                    });
-                } else {
-                    // error implementation
-                }
+                                createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
+                                    // Trigger notification workflow
+
+
+                                    //AccidentReportForm
+                                    if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
+
+                                        updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
+                                            console.log(res)
+                                            formSubmittedHandler()
+                                        }).catch(console.error);
+                                    }
+                                })
+                            }
+                        }).catch(console.error);
+                    }
+                });
+
             }
         }
     }
+    console.log(formStatus, formStatus === "");
 
     const sptRejectHandler = () => {
         if (confirm("確認拒絕 ?")) {
-            if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
-                const body = {
-                    "SPTApproved": false,
-                    "SPTComment": sptComment,
-                    "SPTDate": new Date().toISOString(),
-                    "InvestigatorId": investigatorPickerInfo[0].id,
-                    "Status": "PENDING_SM_APPROVE"
-                };
-                updateServiceUserAccidentById(formId, body).then(() => {
-                    // Trigger notification workflow
-                    formSubmittedHandler();
-                }).catch(console.error);
-            } else {
-                // error implementation
-            }
+
+            const body = {
+                "SPTApproved": false,
+                "SPTComment": sptComment,
+                "SPTDate": new Date().toISOString(),
+                "Status": "PENDING_SM_APPROVE"
+            };
+            updateServiceUserAccidentById(formData.Id, body).then((res) => {
+                console.log(res);
+                // Trigger notification workflow
+                formSubmittedHandler();
+            }).catch(console.error);
         }
     }
 
@@ -964,6 +962,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
+                setServiceLocation(userInfo.hr_location);
                 setPatientServiceUnit(userInfo.hr_deptid);
             }
         }
@@ -1899,7 +1898,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             </select> */}
 
                             {
-                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                         <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
@@ -1966,7 +1965,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                             </select> */}
                             {
-                                Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                     >

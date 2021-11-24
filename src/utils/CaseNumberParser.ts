@@ -78,7 +78,7 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
                 const [caseType, caseNumberRemain] = caseNumberSplit;
                 const financialYear = caseNumberRemain.substring(0, 4);
                 if (financialYear === currentFinancialYear) {
-                    const caseOrder = parseInt(caseNumberRemain.substring(4 + lastCase.ServiceUnit.length));
+                    const caseOrder = parseInt(caseNumberRemain.substring(4 + lastCase.ServiceLocation.length));
                     if (isNaN(caseOrder) === false) {
                         return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(caseOrder + 1)}`;
                     }

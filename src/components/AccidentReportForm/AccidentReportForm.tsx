@@ -179,22 +179,22 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             } else {
                 // Investigator 
                 const [body, error] = dataFactory();
-                if (Object.keys(error).length === 0) {
-                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                        if (formType === "SERVICE_USER") {
-                            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
-                                console.log(updateServiceUserAccidentResponse)
-                                // Trigger notification workflow;
-                                formSubmittedHandler();
-                            }).catch(console.error)
-                        } else {
-                            updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
-                                console.log(updateOutsiderAccidentResponse);
-                                formSubmittedHandler();
-                            }).catch(console.error);
-                        }
-                    }).catch(console.error);
-                }
+
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                    if (formType === "SERVICE_USER") {
+                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
+                            console.log(updateServiceUserAccidentResponse)
+                            // Trigger notification workflow;
+                            formSubmittedHandler();
+                        }).catch(console.error)
+                    } else {
+                        updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
+                            console.log(updateOutsiderAccidentResponse);
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
+                }).catch(console.error);
+
             }
         }
     };
@@ -202,17 +202,17 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const draftHandler = () => {
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
-            if (Object.keys(error).length === 0) {
-                if (formType === "SERVICE_USER") {
-                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                } else {
-                    updateOutsiderAccidentFormById(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                }
+
+            if (formType === "SERVICE_USER") {
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                updateOutsiderAccidentFormById(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
+                    formSubmittedHandler();
+                }).catch(console.error);
             }
+
         }
     };
 
@@ -254,7 +254,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             },
                             "Stage": "3",
                             "Status": "PENDING_SM_FILL_IN",
-                            "NextDeadline": addMonths(new Date(), 6).toISOString()
+                            "NextDeadline": addMonths(new Date(), 6).toISOString(),
+                            "Title": "意外跟進/結束表(三) - 1"
                         }
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
@@ -400,7 +401,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
-
+    console.log(parentFormData)
     return (
         <>
             <div>
@@ -418,7 +419,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceUnitDetail && serviceUnitDetail.Title ? `${serviceUnitDetail.Title} - ${serviceUnitDetail.ShortForm}` : ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUnit ? `${parentFormData.ServiceUnit}` : ""}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>

@@ -30,6 +30,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [formStage, setFormStage] = useState("");
     const [formStatus, setFormStatus] = useState("");
     const [error, setError] = useState<IErrorFields>()
+    const [serviceLocation, setServiceLocation] = useState("");
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
         toDepartment: "",
         incidentLocation: "",
@@ -447,7 +448,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         console.log(error);
 
 
-        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceUnit).then((caseNumber: string) => {
+        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceLocation).then((caseNumber: string) => {
+            console.log(caseNumber)
             let extraBody = {
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
                 "CaseNumber": caseNumber,
@@ -455,7 +457,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Stage": "1",
                 "SDId": spSdInfo.Id,
                 "SMId": spSmInfo.Id,
-                "ServiceUnit": serviceUnit
+                "ServiceUnit": serviceUnit,
+                "ServiceLocation": serviceLocation
             }
 
             if (CURRENT_USER.email === spSmInfo.Email) {
@@ -533,20 +536,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         event.preventDefault();
         const [body, error] = dataFactory();
         if (confirm("確認批准 ?")) {
-            if (Object.keys(error).length > 0) {
-                setError(error);
-            } else {
-                updateSpecialIncidentReportAllowance(formData.Id, {
-                    ...body,
-                    "Status": "PENDING_SD_APPROVE",
-                    "SMDate": new Date().toISOString(),
-                    "SMComment": smComment
-                }).then((res) => {
-                    console.log(res);
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
+
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body,
+                "Status": "PENDING_SD_APPROVE",
+                "SMDate": new Date().toISOString(),
+                "SMComment": smComment
+            }).then((res) => {
+                console.log(res);
+                formSubmittedHandler();
+            }).catch(console.error);
         }
+
     }
 
     const smRejectHandler = (event) => {
@@ -666,6 +667,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
+                setServiceLocation(userInfo.hr_location);
             }
         }
     }, [userInfo]);
