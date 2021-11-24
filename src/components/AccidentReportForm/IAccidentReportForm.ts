@@ -8,6 +8,7 @@ export interface IAccidentFollowUpRepotFormProps {
     currentUserRole: Role;
     parentFormData: any;
     formSubmittedHandler(): void;
+    isPrintMode: boolean;
 }
 
 export interface IAccidentFollowUpRepotFormStates {

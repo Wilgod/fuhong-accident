@@ -44,7 +44,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -1020,8 +1020,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     return (
         <>
-            <Header displayName="服務使用者意外填報表(一)" />
-            <div className={`${styles.backgroundColor} container-fluid px-4 pt-3`}>
+            {
+                isPrintMode && <Header displayName="服務使用者意外填報表(一)" />
+            }
+
+            <div className={`${styles.backgroundColor} container-fluid px-4 pt-4`}>
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         {/* 服務單位 */}

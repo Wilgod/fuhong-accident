@@ -44,6 +44,7 @@ interface IServiceUserAccidentFormProps {
     currentUserRole: Role
     formData: any;
     formSubmittedHandler(): void;
+    isPrintMode: boolean;
 }
 
 interface IErrorFields {

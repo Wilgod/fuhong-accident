@@ -27,7 +27,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -404,10 +404,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     console.log(parentFormData)
     return (
         <>
-            <div>
-                <Header displayName="服務使用者/外界人士意外報告(二)" />
-            </div>
-            <div className="container-fluid px-4 pt-3">
+            {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
+            <div className="container-fluid px-4 pt-4">
                 <section className="mb-5">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">

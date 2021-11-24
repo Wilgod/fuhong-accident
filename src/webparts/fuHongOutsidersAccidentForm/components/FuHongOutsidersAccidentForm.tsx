@@ -39,9 +39,14 @@ const getCanvasZone = () => {
   }
 }
 
-
-
-export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, { currentUserRole: Role, formSubmitted: boolean, outsiderAccidentFormData: any, stage: string, }> {
+interface IFuHongOutsidersAccidentFormState {
+  currentUserRole: Role;
+  formSubmitted: boolean;
+  outsiderAccidentFormData: any;
+  stage: string;
+  isPrintMode: boolean;
+}
+export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -53,7 +58,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       currentUserRole: Role.GENERAL,
       outsiderAccidentFormData: null,
       stage: "",
-      formSubmitted: false
+      formSubmitted: false,
+      isPrintMode: false
     }
   }
 
@@ -134,17 +140,17 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               <Tabs variant="fullWidth">
                 <TabList>
                   <Tab>外界人士意外填報表(一)</Tab>
-                  <Tab>服務使用者/外界人士意外報告(二)</Tab>
+                  <Tab>外界人士意外報告(二)</Tab>
                   <Tab>意外跟進/結束表(三)</Tab>
                 </TabList>
                 <TabPanel>
-                  <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} />
+                  <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
               </Tabs>
           }

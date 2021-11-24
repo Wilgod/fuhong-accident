@@ -39,9 +39,15 @@ const getCanvasZone = () => {
   }
 }
 
+interface IFuHongOtherIncidentReportStates {
+  currentUserRole: Role,
+  otherIncidentReportFormData: any,
+  stage: string,
+  formSubmitted: boolean,
+  isPrintMode: boolean
+}
 
-
-export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, { currentUserRole: Role, otherIncidentReportFormData: any, stage: string, formSubmitted: boolean }> {
+export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, IFuHongOtherIncidentReportStates> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -53,7 +59,8 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
       currentUserRole: Role.GENERAL,
       otherIncidentReportFormData: null,
       stage: "",
-      formSubmitted: false
+      formSubmitted: false,
+      isPrintMode: false
     }
 
     console.log("Flow 5");
@@ -99,7 +106,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
-        
+
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
@@ -139,7 +146,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} />
+                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
                   <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} />

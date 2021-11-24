@@ -8,6 +8,7 @@ export interface IOtherIncidentReportProps {
     formSubmittedHandler(): void;
     currentUserRole: Role;
     formData: any;
+    isPrintMode: boolean;
 }
 
 export interface IOtherIncidentReportStates {

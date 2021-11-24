@@ -19,7 +19,7 @@ import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -648,10 +648,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     return (
         <>
-            <div>
-                <Header displayName="其他事故呈報表" />
-            </div>
-            <div className="container-fluid px-4 pt-3">
+            {isPrintMode && <Header displayName="其他事故呈報表" />}
+
+            <div className="container-fluid px-4 pt-4">
                 <section className="mb-5">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">

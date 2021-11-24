@@ -30,7 +30,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
@@ -556,19 +556,20 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     return (
         <>
-            <div className="mb-3">
-                <Header displayName="意外跟進/結束表(三)" >
-                    {
-                        accidentFollowUpFormList.length > 1 &&
+            {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}
+            {
+                accidentFollowUpFormList.length > 1 &&
+                <div className="row">
+                    <div className="col-sm-12 col-md-6">
                         <select className={"form-control"} value={selectedAccidentFollowUpFormId} onChange={formChangeHandler}>
                             {accidentFollowUpFormList.map((item) => {
                                 return <option value={item.ID}>{moment(item.Created).format("YYYY-MM-DD")} - {item.Title}</option>
                             })}
                         </select>
-                    }
-                </Header>
-            </div>
-            <div className="container-fluid px-4">
+                    </div>
+                </div>
+            }
+            <div className="container-fluid px-4 pt-4">
                 <section className="mb-5">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">

@@ -39,8 +39,15 @@ if (document.querySelector('.CanvasZone') != null) {
   (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
+interface IFuHongServiceUserAccidentFormState {
+  currentUserRole: Role;
+  serviceUserAccidentFormData: any;
+  stage: string;
+  formSubmitted: boolean;
+  isPrintMode: boolean;
+}
 
-export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, { currentUserRole: Role, serviceUserAccidentFormData: any, stage: string, formSubmitted: boolean }> {
+export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -52,7 +59,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       currentUserRole: Role.GENERAL,
       serviceUserAccidentFormData: null,
       stage: "",
-      formSubmitted: false
+      formSubmitted: false,
+      isPrintMode: false,
     }
     console.log("Flow 1");
   }
@@ -121,6 +129,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
+  private printModeHandler = () => { this.setState({ isPrintMode: !this.state.isPrintMode }); }
+
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
     console.log(this.state.currentUserRole);
     return (
@@ -133,17 +143,17 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <Tabs variant="fullWidth">
                 <TabList>
                   <Tab>服務使用者意外填報表(一)</Tab>
-                  <Tab>服務使用者/外界人士意外報告(二)</Tab>
+                  <Tab>服務使用者意外報告(二)</Tab>
                   <Tab>意外跟進/結束表(三)</Tab>
                 </TabList>
                 <TabPanel>
-                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} />
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
               </Tabs>
           }

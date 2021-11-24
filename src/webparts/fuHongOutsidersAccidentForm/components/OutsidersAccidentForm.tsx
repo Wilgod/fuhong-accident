@@ -37,10 +37,11 @@ interface IOutsidersAccidentFormProps {
     context: WebPartContext;
     currentUserRole: Role,
     formSubmittedHandler(): void;
-    formData: any
+    formData: any;
+    isPrintMode: boolean;
 }
 
-export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOutsidersAccidentFormProps) {
     const [error, setError] = useState<IErrorFields>();
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -805,10 +806,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     return (
         <>
-            <div>
-                <Header displayName="外界人士意外填報表(一)" />
-            </div>
-            <div className="container-fluid px-4 pt-3">
+            {isPrintMode && <Header displayName="外界人士意外填報表(一)" />}
+            <div className="container-fluid px-4 pt-4">
                 <section className="mb-5">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
