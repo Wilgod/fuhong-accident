@@ -606,54 +606,53 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let [body, error] = dataFactory("SUBMIT");
             console.log(error);
 
-            caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
-                console.log(caseNumber)
-                let extraBody = {
-                    "CaseNumber": caseNumber,
-                    "Title": "SUI",
-                    "ServiceLocation": serviceLocation
-                };
-                //SM Auto approve go to next step
-                if (CURRENT_USER.email === spSmInfo.Email) {
-                    extraBody["SMApproved"] = true;
-                    extraBody["SMComment"] = smComment;
-                    extraBody["SMDate"] = new Date().toISOString();
-                    extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
-                    extraBody["Status"] = "PENDING_SPT_APPROVE"
-                }
+            if (formStatus === "SM_VOID") {
+                updateServiceUserAccidentById(formData.Id, {
+                    ...body,
+                    "Status": "PENDING_SM_APPROVE"
+                }).then(async (updateServiceUserAccidentByIdRes) => {
+                    let att = [];
+                    if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                        att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                    }
 
-                if (formStatus === "DRAFT") {
-                    updateServiceUserAccidentById(formData.Id, {
-                        ...body,
-                        ...extraBody
-                    }).then(async (updateServiceUserAccidentByIdRes) => {
-                        let att = [];
-                        if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
-                            att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
-                        }
+                    if (injuryFiles.length > 0) {
+                        att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                    }
 
-                        if (injuryFiles.length > 0) {
-                            att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
-                        }
+                    if (att.length > 0) {
+                        // Do seomething
+                        await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                            if (updateServiceUserAccidentAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                    console.log(caseNumber)
+                    let extraBody = {
+                        "CaseNumber": caseNumber,
+                        "Title": "SUI",
+                        "ServiceLocation": serviceLocation,
+                        "Status": "PENDING_SM_APPROVE"
+                    };
+                    //SM Auto approve go to next step
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["SMApproved"] = true;
+                        extraBody["SMComment"] = smComment;
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                        extraBody["Status"] = "PENDING_SPT_APPROVE"
+                    }
 
-                        if (att.length > 0) {
-                            // Do seomething
-                            await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
-                                if (updateServiceUserAccidentAttachmentByIdRes) {
-                                    // Do something
-                                }
-                            }).catch(console.error);
-                        }
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                } else {
-                    createServiceUserAccident({
-                        ...body,
-                        ...extraBody
-                    }).then(async (createServiceUserAccidentRes) => {
-                        if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
-
-                            // Attachement
+                    if (formStatus === "DRAFT") {
+                        updateServiceUserAccidentById(formData.Id, {
+                            ...body,
+                            ...extraBody
+                        }).then(async (updateServiceUserAccidentByIdRes) => {
                             let att = [];
                             if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                                 att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
@@ -665,18 +664,45 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                             if (att.length > 0) {
                                 // Do seomething
-                                await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
                                     if (updateServiceUserAccidentAttachmentByIdRes) {
                                         // Do something
                                     }
                                 }).catch(console.error);
                             }
-                        }
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                }
-            }).catch(console.error);
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else {
+                        createServiceUserAccident({
+                            ...body,
+                            ...extraBody
+                        }).then(async (createServiceUserAccidentRes) => {
+                            if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
 
+                                // Attachement
+                                let att = [];
+                                if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                                    att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                                }
+
+                                if (injuryFiles.length > 0) {
+                                    att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                                }
+
+                                if (att.length > 0) {
+                                    // Do seomething
+                                    await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                        if (updateServiceUserAccidentAttachmentByIdRes) {
+                                            // Do something
+                                        }
+                                    }).catch(console.error);
+                                }
+                            }
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
+                }).catch(console.error);
+            }
         }
     }
     const cancelHandler = () => {
@@ -721,7 +747,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 "SMApproved": false,
                 "SMComment": smComment,
                 "SMDate": smDate.toISOString(),
-                "Status": ""
+                "Status": "SM_VOID"
             };
             updateServiceUserAccidentById(formId, body).then((res) => {
                 console.log(res);
@@ -2093,7 +2119,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <button className="btn btn-warning" onClick={submitHandler}>提交</button>
                             }
                             {
-                                formInitial(currentUserRole, formStatus) &&
+                                formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                                 <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                             }
                             <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>

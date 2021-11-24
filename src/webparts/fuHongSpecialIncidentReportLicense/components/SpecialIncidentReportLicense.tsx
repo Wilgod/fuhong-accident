@@ -443,45 +443,54 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         console.log(body);
         console.log(error);
 
-        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
-            console.log(caseNumber)
-            const extraBody = {
-                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                "Status": "PENDING_SM_APPROVE",
-                "Stage": "1",
-                "CaseNumber": caseNumber,
-                "SDId": spSdInfo.Id,
-                "SMId": spSmInfo.Id,
-                "SDDate": sdDate.toISOString(),
-                "SMDate": smDate.toISOString(),
-                "ServiceLocation": serviceLocation
-            }
+        if (formStatus === "SM_VOID") {
+            updateSpecialIncidentReportLicense(formData.Id, {
+                ...body,
+                "Status": "PENDING_SM_APPROVE"
+            }).then(async (res) => {
+                await uploadFile(formData.Id);
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
+                console.log(caseNumber)
+                const extraBody = {
+                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                    "Status": "PENDING_SM_APPROVE",
+                    "Stage": "1",
+                    "CaseNumber": caseNumber,
+                    "SDId": spSdInfo.Id,
+                    "SMId": spSmInfo.Id,
+                    "SDDate": sdDate.toISOString(),
+                    "SMDate": smDate.toISOString(),
+                    "ServiceLocation": serviceLocation
+                }
 
-            if (CURRENT_USER.email === spSmInfo.Email) {
-                extraBody["Status"] = "PENDING_SD_APPROVE";
-                extraBody["SMDate"] = new Date().toISOString();
-                extraBody["SMComment"] = smComment;
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment;
+                }
 
-            }
-
-            if (formStatus === "DRAFT") {
-                updateSpecialIncidentReportLicense(formData.Id, {
-                    ...body,
-                    ...extraBody
-                }).then(async (res) => {
-                    await uploadFile(formData.Id);
-                    formSubmittedHandler();
-                }).catch(console.error);
-            } else {
-                createSpecialIncidentReportLicense({
-                    ...body,
-                    ...extraBody
-                }).then(async (createSpecialIncidentReportLicenseRes) => {
-                    await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
-        }).catch(console.error);
+                if (formStatus === "DRAFT") {
+                    updateSpecialIncidentReportLicense(formData.Id, {
+                        ...body,
+                        ...extraBody
+                    }).then(async (res) => {
+                        await uploadFile(formData.Id);
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    createSpecialIncidentReportLicense({
+                        ...body,
+                        ...extraBody
+                    }).then(async (createSpecialIncidentReportLicenseRes) => {
+                        await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            }).catch(console.error);
+        }
     }
 
     const draftHandler = (event) => {
@@ -611,7 +620,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
             updateSpecialIncidentReportLicense(formData.Id, {
                 ...body,
-                "Status": ""
+                "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();
@@ -1857,7 +1866,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         }
 
                         {
-                            formInitial(currentUserRole, formStatus) &&
+                            formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
 

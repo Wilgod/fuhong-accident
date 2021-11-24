@@ -342,10 +342,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
             body["SMApproved"] = true;
-            body["Status"] = "PENDING_SPT_APPROVE";
+            // body["Status"] = "PENDING_SPT_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else if (status === "SUBMIT") {
-            body["Status"] = "PENDING_SM_APPROVE";
+            // body["Status"] = "PENDING_SM_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
         } else if (status === "DRAFT") {
             // body["Status"] = "DRAFT";
@@ -381,51 +381,54 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }).catch(console.error);
         } else {
 
-            // Draft update havent implement
-            caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNubmer) => {
-                console.log(caseNubmer);
-                let extraBody = {
-                    "CaseNumber": caseNubmer,
-                    "Title": "PUI",
-                    "ServiceLocation": serviceLocation
-                }
+            if (formStatus === "SM_VOID") {
 
-                if (CURRENT_USER.email === spSmInfo.Email) {
-                    extraBody["SMApproved"] = true;
-                    extraBody["SMComment"] = smComment;
-                    extraBody["SMDate"] = new Date().toISOString();
-                    extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
-                    extraBody["Status"] = "PENDING_SPT_APPROVE";
-                }
+                updateOutsiderAccidentFormById(formData.Id, {
+                    ...body,
+                    "Status": "PENDING_SM_APPROVE"
+                }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                    console.log(updateOutsiderAccidentFormByIdRes)
+                    // Photo upload implement
+                    let att = [];
+                    if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                        att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                    }
 
-                if (formStatus === "DRAFT") {
-                    updateOutsiderAccidentFormById(formData.Id, {
-                        ...body,
-                        ...extraBody
-                    }).then(async (updateOutsiderAccidentFormByIdRes) => {
-                        console.log(updateOutsiderAccidentFormByIdRes)
-                        // Photo upload implement
-                        let att = [];
-                        if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
-                            att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
-                        }
+                    if (att.length > 0) {
+                        await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                            if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                            }
+                        }).catch(console.error);
+                    }
+                    formSubmittedHandler();
+                })
+            } else {
 
-                        if (att.length > 0) {
-                            await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
-                                if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                    console.log(updateOutsidersAccidentFormAttachmentByIdRes);
-                                }
-                            }).catch(console.error);
-                        }
-                        formSubmittedHandler();
-                    })
-                } else {
-                    createOutsiderAccidentForm({
-                        ...body,
-                        ...extraBody
-                    }).then(async createOutsiderAccidentFormRes => {
-                        if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
-                            console.log(createOutsiderAccidentFormRes);
+                // Draft update havent implement
+                caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNubmer) => {
+                    console.log(caseNubmer);
+                    let extraBody = {
+                        "CaseNumber": caseNubmer,
+                        "Title": "PUI",
+                        "ServiceLocation": serviceLocation,
+                        "Status": "PENDING_SM_APPROVE"
+                    }
+
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["SMApproved"] = true;
+                        extraBody["SMComment"] = smComment;
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                        extraBody["Status"] = "PENDING_SPT_APPROVE";
+                    }
+
+                    if (formStatus === "DRAFT") {
+                        updateOutsiderAccidentFormById(formData.Id, {
+                            ...body,
+                            ...extraBody,
+                        }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                            console.log(updateOutsiderAccidentFormByIdRes)
                             // Photo upload implement
                             let att = [];
                             if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
@@ -433,19 +436,41 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }
 
                             if (att.length > 0) {
-                                await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                     if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes);
                                     }
                                 }).catch(console.error);
                             }
-                        }
+                            formSubmittedHandler();
+                        })
+                    } else {
+                        createOutsiderAccidentForm({
+                            ...body,
+                            ...extraBody
+                        }).then(async createOutsiderAccidentFormRes => {
+                            if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
+                                console.log(createOutsiderAccidentFormRes);
+                                // Photo upload implement
+                                let att = [];
+                                if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                                    att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                                }
 
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                }
-            }).catch(console.error);
+                                if (att.length > 0) {
+                                    await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                        if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                                        }
+                                    }).catch(console.error);
+                                }
+                            }
 
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
+                }).catch(console.error);
+            }
         }
     }
 
@@ -541,7 +566,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 "SMApproved": false,
                 "SMComment": smComment,
                 "SMDate": smDate.toISOString(),
-                "Status": ""
+                "Status": "SM_VOID"
             };
             updateOutsiderAccidentFormById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
         }
@@ -1430,7 +1455,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <button className="btn btn-warning" onClick={submitHandler}>提交</button>
                         }
                         {
-                            formInitial(currentUserRole, formStatus) &&
+                            formInitial(currentUserRole, formStatus) && formStatus === "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>

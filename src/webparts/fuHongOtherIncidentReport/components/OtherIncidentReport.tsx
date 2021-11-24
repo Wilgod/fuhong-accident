@@ -305,46 +305,57 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         const [body, error] = dataFactory()
 
         console.log(body);
-        let status = "PENDING_SM_APPROVE"
 
-        caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceLocation).then((caseNumber) => {
-            console.log(caseNumber)
-            const extraBody = {
-                "Status": status,
-                "Stage": "1",
-                "NextDeadline": addBusinessDays(preparationDate, 3).toISOString(),
-                "CaseNumber": caseNumber,
+        if (formStatus === "SM_VOID") {
+            updateOtherIncidentReport(formData.Id, {
+                ...body,
+                "Status": "PENDING_SM_APPROVE",
                 "PreparationDate": new Date().toISOString(),
                 "PreparationStaffId": CURRENT_USER.id,
-                "Title": "OIN",
-                "ServiceLocation": serviceLocation
-            }
+            }).then((updateOtherIncidentReportRes) => {
+                console.log(updateOtherIncidentReportRes)
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
 
-            if (CURRENT_USER.email === spSmInfo.Email) {
-                extraBody["Status"] = "PENDING_SD_APPROVE";
-                extraBody["SMDate"] = new Date().toISOString();
-                extraBody["SMComment"] = smComment
-            }
+            caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceLocation).then((caseNumber) => {
+                console.log(caseNumber)
+                const extraBody = {
+                    "Status": "PENDING_SM_APPROVE",
+                    "Stage": "1",
+                    "NextDeadline": addBusinessDays(preparationDate, 3).toISOString(),
+                    "CaseNumber": caseNumber,
+                    "PreparationDate": new Date().toISOString(),
+                    "PreparationStaffId": CURRENT_USER.id,
+                    "Title": "OIN",
+                    "ServiceLocation": serviceLocation
+                }
 
-            if (formStatus === "DRAFT") {
-                updateOtherIncidentReport(formData.Id, {
-                    ...body,
-                    ...extraBody
-                }).then((updateOtherIncidentReportRes) => {
-                    console.log(updateOtherIncidentReportRes)
-                    formSubmittedHandler();
-                }).catch(console.error);
-            } else {
-                createOtherIncidentReport({
-                    ...body,
-                    ...extraBody
-                }).then(createOtherIncidentReportRes => {
-                    console.log(createOtherIncidentReportRes)
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
-        });
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment
+                }
 
+                if (formStatus === "DRAFT") {
+                    updateOtherIncidentReport(formData.Id, {
+                        ...body,
+                        ...extraBody
+                    }).then((updateOtherIncidentReportRes) => {
+                        console.log(updateOtherIncidentReportRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    createOtherIncidentReport({
+                        ...body,
+                        ...extraBody
+                    }).then(createOtherIncidentReportRes => {
+                        console.log(createOtherIncidentReportRes)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            });
+        }
     }
 
     const draftHandler = (event) => {
@@ -487,12 +498,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             const [body, error] = dataFactory();
             updateOtherIncidentReport(formData.Id, {
                 ...body,
-                "Status": ""
+                "Status": "SM_VOID"
             }).then((res) => {
                 formSubmittedHandler();
             }).catch(console.error);
         }
     }
+
     // fill in the insurance number
     const adminSubmitHandler = (event) => {
         event.preventDefault();
@@ -1206,15 +1218,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             <button className="btn btn-warning" onClick={smSubmitHadnler}>儲存</button>
                         }
                         {
-                            formInitial(currentUserRole, formStatus) &&
+                            formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                     </div>
                 </section>
-
-
-            </div>
+            </div >
         </>
     )
 }

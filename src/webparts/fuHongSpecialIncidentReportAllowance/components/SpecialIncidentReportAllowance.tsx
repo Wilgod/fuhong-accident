@@ -446,45 +446,54 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         const [body, error] = dataFactory()
         console.log(body);
         console.log(error);
-
-
-        caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceLocation).then((caseNumber: string) => {
-            console.log(caseNumber)
-            let extraBody = {
-                "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                "CaseNumber": caseNumber,
+        if (formStatus === "SM_VOID") {
+            updateSpecialIncidentReportAllowance(formData.Id, {
+                ...body,
                 "Status": "PENDING_SM_APPROVE",
-                "Stage": "1",
-                "SDId": spSdInfo.Id,
-                "SMId": spSmInfo.Id,
-                "ServiceUnit": serviceUnit,
-                "ServiceLocation": serviceLocation
-            }
+                
+            }).then(res => {
+                console.log(res)
+                formSubmittedHandler();
+            }).catch(console.error);
+        } else {
+            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceLocation).then((caseNumber: string) => {
+                console.log(caseNumber)
+                let extraBody = {
+                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                    "CaseNumber": caseNumber,
+                    "Status": "PENDING_SM_APPROVE",
+                    "Stage": "1",
+                    "SDId": spSdInfo.Id,
+                    "SMId": spSmInfo.Id,
+                    "ServiceUnit": serviceUnit,
+                    "ServiceLocation": serviceLocation
+                }
 
-            if (CURRENT_USER.email === spSmInfo.Email) {
-                extraBody["Status"] = "PENDING_SD_APPROVE";
-                extraBody["SMDate"] = new Date().toISOString();
-                extraBody["SMComment"] = smComment;
-            }
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment;
+                }
 
-            if (formStatus === "DRAFT") {
-                updateSpecialIncidentReportAllowance(formData.Id, {
-                    ...body,
-                    ...extraBody
-                }).then(res => {
-                    console.log(res)
-                    formSubmittedHandler();
-                }).catch(console.error);
-            } else {
-                createSpecialIncidentReportAllowance({
-                    ...body,
-                    ...extraBody
-                }).then(res => {
-                    console.log(res)
-                    formSubmittedHandler();
-                }).catch(console.error);
-            }
-        }).catch(console.error);
+                if (formStatus === "DRAFT") {
+                    updateSpecialIncidentReportAllowance(formData.Id, {
+                        ...body,
+                        ...extraBody
+                    }).then(res => {
+                        console.log(res)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    createSpecialIncidentReportAllowance({
+                        ...body,
+                        ...extraBody
+                    }).then(res => {
+                        console.log(res)
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+            }).catch(console.error);
+        }
 
 
     }
@@ -558,7 +567,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
             updateSpecialIncidentReportAllowance(formData.Id, {
                 ...body,
-                "Status": ""
+                "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
                 formSubmittedHandler();
@@ -574,7 +583,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         updateSpecialIncidentReportAllowance(formData.Id, {
             ...body,
             "SMComment": smComment,
-            "SMDate": new Date().toISOString()
+            "SMDate": new Date().toISOString(),
         }).then((res) => {
             console.log(res);
             formSubmittedHandler();
@@ -1528,7 +1537,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <button className="btn btn-warning" onClick={smSubmitHandler}>儲存</button>
                         }
                         {
-                            formInitial(currentUserRole, formStatus) &&
+                            formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
 
