@@ -19,6 +19,11 @@ export interface IAccidentFollowUpFormStates {
     accidentalFollowUpContinue: boolean;
 }
 
+export interface IFollowUpAction {
+    action: string;
+    date: string;
+    remark: string;
+}
 //FormType
 //FollowUpMeasures
 //ExecutionPeriod

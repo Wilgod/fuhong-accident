@@ -7,7 +7,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import * as moment from 'moment';
 import "./AccidentFollowUpForm.css";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
-import { IAccidentFollowUpFormStates, IAccidentFollowUpFormProps } from './IAccidentFollowUpForm';
+import { IAccidentFollowUpFormStates, IAccidentFollowUpFormProps, IFollowUpAction } from './IAccidentFollowUpForm';
 import useUserInfoAD from '../../hooks/useUserInfoAD';
 import useSPT from '../../hooks/useSPT';
 import useSM from '../../hooks/useSM';
@@ -50,8 +50,14 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         accidentalFollowUpContinue: undefined,
         executionPeriod: "",
         followUpMeasures: "",
-        remark: "",
+        remark: ""
     });
+
+    const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
+        action: "",
+        date: new Date().toISOString(),
+        remark: ""
+    }]);
 
     const [accidentFollowUpFormList, setAccidentFollowUpFormList] = useState([]);
     const [selectedAccidentFollowUpFormId, setSelectedAccidentFollowUpFormId] = useState(null);
@@ -72,6 +78,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const dataFactory = () => {
         let body = {};
         let error = {};
+
+        body["FollowUpActions"] = JSON.stringify(followUpActions);
 
         if (form.followUpMeasures) {
             body["FollowUpMeasures"] = form.followUpMeasures;
@@ -522,6 +530,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const [data] = accidentFollowUpFormList.filter((item) => item.ID === selectedAccidentFollowUpFormId);
 
         if (data) {
+            if (data.FollowUpActions) {
+                setFollowUpActions(JSON.parse(data.FollowUpActions));
+            }
+
             setCompleted(data.Completed === true ? true : false);
 
             setForm({
@@ -638,32 +650,87 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 </section>
 
                 <section className="mb-5">
-                    <div className="form-row mb-3">
-                        <div className="col-12 font-weight-bold">
+                    {/* <div className="form-row mb-3">
+                        <div className="col-sm-10 col-10 font-weight-bold">
                             <h5>意外跟進行動表</h5>
                         </div>
-                    </div>
-                    <div className="form-row mb-2">
-                        {/* 意外報告的跟進措施 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={textFieldHandler} value={form.followUpMeasures} disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                            <button className="btn btn-primary">新增意外跟進行動</button>
                         </div>
+                    </div> */}
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+
+                        <h5>意外跟進行動表</h5>
+                        <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}>
+                            新增意外跟進行動
+                        </button>
                     </div>
-                    <div className="form-row mb-2">
-                        {/* 執行時段 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
-                        <div className="col">
-                            <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler} disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
-                        </div>
-                    </div>
-                    <div className="form-row mb-2">
-                        {/* 備註 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="remark" onChange={textFieldHandler} value={form.remark} disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
-                        </div>
-                    </div>
+                    {
+                        followUpActions.map((item, index) => {
+                            return (
+                                <div className="mb-3 px-2 py-3" style={{ border: "1px solid #d9dde0", borderRadius: "10px" }} >
+                                    {
+                                        followUpActions.length > 1 &&
+                                        <div className="d-flex justify-content-between align-items-center mb-2" >
+                                            <div className={`${styles.fieldTitle}`} style={{ fontSize: 18 }}>
+                                                意外跟進行動 - {index + 1}
+                                            </div>
+                                            <div className="mr-2 p-1" style={{ fontSize: 25, cursor: "pointer" }} onClick={(event) => {
+                                                if (followUpActions.length > 1) {
+                                                    let arr = followUpActions.filter((item, j) => j !== index);
+                                                    setFollowUpActions(arr);
+                                                }
+                                            }}>
+                                                &times;
+                                            </div>
+                                        </div>
+                                    }
+                                    <div className="form-row mb-2">
+                                        {/* 意外報告的跟進措施 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
+                                        <div className="col">
+                                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={(event) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.action = event.target.value;
+                                                setFollowUpActions(arr);
+                                            }}
+                                                value={item.action}
+                                                disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                                        </div>
+                                    </div>
+                                    <div className="form-row mb-2">
+                                        {/* 執行時段 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時間</label>
+                                        <div className="col">
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.date = new Date(date).toISOString();
+                                                setFollowUpActions(arr);
+                                            }}
+                                                readOnly={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))}
+                                            />
+                                            {/* <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler}
+                                            disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} /> */}
+                                        </div>
+                                    </div>
+                                    <div className="form-row mb-2">
+                                        {/* 備註 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
+                                        <div className="col">
+                                            <AutosizeTextarea className="form-control" name="remark" onChange={(event) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.remark = event.target.value;
+                                                setFollowUpActions(arr);
+                                            }} value={item.remark}
+                                                disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} />
+                                        </div>
+                                    </div>
+                                </div>)
+                        })
+                    }
 
                     <div className="form-row mb-2">
                         {/* 意外跟進 */}
