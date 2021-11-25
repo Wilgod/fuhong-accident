@@ -12,6 +12,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
+
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
     styles: any;
@@ -28,6 +29,12 @@ interface IIncidentFollowUpFormStates {
     remark: string;
     incidentFollowUpContinue: boolean;
 
+}
+
+export interface IFollowUpAction {
+    action: string;
+    date: string;
+    remark: string;
 }
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -61,7 +68,11 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const [completed, setCompleted] = useState(false);
     const [incidentFollowUpFormList, setIncidentFollowUpFormList] = useState([]);
     const [selectedIncidentFollowUpFormId, setSelectedIncidentFollowUpFormId] = useState<number>(null);
-    console.log(completed);
+    const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
+        action: "",
+        date: new Date().toISOString(),
+        remark: ""
+    }]);
 
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -78,6 +89,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const dataFactory = () => {
         let body = {};
         let error = {};
+
+        body["FollowUpActions"] = JSON.stringify(followUpActions);
 
         //跟進措施
         if (form.followUpMeasures) {
@@ -316,12 +329,15 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         }
     }
 
-    const initialState = () => {
+    const updateState = () => {
         const [data] = incidentFollowUpFormList.filter((item) => item.ID === selectedIncidentFollowUpFormId);
-
 
         if (data) {
             setCompleted(data.Completed);
+
+            if (data.FollowUpActions) {
+                setFollowUpActions(JSON.parse(data.FollowUpActions));
+            }
 
             setForm({
                 executionPeriod: data.ExecutionPeriod || "",
@@ -351,8 +367,6 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));
             }
-
-
         }
     }
 
@@ -367,7 +381,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     }, [parentFormData]);
 
     useEffect(() => {
-        initialState();
+        updateState();
     }, [selectedIncidentFollowUpFormId]);
 
     return (
@@ -432,37 +446,94 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 </section>
 
                 <section className="mb-5">
-                    <div className="form-row mb-3">
+                    {/* <div className="form-row mb-3">
                         <div className="col-12 font-weight-bold">
                             <h5>事故跟進行動表</h5>
                         </div>
+                    </div> */}
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <h5>事故跟進行動表</h5>
+                        {
+                            // (completed === false || (stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) || stageThreePendingSdApprove(currentUserRole, formStatus, formStage))) &&
+                            <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}
+                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}>
+                                新增事故跟進行動
+                            </button>
+                        }
                     </div>
-                    <div className="form-row mb-2">
-                        {/* 事故性質 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>跟進措施</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="followUpMeasures" value={form.followUpMeasures} onChange={inputFieldHandler}
-                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))} />
-                        </div>
-                    </div>
+                    {
+                        followUpActions.map((item, index) => {
+                            return (
+                                <div className="mb-3 px-2 py-3" style={{
+                                    border: "1px solid #d9dde0", borderRadius: "10px"
+                                }}
+                                >
+                                    {
+                                        followUpActions.length > 1 &&
+                                        <div className="d-flex justify-content-between align-items-center mb-2" >
+                                            <div className={`${styles.fieldTitle}`} style={{ fontSize: 18 }}>
+                                                事故跟進行動 - {index + 1}
+                                            </div>
+                                            <div className="mr-2 p-1" style={{ fontSize: 25, cursor: "pointer" }} onClick={(event) => {
+                                                if (followUpActions.length > 1) {
+                                                    let arr = followUpActions.filter((item, j) => j !== index);
+                                                    setFollowUpActions(arr);
+                                                }
+                                            }}>
+                                                &times;
+                                            </div>
+                                        </div>
+                                    }
+                                    < div className="form-row mb-2" >
+                                        {/* 事故性質 */}
+                                        < label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`
+                                        } > 跟進措施</label>
+                                        <div className="col">
+                                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={(event) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.action = event.target.value;
+                                                setFollowUpActions(arr);
+                                            }}
+                                                value={item.action}
+                                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                            />
+                                        </div>
+                                    </div>
 
-                    <div className="form-row mb-2">
-                        {/* 執行時段 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時段</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={inputFieldHandler}
-                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))} />
-                        </div>
-                    </div>
+                                    <div className="form-row mb-2">
+                                        {/* 執行時段 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時間</label>
+                                        <div className="col">
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.date = new Date(date).toISOString();
+                                                setFollowUpActions(arr);
+                                            }}
+                                                readOnly={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-row mb-2">
+                                        {/* 備註 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
+                                        <div className="col">
+                                            <AutosizeTextarea className="form-control" name="remark" onChange={(event) => {
+                                                let arr = [...followUpActions];
+                                                let actionItem = arr[index];
+                                                actionItem.remark = event.target.value;
+                                                setFollowUpActions(arr);
+                                            }} value={item.remark}
+                                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
 
-                    <div className="form-row mb-2">
-                        {/* 備註 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>備註</label>
-                        <div className="col">
-                            <AutosizeTextarea className="form-control" name="remark" value={form.remark} onChange={inputFieldHandler}
-                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))} />
-                        </div>
-                    </div>
 
                     <div className="form-row mb-2">
                         {/* 意外跟進 */}
@@ -488,17 +559,17 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             </select> */}
                         </div>
                     </div>
-                </section>
+                </section >
 
                 {/* <hr className="my-3" /> */}
 
-                <section className="mb-5">
+                < section className="mb-5" >
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold mb-2">
                             <span>[此欄由高級服務經理/服務經理姓名填寫]</span>
                         </div>
                     </div> */}
-                    <div className="form-row mb-2">
+                    < div className="form-row mb-2" >
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
                             {/* <PeoplePicker
@@ -520,9 +591,9 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 readOnly
                             />
                         </div>
-                    </div>
+                    </div >
 
-                </section>
+                </section >
 
                 <hr className="my-3" />
 
@@ -604,7 +675,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                     </div>
                 </section>
-            </div>
+            </div >
         </>
     )
 }
