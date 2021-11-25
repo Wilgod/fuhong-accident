@@ -1,14 +1,14 @@
 import * as React from 'react'
+import { useEffect } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import useServiceUnit from '../../hooks/useServiceUnits';
-
 import { IMainTableComponentProps } from './IMainTableComponent';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import useFetchAllForms from '../../hooks/useFetchAllForms';
 import { IUser } from '../../interface/IUser';
-export default function MainTableComponent({ context }: IMainTableComponentProps) {
+export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit }: IMainTableComponentProps) {
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -16,7 +16,17 @@ export default function MainTableComponent({ context }: IMainTableComponentProps
         id: context.pageContext.legacyPageContext.userId,
     }
 
-    const [data] = useFetchAllForms(CURRENT_USER.id);
+    const [data] = useFetchAllForms(CURRENT_USER.id, {
+        startDate: dateRange.start,
+        endDate: dateRange.end,
+        expired: searchExpired,
+        formStatus: searchFormStatus,
+        formTypes: searchFormType,
+        serviceUnits: searchServiceUnit
+    });
+    // const [data, setStartDate, setEndDate, setSearchServiceUnit, setSearchFormTypes, setSearchFormStatus, setSearchExpired] = useFetchAllForms(CURRENT_USER.id);
+
+
 
     return (
         <div>

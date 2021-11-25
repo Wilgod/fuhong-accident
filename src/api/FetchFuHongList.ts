@@ -269,7 +269,6 @@ export async function getSpecialIncidentReportLicense(spId: number) {
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
             .getAll();
-        console.log(items);
         return items;
     } catch (err) {
         console.error(err);

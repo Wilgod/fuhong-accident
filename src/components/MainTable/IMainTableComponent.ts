@@ -8,5 +8,5 @@ export interface IMainTableComponentProps {
     searchServiceUnit: string[];
     searchFormType: string[];
     searchFormStatus: string;
-    searchExpired: string;
+    searchExpired: boolean;
 }

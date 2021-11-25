@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAllServiceUnit } from '../../../api/FetchUser';
 import { IUser } from '../../../interface/IUser';
+import { over } from 'lodash';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -21,19 +22,21 @@ if (document.querySelector('.CanvasZone') != null) {
   (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-interface IFuHongFormsMenu {
+interface IFuHongFormsMenuStates {
   formToggle: boolean;
+  reportToggle: boolean;
+  statToggle: boolean;
   screenNav: string;
   searchDateStart: Date;
   searchDateEnd: Date;
   searchServiceUnit: string[];
   searchFormType: string[];
   searchFormStatus: string;
-  searchExpired: string;
+  searchExpired: boolean;
   serviceUnitList: any[];
 }
 
-export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenu> {
+export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
 
   private SERVICE_USER_ACCIDENT = "ServiceUserAccident"; // form 19
   private OUTSIDERS_ACCIDENT = "OutsidersAccident"; //form 22
@@ -51,14 +54,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     this.state = {
       formToggle: false,
+      reportToggle: false,
+      statToggle: false,
       screenNav: "",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
-      searchExpired: "",
+      searchExpired: false,
       searchFormStatus: "",
-      searchFormType: [],
-      searchServiceUnit: []
+      searchFormType: ["ALL"],
+      searchServiceUnit: ["ALL"]
     }
   }
 
@@ -82,12 +87,29 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     this.setState({ formToggle: !this.state.formToggle })
   }
 
+  private repotToggleHandler = (event) => {
+    event.stopPropagation();
+    this.setState({ reportToggle: !this.state.reportToggle });
+  }
+
+  private statToggleHandler = (event) => {
+    event.stopPropagation();
+    this.setState({ statToggle: !this.state.statToggle });
+  }
+
   private screenNavHandler = (event, nav: string) => {
     event.stopPropagation();
     this.setState({ screenNav: nav });
   }
 
-
+  private multipleOptionsSelectParser = (event) => {
+    let result = [];
+    const selectedOptions = event.target.selectedOptions;
+    for (let i = 0; i < selectedOptions.length; i++) {
+      result.push(selectedOptions[i].value);
+    }
+    return result;
+  }
 
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
     const ItemComponent = (href, name) => {
@@ -106,6 +128,99 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       </ul>
     }
 
+    const reportList = () => {
+      return <ul>
+        <li>
+          <div onClick={(event) => this.screenNavHandler(event, "")}>
+            個案概要
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "")}>
+            保險公司電郵報告
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "")}>
+            表格更新記錄
+          </div>
+        </li>
+      </ul>
+    }
+
+    const statList = () => {
+      return (
+        <ul>
+          <li>
+            一般統計
+            <ul>
+              <li>
+                新發生意外或事故
+              </li>
+            </ul>
+          </li>
+          <li>
+            服務使用者意外統計
+            <ul>
+              <li>
+                年齡
+              </li>
+              <li>
+                性別
+              </li>
+              <li>
+                智力障礙程度
+              </li>
+              <li>
+                自閉症譜系障礙 (ASD)
+              </li>
+              <li>
+                意外性質
+              </li>
+              <li>
+                意外成因 - 環境因素
+              </li>
+              <li>
+                意外成因 - 個人因素
+              </li>
+            </ul>
+          </li>
+          <li>
+            外界人士意外統計
+            <ul>
+              <li>
+                意外性質
+              </li>
+              <li>
+                意外成因 - 環境因素
+              </li>
+              <li>
+                意外成因 - 個人因素
+              </li>
+            </ul>
+          </li>
+          <li>
+            特別事故統計 (牌照事務處)
+            <ul>
+              <li>
+                特別事故類別
+              </li>
+            </ul>
+          </li>
+          <li>
+            特別事故統計 (津貼科)
+            <ul>
+              <li>
+                特別事故類別
+              </li>
+              <li>
+                虐待性質
+              </li>
+            </ul>
+          </li>
+        </ul>)
+    }
+
     const siteContentCog = () => {
       return (
         <a href={this.SITE_CONTENT} target="_blank" data-interception="off">
@@ -116,14 +231,59 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     const navigationMenu = () => {
       return <div className={`${styles.navigationMenu}`}>
-        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>主頁</div>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              主頁
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faHome} title={"主頁"} />
+            </div>
+          </div>
+        </div>
         <div className={`${styles.child}`} onClick={this.formToggleHandler}>
-          表格
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              表格
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faPen} title={"表格"} />
+            </div>
+          </div>
           {this.state.formToggle && formList()}
         </div>
-        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "REPORT")}>報告</div>
-        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "STAT")}>統計資料</div>
-        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>儀表板</div>
+        <div className={`${styles.child}`} onClick={this.repotToggleHandler}>
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              報告
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faFileContract} title={"報告"} />
+            </div>
+          </div>
+          {this.state.reportToggle && reportList()}
+        </div>
+        <div className={`${styles.child}`} onClick={(this.statToggleHandler)}>
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              統計資料
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faChartBar} title={"統計資料"} />
+            </div>
+          </div>
+          {this.state.statToggle && statList()}
+        </div>
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              儀表板
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"儀表板"} />
+            </div>
+          </div>
+        </div>
       </div>
     }
 
@@ -176,7 +336,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                    <select multiple className="form-control" onChange={(event) => {
+                      const selectedOptions = this.multipleOptionsSelectParser(event);
+                      this.setState({ searchServiceUnit: selectedOptions });
+                    }}>
                       <option value="ALL">--- 所有 ---</option>
                       {this.state.serviceUnitList.sort((a, b) => {
                         return a.Title.localeCompare(b.Title)
@@ -191,7 +354,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     <div className="mb-3" style={{ fontWeight: 600 }}>
                       意外/事故
                     </div>
-                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                    <select multiple className="form-control" onChange={(event) => {
+                      const selectedOptions = this.multipleOptionsSelectParser(event);
+                      this.setState({ searchFormType: selectedOptions });
+                    }}>
                       <option value="ALL">--- 所有 ---</option>
                       <option value="SUI">服務使用者意外</option>
                       <option value="PUI">外界人士意外</option>
@@ -204,7 +370,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     <div className="mb-3" style={{ fontWeight: 600 }}>
                       顯示狀態
                     </div>
-                    <select multiple className="form-control" onChange={(event) => { console.log(event.target.value) }}>
+                    <select multiple className="form-control" onChange={(event) => {
+                      this.setState({ searchFormStatus: event.target.value });
+                    }}>
                       <option value="PROCESSING">跟進中個案</option>
                       <option value="CLOSED">已結束個案</option>
                       <option value="ALL">所有狀態</option>
@@ -215,7 +383,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       過期未交報告
                     </div>
                     <div className="form-check">
-                      <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({ searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
                     </div>
                   </div>
                 </div>
@@ -250,7 +418,6 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           )
       }
     }
-
 
     return (
       <div className={styles.fuHongFormsMenu} >

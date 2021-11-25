@@ -12,6 +12,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
+import { faPager } from '@fortawesome/free-solid-svg-icons';
 
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
@@ -24,11 +25,7 @@ interface IIncidentFollowUpFormProps {
 }
 
 interface IIncidentFollowUpFormStates {
-    followUpMeasures: string;
-    executionPeriod: string;
-    remark: string;
     incidentFollowUpContinue: boolean;
-
 }
 
 export interface IFollowUpAction {
@@ -49,9 +46,6 @@ const formTypeParser = (formType: string, additonalString: string) => {
 export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
-        followUpMeasures: "",
-        executionPeriod: "",
-        remark: "",
         incidentFollowUpContinue: undefined,
     });
     const [incidentDatetime, setIncidentDatetime] = useState(new Date());
@@ -92,22 +86,22 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
 
         body["FollowUpActions"] = JSON.stringify(followUpActions);
 
-        //跟進措施
-        if (form.followUpMeasures) {
-            body["FollowUpMeasures"] = form.followUpMeasures;
-        } else {
-            error["FollowUpMeasures"] = true;
-        }
+        // //跟進措施
+        // if (form.followUpMeasures) {
+        //     body["FollowUpMeasures"] = form.followUpMeasures;
+        // } else {
+        //     error["FollowUpMeasures"] = true;
+        // }
 
-        //執行時段
-        if (form.executionPeriod) {
-            body["ExecutionPeriod"] = form.executionPeriod;
-        } else {
-            error["ExecutionPeriod"] = true;
-        }
+        // //執行時段
+        // if (form.executionPeriod) {
+        //     body["ExecutionPeriod"] = form.executionPeriod;
+        // } else {
+        //     error["ExecutionPeriod"] = true;
+        // }
 
         //備註
-        body["Remark"] = form.remark;
+        // body["Remark"] = form.remark;
 
         //事故跟進
         body["IncidentFollowUpContinue"] = form.incidentFollowUpContinue;
@@ -339,11 +333,14 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 setFollowUpActions(JSON.parse(data.FollowUpActions));
             }
 
+            // setForm({
+            //     executionPeriod: data.ExecutionPeriod || "",
+            //     followUpMeasures: data.FollowUpMeasures || "",
+            //     incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
+            //     remark: data.Remark || ""
+            // })
             setForm({
-                executionPeriod: data.ExecutionPeriod || "",
-                followUpMeasures: data.FollowUpMeasures || "",
                 incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
-                remark: data.Remark || ""
             })
 
             setFormStatus(data.Status);
@@ -456,7 +453,10 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         {
                             // (completed === false || (stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) || stageThreePendingSdApprove(currentUserRole, formStatus, formStage))) &&
                             <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}
-                                disabled={completed || (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}>
+                                disabled={
+                                    followUpActions.length >= 5 ||
+                                    completed ||
+                                    (!pendingSdApprove(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !pendingSmFillIn(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "") && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}>
                                 新增事故跟進行動
                             </button>
                         }
@@ -502,8 +502,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                     </div>
 
                                     <div className="form-row mb-2">
-                                        {/* 執行時段 */}
-                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時間</label>
+                                        {/* 完成日期 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>完成日期</label>
                                         <div className="col">
                                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
                                                 let arr = [...followUpActions];

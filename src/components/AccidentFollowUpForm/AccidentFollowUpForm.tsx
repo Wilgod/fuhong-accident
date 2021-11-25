@@ -48,9 +48,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: undefined,
-        executionPeriod: "",
-        followUpMeasures: "",
-        remark: ""
     });
 
     const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
@@ -81,23 +78,23 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         body["FollowUpActions"] = JSON.stringify(followUpActions);
 
-        if (form.followUpMeasures) {
-            body["FollowUpMeasures"] = form.followUpMeasures;
-        } else {
-            // error handling;
-        }
+        // if (form.followUpMeasures) {
+        //     body["FollowUpMeasures"] = form.followUpMeasures;
+        // } else {
+        //     // error handling;
+        // }
 
-        if (form.executionPeriod) {
-            body["ExecutionPeriod"] = form.executionPeriod;
-        } else {
-            //error handling
-        }
+        // if (form.executionPeriod) {
+        //     body["ExecutionPeriod"] = form.executionPeriod;
+        // } else {
+        //     //error handling
+        // }
 
-        if (form.remark) {
-            body["Remark"] = form.remark;
-        } else {
-            //error handling;
-        }
+        // if (form.remark) {
+        //     body["Remark"] = form.remark;
+        // } else {
+        //     //error handling;
+        // }
 
         if (form.accidentalFollowUpContinue !== undefined) {
             body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue;
@@ -536,11 +533,14 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
             setCompleted(data.Completed === true ? true : false);
 
+            // setForm({
+            //     accidentalFollowUpContinue: data.AccidentalFollowUpContinue,
+            //     executionPeriod: data.ExecutionPeriod || "",
+            //     followUpMeasures: data.FollowUpMeasures || "",
+            //     remark: data.Remark || ""
+            // });
             setForm({
                 accidentalFollowUpContinue: data.AccidentalFollowUpContinue,
-                executionPeriod: data.ExecutionPeriod || "",
-                followUpMeasures: data.FollowUpMeasures || "",
-                remark: data.Remark || ""
             });
 
             setSdComment(data.SDComment || "");
@@ -651,11 +651,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
                 <section className="mb-5">
                     {/* <div className="form-row mb-3">
-                        <div className="col-sm-10 col-10 font-weight-bold">
+                        <div className="col-12 font-weight-bold">
                             <h5>意外跟進行動表</h5>
-                        </div>
-                        <div className="col">
-                            <button className="btn btn-primary">新增意外跟進行動</button>
                         </div>
                     </div> */}
                     <div className="d-flex justify-content-between align-items-center mb-3">
@@ -664,7 +661,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {
                             // (completed === false || (stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) || stageThreePendingSdApprove(currentUserRole, formStatus, formStage))) &&
                             <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}
-                                disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))}>
+                                disabled={
+                                    followUpActions.length >= 5 ||
+                                    completed ||
+                                    (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))}>
                                 新增意外跟進行動
                             </button>
                         }
@@ -704,8 +704,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                         </div>
                                     </div>
                                     <div className="form-row mb-2">
-                                        {/* 執行時段 */}
-                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>執行時間</label>
+                                        {/* 完成日期 */}
+                                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>完成日期</label>
                                         <div className="col">
                                             <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
                                                 let arr = [...followUpActions];
