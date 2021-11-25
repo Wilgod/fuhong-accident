@@ -23,7 +23,7 @@ import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { IAttachmentFileInfo } from '@pnp/sp/attachments';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -34,7 +34,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const { departments, setHrDepartment } = useDepartmentMangers();
-    const [isPrintMode, setPrintMode] = useState(false);
+
     const [form, setForm] = useState<ISpecialIncidentReportLicenseStates>({
         abuser: "",
         abuserDescription: "",
@@ -825,9 +825,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     return (
         <>
-            <div>
-                <Header displayName="殘疾人士院舍特別事故報告" />
-            </div>
+
+            {isPrintMode && <Header displayName="殘疾人士院舍特別事故報告" />}
+
             <div className="container-fluid px-4 pt-3">
                 <section className="mb-5">
                     {/* <div className="row">
@@ -1738,7 +1738,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
-                                dateFormat="yyyy/MM/dd h:mm aa"
+                                dateFormat="yyyy/MM/dd"
                                 readOnly
                             />
                         </div>

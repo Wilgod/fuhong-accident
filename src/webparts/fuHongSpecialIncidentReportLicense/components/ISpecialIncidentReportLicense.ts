@@ -7,6 +7,7 @@ export interface ISpecialIncidentReportLicenseProps {
     formSubmittedHandler(): void;
     currentUserRole: Role;
     formData: any;
+    isPrintMode: boolean;
 }
 
 export interface ISpecialIncidentReportLicenseStates {
@@ -64,7 +65,7 @@ export interface ISpecialIncidentReportLicenseStates {
     guardian: boolean;
     guardianName: string;
     guardianRelation: string;
-   
+
     guardianDate: Date;
     guardianReason: string;
     affectedName: string;

@@ -39,7 +39,15 @@ const getCanvasZone = () => {
   }
 }
 
-export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, { currentUserRole: Role, specialINcidentReportLicenseData: any, stage: string, formSubmitted: boolean }> {
+interface IFuHongSpecialIncidentReportLicenseStates {
+  currentUserRole: Role;
+  specialINcidentReportLicenseData: any;
+  stage: string;
+  formSubmitted: boolean;
+  isPrintMode: boolean;
+}
+
+export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, IFuHongSpecialIncidentReportLicenseStates> {
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -52,7 +60,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       currentUserRole: Role.GENERAL,
       specialINcidentReportLicenseData: null,
       stage: "",
-      formSubmitted: false
+      formSubmitted: false,
+      isPrintMode: false
     }
   }
 
@@ -134,10 +143,10 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} />
+                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
               </Tabs>
           }

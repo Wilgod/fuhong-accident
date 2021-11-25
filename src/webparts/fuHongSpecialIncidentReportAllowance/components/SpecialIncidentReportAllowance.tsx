@@ -23,8 +23,7 @@ import { addBusinessDays } from '../../../utils/DateUtils';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData }: ISpecialIncidentReportAllowanceProps) {
-    const [isPrintMode, setPrintMode] = useState(false);
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportAllowanceProps) {
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [formStage, setFormStage] = useState("");
@@ -450,7 +449,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             updateSpecialIncidentReportAllowance(formData.Id, {
                 ...body,
                 "Status": "PENDING_SM_APPROVE",
-                
+
             }).then(res => {
                 console.log(res)
                 formSubmittedHandler();
@@ -718,10 +717,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     return (
         <>
-            <div className="mb-3">
-                <Header displayName="殘疾人士院舍特別事故報告" />
-            </div>
-            <div className="container-fluid px-4">
+            {isPrintMode && <Header displayName="殘疾人士院舍特別事故報告" />}
+
+            <div className="container-fluid px-4 pt-3">
                 <section className="mb-4">
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">

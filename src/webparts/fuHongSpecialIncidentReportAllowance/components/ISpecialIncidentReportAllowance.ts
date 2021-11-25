@@ -7,6 +7,7 @@ export interface ISpecialIncidentReportAllowanceProps {
     formSubmittedHandler(): void;
     currentUserRole: Role;
     formData: any;
+    isPrintMode: boolean;
 }
 
 export interface IAccidentCategoryAbuseDetails {

@@ -12,7 +12,6 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
-
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
     styles: any;
@@ -20,6 +19,7 @@ interface IIncidentFollowUpFormProps {
     formSubmittedHandler(): void;
     currentUserRole: Role;
     parentFormData: any;
+    isPrintMode: any;
 }
 
 interface IIncidentFollowUpFormStates {
@@ -39,7 +39,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         followUpMeasures: "",
@@ -372,18 +372,20 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
 
     return (
         <>
-            <div>
-                <Header displayName="事故跟進/結束報告" >
-                    {
-                        incidentFollowUpFormList.length > 1 &&
+            {isPrintMode && <Header displayName="事故跟進/結束報告" />}
+
+            {
+                incidentFollowUpFormList.length > 1 &&
+                <div className="row">
+                    <div className="col-sm-12 col-md-6">
                         <select className={"form-control"} value={selectedIncidentFollowUpFormId} onChange={formChangeHandler}>
                             {incidentFollowUpFormList.map((item) => {
                                 return <option value={item.ID}>{moment(item.Created).format("YYYY-MM-DD")} - {item.Title}</option>
                             })}
                         </select>
-                    }
-                </Header>
-            </div>
+                    </div>
+                </div>
+            }
             <div className="container-fluid px-4 pt-3">
                 <section className="mb-5">
                     {/* <div className="row">
@@ -606,3 +608,4 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         </>
     )
 }
+

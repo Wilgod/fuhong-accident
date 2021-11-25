@@ -661,9 +661,13 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     <div className="d-flex justify-content-between align-items-center mb-3">
 
                         <h5>意外跟進行動表</h5>
-                        <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}>
-                            新增意外跟進行動
-                        </button>
+                        {
+                            // (completed === false || (stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) || stageThreePendingSdApprove(currentUserRole, formStatus, formStage))) &&
+                            <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}
+                                disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))}>
+                                新增意外跟進行動
+                            </button>
+                        }
                     </div>
                     {
                         followUpActions.map((item, index) => {
