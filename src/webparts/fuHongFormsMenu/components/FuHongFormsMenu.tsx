@@ -34,6 +34,8 @@ interface IFuHongFormsMenuStates {
   searchFormStatus: string;
   searchExpired: boolean;
   serviceUnitList: any[];
+  searchKeyword: string;
+  tempKeyword: string;
 }
 
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
@@ -61,9 +63,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       searchDateEnd: new Date(),
       serviceUnitList: [],
       searchExpired: false,
-      searchFormStatus: "",
+      searchFormStatus: "ALL",
       searchFormType: ["ALL"],
-      searchServiceUnit: ["ALL"]
+      searchServiceUnit: ["ALL"],
+      searchKeyword: "",
+      tempKeyword: ""
     }
   }
 
@@ -394,10 +398,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                 </div>
                 <div className="row">
                   <div className="col-10">
-                    <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" />
+                    <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" value={this.state.tempKeyword} onChange={(event) => this.setState({ tempKeyword: event.target.value })} />
                   </div>
                   <div className="col">
-                    <button type="button" className="btn btn-primary">搜尋</button>
+                    <button type="button" className="btn btn-primary" onClick={() => this.setState({ searchKeyword: this.state.tempKeyword })}>搜尋</button>
                   </div>
                 </div>
               </div>
@@ -412,6 +416,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   searchFormStatus={this.state.searchFormStatus}
                   searchFormType={this.state.searchFormType}
                   searchServiceUnit={this.state.searchServiceUnit}
+                  searchKeyword={this.state.searchKeyword}
                 />
               </div>
             </div>

@@ -2,6 +2,8 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import { ISearchCriteria } from "../hooks/useFetchAllForms";
+import { filter } from "lodash";
 
 
 export async function getServiceUnits() {
@@ -64,11 +66,48 @@ export async function getLastCaseNo(formFlow: FormFlow) {
 }
 
 // Form 19
-export async function getServiceUserAccident(spId: number) {
+export async function getServiceUserAccident(spId: number, searchCriteria?: ISearchCriteria) {
     try {
         const LIST_NAME = "Service User Accident";
+        let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT'`;
+        if (searchCriteria) {
+
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.formStatus) {
+                if (searchCriteria.formStatus === "PROCESSING") {
+                    filterQuery = `${filterQuery} and Status ne 'CLOSED'`;
+                } else if (searchCriteria.formStatus === "CLOSED") {
+                    filterQuery = `${filterQuery} and Status eq 'CLOSED'`;
+                }
+            }
+
+            if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+                let su = "";
+                searchCriteria.serviceUnits.forEach((item, index) => {
+                    if (index === 0) {
+                        su = `ServiceUnit eq '${item}'`;
+                    } else {
+                        su += `ServiceUnit eq '${item}'`;
+                    }
+
+                    if (index !== searchCriteria.serviceUnits.length - 1) {
+                        su = `${su} or `;
+                    }
+                })
+                filterQuery = `${filterQuery} and (${su})`;
+            }
+
+            if (searchCriteria.startDate && searchCriteria.endDate) {
+                //start < AccidentTime < end
+                filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+            }
+        }
+
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT' `)
+            .filter(filterQuery)
             .getAll();
 
         return items;
@@ -172,11 +211,51 @@ export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string)
 }
 
 // Form 22
-export async function getOutsiderAccident(spId: number) {
+export async function getOutsiderAccident(spId: number, searchCriteria?: ISearchCriteria) {
     try {
         const LIST_NAME = "Outsider Accident Form";
+        let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT'`;
+        if (searchCriteria) {
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.formStatus) {
+                if (searchCriteria.formStatus === "PROCESSING") {
+                    filterQuery = `${filterQuery} and Status ne 'CLOSED'`;
+                } else if (searchCriteria.formStatus === "CLOSED") {
+                    filterQuery = `${filterQuery} and Status eq 'CLOSED'`;
+                }
+            }
+
+            if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+                let su = "";
+                searchCriteria.serviceUnits.forEach((item, index) => {
+                    if (index === 0) {
+                        su = `ServiceUnit eq '${item}'`;
+                    } else {
+                        su += `ServiceUnit eq '${item}'`;
+                    }
+
+                    if (index !== searchCriteria.serviceUnits.length - 1) {
+                        su = `${su} or `;
+                    }
+                })
+                filterQuery = `${filterQuery} and (${su})`;
+            }
+
+            if (searchCriteria.startDate && searchCriteria.endDate) {
+                //start < AccidentTime < end
+                filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+            }
+        }
+        console.log(filterQuery);
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'DRAFT'`)
+            .filter(filterQuery)
             .getAll();
 
         return items;
@@ -218,11 +297,47 @@ export async function getOutsiderAccidentById(id: number) {
 }
 
 //Form 23
-export async function getOtherIncidentReport(spId: number) {
+export async function getOtherIncidentReport(spId: number, searchCriteria?: ISearchCriteria) {
     try {
         const LIST_NAME = "Other Incident Report";
+        let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`;
+        if (searchCriteria) {
+
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.formStatus) {
+                if (searchCriteria.formStatus === "PROCESSING") {
+                    filterQuery = `${filterQuery} and Status ne 'CLOSED'`;
+                } else if (searchCriteria.formStatus === "CLOSED") {
+                    filterQuery = `${filterQuery} and Status eq 'CLOSED'`;
+                }
+            }
+
+            if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+                let su = "";
+                searchCriteria.serviceUnits.forEach((item, index) => {
+                    if (index === 0) {
+                        su = `ServiceUnit eq '${item}'`;
+                    } else {
+                        su += `ServiceUnit eq '${item}'`;
+                    }
+
+                    if (index !== searchCriteria.serviceUnits.length - 1) {
+                        su = `${su} or `;
+                    }
+                })
+                filterQuery = `${filterQuery} and (${su})`;
+            }
+
+            if (searchCriteria.startDate && searchCriteria.endDate) {
+                //start < AccidentTime < end
+                filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
+            }
+        }
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
+            .filter(filterQuery)
             .getAll();
 
         return items;
@@ -263,11 +378,47 @@ export async function getOtherIncidentReportById(id: number) {
 }
 
 //Form 24
-export async function getSpecialIncidentReportLicense(spId: number) {
+export async function getSpecialIncidentReportLicense(spId: number, searchCriteria?: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report License";
+        let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`;
+        if (searchCriteria) {
+
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.formStatus) {
+                if (searchCriteria.formStatus === "PROCESSING") {
+                    filterQuery = `${filterQuery} and Status ne 'CLOSED'`;
+                } else if (searchCriteria.formStatus === "CLOSED") {
+                    filterQuery = `${filterQuery} and Status eq 'CLOSED'`;
+                }
+            }
+
+            if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+                let su = "";
+                searchCriteria.serviceUnits.forEach((item, index) => {
+                    if (index === 0) {
+                        su = `ServiceUnit eq '${item}'`;
+                    } else {
+                        su += `ServiceUnit eq '${item}'`;
+                    }
+
+                    if (index !== searchCriteria.serviceUnits.length - 1) {
+                        su = `${su} or `;
+                    }
+                })
+                filterQuery = `${filterQuery} and (${su})`;
+            }
+
+            if (searchCriteria.startDate && searchCriteria.endDate) {
+                //start < AccidentTime < end
+                filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
+            }
+        }
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
+            .filter(filterQuery)
             .getAll();
         return items;
     } catch (err) {
@@ -307,11 +458,47 @@ export async function getSpecialIncidentReportLicenseById(id: number) {
 }
 
 //Form 25
-export async function getSpecialIncidentReportAllowance(spId: number) {
+export async function getSpecialIncidentReportAllowance(spId: number, searchCriteria?: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
+        let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`;
+        if (searchCriteria) {
+
+            if (searchCriteria.keyword) {
+                filterQuery = `${filterQuery} and (CaseNumber eq '${searchCriteria.keyword}')`;
+            }
+
+            if (searchCriteria.formStatus) {
+                if (searchCriteria.formStatus === "PROCESSING") {
+                    filterQuery = `${filterQuery} and Status ne 'CLOSED'`;
+                } else if (searchCriteria.formStatus === "CLOSED") {
+                    filterQuery = `${filterQuery} and Status eq 'CLOSED'`;
+                }
+            }
+
+            if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+                let su = "";
+                searchCriteria.serviceUnits.forEach((item, index) => {
+                    if (index === 0) {
+                        su = `ServiceUnit eq '${item}'`;
+                    } else {
+                        su += `ServiceUnit eq '${item}'`;
+                    }
+
+                    if (index !== searchCriteria.serviceUnits.length - 1) {
+                        su = `${su} or `;
+                    }
+                })
+                filterQuery = `${filterQuery} and (${su})`;
+            }
+
+            if (searchCriteria.startDate && searchCriteria.endDate) {
+                //start < IncidentTime < end
+                filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
+            }
+        }
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId}) and Status ne 'DRAFT'`)
+            .filter(filterQuery)
             .getAll();
 
         return items;
