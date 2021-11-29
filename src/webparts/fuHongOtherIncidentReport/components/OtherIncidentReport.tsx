@@ -18,6 +18,7 @@ import { adminUpdateInsuranceNumber, formInitBySm, formInitial, pendingSdApprove
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
+import { notifyOtherIncident } from '../../../api/Notification';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -343,6 +344,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         ...extraBody
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifyOtherIncident(context, formData.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
@@ -351,6 +355,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         ...extraBody
                     }).then(createOtherIncidentReportRes => {
                         console.log(createOtherIncidentReportRes)
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifyOtherIncident(context, createOtherIncidentReportRes.data.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -431,6 +438,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
+                    notifyOtherIncident(context, formData.Id);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
@@ -441,8 +449,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         event.preventDefault();
         console.log("sdRejectHandler")
         if (confirm("確認拒絕 ?")) {
-
-
             const [body, error] = dataFactory();
             updateOtherIncidentReport(formData.Id, {
                 ...body,

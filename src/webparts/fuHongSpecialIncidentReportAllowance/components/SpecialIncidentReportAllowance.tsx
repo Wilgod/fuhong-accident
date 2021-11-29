@@ -18,6 +18,7 @@ import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
+import { notifySpecialIncidentAllowance } from '../../../api/Notification';
 
 
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
@@ -480,6 +481,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         ...extraBody
                     }).then(res => {
                         console.log(res)
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifySpecialIncidentAllowance(context, formData.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
@@ -488,6 +492,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         ...extraBody
                     }).then(res => {
                         console.log(res)
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifySpecialIncidentAllowance(context, res.data.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -613,6 +620,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "SDPhone": sdPhoneNo
                 }).then((res) => {
                     console.log(res);
+                    notifySpecialIncidentAllowance(context, formData.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
             }).catch(console.error);

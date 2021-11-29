@@ -13,6 +13,7 @@ import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByPar
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { faPager } from '@fortawesome/free-solid-svg-icons';
+import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense } from '../../api/Notification';
 
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
@@ -157,6 +158,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             },
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateOtherIncidentReportRes) => {
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -166,6 +168,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             },
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateSpecialIncidentReportLicenseRes) => {
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
@@ -176,6 +179,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateSpecialIncidentReportAllowanceRes) => {
                             console.log("SPECIAL_INCIDENT_REPORT_ALLOWANCE")
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -191,18 +195,21 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     updateOtherIncidentReport(parentFormData.Id, {
                         "Status": "PENDING_SD_APPROVE"
                     }).then((updateOtherIncidentReportRes) => {
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
                     updateSpecialIncidentReportLicense(parentFormData.Id, {
                         "Status": "PENDING_SD_APPROVE"
                     }).then(() => {
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
                         "Status": "PENDING_SD_APPROVE"
                     }).then(() => {
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -238,6 +245,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
+                        notifyOtherIncident(context, parentFormData.Id);
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -245,12 +253,14 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateSpecialIncidentReportLicenseRes) => {
                         console.log(updateSpecialIncidentReportLicenseRes)
+                        notifySpecialIncidentLicense(context, parentFormData.Id);
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
                         "Status": "CLOSED"
                     }).then(() => {
+                        notifySpecialIncidentAllowance(context, parentFormData.Id);
                         formSubmittedHandler();
                     }).catch(console.error);
                 }

@@ -20,6 +20,7 @@ import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, u
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
+import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -144,6 +145,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 "NextDeadline": addMonths(new Date(), 6),
                             }).then((updateServiceUserAccidentByIdRes) => {
                                 console.log(updateServiceUserAccidentByIdRes);
+
                                 formSubmittedHandler();
                             }).catch(console.error);
                         } else if (formType === "OUTSIDERS") {
@@ -154,6 +156,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 "NextDeadline": addMonths(new Date(), 6),
                             }).then((res) => {
                                 console.log(res);
+
                                 formSubmittedHandler();
                             }).catch(console.error);
                         }
@@ -226,16 +229,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const sdApproveHandler = () => {
         if (confirm("確認批准 ?") === false) return;
-        // Flow:
-        // if continue: 
-        // create new form 19 
-        // status send back to sm
-        // update current form 21 to complete
-        // complete current selected form
-        // if close:
-        // update form 19 status
-        // update form 21 to complete
-
         const [body, error] = dataFactory();
         updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
             ...body,
@@ -246,10 +239,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (formType === "SERVICE_USER") {
                 updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
                     // trigger notification workflow
+                    notifyServiceUserAccident(context, parentFormData.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else if (formType === "OUTSIDERS") {
                 updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
+                    notifyOutsiderAccident(context, parentFormData.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
             }

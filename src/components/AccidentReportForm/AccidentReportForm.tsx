@@ -15,6 +15,7 @@ import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
+import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -185,11 +186,13 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
                             console.log(updateServiceUserAccidentResponse)
                             // Trigger notification workflow;
+
                             formSubmittedHandler();
                         }).catch(console.error)
                     } else {
                         updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
                             console.log(updateOutsiderAccidentResponse);
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -260,10 +263,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
+                                notifyServiceUserAccident(context, parentFormData.Id);
                                 formSubmittedHandler()
                             }).catch(console.error);
                         } else {
                             updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
+                                notifyOutsiderAccident(context, parentFormData.Id);
                                 formSubmittedHandler()
                             }).catch(console.error);
                         }
@@ -301,7 +306,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             }
         }
     }
-    console.log(parentFormData)
+
     const loadData = () => {
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)

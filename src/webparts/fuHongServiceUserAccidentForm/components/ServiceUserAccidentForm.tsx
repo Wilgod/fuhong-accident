@@ -35,6 +35,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUserUnit from '../../../hooks/useServiceUserUnit';
+import { notifyServiceUserAccident } from '../../../api/Notification';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -600,6 +601,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
+                notifyServiceUserAccident(context, formData.Id);
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -628,6 +630,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                         }).catch(console.error);
                     }
+
+                    notifyServiceUserAccident(context, formData.Id);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -670,6 +674,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     }
                                 }).catch(console.error);
                             }
+                            if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                notifyServiceUserAccident(context, formData.Id);
+                            }
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else {
@@ -697,6 +704,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                         }
                                     }).catch(console.error);
                                 }
+                            }
+                            if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id);
                             }
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -734,6 +744,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
+                notifyServiceUserAccident(context, formData.Id);
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -795,6 +806,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                                         updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
+                                            
+                                            notifyServiceUserAccident(context, formData.Id);
                                             formSubmittedHandler()
                                         }).catch(console.error);
                                     }

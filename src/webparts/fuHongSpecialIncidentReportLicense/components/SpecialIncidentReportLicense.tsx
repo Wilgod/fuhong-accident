@@ -22,6 +22,7 @@ import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { IAttachmentFileInfo } from '@pnp/sp/attachments';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
+import { notifySpecialIncidentLicense } from '../../../api/Notification';
 
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -478,6 +479,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         ...extraBody
                     }).then(async (res) => {
                         await uploadFile(formData.Id);
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifySpecialIncidentLicense(context, formData.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
@@ -486,6 +490,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         ...extraBody
                     }).then(async (createSpecialIncidentReportLicenseRes) => {
                         await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
+                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            notifySpecialIncidentLicense(context, formData.Id);
+                        }
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -560,6 +567,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
+                    notifySpecialIncidentLicense(context, formData.Id);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
