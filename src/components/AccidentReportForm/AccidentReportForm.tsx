@@ -246,7 +246,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         "SMId": parentFormData.SMId,
                         "SDId": parentFormData.SDId,
                         "CaseNumber": parentFormData.CaseNumber,
-                        "ParentFormId": parentFormData.Id
+                        "ParentFormId": parentFormData.Id,
+                        "Title": "意外跟進/結束表(三) - 1"
                     };
                     createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
 
@@ -258,7 +259,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             "Stage": "3",
                             "Status": "PENDING_SM_FILL_IN",
                             "NextDeadline": addMonths(new Date(), 6).toISOString(),
-                            "Title": "意外跟進/結束表(三) - 1"
                         }
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
