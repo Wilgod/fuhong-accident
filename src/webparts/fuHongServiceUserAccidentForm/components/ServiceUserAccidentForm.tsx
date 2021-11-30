@@ -601,7 +601,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-                notifyServiceUserAccident(context, formData.Id);
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -631,7 +631,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         }).catch(console.error);
                     }
 
-                    notifyServiceUserAccident(context, formData.Id);
+                   
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -675,7 +675,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }).catch(console.error);
                             }
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, formData.Id);
+                                notifyServiceUserAccident(context, formData.Id, 1);
                             }
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -706,7 +706,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                             }
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id);
+                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1);
                             }
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -744,7 +744,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-                notifyServiceUserAccident(context, formData.Id);
+                notifyServiceUserAccident(context, formData.Id, 1);
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -806,8 +806,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                                         updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
-                                            
-                                            notifyServiceUserAccident(context, formData.Id);
+
+                                            notifyServiceUserAccident(context, formData.Id, 1);
                                             formSubmittedHandler()
                                         }).catch(console.error);
                                     }

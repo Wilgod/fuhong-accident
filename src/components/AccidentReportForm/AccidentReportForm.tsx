@@ -263,12 +263,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
-                                notifyServiceUserAccident(context, parentFormData.Id);
+                                notifyServiceUserAccident(context, parentFormData.Id, 2);
                                 formSubmittedHandler()
                             }).catch(console.error);
                         } else {
                             updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
-                                notifyOutsiderAccident(context, parentFormData.Id);
+                                notifyOutsiderAccident(context, parentFormData.Id, 2);
                                 formSubmittedHandler()
                             }).catch(console.error);
                         }

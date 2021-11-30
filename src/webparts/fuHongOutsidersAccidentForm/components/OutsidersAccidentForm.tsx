@@ -25,6 +25,7 @@ import useSPT from '../../../hooks/useSPT';
 import { formInitBySm, formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
+import { notifyOutsiderAccident } from '../../../api/Notification';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -402,6 +403,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }
                         }).catch(console.error);
                     }
+                    notifyOutsiderAccident(context, formData.Id, 1);
                     formSubmittedHandler();
                 })
             } else {
@@ -443,6 +445,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }
                                 }).catch(console.error);
                             }
+                            notifyOutsiderAccident(context, formData.Id, 1);
                             formSubmittedHandler();
                         })
                     } else {
@@ -466,7 +469,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }).catch(console.error);
                                 }
                             }
-
+                            notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1);
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -612,6 +615,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                                         updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
+                                            notifyOutsiderAccident(context, formData.Id, 1);
                                             formSubmittedHandler()
                                         }).catch(console.error);
                                     }

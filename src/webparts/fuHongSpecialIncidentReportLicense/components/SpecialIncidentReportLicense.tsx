@@ -480,7 +480,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).then(async (res) => {
                         await uploadFile(formData.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, formData.Id);
+                            notifySpecialIncidentLicense(context, formData.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -491,7 +491,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).then(async (createSpecialIncidentReportLicenseRes) => {
                         await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, formData.Id);
+                            notifySpecialIncidentLicense(context, formData.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -567,7 +567,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
-                    notifySpecialIncidentLicense(context, formData.Id);
+                    notifySpecialIncidentLicense(context, formData.Id, 1);
                     formSubmittedHandler();
                 });
             }).catch(console.error);

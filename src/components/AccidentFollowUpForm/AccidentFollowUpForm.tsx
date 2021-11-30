@@ -239,12 +239,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (formType === "SERVICE_USER") {
                 updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
                     // trigger notification workflow
-                    notifyServiceUserAccident(context, parentFormData.Id);
+                    notifyServiceUserAccident(context, parentFormData.Id, 3);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else if (formType === "OUTSIDERS") {
                 updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
-                    notifyOutsiderAccident(context, parentFormData.Id);
+                    notifyOutsiderAccident(context, parentFormData.Id, 3);
                     formSubmittedHandler();
                 }).catch(console.error);
             }

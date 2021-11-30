@@ -245,7 +245,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
-                        notifyOtherIncident(context, parentFormData.Id);
+                        notifyOtherIncident(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -253,14 +253,14 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateSpecialIncidentReportLicenseRes) => {
                         console.log(updateSpecialIncidentReportLicenseRes)
-                        notifySpecialIncidentLicense(context, parentFormData.Id);
+                        notifySpecialIncidentLicense(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
                         "Status": "CLOSED"
                     }).then(() => {
-                        notifySpecialIncidentAllowance(context, parentFormData.Id);
+                        notifySpecialIncidentAllowance(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
                 }

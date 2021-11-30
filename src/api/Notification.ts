@@ -13,7 +13,7 @@ const SPEICAL_INCIDENT_REPORT_ALLOWANCE = "https://prod-30.southeastasia.logic.a
 const OTHER_INCIDENT_REPORT = "https://prod-29.southeastasia.logic.azure.com:443/workflows/b63eae455f434a2c83dd0371ea4aa083/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BuDseSvFRuKDCijnsGD3xv97UHx77dtkVeYeKLfRNkE";
 
 //Form 19
-export async function notifyServiceUserAccident(context: WebPartContext, formId: number) {
+export async function notifyServiceUserAccident(context: WebPartContext, formId: number, stage: number) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -22,7 +22,8 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
                 "OData-Version": "" //Really important to specify
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
-                "id": formId
+                "id": formId,
+                "stage": stage
             })
         };
         await context.httpClient.post(SERVICE_USER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
@@ -32,7 +33,7 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
     }
 }
 // form 22
-export async function notifyOutsiderAccident(context: WebPartContext, formId: number) {
+export async function notifyOutsiderAccident(context: WebPartContext, formId: number, stage: number) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -41,7 +42,8 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
                 "OData-Version": "" //Really important to specify
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
-                "id": formId
+                "id": formId,
+                "stage": stage
             })
         };
         await context.httpClient.post(OUTSIDER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
@@ -52,7 +54,7 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
 }
 
 // form 24
-export async function notifySpecialIncidentLicense(context: WebPartContext, formId: number) {
+export async function notifySpecialIncidentLicense(context: WebPartContext, formId: number, stage: number) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -61,7 +63,8 @@ export async function notifySpecialIncidentLicense(context: WebPartContext, form
                 "OData-Version": "" //Really important to specify
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
-                "id": formId
+                "id": formId,
+                "stage": stage
             })
         };
         await context.httpClient.post(SPEICAL_INCIDENT_REPORT_LICENSE, SPHttpClient.configurations.v1, CONFIG);
@@ -71,7 +74,7 @@ export async function notifySpecialIncidentLicense(context: WebPartContext, form
     }
 }
 // form 25
-export async function notifySpecialIncidentAllowance(context: WebPartContext, formId: number) {
+export async function notifySpecialIncidentAllowance(context: WebPartContext, formId: number, stage: number) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -80,7 +83,8 @@ export async function notifySpecialIncidentAllowance(context: WebPartContext, fo
                 "OData-Version": "" //Really important to specify
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
-                "id": formId
+                "id": formId,
+                "stage": stage
             })
         };
         await context.httpClient.post(SPEICAL_INCIDENT_REPORT_ALLOWANCE, SPHttpClient.configurations.v1, CONFIG);
@@ -91,7 +95,7 @@ export async function notifySpecialIncidentAllowance(context: WebPartContext, fo
 }
 
 // form 23
-export async function notifyOtherIncident(context: WebPartContext, formId: number) {
+export async function notifyOtherIncident(context: WebPartContext, formId: number, stage: number) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -100,7 +104,8 @@ export async function notifyOtherIncident(context: WebPartContext, formId: numbe
                 "OData-Version": "" //Really important to specify
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
-                "id": formId
+                "id": formId,
+                "stage": stage
             })
         };
         await context.httpClient.post(OTHER_INCIDENT_REPORT, SPHttpClient.configurations.v1, CONFIG);

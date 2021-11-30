@@ -482,7 +482,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     }).then(res => {
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentAllowance(context, formData.Id);
+                            notifySpecialIncidentAllowance(context, formData.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -493,7 +493,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     }).then(res => {
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentAllowance(context, res.data.Id);
+                            notifySpecialIncidentAllowance(context, res.data.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -620,7 +620,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "SDPhone": sdPhoneNo
                 }).then((res) => {
                     console.log(res);
-                    notifySpecialIncidentAllowance(context, formData.Id);
+                    notifySpecialIncidentAllowance(context, formData.Id, 1);
                     formSubmittedHandler();
                 }).catch(console.error);
             }).catch(console.error);

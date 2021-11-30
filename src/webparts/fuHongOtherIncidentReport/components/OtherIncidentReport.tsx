@@ -345,7 +345,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifyOtherIncident(context, formData.Id);
+                            notifyOtherIncident(context, formData.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -356,7 +356,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }).then(createOtherIncidentReportRes => {
                         console.log(createOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifyOtherIncident(context, createOtherIncidentReportRes.data.Id);
+                            notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -438,7 +438,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
-                    notifyOtherIncident(context, formData.Id);
+                    notifyOtherIncident(context, formData.Id, 1);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
