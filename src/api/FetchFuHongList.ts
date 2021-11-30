@@ -121,12 +121,22 @@ export async function getServiceUserAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Service User Accident";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.
-            filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'CLOSED'`)
+            filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
 
-        return items;
+        return items.filter((item) => {
+            if (item.Status === "DRAFT") {
+                if (item.AuthorId === spId) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        });
     } catch (err) {
         console.error(err);
         throw new Error("getServiceUserAccidentBySPId failed");
@@ -269,12 +279,23 @@ export async function getOutsiderAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId}) and Status ne 'CLOSED'`)
+            .filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
 
-        return items;
+        return items.filter((item) => {
+            if (item.Status === "DRAFT") {
+                if (item.AuthorId === spId) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        });
+
     } catch (err) {
         console.error(err);
         throw new Error("getOutsiderAccidentBySPId failed");
@@ -356,7 +377,17 @@ export async function getOtherIncidentReportBySPId(spId: number) {
             .expand("SM", "SD", "Author")
             .getAll();
 
-        return items;
+        return items.filter((item) => {
+            if (item.Status === "DRAFT") {
+                if (item.AuthorId === spId) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        });
     } catch (err) {
         console.error(err);
         throw new Error("getOtherIncidentReportBySPId failed");
@@ -436,7 +467,17 @@ export async function getSpecialIncidentReportLicenseBySPId(spId: number) {
             .expand("SM", "SD", "Author")
             .getAll();
 
-        return items;
+        return items.filter((item) => {
+            if (item.Status === "DRAFT") {
+                if (item.AuthorId === spId) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        });
     } catch (err) {
         console.error(err);
         throw new Error("getSpecialIncidentReportLicenseBySPId failed");
@@ -517,7 +558,17 @@ export async function getSpecialIncidentReportAllowanceBySPId(spId: number) {
             .expand("SM", "SD", "Author")
             .getAll();
 
-        return items;
+        return items.filter((item) => {
+            if (item.Status === "DRAFT") {
+                if (item.AuthorId === spId) {
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        });
     } catch (err) {
         console.error(err);
         throw new Error("getSpecialIncidentReportAllowanceBySPId failed");
