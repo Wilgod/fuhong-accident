@@ -48,7 +48,7 @@ export default function useFetchAllForms(spId: number, searchCriteria: ISearchCr
         result = result.sort((a, b) => {
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
         });
-
+        
         setResult(result);
     }
 

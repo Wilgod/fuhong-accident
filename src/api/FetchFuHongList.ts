@@ -73,7 +73,7 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
         if (searchCriteria) {
 
             if (searchCriteria.keyword) {
-                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}' or ServiceUserNameEN eq '${searchCriteria.keyword}' or ServiceUserNameCN eq '${searchCriteria.keyword}')`;
             }
 
             if (searchCriteria.formStatus) {
@@ -105,7 +105,7 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
                 filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
             }
         }
-
+        console.log(searchCriteria)
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .getAll();
@@ -227,11 +227,7 @@ export async function getOutsiderAccident(spId: number, searchCriteria?: ISearch
         let filterQuery = `(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'DRAFT'`;
         if (searchCriteria) {
             if (searchCriteria.keyword) {
-                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
-            }
-
-            if (searchCriteria.keyword) {
-                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}')`;
+                filterQuery = `${filterQuery} and (InsuranceCaseNo eq '${searchCriteria.keyword}' or CaseNumber eq '${searchCriteria.keyword}' or ServiceUserNameTC eq '${searchCriteria.keyword}' or ServiceUserNameEN eq '${searchCriteria.keyword}')`;
             }
 
             if (searchCriteria.formStatus) {
