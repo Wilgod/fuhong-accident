@@ -13,6 +13,8 @@ export default function useServiceUser() {
     }, []);
 
     useEffect(() => {
+        if (serviceUserRecordId === -1) return;
+        
         if (serviceUserRecordId) {
             getServiceUserByID(serviceUserRecordId).then((user) => {
                 setServiceUser(user);
