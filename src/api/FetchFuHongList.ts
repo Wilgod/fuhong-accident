@@ -3,7 +3,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { ISearchCriteria } from "../hooks/useFetchAllForms";
-import { filter } from "lodash";
 
 
 export async function getServiceUnits() {
@@ -219,6 +218,8 @@ export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string)
         throw new Error("getAllAccidentFollowUpFormByCaseNumber failed");
     }
 }
+
+
 
 // Form 22
 export async function getOutsiderAccident(spId: number, searchCriteria?: ISearchCriteria) {

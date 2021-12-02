@@ -6,6 +6,7 @@ import useServiceUnit2 from '../../../hooks/useServiceUser2';
 import BootstrapTable from 'react-bootstrap-table-next';
 import * as moment from 'moment';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
 
 function ServiceUserAccidentAge() {
     const [startDate, setStartDate] = useState(new Date());
@@ -13,7 +14,8 @@ function ServiceUserAccidentAge() {
     const [groupBy, setGroupBy] = useState("");
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
     const [serviceUnitList] = useServiceUnit2();
-
+    const serviceUserAge = useServiceUserAge();
+    console.log(serviceUserAge);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -22,6 +24,10 @@ function ServiceUserAccidentAge() {
         }
         return result;
     }
+
+    useEffect(() => {
+
+    }, [serviceUserAge])
 
     return (
         <div>
@@ -100,14 +106,49 @@ function ServiceUserAccidentAge() {
                 <div className="mb-2" style={{ fontWeight: 600 }}>
                     統計資料
                 </div>
-                <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} />
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">&lt;15歲</th>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">15-20歲</th>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">21-30歲</th>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">31-40歲</th>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">41-50歲</th>
+
+                        </tr>
+                        <tr>
+                            <th scope="row">&gt;60歲</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
                 <div className="" style={{ fontWeight: 600 }}>
                     統計圖表
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
