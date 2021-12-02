@@ -13,6 +13,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getAllServiceUnit } from '../../../api/FetchUser';
 import { IUser } from '../../../interface/IUser';
 import { over } from 'lodash';
+import ServiceUserAccidentAge from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentAge';
+import { TagItemSuggestion } from 'office-ui-fabric-react';
+import ServiceUserAccidentSex from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentSex';
+import ServiceUserAccidentIntelligence from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentIntelligence';
+import ServiceUserAccidentASD from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentASD';
+import ServiceUserAccidentEnv from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentEnv';
+import ServiceUserAccidentPersonal from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentPersonal';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -58,7 +65,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       formToggle: false,
       reportToggle: false,
       statToggle: false,
-      screenNav: "",
+      screenNav: "SUI_AGE",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
@@ -156,73 +163,111 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       return (
         <ul>
           <li>
-            一般統計
+            <div onClick={(event) => event.stopPropagation()}>
+              一般統計
+            </div>
             <ul>
               <li>
-                新發生意外或事故
+                <div onClick={(event) => this.screenNavHandler(event, "GENERAL")}>
+                  新發生意外或事故
+                </div>
               </li>
             </ul>
           </li>
           <li>
-            服務使用者意外統計
+            <div onClick={(event) => event.stopPropagation()}>
+              服務使用者意外統計
+            </div>
             <ul>
               <li>
-                年齡
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_AGE")}>
+                  年齡
+                </div>
               </li>
               <li>
-                性別
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_SEX")}>
+                  性別
+                </div>
               </li>
               <li>
-                智力障礙程度
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_INTELLIGENCE")}>
+                  智力障礙程度
+                </div>
               </li>
               <li>
-                自閉症譜系障礙 (ASD)
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_ASD")}>
+                  自閉症譜系障礙 (ASD)
+                </div>
               </li>
               <li>
-                意外性質
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_NATURE")}>
+                  意外性質
+                </div>
               </li>
               <li>
-                意外成因 - 環境因素
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_ENV")}>
+                  意外成因 - 環境因素
+                </div>
               </li>
               <li>
-                意外成因 - 個人因素
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_PERSONAL")}>
+                  意外成因 - 個人因素
+                </div>
+              </li>
+            </ul>
+          </li >
+          <li>
+            <div onClick={(event) => event.stopPropagation()}>
+              外界人士意外統計
+            </div>
+            <ul>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "PUI_NATURE")}>
+                  意外性質
+                </div>
+              </li>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "PUI_ENV")}>
+                  意外成因 - 環境因素
+                </div>
+              </li>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "PUI_PERSONAL")}>
+                  意外成因 - 個人因素
+                </div>
               </li>
             </ul>
           </li>
           <li>
-            外界人士意外統計
+            <div onClick={(event) => event.stopPropagation()}>
+              特別事故統計 (牌照事務處)
+            </div>
             <ul>
               <li>
-                意外性質
-              </li>
-              <li>
-                意外成因 - 環境因素
-              </li>
-              <li>
-                意外成因 - 個人因素
+                <div onClick={(event) => this.screenNavHandler(event, "SIH_CATEGORY")}>
+                  特別事故類別
+                </div>
               </li>
             </ul>
           </li>
           <li>
-            特別事故統計 (牌照事務處)
+            <div onClick={(event) => event.stopPropagation()}>
+              特別事故統計 (津貼科)
+            </div>
             <ul>
               <li>
-                特別事故類別
+                <div onClick={(event) => this.screenNavHandler(event, "SID_CATEGORY")}>
+                  特別事故類別
+                </div>
+              </li>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "SID_NATURE")}>
+                  虐待性質
+                </div>
               </li>
             </ul>
           </li>
-          <li>
-            特別事故統計 (津貼科)
-            <ul>
-              <li>
-                特別事故類別
-              </li>
-              <li>
-                虐待性質
-              </li>
-            </ul>
-          </li>
-        </ul>)
+        </ul >)
     }
 
     const siteContentCog = () => {
@@ -293,6 +338,34 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     const screenSwitch = () => {
       switch (this.state.screenNav) {
+        case 'GENERAL':
+          return <div>GENERAL</div>
+        case 'SUI_AGE':
+          return <ServiceUserAccidentAge />
+        case 'SUI_SEX':
+          return <ServiceUserAccidentSex />
+        case 'SUI_INTELLIGENCE':
+          return <ServiceUserAccidentIntelligence />
+        case 'SUI_ASD':
+          return <ServiceUserAccidentASD />
+        case 'SUI_NATURE':
+          return <div>SUI_NATURE</div>
+        case 'SUI_ENV':
+          return <ServiceUserAccidentEnv />
+        case 'SUI_PERSONAL':
+          return <ServiceUserAccidentPersonal />
+        case 'PUI_NATURE':
+          return <div>PUI_NATURE</div>
+        case 'PUI_ENV':
+          return <div>PUI_ENV</div>
+        case 'PUI_PERSONAL':
+          return <div>PUI_PERSONAL</div>
+        case 'SIH_CATEGORY':
+          return <div>SIH_CATEGORY</div>
+        case 'SID_CATEGORY':
+          return <div>SID_CATEGORY</div>
+        case 'SID_NATURE':
+          return <div>SID_NATURE</div>
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":

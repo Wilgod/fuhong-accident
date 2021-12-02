@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getAllServiceUnit } from "../api/FetchUser";
 
-export default function useServiceUserUnit() {
+export default function useServiceUnit2() {
     const [serviceUnitList, setServiceUnitList] = useState<any[]>([]);
     const [serviceUnit, setServiceUnit] = useState(null);
     useEffect(() => {

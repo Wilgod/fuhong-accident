@@ -108,7 +108,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
-
+    
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,

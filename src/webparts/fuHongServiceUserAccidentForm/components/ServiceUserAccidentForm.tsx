@@ -34,7 +34,7 @@ import { formInitial, pendingSmApprove, pendingSptApproveForSPT, pendingSptAppro
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
-import useServiceUserUnit from '../../../hooks/useServiceUserUnit';
+import useServiceUnit2 from '../../../hooks/useServiceUser2';
 import { notifyServiceUserAccident } from '../../../api/Notification';
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -63,7 +63,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
     console.log(serviceUser);
     console.log(serviceUserRecordId);
-    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUserUnit();
+    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2();
     const [serviceUnit, setServiceUnit] = useState("");
     const [serviceLocation, setServiceLocation] = useState("");
     const [sptList] = useSPT();
