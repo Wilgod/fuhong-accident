@@ -20,6 +20,9 @@ import ServiceUserAccidentIntelligence from '../../../components/Statistics/Serv
 import ServiceUserAccidentASD from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentASD';
 import ServiceUserAccidentEnv from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentEnv';
 import ServiceUserAccidentPersonal from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentPersonal';
+import CaseSummaryScreen from '../../../components/CaseSummaryScreen/CaseSummaryScreen';
+import InsuranceEmailReportScreen from '../../../components/InsuranceEmailReportScreen/InsuranceEmailReportScreen';
+import LogScreen from '../../../components/LogScreen/LogScreen';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -142,17 +145,17 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     const reportList = () => {
       return <ul>
         <li>
-          <div onClick={(event) => this.screenNavHandler(event, "")}>
+          <div onClick={(event) => this.screenNavHandler(event, "CASE_SUMMARY")}>
             個案概要
           </div>
         </li>
         <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "")}>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "INSURANCE_EMAIL")}>
             保險公司電郵報告
           </div>
         </li>
         <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "")}>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "LOG")}>
             表格更新記錄
           </div>
         </li>
@@ -338,6 +341,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     const screenSwitch = () => {
       switch (this.state.screenNav) {
+        case 'CASE_SUMMARY':
+          return <CaseSummaryScreen context={this.props.context} />
+        case 'INSURANCE_EMAIL':
+          return <InsuranceEmailReportScreen context={this.props.context} />
+        case 'LOG':
+          return <LogScreen context={this.props.context} />
         case 'GENERAL':
           return <div>GENERAL</div>
         case 'SUI_AGE':
