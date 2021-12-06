@@ -7,10 +7,10 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import * as moment from 'moment';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
-
+import Chart from "react-google-charts";
+// import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
+// import { Pie, Bar } from 'react-chartjs-2';
+// ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 const labels = ["<15歲", "15-20歲", "21-30歲", "31-40歲", "41-50歲", "51-60歲", ">60歲"];
 
 //Age interval
@@ -187,81 +187,57 @@ function ServiceUserAccidentAge() {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-6">
-                                <Bar
-                                    options={{
-                                        responsive: true,
-                                        plugins: {
-                                            title: {
-                                                display: true,
-                                                text: `${title} - 年齡統計`,
-                                            },
-                                            legend: {
-                                                display: false
-                                            }
-                                        }
-                                    }}
-                                    data={{
-                                        labels: labels,
-                                        datasets: [
-                                            {
-                                                label: "年齡",
-                                                data: [
-                                                    ageDataset.lessThanFifteen,
-                                                    ageDataset.fifteenToTwenty,
-                                                    ageDataset.twentyOneToThirty,
-                                                    ageDataset.thirtyOneToforty,
-                                                    ageDataset.fortyOneTofifty,
-                                                    ageDataset.greaterThanSixty
-                                                ],
-                                                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                                            }
-                                        ]
-                                    }} />;
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        服務使用者意外 - 年齡統計
+                                    </div>
+                                </div>
+                                <div className="">
+                                    <Chart
+                                        chartType={"Bar"}
+                                        loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        data={[
+                                            ["年齡", "年齡"],
+                                            ["<15歲", ageDataset.lessThanFifteen],
+                                            ["15-20歲", ageDataset.fifteenToTwenty],
+                                            ["21-30歲", ageDataset.twentyOneToThirty],
+                                            ["31-40歲", ageDataset.thirtyOneToforty],
+                                            ["41-50歲", ageDataset.fortyOneTofifty],
+                                            ["51-60歲", ageDataset.fiftyOneToSixty],
+                                            [">60歲", ageDataset.greaterThanSixty],
+                                        ]}
+                                    />
+
+                                </div>
                             </div>
                             <div className="col-6">
-                                <Pie
-                                    options={{
-                                        responsive: true,
-                                        plugins: {
-                                            title: {
-                                                display: true,
-                                                text: `${title} - 年齡統計`,
-                                            }
-                                        }
-                                    }}
-
-                                    data={{
-                                        labels: labels,
-                                        datasets: [
-                                            {
-                                                label: "年齡",
-                                                data: [
-                                                    ageDataset.lessThanFifteen,
-                                                    ageDataset.fifteenToTwenty,
-                                                    ageDataset.twentyOneToThirty,
-                                                    ageDataset.thirtyOneToforty,
-                                                    ageDataset.fortyOneTofifty,
-                                                    ageDataset.greaterThanSixty],
-                                                backgroundColor: [
-                                                    'rgba(255, 99, 132, 0.2)',
-                                                    'rgba(54, 162, 235, 0.2)',
-                                                    'rgba(255, 206, 86, 0.2)',
-                                                    'rgba(75, 192, 192, 0.2)',
-                                                    'rgba(153, 102, 255, 0.2)',
-                                                    'rgba(255, 159, 64, 0.2)',
-                                                ],
-                                                borderColor: [
-                                                    'rgba(255, 99, 132, 1)',
-                                                    'rgba(54, 162, 235, 1)',
-                                                    'rgba(255, 206, 86, 1)',
-                                                    'rgba(75, 192, 192, 1)',
-                                                    'rgba(153, 102, 255, 1)',
-                                                    'rgba(255, 159, 64, 1)',
-                                                ],
-                                                borderWidth: 1,
-                                            }
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        服務使用者意外 - 年齡統計
+                                    </div>
+                                </div>
+                                <Chart
+                                    chartType={"PieChart"}
+                                    loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                    data={
+                                        [
+                                            ["年齡", '年齡'],
+                                            ["<15歲", ageDataset.lessThanFifteen],
+                                            ["15-20歲", ageDataset.fifteenToTwenty],
+                                            ["21-30歲", ageDataset.twentyOneToThirty],
+                                            ["31-40歲", ageDataset.thirtyOneToforty],
+                                            ["41-50歲", ageDataset.fortyOneTofifty],
+                                            ["51-60歲", ageDataset.fiftyOneToSixty],
+                                            [">60歲", ageDataset.greaterThanSixty],
                                         ]
-                                    }} />
+                                    }
+                                />
                             </div>
                         </div>
                     </React.Fragment>
