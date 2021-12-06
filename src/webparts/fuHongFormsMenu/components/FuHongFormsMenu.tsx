@@ -65,7 +65,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       formToggle: false,
       reportToggle: false,
       statToggle: false,
-      screenNav: "SUI_AGE",
+      screenNav: "",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],

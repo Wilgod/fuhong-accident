@@ -1458,7 +1458,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <button className="btn btn-warning" onClick={submitHandler}>提交</button>
                         }
                         {
-                            formInitial(currentUserRole, formStatus) && formStatus === "SM_VOID" &&
+                            formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>

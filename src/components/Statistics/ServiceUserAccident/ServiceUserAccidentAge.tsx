@@ -7,15 +7,82 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import * as moment from 'moment';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
+import { Pie, Bar } from 'react-chartjs-2';
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+
+const labels = ["<15歲", "15-20歲", "21-30歲", "31-40歲", "41-50歲", "51-60歲", ">60歲"];
+
+//Age interval
+interface IDataset {
+    lessThanFifteen: number;
+    fifteenToTwenty: number;
+    twentyOneToThirty: number;
+    thirtyOneToforty: number;
+    fortyOneTofifty: number;
+    fiftyOneToSixty: number;
+    greaterThanSixty: number;
+}
+
+const initialDataset: IDataset = {
+    lessThanFifteen: 0,
+    fifteenToTwenty: 0,
+    twentyOneToThirty: 0,
+    thirtyOneToforty: 0,
+    fortyOneTofifty: 0,
+    fiftyOneToSixty: 0,
+    greaterThanSixty: 0,
+}
+
+const agefilter = (age: number, dataset: IDataset): IDataset => {
+    let result = dataset;
+    if (age < 15) {
+        result.lessThanFifteen = result.lessThanFifteen + 1;
+    } else if (age >= 15 && age <= 20) {
+        result.fifteenToTwenty = result.fifteenToTwenty + 1;
+    } else if (age >= 21 && age <= 30) {
+        result.twentyOneToThirty = result.twentyOneToThirty + 1;
+    } else if (age >= 31 && age <= 40) {
+        result.thirtyOneToforty = result.thirtyOneToforty + 1;
+    } else if (age >= 41 && age <= 50) {
+        result.fortyOneTofifty = result.fortyOneTofifty + 1;
+    } else if (age >= 51 && age <= 60) {
+        result.fifteenToTwenty = result.fifteenToTwenty + 1;
+    } else {
+        result.greaterThanSixty = result.greaterThanSixty + 1;
+    }
+    return result;
+}
+
+const sampleOneParser = (serviceUserAge: any[]) => {
+    let dataset: IDataset = { ...initialDataset };
+    serviceUserAge.forEach((item) => {
+        dataset = agefilter(item.ServiceUserAge, dataset);
+    });
+    return dataset;
+}
+
+const sampleTwoParser = (serviceUserAge: any[]): Map<string, IDataset> => {
+    const result = new Map<string, IDataset>();
+    serviceUserAge.forEach((item) => {
+        const year = new Date(item.AccidentTime).getFullYear();
+        if (result.has(`${year}`)) {
+            let dataset = result.get(`${year}`);
+
+        } else {
+
+        }
+    });
+    return result;
+}
 
 function ServiceUserAccidentAge() {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
-    const [groupBy, setGroupBy] = useState("");
-    const [serviceUnits, setServiceUnits] = useState<string[]>([]);
+
+    const [groupBy, setGroupBy] = useState("NON");
+    const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
     const [serviceUnitList] = useServiceUnit2();
-    const serviceUserAge = useServiceUserAge();
-    console.log(serviceUserAge);
+    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserAge();
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -25,9 +92,189 @@ function ServiceUserAccidentAge() {
         return result;
     }
 
-    useEffect(() => {
+    const byMonthTableComponent = () => {
+        return (
+            <table className="table" >
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th>總數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">&lt;15歲</th>
+                        <th>{ageDataset.lessThanFifteen}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">15-20歲</th>
+                        <th>{ageDataset.fifteenToTwenty}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">21-30歲</th>
+                        <th>{ageDataset.twentyOneToThirty}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">31-40歲</th>
+                        <th>{ageDataset.thirtyOneToforty}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">41-50歲</th>
+                        <th>{ageDataset.fortyOneTofifty}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">&gt;60歲</th>
+                        <th>{ageDataset.greaterThanSixty}</th>
+                    </tr>
+                </tbody>
+            </table >
+        )
+    }
 
-    }, [serviceUserAge])
+    useEffect(() => {
+        switch (groupBy) {
+            case "NON":
+                setAgeDataset(sampleOneParser(serviceUserAge));
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                console.log("default");
+        }
+    }, [groupBy, serviceUserAge])
+
+    const statsTableSwitch = () => {
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        switch (groupBy) {
+            case "NON":
+                return (
+                    <React.Fragment>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 年齡統計`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-7">
+                                {byMonthTableComponent()}
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                return null;
+        }
+    }
+
+    const chartSwitch = () => {
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+
+        switch (groupBy) {
+            case "NON":
+                return (
+                    <React.Fragment>
+                        <div className="row">
+                            <div className="col-6">
+                                <Bar
+                                    options={{
+                                        responsive: true,
+                                        plugins: {
+                                            title: {
+                                                display: true,
+                                                text: `${title} - 年齡統計`,
+                                            },
+                                            legend: {
+                                                display: false
+                                            }
+                                        }
+                                    }}
+                                    data={{
+                                        labels: labels,
+                                        datasets: [
+                                            {
+                                                label: "年齡",
+                                                data: [
+                                                    ageDataset.lessThanFifteen,
+                                                    ageDataset.fifteenToTwenty,
+                                                    ageDataset.twentyOneToThirty,
+                                                    ageDataset.thirtyOneToforty,
+                                                    ageDataset.fortyOneTofifty,
+                                                    ageDataset.greaterThanSixty
+                                                ],
+                                                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                                            }
+                                        ]
+                                    }} />;
+                            </div>
+                            <div className="col-6">
+                                <Pie
+                                    options={{
+                                        responsive: true,
+                                        plugins: {
+                                            title: {
+                                                display: true,
+                                                text: `${title} - 年齡統計`,
+                                            }
+                                        }
+                                    }}
+
+                                    data={{
+                                        labels: labels,
+                                        datasets: [
+                                            {
+                                                label: "年齡",
+                                                data: [
+                                                    ageDataset.lessThanFifteen,
+                                                    ageDataset.fifteenToTwenty,
+                                                    ageDataset.twentyOneToThirty,
+                                                    ageDataset.thirtyOneToforty,
+                                                    ageDataset.fortyOneTofifty,
+                                                    ageDataset.greaterThanSixty],
+                                                backgroundColor: [
+                                                    'rgba(255, 99, 132, 0.2)',
+                                                    'rgba(54, 162, 235, 0.2)',
+                                                    'rgba(255, 206, 86, 0.2)',
+                                                    'rgba(75, 192, 192, 0.2)',
+                                                    'rgba(153, 102, 255, 0.2)',
+                                                    'rgba(255, 159, 64, 0.2)',
+                                                ],
+                                                borderColor: [
+                                                    'rgba(255, 99, 132, 1)',
+                                                    'rgba(54, 162, 235, 1)',
+                                                    'rgba(255, 206, 86, 1)',
+                                                    'rgba(75, 192, 192, 1)',
+                                                    'rgba(153, 102, 255, 1)',
+                                                    'rgba(255, 159, 64, 1)',
+                                                ],
+                                                borderWidth: 1,
+                                            }
+                                        ]
+                                    }} />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                return null;
+        }
+    }
 
     return (
         <div>
@@ -81,7 +328,6 @@ function ServiceUserAccidentAge() {
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
-
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
@@ -106,47 +352,14 @@ function ServiceUserAccidentAge() {
                 <div className="mb-2" style={{ fontWeight: 600 }}>
                     統計資料
                 </div>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">&lt;15歲</th>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">15-20歲</th>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">21-30歲</th>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">31-40歲</th>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">41-50歲</th>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">&gt;60歲</th>
-
-                        </tr>
-                    </tbody>
-                </table>
-
+                {statsTableSwitch()}
                 {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
                 <div className="" style={{ fontWeight: 600 }}>
                     統計圖表
                 </div>
+                {chartSwitch()}
             </div>
         </div >
     )
