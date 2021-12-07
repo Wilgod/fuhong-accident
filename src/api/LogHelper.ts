@@ -5,7 +5,7 @@ import "@pnp/sp/items";
 
 export async function postLog(body: {
     CaseNumber: string;
-    AccidentTime: Date;
+    AccidentTime: string;
     ServiceUnit: string;
     FormType: string;
     Report: string;

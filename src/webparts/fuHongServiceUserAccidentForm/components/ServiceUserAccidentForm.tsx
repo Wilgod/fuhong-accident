@@ -36,6 +36,7 @@ import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
 import { notifyServiceUserAccident } from '../../../api/Notification';
+import { postLog } from '../../../api/LogHelper';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -76,6 +77,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
     const { departments, setHrDepartment } = useDepartmentMangers();
+
 
     const [serviceUserNameEN, setServiceUserNameEN] = useState("");
     const [serviceUserNameCN, setServiceUserNameCN] = useState("");
@@ -654,7 +656,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         }).catch(console.error);
                     }
 
-
+                    postLog({
+                        AccidentTime: formData.AccidentTime,
+                        Action: "重新提交至服務經理",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SUI",
+                        Report: "服務使用者意外填報表(一)",
+                        ServiceUnit: formData.ServiceLocation
+                    }).catch(console.error);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -666,6 +675,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         "ServiceLocation": serviceLocation,
                         "Status": "PENDING_SM_APPROVE"
                     };
+
+                    let log = {
+                        Action: "提交至服務經理",
+                        CaseNumber: caseNumber,
+                        FormType: "SUI",
+                        Report: "服務使用者意外填報表(一)",
+                        ServiceUnit: serviceLocation,
+                        AccidentTime: accidentTime.toISOString()
+                    }
+
                     //SM Auto approve go to next step
                     if (CURRENT_USER.email === spSmInfo.Email) {
                         extraBody["SMApproved"] = true;
@@ -673,6 +692,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         extraBody["SMDate"] = new Date().toISOString();
                         extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
                         extraBody["Status"] = "PENDING_SPT_APPROVE"
+
+                        log["Action"] = "提交至高級物理治療師"
                     }
 
                     if (formStatus === "DRAFT") {
@@ -700,6 +721,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, formData.Id, 1);
                             }
+                            postLog(log).catch(console.error);
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else {
@@ -731,6 +753,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1);
                             }
+                            postLog(log).catch(console.error);
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -768,6 +791,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Trigger notification workflow
                 console.log(res);
                 notifyServiceUserAccident(context, formData.Id, 1);
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "服務經理批准",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SUI",
+                    Report: "服務使用者意外填報表(一)",
+                    ServiceUnit: formData.ServiceLocation
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -785,6 +818,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             };
             updateServiceUserAccidentById(formId, body).then((res) => {
                 console.log(res);
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "服務經理拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SUI",
+                    Report: "服務使用者意外填報表(一)",
+                    ServiceUnit: formData.ServiceLocation
+                }).catch(console.error);
                 formSubmittedHandler()
             }).catch(console.error);
         }
@@ -834,6 +875,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                             formSubmittedHandler()
                                         }).catch(console.error);
                                     }
+                                    
+                                    postLog({
+                                        AccidentTime: accidentTime.toISOString(),
+                                        Action: "高級物理治療師批准",
+                                        CaseNumber: formData.CaseNumber,
+                                        FormType: "SUI",
+                                        Report: "服務使用者意外填報表(一)",
+                                        ServiceUnit: formData.ServiceLocation
+                                    }).catch(console.error);
+
                                 })
                             }
                         }).catch(console.error);
@@ -856,6 +907,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             updateServiceUserAccidentById(formData.Id, body).then((res) => {
                 console.log(res);
                 // Trigger notification workflow
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "高級物理治療師拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SUI",
+                    Report: "服務使用者意外填報表(一)",
+                    ServiceUnit: formData.ServiceLocation
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -941,7 +1002,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setAccidentTime(new Date(data.AccidentTime));
 
             //setAccidentTime
-            
+
             // Service Unit
             setServiceUnit(data.ServiceUnit);
 

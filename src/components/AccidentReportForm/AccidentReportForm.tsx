@@ -16,6 +16,7 @@ import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateSe
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
+import { postLog } from '../../api/LogHelper';
 
 
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -186,6 +187,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
                             console.log(updateServiceUserAccidentResponse)
                             // Trigger notification workflow;
+
+                        
 
                             formSubmittedHandler();
                         }).catch(console.error)

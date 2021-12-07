@@ -7,6 +7,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import useLog from '../../hooks/useLog';
 interface ILogScreenProps {
     context: WebPartContext;
 }
@@ -16,6 +17,8 @@ function LogScreen({ context }: ILogScreenProps) {
     const [endDate, setEndDate] = useState(new Date());
     const [serviceUnitList] = useServiceUnit2();
     const [data, setData] = useState([]);
+    const [log] = useLog();
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -124,9 +127,9 @@ function LogScreen({ context }: ILogScreenProps) {
             </div>
             <div>
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
-                    搜尋結果 [{`${data.length} 筆記錄`}]
+                    搜尋結果 [{`${log.length} 筆記錄`}]
                 </div>
-                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
+                <BootstrapTable boot keyField='id' data={log || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )
@@ -221,6 +224,15 @@ const columns = (context) => {
             dataField: 'AuthorId',
             text: '更新同事',
             sort: true,
+            formatter: (value, data) => {
+                console.log(data);
+                if (data.Author) {
+                    return data.Author.Title || data.Author.EMail
+                } else {
+                    return ""
+                }
+
+            }
         },
         {
             dataField: 'Action',
