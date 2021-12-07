@@ -176,6 +176,29 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     "SMComment": smComment,
                     "SMDate": smDate.toISOString()
                 }).then((updateAccidentReportFormResponse) => {
+
+                    if (formType === "SERVICE_USER") {
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "服務經理留下評語",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SUI",
+                            RecordId: parentFormData.Id,
+                            Report: "服務使用者意外報告(二)",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        });
+                    } else {
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "服務經理留下評語",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "PUI",
+                            RecordId: parentFormData.Id,
+                            Report: "外界人士意外報告(二)",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        });
+                    }
+
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -188,13 +211,31 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             console.log(updateServiceUserAccidentResponse)
                             // Trigger notification workflow;
 
-                        
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交至高級物理治療師",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SUI",
+                                RecordId: parentFormData.Id,
+                                Report: "服務使用者意外報告(二)",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            });
 
                             formSubmittedHandler();
                         }).catch(console.error)
                     } else {
                         updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
                             console.log(updateOutsiderAccidentResponse);
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交至高級物理治療師",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "PUI",
+                                RecordId: parentFormData.Id,
+                                Report: "外界人士意外報告(二)",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            });
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -267,11 +308,33 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
                                 notifyServiceUserAccident(context, parentFormData.Id, 2);
+
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "高級物理治療師批准",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "SUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "服務使用者意外報告(二)",
+                                    ServiceUnit: parentFormData.ServiceLocation,
+                                });
+
                                 formSubmittedHandler()
                             }).catch(console.error);
                         } else {
                             updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
                                 notifyOutsiderAccident(context, parentFormData.Id, 2);
+
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "高級物理治療師批准",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "PUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "外界人士意外報告(二)",
+                                    ServiceUnit: parentFormData.ServiceLocation,
+                                });
+
                                 formSubmittedHandler()
                             }).catch(console.error);
                         }
@@ -297,14 +360,42 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
                     // Update main form status and stage
                     // Update main form status and stage 3
-                    const serviceUserAccidentFormBody = {
+                    const body = {
                         "Stage": "2",
                         "Status": "PENDING_INVESTIGATE"
                     }
-                    updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
-                        //trigger notification work flow
-                        formSubmittedHandler();
-                    }).catch(console.error);
+
+                    if (formType === "SERVICE_USER") {
+                        updateServiceUserAccidentById(parentFormData.Id, body).then((serviceUserAccidentFormResponse) => {
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "高級物理治療師拒絕",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SUI",
+                                RecordId: parentFormData.Id,
+                                Report: "服務使用者意外報告(二)",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            });
+
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else {
+                        updateOutsiderAccidentFormById(parentFormData.Id, body).then((outsiderAccidentFormResponse) => {
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "高級物理治療師拒絕",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "PUI",
+                                RecordId: parentFormData.Id,
+                                Report: "外界人士意外報告(二)",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            });
+                            formSubmittedHandler()
+                        }).catch(console.error);
+                    }
+                    //trigger notification work flow
                 }).catch(console.error);
             }
         }

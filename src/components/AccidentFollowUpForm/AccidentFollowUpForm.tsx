@@ -21,6 +21,7 @@ import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
 import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
+import { postLog } from '../../api/LogHelper';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -146,6 +147,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             }).then((updateServiceUserAccidentByIdRes) => {
                                 console.log(updateServiceUserAccidentByIdRes);
 
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "SUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "意外跟進/結束表(三)",
+                                    ServiceUnit: parentFormData.ServiceLocation
+                                })
+
                                 formSubmittedHandler();
                             }).catch(console.error);
                         } else if (formType === "OUTSIDERS") {
@@ -156,6 +167,16 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 "NextDeadline": addMonths(new Date(), 6),
                             }).then((res) => {
                                 console.log(res);
+
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "PUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "意外跟進/結束表(三)",
+                                    ServiceUnit: parentFormData.ServiceLocation
+                                })
 
                                 formSubmittedHandler();
                             }).catch(console.error);
@@ -172,12 +193,34 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         updateServiceUserAccidentById(parentFormData.Id, {
                             "Status": "PENDING_SD_APPROVE"
                         }).then((updateServiceUserAccidentByIdRes) => {
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            })
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else if (formType === "OUTSIDERS") {
                         updateOutsiderAccidentFormById(parentFormData.Id, {
                             "Status": "PENDING_SD_APPROVE"
                         }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "PUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            })
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -223,6 +266,29 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         }
         updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, body).then((res) => {
             console.log(res);
+
+            if (formType === "SERVICE_USER") {
+                postLog({
+                    AccidentTime: parentFormData.AccidentTime,
+                    Action: "評語",
+                    CaseNumber: parentFormData.CaseNumber,
+                    FormType: "SUI",
+                    RecordId: parentFormData.Id,
+                    Report: "意外跟進/結束表(三)",
+                    ServiceUnit: parentFormData.ServiceLocation
+                })
+            } else {
+                postLog({
+                    AccidentTime: parentFormData.AccidentTime,
+                    Action: "評語",
+                    CaseNumber: parentFormData.CaseNumber,
+                    FormType: "PUI",
+                    RecordId: parentFormData.Id,
+                    Report: "意外跟進/結束表(三)",
+                    ServiceUnit: parentFormData.ServiceLocation
+                })
+            }
+
             formSubmittedHandler();
         }).catch(console.error);
     }
@@ -240,133 +306,37 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
                     // trigger notification workflow
                     notifyServiceUserAccident(context, parentFormData.Id, 3);
+
+                    postLog({
+                        AccidentTime: parentFormData.AccidentTime,
+                        Action: "批准",
+                        CaseNumber: parentFormData.CaseNumber,
+                        FormType: "SUI",
+                        RecordId: parentFormData.Id,
+                        Report: "意外跟進/結束表(三)",
+                        ServiceUnit: parentFormData.ServiceLocation
+                    })
+
                     formSubmittedHandler();
                 }).catch(console.error);
             } else if (formType === "OUTSIDERS") {
                 updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
+
+                    postLog({
+                        AccidentTime: parentFormData.AccidentTime,
+                        Action: "批准",
+                        CaseNumber: parentFormData.CaseNumber,
+                        FormType: "PUI",
+                        RecordId: parentFormData.Id,
+                        Report: "意外跟進/結束表(三)",
+                        ServiceUnit: parentFormData.ServiceLocation
+                    })
+
                     notifyOutsiderAccident(context, parentFormData.Id, 3);
                     formSubmittedHandler();
                 }).catch(console.error);
             }
         }).catch(console.error);
-
-        // ---------------------------------------------
-        // if (form.accidentalFollowUpContinue) { // form continue
-        //     // Get form 19, for AccidentFollowUpFormId[]
-        //     if (formType === "SERVICE_USER") {
-        //         getServiceUserAccidentById(parentFormData.Id).then((getAccidentFollowUpFormByIdRes) => {
-        //             let title = "";
-        //             if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-        //                 title = `意外跟進/結束表 - ${getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId.length + 1}`;
-        //             } else {
-        //                 title = `意外跟進/結束表 - 1`;
-        //             }
-
-        //             const newAccountFollowUpReportFormBody = {
-        //                 "CaseNumber": parentFormData.CaseNumber,
-        //                 "ParentFormId": parentFormData.ID,
-        //                 "SPTId": parentFormData.SPTId,
-        //                 "SDId": parentFormData.SDId,
-        //                 "SMId": parentFormData.SMId,
-        //                 "Title": title
-        //             }
-        //             // Create form 21
-        //             createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
-
-        //                 // Update form 19 , add new form 21 id to it. Also recount the deadline
-        //                 let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
-        //                 if (getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId) {
-        //                     accidentFollowUpFormId = [...getAccidentFollowUpFormByIdRes.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
-        //                 }
-        //                 updateServiceUserAccidentById(parentFormData.Id, {
-        //                     "AccidentFollowUpFormId": {
-        //                         results: accidentFollowUpFormId
-        //                     },
-        //                     "NextDeadline": addMonths(new Date(), 6),
-        //                     "Status": "PENDING_SM_FILL_IN"
-        //                 }).then((updateServiceUserAccidentFormRes) => {
-        //                     // Update current form 21 Status to complete
-
-        //                     const updateAccidentFollowUpReportFormBody = {
-        //                         ...body,
-        //                         "Completed": true,
-        //                         "SDDate": new Date().toISOString(),
-        //                         "SDComment": sdComment
-        //                     }
-
-        //                     updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((res) => {
-        //                         formSubmittedHandler();
-        //                         // Trigger notification workflow
-        //                     }).catch(console.error);
-        //                 }).catch(console.error);
-        //             }).catch(console.error);
-        //         }).catch(console.error);
-        //     } else {
-        //         getOutsiderAccidentById(parentFormData.Id).then((getOutsiderAccidentResponse) => {
-        //             let title = "";
-        //             if (getOutsiderAccidentResponse.AccidentFollowUpFormId) {
-        //                 title = `意外跟進/結束表 - ${getOutsiderAccidentResponse.AccidentFollowUpFormId.length + 1}`;
-        //             } else {
-        //                 title = `意外跟進/結束表 - 1`;
-        //             }
-
-        //             const newAccountFollowUpReportFormBody = {
-        //                 "CaseNumber": parentFormData.CaseNumber,
-        //                 "ParentFormId": parentFormData.ID,
-        //                 "SPTId": parentFormData.SPTId,
-        //                 "SDId": parentFormData.SDId,
-        //                 "SMId": parentFormData.SMId,
-        //                 "Title": title
-        //             }
-        //             // Create form 21
-        //             createAccidentFollowUpRepotForm(newAccountFollowUpReportFormBody).then((accidentFollowUpRepotFormRes) => {
-
-        //                 // Update form 19 , add new form 21 id to it. Also recount the deadline
-        //                 let accidentFollowUpFormId = [accidentFollowUpRepotFormRes.data.Id];
-        //                 if (getOutsiderAccidentResponse.AccidentFollowUpFormId) {
-        //                     accidentFollowUpFormId = [...getOutsiderAccidentResponse.AccidentFollowUpFormId, ...accidentFollowUpRepotFormRes.data.Id];
-        //                 }
-        //                 updateOutsiderAccidentFormById(parentFormData.Id, {
-        //                     "AccidentFollowUpFormId": {
-        //                         results: accidentFollowUpFormId
-        //                     },
-        //                     "NextDeadline": addMonths(new Date(), 6),
-        //                     "Status": "PENDING_SM_FILL_IN"
-        //                 }).then((updateOutsiderAccidentFormRes) => {
-        //                     // Update current form 21 Status to complete
-
-        //                     const updateOutsiderFollowUpReportFormBody = {
-        //                         ...body,
-        //                         "Completed": true,
-        //                         "SDDate": new Date().toISOString(),
-        //                         "SDComment": sdComment
-        //                     }
-
-        //                     updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateOutsiderFollowUpReportFormBody).then((res) => {
-        //                         formSubmittedHandler();
-        //                         // Trigger notification workflow
-        //                     }).catch(console.error);
-        //                 }).catch(console.error);
-        //             }).catch(console.error);
-        //         }).catch(console.error);
-        //     }
-        // } else {
-        //     // update form 19 status
-        //     // update form 21 to complete
-        //     const updateAccidentFollowUpReportFormBody = {
-        //         ...body,
-        //         "Completed": true,
-        //         "SDDate": new Date().toISOString(),
-        //         "SDComment": sdComment
-        //     }
-        //     updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, updateAccidentFollowUpReportFormBody).then((AccidentFollowUpReportFormResponse) => {
-        //         //Update 
-        //         updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
-        //             // trigger notification workflow
-        //             formSubmittedHandler()
-        //         }).catch(console.error)
-        //     }).catch(console.error);
-        // }
     }
 
     const sdRejectHandler = () => {
@@ -379,10 +349,32 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 if (formType === "SERVICE_USER") {
                     updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SM_FILL_IN" }).then(() => {
                         // trigger notification workflow
+
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "拒絕",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SUI",
+                            RecordId: parentFormData.Id,
+                            Report: "意外跟進/結束表(三)",
+                            ServiceUnit: parentFormData.ServiceLocation
+                        });
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "OUTSIDERS") {
                     updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SM_FILL_IN" }).then(() => {
+
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "拒絕",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "PUI",
+                            RecordId: parentFormData.Id,
+                            Report: "意外跟進/結束表(三)",
+                            ServiceUnit: parentFormData.ServiceLocation
+                        });
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -428,6 +420,17 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            });
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else if (formType === "OUTSIDERS") {
@@ -438,6 +441,17 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((res) => {
                             console.log(res);
+
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "PUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            });
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
@@ -450,19 +464,41 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 "SDDate": new Date().toISOString(),
                 "SDComment": sdComment,
             }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-                // if (formType === "SERVICE_USER") {
-                //     updateServiceUserAccidentById(parentFormData.Id, {
-                //         "Status": "CLOSED"
-                //     }).then((updateServiceUserAccidentByIdRes) => {
-                //         formSubmittedHandler();
-                //     }).catch(console.error);
-                // } else if (formType === "OUTSIDERS") {
-                //     updateOutsiderAccidentFormById(parentFormData.Id, {
-                //         "Status": "CLOSED"
-                //     }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-                //         formSubmittedHandler();
-                //     }).catch(console.error);
-                // }
+                if (formType === "SERVICE_USER") {
+                    updateServiceUserAccidentById(parentFormData.Id, {
+                        "Status": "CLOSED"
+                    }).then((updateServiceUserAccidentByIdRes) => {
+
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "批准",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SUI",
+                            RecordId: parentFormData.Id,
+                            Report: "意外跟進/結束表(三)",
+                            ServiceUnit: parentFormData.ServiceLocation
+                        });
+
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else if (formType === "OUTSIDERS") {
+                    updateOutsiderAccidentFormById(parentFormData.Id, {
+                        "Status": "CLOSED"
+                    }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+
+                        postLog({
+                            AccidentTime: parentFormData.AccidentTime,
+                            Action: "批准",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "PUI",
+                            RecordId: parentFormData.Id,
+                            Report: "意外跟進/結束表(三)",
+                            ServiceUnit: parentFormData.ServiceLocation
+                        });
+
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
                 formSubmittedHandler();
             }).catch(console.error);
         }
