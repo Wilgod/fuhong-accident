@@ -7,6 +7,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import useEmailRecord from '../../hooks/useEmailRecords';
 interface IInsuranceEmailReportScreenProps {
     context: WebPartContext;
 }
@@ -16,7 +17,9 @@ function InsuranceEmailReportScreen({ context }: IInsuranceEmailReportScreenProp
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceUnitList] = useServiceUnit2();
-    const [data, setData] = useState([]);
+
+    const [data] = useEmailRecord();
+    console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -225,7 +228,7 @@ const columns = (context) => {
             text: '電郵標題',
         },
         {
-            dataField: 'Id',
+            dataField: 'RecordId',
             text: '[按鈕]',
             formatter: (value, data) => {
                 let formLink = "";

@@ -136,8 +136,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       return <ul>
         <li>{ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}</li>
         <li>{ItemComponent(this.OUTSIDERS_ACCIDENT, "外界人士意外")}</li>
-        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_ALLOWANCE, "特別事故報告 (牌照事務處)")}</li>
-        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_LICENSE, "特別事故報告 (津貼科)")}</li>
+        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_LICENSE, "特別事故報告 (牌照事務處)")}</li>
+        <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_ALLOWANCE, "特別事故報告 (津貼科)")}</li>
         <li>{ItemComponent(this.OTHER_INCIDENT_REPORT, "其他事故")}</li>
       </ul>
     }

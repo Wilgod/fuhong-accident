@@ -240,7 +240,7 @@ const columns = (context) => {
             sort: true,
         },
         {
-            dataField: 'Id',
+            dataField: 'RecordId',
             text: '[按鈕]',
             formatter: (value, data) => {
                 let formLink = "";

@@ -6,9 +6,9 @@ const SERVICE_USER_ACCIDENT = "https://prod-26.southeastasia.logic.azure.com:443
 // form 22
 const OUTSIDER_ACCIDENT = "https://prod-25.southeastasia.logic.azure.com:443/workflows/0682e9e95a7e4ae6bcaa41bdf8685cb2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=N6HKhU9dIoy2296cMNgKrT1C_MO8V7Ypi-QEthikYpg";
 // form 24
-const SPEICAL_INCIDENT_REPORT_LICENSE = "https://prod-22.southeastasia.logic.azure.com:443/workflows/b7f9ae2e910f4f928b6d6df3f9635110/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=06CWh3aLcZ6W4Mr459u1un2zk6ekx3XLVyFWIfcEZ2k";
+const SPEICAL_INCIDENT_REPORT_LICENSE = "https://prod-30.southeastasia.logic.azure.com:443/workflows/8e7d363bd409461faaee8c5c2a85200f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LBlIfgLzoFOF8bTOHP23qs4MhKTKDktJ2jk2Q3N_q4U";
 // form 25
-const SPEICAL_INCIDENT_REPORT_ALLOWANCE = "https://prod-30.southeastasia.logic.azure.com:443/workflows/8e7d363bd409461faaee8c5c2a85200f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LBlIfgLzoFOF8bTOHP23qs4MhKTKDktJ2jk2Q3N_q4U";
+const SPEICAL_INCIDENT_REPORT_ALLOWANCE = "https://prod-22.southeastasia.logic.azure.com:443/workflows/b7f9ae2e910f4f928b6d6df3f9635110/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=06CWh3aLcZ6W4Mr459u1un2zk6ekx3XLVyFWIfcEZ2k";
 // form 23 
 const OTHER_INCIDENT_REPORT = "https://prod-29.southeastasia.logic.azure.com:443/workflows/b63eae455f434a2c83dd0371ea4aa083/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BuDseSvFRuKDCijnsGD3xv97UHx77dtkVeYeKLfRNkE";
 

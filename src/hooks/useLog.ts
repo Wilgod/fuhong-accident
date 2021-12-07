@@ -10,7 +10,7 @@ export default function useLog(): any {
         getLog().then((res) => {
             setLog(res);
         }).catch(console.error);
-    })
+    }, [])
 
     return [log];
 }

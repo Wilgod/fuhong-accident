@@ -3,14 +3,17 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 
-export async function postLog(body: {
+export interface ILog {
     CaseNumber: string;
     AccidentTime: string;
     ServiceUnit: string;
     FormType: string;
     Report: string;
     Action: string;
-}) {
+    RecordId: number;
+}
+
+export async function postLog(body: ILog) {
     try {
         const LIST_NAME = "Log";
         const result = await sp.web.lists.getByTitle(LIST_NAME).items.add(body);
