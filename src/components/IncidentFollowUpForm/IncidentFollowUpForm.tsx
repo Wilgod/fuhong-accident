@@ -14,6 +14,7 @@ import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConf
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { faPager } from '@fortawesome/free-solid-svg-icons';
 import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense } from '../../api/Notification';
+import { postLog } from '../../api/LogHelper';
 
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
@@ -159,6 +160,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateOtherIncidentReportRes) => {
 
+                            postLog({
+                                AccidentTime: parentFormData.IncidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "OIN",
+                                RecordId: parentFormData.Id,
+                                Report: "事故跟進/結束報告",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            }).catch(console.error);
+
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -168,6 +179,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             },
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateSpecialIncidentReportLicenseRes) => {
+
+                            postLog({
+                                AccidentTime: parentFormData.IncidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SID",
+                                RecordId: parentFormData.Id,
+                                Report: "事故跟進/結束報告",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -179,6 +200,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             "NextDeadline": addMonths(new Date(), 1).toISOString(),
                         }).then((updateSpecialIncidentReportAllowanceRes) => {
                             console.log("SPECIAL_INCIDENT_REPORT_ALLOWANCE")
+
+                            postLog({
+                                AccidentTime: parentFormData.IncidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SIH",
+                                RecordId: parentFormData.Id,
+                                Report: "事故跟進/結束報告",
+                                ServiceUnit: parentFormData.ServiceLocation,
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -196,6 +227,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         "Status": "PENDING_SD_APPROVE"
                     }).then((updateOtherIncidentReportRes) => {
 
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "提交",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "OIN",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -203,12 +244,32 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         "Status": "PENDING_SD_APPROVE"
                     }).then(() => {
 
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "提交",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SIH",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
                         "Status": "PENDING_SD_APPROVE"
                     }).then(() => {
+
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "提交",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SID",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
 
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -245,6 +306,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "批准",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "OIN",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
+
                         notifyOtherIncident(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -253,6 +324,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         Status: "CLOSED"
                     }).then((updateSpecialIncidentReportLicenseRes) => {
                         console.log(updateSpecialIncidentReportLicenseRes)
+
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "批准",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SIH",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
                         notifySpecialIncidentLicense(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -260,6 +341,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     updateSpecialIncidentReportAllowance(parentFormData.Id, {
                         "Status": "CLOSED"
                     }).then(() => {
+
+                        postLog({
+                            AccidentTime: parentFormData.IncidentTime,
+                            Action: "批准",
+                            CaseNumber: parentFormData.CaseNumber,
+                            FormType: "SID",
+                            RecordId: parentFormData.Id,
+                            Report: "事故跟進/結束報告",
+                            ServiceUnit: parentFormData.ServiceLocation,
+                        }).catch(console.error);
                         notifySpecialIncidentAllowance(context, parentFormData.Id, 2);
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -279,6 +370,17 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     "SDComment": sdComment,
                 }).then((updateOtherIncidentReportRes) => {
                     console.log(updateOtherIncidentReportRes)
+
+                    postLog({
+                        AccidentTime: parentFormData.IncidentTime,
+                        Action: "拒絕",
+                        CaseNumber: parentFormData.CaseNumber,
+                        FormType: "OIN",
+                        RecordId: parentFormData.Id,
+                        Report: "事故跟進/結束報告",
+                        ServiceUnit: parentFormData.ServiceLocation,
+                    }).catch(console.error);
+
                     formSubmittedHandler();
                 }).catch(console.error);
             } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
@@ -288,6 +390,17 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     "SDComment": sdComment,
                 }).then((updateSpecialIncidentReportLicenseRes) => {
                     console.log(updateSpecialIncidentReportLicenseRes);
+
+                    postLog({
+                        AccidentTime: parentFormData.IncidentTime,
+                        Action: "拒絕",
+                        CaseNumber: parentFormData.CaseNumber,
+                        FormType: "SIH",
+                        RecordId: parentFormData.Id,
+                        Report: "事故跟進/結束報告",
+                        ServiceUnit: parentFormData.ServiceLocation,
+                    }).catch(console.error);
+
                     formSubmittedHandler();
                 }).catch(console.error);
             } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
@@ -297,6 +410,17 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     "SDComment": sdComment,
                 }).then((updateSpecialIncidentReportAllowance) => {
                     console.log(updateSpecialIncidentReportAllowance);
+
+                    postLog({
+                        AccidentTime: parentFormData.IncidentTime,
+                        Action: "拒絕",
+                        CaseNumber: parentFormData.CaseNumber,
+                        FormType: "SID",
+                        RecordId: parentFormData.Id,
+                        Report: "事故跟進/結束報告",
+                        ServiceUnit: parentFormData.ServiceLocation,
+                    }).catch(console.error);
+
                     formSubmittedHandler();
                 }).catch(console.error);
             }
@@ -312,6 +436,39 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             "SDDate": new Date().toISOString()
         }).then((res) => {
             console.log(res);
+
+            if (formType === "OTHER_INCIDENT") {
+                postLog({
+                    AccidentTime: parentFormData.IncidentTime,
+                    Action: "拒絕",
+                    CaseNumber: parentFormData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: parentFormData.Id,
+                    Report: "事故跟進/結束報告",
+                    ServiceUnit: parentFormData.ServiceLocation,
+                }).catch(console.error);
+            } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
+                postLog({
+                    AccidentTime: parentFormData.IncidentTime,
+                    Action: "拒絕",
+                    CaseNumber: parentFormData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: parentFormData.Id,
+                    Report: "事故跟進/結束報告",
+                    ServiceUnit: parentFormData.ServiceLocation,
+                }).catch(console.error);
+            } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
+                postLog({
+                    AccidentTime: parentFormData.IncidentTime,
+                    Action: "拒絕",
+                    CaseNumber: parentFormData.CaseNumber,
+                    FormType: "SID",
+                    RecordId: parentFormData.Id,
+                    Report: "事故跟進/結束報告",
+                    ServiceUnit: parentFormData.ServiceLocation,
+                }).catch(console.error);
+            }
+
             formSubmittedHandler();
         }).catch(console.error);
     }

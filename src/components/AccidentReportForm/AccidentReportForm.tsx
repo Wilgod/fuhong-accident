@@ -186,7 +186,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             RecordId: parentFormData.Id,
                             Report: "服務使用者意外報告(二)",
                             ServiceUnit: parentFormData.ServiceLocation,
-                        });
+                        }).catch(console.error);
                     } else {
                         postLog({
                             AccidentTime: parentFormData.AccidentTime,
@@ -196,7 +196,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             RecordId: parentFormData.Id,
                             Report: "外界人士意外報告(二)",
                             ServiceUnit: parentFormData.ServiceLocation,
-                        });
+                        }).catch(console.error);
                     }
 
                     formSubmittedHandler();
@@ -219,7 +219,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 RecordId: parentFormData.Id,
                                 Report: "服務使用者意外報告(二)",
                                 ServiceUnit: parentFormData.ServiceLocation,
-                            });
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error)
@@ -235,7 +235,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 RecordId: parentFormData.Id,
                                 Report: "外界人士意外報告(二)",
                                 ServiceUnit: parentFormData.ServiceLocation,
-                            });
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -317,7 +317,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                     RecordId: parentFormData.Id,
                                     Report: "服務使用者意外報告(二)",
                                     ServiceUnit: parentFormData.ServiceLocation,
-                                });
+                                }).catch(console.error);
 
                                 formSubmittedHandler()
                             }).catch(console.error);
@@ -333,7 +333,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                     RecordId: parentFormData.Id,
                                     Report: "外界人士意外報告(二)",
                                     ServiceUnit: parentFormData.ServiceLocation,
-                                });
+                                }).catch(console.error);
 
                                 formSubmittedHandler()
                             }).catch(console.error);
@@ -376,7 +376,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 RecordId: parentFormData.Id,
                                 Report: "服務使用者意外報告(二)",
                                 ServiceUnit: parentFormData.ServiceLocation,
-                            });
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -391,7 +391,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                 RecordId: parentFormData.Id,
                                 Report: "外界人士意外報告(二)",
                                 ServiceUnit: parentFormData.ServiceLocation,
-                            });
+                            }).catch(console.error);
                             formSubmittedHandler()
                         }).catch(console.error);
                     }

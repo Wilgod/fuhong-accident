@@ -19,6 +19,7 @@ import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
 import { notifySpecialIncidentAllowance } from '../../../api/Notification';
+import { postLog } from '../../../api/LogHelper';
 
 
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
@@ -453,6 +454,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
             }).then(res => {
                 console.log(res)
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "提交",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SID",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(津貼科)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -483,6 +495,26 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifySpecialIncidentAllowance(context, formData.Id, 1);
+                       
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: formData.CaseNumber,
+                                FormType: "SID",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(津貼科)"
+                            }).catch(console.error);
+                        }else{
+                            postLog({
+                                AccidentTime: caseNumber,
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SID",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(津貼科)"
+                            }).catch(console.error);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -494,6 +526,27 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifySpecialIncidentAllowance(context, res.data.Id, 1);
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交至服務總監",
+                                CaseNumber: caseNumber,
+                                FormType: "SID",
+                                RecordId: res.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(津貼科)"
+                            }).catch(console.error);
+
+                        }else{
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SID",
+                                RecordId: res.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(津貼科)"
+                            }).catch(console.error);
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -559,6 +612,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "SMComment": smComment
             }).then((res) => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "批准",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SID",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(津貼科)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -576,6 +640,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SID",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(津貼科)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -592,6 +667,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             "SMDate": new Date().toISOString(),
         }).then((res) => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "更新",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SID",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(津貼科)"
+            }).catch(console.error);
+
             formSubmittedHandler();
         }).catch(console.error);
 
@@ -620,6 +706,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "SDPhone": sdPhoneNo
                 }).then((res) => {
                     console.log(res);
+
+                    postLog({
+                        AccidentTime: incidentTime.toISOString(),
+                        Action: "批准",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SID",
+                        RecordId: formData.Id,
+                        ServiceUnit: serviceLocation,
+                        Report: "特別事故報告(津貼科)"
+                    }).catch(console.error);
+
                     notifySpecialIncidentAllowance(context, formData.Id, 1);
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -637,6 +734,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SID",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(津貼科)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         }

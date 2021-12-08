@@ -19,6 +19,7 @@ import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident } from '../../../api/Notification';
+import { postLog } from '../../../api/LogHelper';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -315,6 +316,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 "PreparationStaffId": CURRENT_USER.id,
             }).then((updateOtherIncidentReportRes) => {
                 console.log(updateOtherIncidentReportRes)
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "提交至服務經理",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "其他事故呈報表"
+                })
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -346,6 +358,26 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         console.log(updateOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifyOtherIncident(context, formData.Id, 1);
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "OIN",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "其他事故呈報表"
+                            })
+                        } else {
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: formData.CaseNumber,
+                                FormType: "OIN",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "其他事故呈報表"
+                            })
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -357,6 +389,26 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         console.log(createOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1);
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "OIN",
+                                RecordId: createOtherIncidentReportRes.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "其他事故呈報表"
+                            })
+                        } else {
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "OIN",
+                                RecordId: createOtherIncidentReportRes.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "其他事故呈報表"
+                            })
                         }
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -408,6 +460,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             "NextDeadline": addMonths(new Date(), 1).toISOString(),
         }).then((res) => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "提交至服務經理",
+                CaseNumber: formData.CaseNumber,
+                FormType: "OIN",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "其他事故呈報表"
+            })
+
             formSubmittedHandler();
         });
     }
@@ -438,6 +501,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
+
+                    postLog({
+                        AccidentTime: incidentTime.toISOString(),
+                        Action: "批准",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "OIN",
+                        RecordId: formData.Id,
+                        ServiceUnit: serviceLocation,
+                        Report: "其他事故呈報表"
+                    })
+
                     notifyOtherIncident(context, formData.Id, 1);
                     formSubmittedHandler();
                 });
@@ -456,6 +530,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 "SMDate": new Date().toISOString(),
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "其他事故呈報表"
+                })
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -473,6 +558,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             "SMDate": new Date().toISOString(),
         }).then(res => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "批准",
+                CaseNumber: formData.CaseNumber,
+                FormType: "OIN",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "其他事故呈報表"
+            })
+
             formSubmittedHandler();
         }).catch(console.error);
     }
@@ -491,6 +587,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 "SMComment": smComment
             }).then(res => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "批准",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "其他事故呈報表"
+                })
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -506,6 +613,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 ...body,
                 "Status": "SM_VOID"
             }).then((res) => {
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "其他事故呈報表"
+                })
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -518,6 +636,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             "InsuranceCaseNo": form.insuranceCaseNo
         }).then(res => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "更新",
+                CaseNumber: formData.CaseNumber,
+                FormType: "OIN",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "其他事故呈報表"
+            })
+
             formSubmittedHandler();
         }).catch(console.error);
     }

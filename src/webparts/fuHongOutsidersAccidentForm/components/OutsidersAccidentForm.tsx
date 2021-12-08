@@ -26,6 +26,7 @@ import { formInitBySm, formInitial, pendingSmApprove, pendingSptApproveForSD, pe
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifyOutsiderAccident } from '../../../api/Notification';
+import { postLog } from '../../../api/LogHelper';
 
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -108,7 +109,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
-    
+
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -369,6 +370,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "更新",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "PUI",
+                    Report: "外界人士意外填報表(一)",
+                    ServiceUnit: serviceLocation,
+                    RecordId: formData.Id
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage)) {
@@ -379,6 +391,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "評語",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "PUI",
+                    Report: "外界人士意外填報表(一)",
+                    ServiceUnit: serviceLocation,
+                    RecordId: formData.Id
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -403,16 +426,27 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }
                         }).catch(console.error);
                     }
+
+                    postLog({
+                        AccidentTime: accidentTime.toISOString(),
+                        Action: "提交",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "PUI",
+                        Report: "外界人士意外填報表(一)",
+                        ServiceUnit: serviceLocation,
+                        RecordId: formData.Id
+                    }).catch(console.error);
+
                     notifyOutsiderAccident(context, formData.Id, 1);
                     formSubmittedHandler();
                 })
             } else {
 
                 // Draft update havent implement
-                caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNubmer) => {
-                    console.log(caseNubmer);
+                caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                    console.log(caseNumber);
                     let extraBody = {
-                        "CaseNumber": caseNubmer,
+                        "CaseNumber": caseNumber,
                         "Title": "PUI",
                         "ServiceLocation": serviceLocation,
                         "Status": "PENDING_SM_APPROVE"
@@ -445,6 +479,29 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }
                                 }).catch(console.error);
                             }
+
+                            if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+                                postLog({
+                                    AccidentTime: accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "PUI",
+                                    Report: "外界人士意外填報表(一)",
+                                    ServiceUnit: serviceLocation,
+                                    RecordId: formData.Id
+                                }).catch(console.error);
+                            } else {
+                                postLog({
+                                    AccidentTime: accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "PUI",
+                                    Report: "外界人士意外填報表(一)",
+                                    ServiceUnit: serviceLocation,
+                                    RecordId: formData.Id
+                                }).catch(console.error);
+                            }
+
                             notifyOutsiderAccident(context, formData.Id, 1);
                             formSubmittedHandler();
                         })
@@ -468,9 +525,32 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         }
                                     }).catch(console.error);
                                 }
+
+                                if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+                                    postLog({
+                                        AccidentTime: accidentTime.toISOString(),
+                                        Action: "提交",
+                                        CaseNumber: caseNumber,
+                                        FormType: "PUI",
+                                        Report: "外界人士意外填報表(一)",
+                                        ServiceUnit: serviceLocation,
+                                        RecordId: createOutsiderAccidentFormRes.data.Id
+                                    }).catch(console.error);
+                                } else {
+                                    postLog({
+                                        AccidentTime: accidentTime.toISOString(),
+                                        Action: "提交",
+                                        CaseNumber: caseNumber,
+                                        FormType: "PUI",
+                                        Report: "外界人士意外填報表(一)",
+                                        ServiceUnit: serviceLocation,
+                                        RecordId: createOutsiderAccidentFormRes.data.Id
+                                    }).catch(console.error);
+                                }
+
+                                notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1);
+                                formSubmittedHandler();
                             }
-                            notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1);
-                            formSubmittedHandler();
                         }).catch(console.error);
                     }
                 }).catch(console.error);
@@ -557,6 +637,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "批准",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "PUI",
+                    Report: "外界人士意外填報表(一)",
+                    ServiceUnit: serviceLocation,
+                    RecordId: formData.Id
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -572,7 +663,19 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 "SMDate": smDate.toISOString(),
                 "Status": "SM_VOID"
             };
-            updateOutsiderAccidentFormById(formId, body).then(() => formSubmittedHandler()).catch(console.error);
+            updateOutsiderAccidentFormById(formId, body).then(() => {
+
+                postLog({
+                    AccidentTime: accidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "PUI",
+                    Report: "外界人士意外填報表(一)",
+                    ServiceUnit: serviceLocation,
+                    RecordId: formData.Id
+                }).catch(console.error);
+                formSubmittedHandler()
+            }).catch(console.error);
         }
     }
 
@@ -615,6 +718,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                                         updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
+
+                                            postLog({
+                                                AccidentTime: accidentTime.toISOString(),
+                                                Action: "批准",
+                                                CaseNumber: formData.CaseNumber,
+                                                FormType: "PUI",
+                                                Report: "外界人士意外填報表(一)",
+                                                ServiceUnit: formData.ServiceLocation,
+                                                RecordId: formData.Id
+                                            }).catch(console.error);
+
                                             notifyOutsiderAccident(context, formData.Id, 1);
                                             formSubmittedHandler()
                                         }).catch(console.error);
@@ -639,6 +753,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 "Status": "PENDING_SM_APPROVE"
             };
             updateOutsiderAccidentFormById(formId, body).then(() => {
+
+                postLog({
+                    AccidentTime: formData.AccidentTime,
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "PUI",
+                    Report: "外界人士意外填報表(一)",
+                    ServiceUnit: formData.ServiceLocation,
+                    RecordId: formData.Id
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         }

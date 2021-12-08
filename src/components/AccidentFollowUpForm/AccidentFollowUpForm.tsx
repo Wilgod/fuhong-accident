@@ -155,7 +155,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     RecordId: parentFormData.Id,
                                     Report: "意外跟進/結束表(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
-                                })
+                                }).catch(console.error)
 
                                 formSubmittedHandler();
                             }).catch(console.error);
@@ -176,7 +176,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     RecordId: parentFormData.Id,
                                     Report: "意外跟進/結束表(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
-                                })
+                                }).catch(console.error)
 
                                 formSubmittedHandler();
                             }).catch(console.error);
@@ -202,7 +202,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 RecordId: parentFormData.Id,
                                 Report: "意外跟進/結束表(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
-                            })
+                            }).catch(console.error)
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -219,7 +219,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 RecordId: parentFormData.Id,
                                 Report: "意外跟進/結束表(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
-                            })
+                            }).catch(console.error)
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -276,7 +276,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     RecordId: parentFormData.Id,
                     Report: "意外跟進/結束表(三)",
                     ServiceUnit: parentFormData.ServiceLocation
-                })
+                }).catch(console.error)
             } else {
                 postLog({
                     AccidentTime: parentFormData.AccidentTime,
@@ -286,7 +286,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     RecordId: parentFormData.Id,
                     Report: "意外跟進/結束表(三)",
                     ServiceUnit: parentFormData.ServiceLocation
-                })
+                }).catch(console.error)
             }
 
             formSubmittedHandler();
@@ -315,7 +315,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         RecordId: parentFormData.Id,
                         Report: "意外跟進/結束表(三)",
                         ServiceUnit: parentFormData.ServiceLocation
-                    })
+                    }).catch(console.error)
 
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -330,7 +330,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         RecordId: parentFormData.Id,
                         Report: "意外跟進/結束表(三)",
                         ServiceUnit: parentFormData.ServiceLocation
-                    })
+                    }).catch(console.error)
 
                     notifyOutsiderAccident(context, parentFormData.Id, 3);
                     formSubmittedHandler();
@@ -358,7 +358,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             RecordId: parentFormData.Id,
                             Report: "意外跟進/結束表(三)",
                             ServiceUnit: parentFormData.ServiceLocation
-                        });
+                        }).catch(console.error);
 
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -373,7 +373,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             RecordId: parentFormData.Id,
                             Report: "意外跟進/結束表(三)",
                             ServiceUnit: parentFormData.ServiceLocation
-                        });
+                        }).catch(console.error);
 
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -429,7 +429,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 RecordId: parentFormData.Id,
                                 Report: "意外跟進/結束表(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
-                            });
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -450,7 +450,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 RecordId: parentFormData.Id,
                                 Report: "意外跟進/結束表(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
-                            });
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
@@ -477,7 +477,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             RecordId: parentFormData.Id,
                             Report: "意外跟進/結束表(三)",
                             ServiceUnit: parentFormData.ServiceLocation
-                        });
+                        }).catch(console.error);
 
                         formSubmittedHandler();
                     }).catch(console.error);
@@ -494,7 +494,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             RecordId: parentFormData.Id,
                             Report: "意外跟進/結束表(三)",
                             ServiceUnit: parentFormData.ServiceLocation
-                        });
+                        }).catch(console.error);
 
                         formSubmittedHandler();
                     }).catch(console.error);

@@ -23,6 +23,7 @@ import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { IAttachmentFileInfo } from '@pnp/sp/attachments';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense } from '../../../api/Notification';
+import { postLog } from '../../../api/LogHelper';
 
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -450,6 +451,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "Status": "PENDING_SM_APPROVE"
             }).then(async (res) => {
                 await uploadFile(formData.Id);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "提交",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(牌照事務處)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -481,7 +493,30 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         await uploadFile(formData.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifySpecialIncidentLicense(context, formData.Id, 1);
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SIH",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(牌照事務處)"
+                            }).catch(console.error);
+                        } else {
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SIH",
+                                RecordId: formData.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(牌照事務處)"
+                            }).catch(console.error);
                         }
+
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
@@ -491,8 +526,31 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).then(async (createSpecialIncidentReportLicenseRes) => {
                         await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, formData.Id, 1);
+                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1);
+
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SIH",
+                                RecordId: createSpecialIncidentReportLicenseRes.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(牌照事務處)"
+                            }).catch(console.error);
+
+                        }else{
+                            postLog({
+                                AccidentTime: incidentTime.toISOString(),
+                                Action: "提交",
+                                CaseNumber: caseNumber,
+                                FormType: "SIH",
+                                RecordId: createSpecialIncidentReportLicenseRes.data.Id,
+                                ServiceUnit: serviceLocation,
+                                Report: "特別事故報告(牌照事務處)"
+                            }).catch(console.error);
                         }
+
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
@@ -540,6 +598,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             "InsuranceCaseNo": form.insuranceCaseNo
         }).then(res => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "更新",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SIH",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(牌照事務處)"
+            }).catch(console.error);
+
             formSubmittedHandler();
         }).catch(console.error);
     }
@@ -567,6 +636,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }
                 }).then((otherIncidentReportRes) => {
                     console.log(otherIncidentReportRes);
+
+                    postLog({
+                        AccidentTime: incidentTime.toISOString(),
+                        Action: "批准",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SIH",
+                        RecordId: formData.Id,
+                        ServiceUnit: serviceLocation,
+                        Report: "特別事故報告(牌照事務處)"
+                    }).catch(console.error);
+
                     notifySpecialIncidentLicense(context, formData.Id, 1);
                     formSubmittedHandler();
                 });
@@ -583,6 +663,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(牌照事務處)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
 
@@ -598,6 +689,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         }).then(res => {
             console.log(res);
+
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "提交至服務總監",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SIH",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(牌照事務處)"
+            }).catch(console.error);
+
             formSubmittedHandler();
         }).catch(console.error);
     }
@@ -614,6 +716,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "SMComment": smComment
             }).then(res => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "批准",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(牌照事務處)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -631,6 +744,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
+
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "拒絕",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(牌照事務處)"
+                }).catch(console.error);
+
                 formSubmittedHandler();
             }).catch(console.error);
 
