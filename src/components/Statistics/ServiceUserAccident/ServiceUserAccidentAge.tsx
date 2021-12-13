@@ -2,10 +2,7 @@ import * as React from 'react'
 import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import BootstrapTable from 'react-bootstrap-table-next';
 import * as moment from 'moment';
-import paginationFactory from 'react-bootstrap-table2-paginator';
 import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';

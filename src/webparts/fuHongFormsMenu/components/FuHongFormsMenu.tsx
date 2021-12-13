@@ -23,6 +23,7 @@ import ServiceUserAccidentPersonal from '../../../components/Statistics/ServiceU
 import CaseSummaryScreen from '../../../components/CaseSummaryScreen/CaseSummaryScreen';
 import InsuranceEmailReportScreen from '../../../components/InsuranceEmailReportScreen/InsuranceEmailReportScreen';
 import LogScreen from '../../../components/LogScreen/LogScreen';
+import General from '../../../components/Statistics/General/General';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -68,7 +69,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       formToggle: false,
       reportToggle: false,
       statToggle: false,
-      screenNav: "",
+      screenNav: "GENERAL",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
@@ -350,7 +351,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'LOG':
           return <LogScreen context={this.props.context} />
         case 'GENERAL':
-          return <div>GENERAL</div>
+          return <General />
         case 'SUI_AGE':
           return <ServiceUserAccidentAge />
         case 'SUI_SEX':

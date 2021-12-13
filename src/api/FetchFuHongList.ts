@@ -260,7 +260,7 @@ export async function getOutsiderAccident(spId: number, searchCriteria?: ISearch
                 filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
             }
         }
-        console.log(filterQuery);
+        
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .getAll();
