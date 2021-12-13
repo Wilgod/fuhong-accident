@@ -22,9 +22,9 @@ export async function getServiceUserAccidentAge(searchCriteria: ISearchCriteria)
             let su = "";
             searchCriteria.serviceUnits.forEach((item, index) => {
                 if (index === 0) {
-                    su = `ServiceUnit eq '${item}'`;
+                    su = `ServiceLocation eq '${item}'`;
                 } else {
-                    su += `ServiceUnit eq '${item}'`;
+                    su += `ServiceLocation eq '${item}'`;
                 }
 
                 if (index !== searchCriteria.serviceUnits.length - 1) {

@@ -13,7 +13,7 @@ export interface ISearchCriteria {
 
 export default function useFetchAllForms(spId: number, searchCriteria: ISearchCriteria) {
     const [result, setResult] = useState([]);
-    console.log(searchCriteria);
+   
     const initial = async () => {
         let result = [];
         // let searchFormTypesAll = true;

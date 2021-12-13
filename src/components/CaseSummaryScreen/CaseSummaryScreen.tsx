@@ -7,6 +7,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
+import useServiceLocation from '../../hooks/useServiceLocation';
 interface ICaseSummaryScreenProps {
     context: WebPartContext;
 }
@@ -15,7 +16,7 @@ function CaseSummaryScreen({ context }: ICaseSummaryScreenProps) {
 
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceUnitList] = useServiceUnit2();
+    const [serviceLocation] = useServiceLocation();
     const [data, setData] = useState([]);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -65,13 +66,11 @@ function CaseSummaryScreen({ context }: ICaseSummaryScreenProps) {
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {serviceUnitList.sort((a, b) => {
-                            return a.Title.localeCompare(b.Title)
-                        }).map((item) => {
-                            if (item && item.Title) {
-                                return <option value={item.Title}>{item.Title}</option>
-                            }
-                        })}
+                        {
+                            serviceLocation.map((item) => {
+                                return <option value={item}>{item}</option>
+                            })
+                        }
                     </select>
                 </div>
                 <div className="col" >

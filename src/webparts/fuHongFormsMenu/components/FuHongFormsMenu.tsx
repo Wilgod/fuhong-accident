@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { getAllServiceUnit } from '../../../api/FetchUser';
 import { IUser } from '../../../interface/IUser';
-import { over } from 'lodash';
+import { locationFilterParser } from '../../../hooks/useServiceLocation';
 import ServiceUserAccidentAge from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentAge';
 import { TagItemSuggestion } from 'office-ui-fabric-react';
 import ServiceUserAccidentSex from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentSex';
@@ -93,7 +93,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private initialState = async () => {
     const serviceUnitList = await getAllServiceUnit();
-    this.setState({ serviceUnitList });
+    const serviceLocations = locationFilterParser(serviceUnitList);
+
+    this.setState({ serviceUnitList: serviceLocations });
   }
 
   private formToggleHandler = (event) => {
@@ -427,12 +429,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       this.setState({ searchServiceUnit: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
-                      {this.state.serviceUnitList.sort((a, b) => {
-                        return a.Title.localeCompare(b.Title)
-                      }).map((item) => {
-                        if (item && item.Title) {
-                          return <option value={item.Title}>{item.Title}</option>
-                        }
+                      {this.state.serviceUnitList.map((item) => {
+                        return <option value={item}>{item}</option>
                       })}
                     </select>
                   </div>

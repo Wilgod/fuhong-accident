@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import useLog from '../../hooks/useLog';
+import useServiceLocation from '../../hooks/useServiceLocation';
 interface ILogScreenProps {
     context: WebPartContext;
 }
@@ -15,7 +16,7 @@ interface ILogScreenProps {
 function LogScreen({ context }: ILogScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceUnitList] = useServiceUnit2();
+    const [serviceLocation] = useServiceLocation();
     const [data, setData] = useState([]);
     const [log] = useLog();
 
@@ -66,13 +67,11 @@ function LogScreen({ context }: ILogScreenProps) {
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {serviceUnitList.sort((a, b) => {
-                            return a.Title.localeCompare(b.Title)
-                        }).map((item) => {
-                            if (item && item.Title) {
-                                return <option value={item.Title}>{item.Title}</option>
-                            }
-                        })}
+                        {
+                            serviceLocation.map((item) => {
+                                return <option value={item}>{item}</option>
+                            })
+                        }
                     </select>
                 </div>
                 <div className="col" >

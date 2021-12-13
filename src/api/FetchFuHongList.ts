@@ -87,9 +87,9 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceUnit eq '${item}'`;
+                        su = `ServiceLocation eq '${item}'`;
                     } else {
-                        su += `ServiceUnit eq '${item}'`;
+                        su += `ServiceLocation eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -104,7 +104,7 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
                 filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
             }
         }
-        console.log(searchCriteria)
+        
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .getAll();
@@ -243,9 +243,9 @@ export async function getOutsiderAccident(spId: number, searchCriteria?: ISearch
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceUnit eq '${item}'`;
+                        su = `ServiceLocation eq '${item}'`;
                     } else {
-                        su += `ServiceUnit eq '${item}'`;
+                        su += `ServiceLocation eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -337,9 +337,9 @@ export async function getOtherIncidentReport(spId: number, searchCriteria?: ISea
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceUnit eq '${item}'`;
+                        su = `ServiceLocation eq '${item}'`;
                     } else {
-                        su += `ServiceUnit eq '${item}'`;
+                        su += `ServiceLocation eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -428,9 +428,9 @@ export async function getSpecialIncidentReportLicense(spId: number, searchCriter
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceUnit eq '${item}'`;
+                        su = `ServiceLocation eq '${item}'`;
                     } else {
-                        su += `ServiceUnit eq '${item}'`;
+                        su += `ServiceLocation eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -518,9 +518,9 @@ export async function getSpecialIncidentReportAllowance(spId: number, searchCrit
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceUnit eq '${item}'`;
+                        su = `ServiceLocation eq '${item}'`;
                     } else {
-                        su += `ServiceUnit eq '${item}'`;
+                        su += `ServiceLocation eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {

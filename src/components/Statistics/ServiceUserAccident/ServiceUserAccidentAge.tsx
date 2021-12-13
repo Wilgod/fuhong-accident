@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
 import Chart from "react-google-charts";
+import useServiceLocation from '../../../hooks/useServiceLocation';
 // import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
 // import { Pie, Bar } from 'react-chartjs-2';
 // ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
@@ -80,7 +81,7 @@ function ServiceUserAccidentAge() {
 
     const [groupBy, setGroupBy] = useState("NON");
     const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
-    const [serviceUnitList] = useServiceUnit2();
+    const [serivceLocation] = useServiceLocation();
     const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserAge();
 
     const multipleOptionsSelectParser = (event) => {
@@ -310,13 +311,9 @@ function ServiceUserAccidentAge() {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {serviceUnitList.sort((a, b) => {
-                            return a.Title.localeCompare(b.Title)
-                        }).map((item) => {
-                            if (item && item.Title) {
-                                return <option value={item.Title}>{item.Title}</option>
-                            }
-                        })}
+                        {
+                            serivceLocation.map((item) => <option value={item}>{item}</option>)
+                        }
                     </select>
                 </div>
                 <div className="col"></div>

@@ -1,5 +1,3 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react';
 import { MSGraphClient } from '@microsoft/sp-http';
 import { sp, extractWebUrl } from "@pnp/sp";
 import { Web } from "@pnp/sp/webs"
@@ -18,7 +16,7 @@ export async function getUserInfoByEmail(email: string) {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getUserInfoByEmail error");
+        throw new Error("getUserInfoByEmail error");
     }
 }
 
@@ -30,7 +28,7 @@ export async function getUserInfoByEmailInUserInfoAD(email: string) {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getUserInfoByEmailInUserInfoAD error");
+        throw new Error("getUserInfoByEmailInUserInfoAD error");
     }
 }
 
@@ -42,7 +40,7 @@ export async function getDepartmentByShortName(shortName: string) {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getDepartmentByShortName error");
+        throw new Error("getDepartmentByShortName error");
     }
 }
 
@@ -54,7 +52,7 @@ export async function getAllServiceUnit() {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getDepartmentByShortName error");
+        throw new Error("getDepartmentByShortName error");
     }
 }
 
@@ -65,7 +63,7 @@ export async function getUserAdByGraph(email: string) {
         return matchingUser;
     } catch (err) {
         console.error(err);
-        throw Error("Get User AD By Graph error");
+        throw new Error("Get User AD By Graph error");
     }
 }
 
@@ -77,7 +75,7 @@ export async function getServiceManagersByGraph() {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("Get User AD By Graph error");
+        throw new Error("Get User AD By Graph error");
     }
 }
 
@@ -89,7 +87,7 @@ export async function getServiceDirectorsByGraph() {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getServiceDirectorsByGraph error");
+        throw new Error("getServiceDirectorsByGraph error");
     }
 }
 
@@ -97,7 +95,7 @@ export async function getServiceDirectorsByGraph() {
 export async function getSeniorPhysiotherapistByGraph() {
     try {
         let query = `jobTitle eq 'Senior Physiotherapist'`
-        
+
         // Testing account
         if (true) {
             query += ` or mail eq 't_cms_spt@fuhong.org'`;
@@ -106,6 +104,6 @@ export async function getSeniorPhysiotherapistByGraph() {
         return result;
     } catch (err) {
         console.error(err);
-        throw Error("getSeniorPhysiotherapistByGraph error");
+        throw new Error("getSeniorPhysiotherapistByGraph error");
     }
 }
