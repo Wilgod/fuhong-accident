@@ -15,7 +15,7 @@ import { IUser } from '../../../interface/IUser';
 import { locationFilterParser } from '../../../hooks/useServiceLocation';
 import ServiceUserAccidentAge from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentAge';
 import { TagItemSuggestion } from 'office-ui-fabric-react';
-import ServiceUserAccidentSex from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentSex';
+import ServiceUserAccidentSex from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentGender';
 import ServiceUserAccidentIntelligence from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentIntelligence';
 import ServiceUserAccidentASD from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentASD';
 import ServiceUserAccidentEnv from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentEnv';
@@ -69,7 +69,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       formToggle: false,
       reportToggle: false,
       statToggle: false,
-      screenNav: "GENERAL",
+      screenNav: "SUI_ASD",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
@@ -191,7 +191,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                 </div>
               </li>
               <li>
-                <div onClick={(event) => this.screenNavHandler(event, "SUI_SEX")}>
+                <div onClick={(event) => this.screenNavHandler(event, "SUI_GENDER")}>
                   性別
                 </div>
               </li>
@@ -354,7 +354,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           return <General />
         case 'SUI_AGE':
           return <ServiceUserAccidentAge />
-        case 'SUI_SEX':
+        case 'SUI_GENDER':
           return <ServiceUserAccidentSex />
         case 'SUI_INTELLIGENCE':
           return <ServiceUserAccidentIntelligence />

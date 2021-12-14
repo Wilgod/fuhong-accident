@@ -3,81 +3,46 @@ import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as moment from 'moment';
-import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
-import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
+import Chart from "react-google-charts";
+import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 
-
-//Age interval
 interface IDataset {
-    lessThanFifteen: number;
-    fifteenToTwenty: number;
-    twentyOneToThirty: number;
-    thirtyOneToforty: number;
-    fortyOneTofifty: number;
-    fiftyOneToSixty: number;
-    greaterThanSixty: number;
+    male: number;
+    female: number;
 }
 
 const initialDataset: IDataset = {
-    lessThanFifteen: 0,
-    fifteenToTwenty: 0,
-    twentyOneToThirty: 0,
-    thirtyOneToforty: 0,
-    fortyOneTofifty: 0,
-    fiftyOneToSixty: 0,
-    greaterThanSixty: 0,
+    male: 0,
+    female: 0
 }
 
-const agefilter = (age: number, dataset: IDataset): IDataset => {
+const sexFilter = (sex: string, dataset: IDataset) => {
     let result = dataset;
-    if (age < 15) {
-        result.lessThanFifteen = result.lessThanFifteen + 1;
-    } else if (age >= 15 && age <= 20) {
-        result.fifteenToTwenty = result.fifteenToTwenty + 1;
-    } else if (age >= 21 && age <= 30) {
-        result.twentyOneToThirty = result.twentyOneToThirty + 1;
-    } else if (age >= 31 && age <= 40) {
-        result.thirtyOneToforty = result.thirtyOneToforty + 1;
-    } else if (age >= 41 && age <= 50) {
-        result.fortyOneTofifty = result.fortyOneTofifty + 1;
-    } else if (age >= 51 && age <= 60) {
-        result.fifteenToTwenty = result.fifteenToTwenty + 1;
-    } else {
-        result.greaterThanSixty = result.greaterThanSixty + 1;
+    if (sex.toLocaleLowerCase() === "female") {
+        result.female += 1;
+    } else if (sex.toLocaleLowerCase() === "male") {
+        result.male += 1;
     }
     return result;
 }
 
-const sampleOneParser = (serviceUserAge: any[]) => {
+const sampleOneParser = (serviceUserGender: any[]) => {
     let dataset: IDataset = { ...initialDataset };
-    serviceUserAge.forEach((item) => {
-        dataset = agefilter(item.ServiceUserAge, dataset);
+    serviceUserGender.forEach((item) => {
+        dataset = sexFilter(item.ServiceUserGender, dataset);
     });
     return dataset;
 }
 
-const sampleTwoParser = (serviceUserAge: any[]): Map<string, IDataset> => {
-    const result = new Map<string, IDataset>();
-    serviceUserAge.forEach((item) => {
-        const year = new Date(item.AccidentTime).getFullYear();
-        if (result.has(`${year}`)) {
-            let dataset = result.get(`${year}`);
 
-        } else {
-
-        }
-    });
-    return result;
-}
-
-function ServiceUserAccidentAge() {
-
+function ServiceUserAccidentGender() {
     const [groupBy, setGroupBy] = useState("NON");
-    const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
+    const [genderDataset, setGenderDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
-    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
-    
+    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -98,47 +63,17 @@ function ServiceUserAccidentAge() {
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">&lt;15歲</th>
-                        <th>{ageDataset.lessThanFifteen}</th>
+                        <th scope="row">男</th>
+                        <th>{genderDataset.male}</th>
                     </tr>
                     <tr>
-                        <th scope="row">15-20歲</th>
-                        <th>{ageDataset.fifteenToTwenty}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">21-30歲</th>
-                        <th>{ageDataset.twentyOneToThirty}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">31-40歲</th>
-                        <th>{ageDataset.thirtyOneToforty}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">41-50歲</th>
-                        <th>{ageDataset.fortyOneTofifty}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">&gt;60歲</th>
-                        <th>{ageDataset.greaterThanSixty}</th>
+                        <th scope="row">女</th>
+                        <th>{genderDataset.female}</th>
                     </tr>
                 </tbody>
             </table >
         )
     }
-
-    useEffect(() => {
-        switch (groupBy) {
-            case "NON":
-                setAgeDataset(sampleOneParser(serviceUserAge));
-            case "BY_MONTH":
-            case "BY_MONTH_FINICIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINICIAL":
-            case "BY_YEAR_CALENDAR":
-            default:
-                console.log("default");
-        }
-    }, [groupBy, serviceUserAge])
 
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
@@ -153,7 +88,7 @@ function ServiceUserAccidentAge() {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 年齡統計`}</h6>
+                                <h6>{`${title} - 性別統計`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -187,7 +122,7 @@ function ServiceUserAccidentAge() {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        服務使用者意外 - 年齡統計
+                                        服務使用者意外 - 性別統計
                                     </div>
                                 </div>
                                 <div className="">
@@ -195,14 +130,9 @@ function ServiceUserAccidentAge() {
                                         chartType={"Bar"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
-                                            ["年齡", "年齡"],
-                                            ["<15歲", ageDataset.lessThanFifteen],
-                                            ["15-20歲", ageDataset.fifteenToTwenty],
-                                            ["21-30歲", ageDataset.twentyOneToThirty],
-                                            ["31-40歲", ageDataset.thirtyOneToforty],
-                                            ["41-50歲", ageDataset.fortyOneTofifty],
-                                            ["51-60歲", ageDataset.fiftyOneToSixty],
-                                            [">60歲", ageDataset.greaterThanSixty],
+                                            ["性別", "數量"],
+                                            ["男", genderDataset.male],
+                                            ["女", genderDataset.female],
                                         ]}
                                     />
 
@@ -214,7 +144,7 @@ function ServiceUserAccidentAge() {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        服務使用者意外 - 年齡統計
+                                        服務使用者意外 - 性別統計
                                     </div>
                                 </div>
                                 <Chart
@@ -222,14 +152,9 @@ function ServiceUserAccidentAge() {
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
-                                            ["年齡", '年齡'],
-                                            ["<15歲", ageDataset.lessThanFifteen],
-                                            ["15-20歲", ageDataset.fifteenToTwenty],
-                                            ["21-30歲", ageDataset.twentyOneToThirty],
-                                            ["31-40歲", ageDataset.thirtyOneToforty],
-                                            ["41-50歲", ageDataset.fortyOneTofifty],
-                                            ["51-60歲", ageDataset.fiftyOneToSixty],
-                                            [">60歲", ageDataset.greaterThanSixty],
+                                            ["性別", "數量"],
+                                            ["男", genderDataset.male],
+                                            ["女", genderDataset.female],
                                         ]
                                     }
                                 />
@@ -247,11 +172,26 @@ function ServiceUserAccidentAge() {
         }
     }
 
+    useEffect(() => {
+        switch (groupBy) {
+            case "NON":
+                console.log(data);
+                setGenderDataset(sampleOneParser(data));
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                console.log("default");
+        }
+    }, [groupBy, data])
+
     return (
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 年齡</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 性別</h6>
                 </div>
             </div>
 
@@ -299,6 +239,7 @@ function ServiceUserAccidentAge() {
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
+
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
@@ -320,7 +261,6 @@ function ServiceUserAccidentAge() {
                     統計資料
                 </div>
                 {statsTableSwitch()}
-                {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
                 <div className="" style={{ fontWeight: 600 }}>
@@ -328,8 +268,8 @@ function ServiceUserAccidentAge() {
                 </div>
                 {chartSwitch()}
             </div>
-        </div >
+        </div>
     )
 }
 
-export default ServiceUserAccidentAge
+export default ServiceUserAccidentGender

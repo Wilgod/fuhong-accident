@@ -25,7 +25,7 @@ const initialDataset: IDataset = {
 
 const unitFilter = (formType: string, dataset: IDataset) => {
     let result = dataset;
-    console.log("")
+
     switch (formType) {
         case "SUI":
             result.sui = result.sui + 1;
@@ -43,7 +43,7 @@ const unitFilter = (formType: string, dataset: IDataset) => {
             result.oin = result.oin + 1;
             return result;
         default:
-            throw new Error("unitFilter error");
+            return result;
     }
 }
 
@@ -132,7 +132,7 @@ function General() {
     }, [groupBy, data])
 
     const statsTableSwitch = () => {
-        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
         switch (groupBy) {
             case "NON":
                 return (
@@ -176,7 +176,7 @@ function General() {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                    新發生意外或事故總數
+                                        新發生意外或事故總數
                                     </div>
                                 </div>
                                 <div className="">

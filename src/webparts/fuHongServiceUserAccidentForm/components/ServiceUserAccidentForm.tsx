@@ -62,8 +62,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
-    console.log(serviceUser);
-    console.log(serviceUserRecordId);
+
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2();
     const [serviceUnit, setServiceUnit] = useState("");
     const [serviceLocation, setServiceLocation] = useState("");

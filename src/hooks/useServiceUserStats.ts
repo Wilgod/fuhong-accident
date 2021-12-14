@@ -1,21 +1,20 @@
-import { getServiceUserAccidentAge } from "../api/FetchFuHongListStats";
-import { useEffect, useState } from 'react';
+import { getServiceUserStats } from "../api/FetchFuHongListStats";
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 
 // Stats
-export function useServiceUserAge(): any {
-    const [data, setData] = useState([]);
+export function useServiceUserStats(): [any[], Date, Date, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
+    const [data, setData] = useState<any[]>([]);
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
 
     useEffect(() => {
-        getServiceUserAccidentAge({
+        getServiceUserStats({
             startDate: startDate,
             endDate: endDate,
             serviceUnits: serviceUnits
         }).then((res) => {
-            console.log(res);
             setData(res);
         }).catch(console.error)
     }, [startDate, endDate, serviceUnits]);
