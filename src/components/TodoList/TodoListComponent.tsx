@@ -45,7 +45,7 @@ const columns = (context) => {
             }
         },
         {
-            dataField: 'ServiceUnit',
+            dataField: 'ServiceLocation',
             text: '服務單位',
             sort: true
         },

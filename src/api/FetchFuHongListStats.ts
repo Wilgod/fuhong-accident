@@ -182,7 +182,7 @@ export async function getNewOtherIncidentReport(searchCriteria: ISearchCriteria)
 }
 
 // Stats
-// Form 19 統計資料 - 年齡 
+// Form 19 統計資料 
 export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Service User Accident";
@@ -207,7 +207,7 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD")
+            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor")
             .filter(filterQuery)
             .getAll();
         return items
