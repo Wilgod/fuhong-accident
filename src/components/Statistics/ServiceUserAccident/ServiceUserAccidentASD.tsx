@@ -2,17 +2,45 @@ import * as React from 'react'
 import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import BootstrapTable from 'react-bootstrap-table-next';
 import * as moment from 'moment';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import useServiceLocation from '../../../hooks/useServiceLocation';
+import Chart from "react-google-charts";
+import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 
+interface IDataset {
+    asdTrue: number;
+    asdFalse: number;
+}
+
+const initialDataset: IDataset = {
+    asdTrue: 0,
+    asdFalse: 0
+}
+
+const asdFilter = (asd: boolean, dataset: IDataset) => {
+    let result = dataset;
+    if (asd === true) {
+        result.asdTrue += 1;
+    } else if (asd === false) {
+        result.asdFalse += 1;
+    }
+    return result;
+}
+
+const sampleOneParser = (serviceUserASD: any[]) => {
+    let dataset: IDataset = { ...initialDataset };
+    serviceUserASD.forEach((item) => {
+        dataset = asdFilter(item.ASD, dataset);
+    });
+    return dataset;
+}
+
+//自閉症譜系障礙
 function ServiceUserAccidentASD() {
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
-    const [groupBy, setGroupBy] = useState("");
-    const [serviceUnits, setServiceUnits] = useState<string[]>([]);
-    const [serviceUnitList] = useServiceUnit2();
+    const [groupBy, setGroupBy] = useState("NON");
+    const [asdDataset, setAsdDataset] = useState<IDataset>(initialDataset);
+    const [serivceLocation] = useServiceLocation();
+    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -23,11 +51,144 @@ function ServiceUserAccidentASD() {
         return result;
     }
 
+    const byMonthTableComponent = () => {
+        return (
+            <table className="table" >
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th>總數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">自閉症譜系障礙 (ASD)</th>
+                        <th>{asdDataset.asdTrue}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">沒有自閉症譜系障礙 (ASD)</th>
+                        <th>{asdDataset.asdFalse}</th>
+                    </tr>
+                </tbody>
+            </table >
+        )
+    }
+
+    const statsTableSwitch = () => {
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        switch (groupBy) {
+            case "NON":
+                return (
+                    <React.Fragment>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 自閉症譜系障礙 (ASD)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-7">
+                                {byMonthTableComponent()}
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                return null;
+        }
+    }
+
+    const chartSwitch = () => {
+        switch (groupBy) {
+            case "NON":
+                return (
+                    <React.Fragment>
+                        <div className="row">
+                            <div className="col-6">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        自閉症譜系障礙 (ASD)
+                                    </div>
+                                </div>
+                                <div className="">
+                                    <Chart
+                                        chartType={"Bar"}
+                                        loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        data={[
+                                            ["智力障礙程度", "數量"],
+                                            ["輕度", asdDataset.asdTrue],
+                                            ["中度", asdDataset.asdFalse],
+                                        ]}
+                                    />
+
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        自閉症譜系障礙 (ASD)
+                                    </div>
+                                </div>
+                                <Chart
+                                    chartType={"PieChart"}
+                                    loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                    data={
+                                        [
+                                            ["智力障礙程度", "數量"],
+                                            ["輕度", asdDataset.asdTrue],
+                                            ["中度", asdDataset.asdFalse],
+                                        ]
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                console.log("default");
+        }
+    }
+
+    useEffect(() => {
+        switch (groupBy) {
+            case "NON":
+                console.log(data);
+                setAsdDataset(sampleOneParser(data));
+            case "BY_MONTH":
+            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                console.log("default");
+        }
+    }, [groupBy, data])
+
     return (
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 性別</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 自閉症譜系障礙 (ASD)</h6>
                 </div>
             </div>
 
@@ -82,13 +243,9 @@ function ServiceUserAccidentASD() {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {serviceUnitList.sort((a, b) => {
-                            return a.Title.localeCompare(b.Title)
-                        }).map((item) => {
-                            if (item && item.Title) {
-                                return <option value={item.Title}>{item.Title}</option>
-                            }
-                        })}
+                        {
+                            serivceLocation.map((item) => <option value={item}>{item}</option>)
+                        }
                     </select>
                 </div>
                 <div className="col"></div>
@@ -100,129 +257,16 @@ function ServiceUserAccidentASD() {
                 <div className="mb-2" style={{ fontWeight: 600 }}>
                     統計資料
                 </div>
-                <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} />
+                {statsTableSwitch()}
             </div>
             <div className="">
                 <div className="" style={{ fontWeight: 600 }}>
                     統計圖表
                 </div>
+                {chartSwitch()}
             </div>
         </div>
     )
 }
 
 export default ServiceUserAccidentASD
-
-const columns = () => {
-
-    return [
-        {
-            dataField: 'CaseNumber',
-            text: '檔案編號',
-            sort: true
-        },
-        {
-            dataField: 'AccidentTime',
-            text: '發生日期',
-            formatter: (value, data) => {
-                let date = value;
-                if (data.AccidentTime) {
-                    date = data.AccidentTime;
-                } else {
-                    date = data.IncidentTime;
-                }
-                return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date().getTime();
-                let bTime = new Date().getTime();
-
-                if (rowA.AccidentTime) {
-                    aTime = new Date(rowA.AccidentTime).getTime();
-                } else {
-                    aTime = new Date(rowA.IncidentTime).getTime();
-                }
-
-
-                if (rowB.AccidentTime) {
-                    bTime = new Date(rowB.AccidentTime).getTime();
-                } else {
-                    bTime = new Date(rowB.IncidentTime).getTime();
-                }
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
-        },
-        {
-            dataField: 'ServiceUnit',
-            text: '服務單位',
-            sort: true
-        },
-        {
-            dataField: 'CaseNumber',
-            text: '意外/事故',
-            sort: true,
-        },
-        {
-            dataField: 'Status',
-            text: '狀態',
-            sort: true
-        },
-        {
-            dataField: 'Modified',
-            text: '最後更新報告',
-            formatter: (value, data) => {
-                return <div> {moment(new Date(value)).format("YYYY-MM-DD")}</div>
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date(rowA.Modified).getTime();
-                let bTime = new Date(rowB.Modified).getTime();
-
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
-        },
-        {
-            dataField: 'NextDeadline',
-            text: '下個報告到期日',
-            formatter: (value, data) => {
-                if (data && (data.Status === "CLOSED" || data.Status === "DRAFT")) {
-                    return <div>沒有</div>
-                } else {
-                    return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
-                }
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date(rowA.NextDeadline || new Date().getTime()).getTime();
-                let bTime = new Date(rowB.NextDeadline || new Date().getTime()).getTime();
-
-                if (rowA.Status === "CLOSED") {
-                    aTime = new Date(new Date().setFullYear(1970)).getTime();
-                }
-
-                if (rowA.Status === "CLOSED") {
-                    bTime = new Date(new Date().setFullYear(1970)).getTime();
-                }
-
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
-        },
-        {
-            dataField: 'Id',
-            text: '',
-        }
-    ]
-};
