@@ -6,10 +6,7 @@ import * as moment from 'moment';
 import { useServiceUserAge } from '../../../hooks/useServiceUserAge';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
-// import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, BarElement, LinearScale, CategoryScale } from 'chart.js';
-// import { Pie, Bar } from 'react-chartjs-2';
-// ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
-const labels = ["<15歲", "15-20歲", "21-30歲", "31-40歲", "41-50歲", "51-60歲", ">60歲"];
+
 
 //Age interval
 interface IDataset {
@@ -80,7 +77,7 @@ function ServiceUserAccidentAge() {
     const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
     const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserAge();
-
+    
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;

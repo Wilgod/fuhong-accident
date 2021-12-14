@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { getAllServiceUnit } from "../api/FetchUser";
 
 export function locationFilterParser(serviceUnit: any[]) {
-    console.log(serviceUnit);
     let result = [];
     const s = new Set();
     if (Array.isArray(serviceUnit)) {

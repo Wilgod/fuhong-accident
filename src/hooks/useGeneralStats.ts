@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getNewServiceUserAccident, getNewOutsiderAccident, getNewOtherIncidentReport, getNewSpecialIncidentReportAllowance, getNewSpecialIncidentReportLicense, ISearchCriteria } from '../api/FetchFuHongListStats';
 
-export default function useGeneralStats(): [number, number] {
-    const [data, setData] = useState([]);
+
+export default function useGeneralStats(): [any[], Date, Date, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
+    const [data, setData] = useState<any[]>([]);
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
@@ -16,19 +17,19 @@ export default function useGeneralStats(): [number, number] {
         const license = await getNewSpecialIncidentReportLicense(searchCriteria);
 
 
-        let result = [...serviceUserAccident, ...outsiderAccident, ...otherIncident, ...allowance, ...license];
-        return result.sort((a, b) => {
+        let result = [...serviceUserAccident, ...outsiderAccident, ...otherIncident, ...allowance, ...license].sort((a, b) => {
             let aTime = new Date(a.AccidentTime || a.IncidentTime).getTime();
             let bTime = new Date(b.AccidentTime || b.IncidentTime).getTime();
             return aTime - bTime;
         });
+        setData(result);
     }
 
 
     useEffect(() => {
-
+        initialState()
     }, [startDate, endDate, serviceUnits])
 
-    let a: [number, number, number] = [1, 2, 3]
-    return [1, 2]
+
+    return [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits]
 }
