@@ -697,7 +697,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         "Status": "PENDING_SM_APPROVE"
                     };
 
-                  
+
 
                     //SM Auto approve go to next step
                     if (CURRENT_USER.email === spSmInfo.Email) {
@@ -733,7 +733,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, formData.Id, 1);
                             }
-                        
+
 
                             postLog({
                                 AccidentTime: accidentTime.toISOString(),
@@ -776,16 +776,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1);
                             }
-                            
+
                             postLog({
                                 AccidentTime: accidentTime.toISOString(),
                                 Action: "提交",
                                 CaseNumber: caseNumber,
                                 FormType: "SUI",
-                                RecordId: formData.Id,
+                                RecordId: createServiceUserAccidentRes.data.Id,
                                 Report: "服務使用者意外填報表(一)",
                                 ServiceUnit: serviceLocation
-                            })
+                            }).catch(console.error);
 
                             formSubmittedHandler();
                         }).catch(console.error);
