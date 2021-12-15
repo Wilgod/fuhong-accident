@@ -26,6 +26,8 @@ import LogScreen from '../../../components/LogScreen/LogScreen';
 import General from '../../../components/Statistics/General/General';
 import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentEnv';
 import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
+import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/AllowanceCategory';
+import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -370,9 +372,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'SIH_CATEGORY':
           return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':
-          return <div>SID_CATEGORY</div>
+          return <AllowanceCategory />
         case 'SID_NATURE':
-          return <div>SID_NATURE</div>
+          return <AllowanceNature />
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
