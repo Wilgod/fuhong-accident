@@ -216,3 +216,37 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
         throw new Error("getServiceUserAccidentAge error");
     }
 }
+// Form 22 統計資料
+export async function getOutsiderStats(searchCriteria: ISearchCriteria) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+
+        let filterQuery = `Status eq 'CLOSED'`;
+        filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "AccidentTime", "EnvSlipperyGround", "EnvUnevenGround", "EnvObstacleItems", "EnvInsufficientLight", "EnvNotEnoughSpace", "EnvAcousticStimulation", "EnvCollidedByOthers", "EnvHurtByOthers", "EnvImproperEquip", "EnvOther")
+            .filter(filterQuery)
+            .getAll();
+        return items
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccidentAge error");
+    }
+}

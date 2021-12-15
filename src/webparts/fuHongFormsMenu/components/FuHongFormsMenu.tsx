@@ -24,6 +24,8 @@ import CaseSummaryScreen from '../../../components/CaseSummaryScreen/CaseSummary
 import InsuranceEmailReportScreen from '../../../components/InsuranceEmailReportScreen/InsuranceEmailReportScreen';
 import LogScreen from '../../../components/LogScreen/LogScreen';
 import General from '../../../components/Statistics/General/General';
+import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentEnv';
+import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -237,11 +239,6 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   意外成因 - 環境因素
                 </div>
               </li>
-              <li>
-                <div onClick={(event) => this.screenNavHandler(event, "PUI_PERSONAL")}>
-                  意外成因 - 個人因素
-                </div>
-              </li>
             </ul>
           </li>
           <li>
@@ -367,11 +364,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'SUI_PERSONAL':
           return <ServiceUserAccidentPersonal />
         case 'PUI_NATURE':
-          return <div>PUI_NATURE</div>
+          return <OutsiderAccidentNature />
         case 'PUI_ENV':
-          return <div>PUI_ENV</div>
-        case 'PUI_PERSONAL':
-          return <div>PUI_PERSONAL</div>
+          return <OutsiderAccidentEnv />
         case 'SIH_CATEGORY':
           return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':
