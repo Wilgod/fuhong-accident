@@ -15,7 +15,7 @@ import "./react-tabs.css";
 import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getSpecialIncidentReportLicenseById } from '../../../api/FetchFuHongList';
+import { getAdmin, getSpecialIncidentReportLicenseById } from '../../../api/FetchFuHongList';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -95,6 +95,14 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
+
+        getAdmin().then((admin) => {
+          admin.forEach((item) => {
+            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.ADMIN });
+            }
+          })
+        }).catch(console.error)
 
         this.checkRole();// Testing Only 
       }).catch(console.error);

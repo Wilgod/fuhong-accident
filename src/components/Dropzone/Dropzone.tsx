@@ -35,7 +35,7 @@ const Container = styled.div`
 
 
 export default function StyledDropzone(props) {
-    console.log(props.uploadedFiles)
+    
     const [files, setFiles] = useState([]);
     const {
         getRootProps,

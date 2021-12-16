@@ -4,6 +4,19 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { ISearchCriteria } from "../hooks/useFetchAllForms";
 
+export async function getAdmin() {
+    try {
+        const LIST_NAME = "Admin";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("*", "Admin/Id", "Admin/EMail", 'Admin/Title')
+            .expand("Admin")
+            .get()
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
 
 export async function getServiceUnits() {
     try {
@@ -104,7 +117,7 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
                 filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
             }
         }
-        
+
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .getAll();
@@ -260,7 +273,7 @@ export async function getOutsiderAccident(spId: number, searchCriteria?: ISearch
                 filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
             }
         }
-        
+
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .getAll();

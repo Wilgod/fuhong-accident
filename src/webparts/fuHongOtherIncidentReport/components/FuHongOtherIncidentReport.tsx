@@ -15,7 +15,7 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getUserAdByGraph } from '../../../api/FetchUser';
-import { getOtherIncidentReportById } from '../../../api/FetchFuHongList';
+import { getAdmin, getOtherIncidentReportById } from '../../../api/FetchFuHongList';
 
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -106,6 +106,14 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
+
+        getAdmin().then((admin) => {
+          admin.forEach((item) => {
+            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.ADMIN });
+            }
+          })
+        }).catch(console.error)
 
         this.checkRole();// Testing Only 
       }).catch(console.error);

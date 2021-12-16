@@ -14,7 +14,7 @@ import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/Accid
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { getAdmin, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 
@@ -106,6 +106,14 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
           }
         }
 
+        getAdmin().then((admin) => {
+          admin.forEach((item) => {
+            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              console.log(Role.ADMIN === 4)
+              this.setState({ currentUserRole: Role.ADMIN });
+            }
+          })
+        }).catch(console.error)
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
@@ -132,7 +140,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private printModeHandler = () => { this.setState({ isPrintMode: !this.state.isPrintMode }); }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-    console.log(this.state.currentUserRole);
+
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>

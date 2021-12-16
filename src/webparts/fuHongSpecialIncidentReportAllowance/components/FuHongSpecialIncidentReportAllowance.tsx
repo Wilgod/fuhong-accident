@@ -17,7 +17,7 @@ import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getSpecialIncidentReportAllowanceById } from '../../../api/FetchFuHongList';
+import { getAdmin, getSpecialIncidentReportAllowanceById } from '../../../api/FetchFuHongList';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -88,6 +88,14 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
+
+        getAdmin().then((admin) => {
+          admin.forEach((item) => {
+            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.ADMIN });
+            }
+          })
+        }).catch(console.error)
 
         this.checkRole();// Testing Only 
       }).catch(console.error);

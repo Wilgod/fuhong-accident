@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
+import { useAllowanceStats } from '../../../hooks/useAllowanceStats';
 
 
 //Age interval
@@ -54,7 +55,7 @@ const abuseNaturefilter = (item: any, dataset: IDataset): IDataset => {
 const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
     serviceUserAge.forEach((item) => {
-        dataset = abuseNaturefilter(item.ServiceUserAge, dataset);
+        dataset = abuseNaturefilter(item, dataset);
     });
     return dataset;
 }
@@ -78,7 +79,7 @@ function AllowanceNature() {
     const [groupBy, setGroupBy] = useState("NON");
     const [abuseNatureDataset, setAbuseNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
-    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -193,7 +194,7 @@ function AllowanceNature() {
                                         chartType={"Bar"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
-                                            ["年齡", "年齡"],
+                                            ["虐待性質", "數量"],
                                             ["身體虐待", abuseNatureDataset.body],
                                             ["性侵犯", abuseNatureDataset.sexual],
                                             ["精神虐待", abuseNatureDataset.mental],
@@ -218,7 +219,7 @@ function AllowanceNature() {
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
-                                            ["年齡", "年齡"],
+                                            ["虐待性質", "數量"],
                                             ["身體虐待", abuseNatureDataset.body],
                                             ["性侵犯", abuseNatureDataset.sexual],
                                             ["精神虐待", abuseNatureDataset.mental],
@@ -245,7 +246,7 @@ function AllowanceNature() {
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 年齡</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 特別事故統計 (津貼科) &gt; 虐待性質</h6>
                 </div>
             </div>
 

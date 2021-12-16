@@ -18,6 +18,6 @@ export function useAllowanceStats(): [any[], Date, Date, Dispatch<SetStateAction
             setData(res);
         }).catch(console.error)
     }, [startDate, endDate, serviceUnits]);
-
+    
     return [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits]
 }

@@ -78,8 +78,8 @@ function AllowanceCategory() {
     const [groupBy, setGroupBy] = useState("NON");
     const [categoryDataset, setCategoryDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
-    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
-
+    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
+    console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -127,7 +127,7 @@ function AllowanceCategory() {
     useEffect(() => {
         switch (groupBy) {
             case "NON":
-                setCategoryDataset(sampleOneParser(serviceUserAge));
+                setCategoryDataset(sampleOneParser(data));
             case "BY_MONTH":
             case "BY_MONTH_FINICIAL":
             case "BY_MONTH_CALENDAR":
@@ -136,7 +136,7 @@ function AllowanceCategory() {
             default:
                 console.log("default");
         }
-    }, [groupBy, serviceUserAge])
+    }, [groupBy, data])
 
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 特別事故統計 (津貼科)`
@@ -193,7 +193,7 @@ function AllowanceCategory() {
                                         chartType={"Bar"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
-                                            ["事故類別", "年齡"],
+                                            ["事故類別", "數量"],
                                             ["服務使用者不尋常死亡／嚴重受傷導致死亡", categoryDataset.accidentCategoryUnusualDeath],
                                             ["服務使用者失踪而需要報警求助", categoryDataset.accidentCategoryMissing],
                                             ["已確立／懷疑有服務使用者被職員／其他服務使用者虐待", categoryDataset.accidentCategoryAbuse],
@@ -217,7 +217,7 @@ function AllowanceCategory() {
                                     chartType={"PieChart"}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={[
-                                        ["事故類別", "年齡"],
+                                        ["事故類別", "數量"],
                                         ["服務使用者不尋常死亡／嚴重受傷導致死亡", categoryDataset.accidentCategoryUnusualDeath],
                                         ["服務使用者失踪而需要報警求助", categoryDataset.accidentCategoryMissing],
                                         ["已確立／懷疑有服務使用者被職員／其他服務使用者虐待", categoryDataset.accidentCategoryAbuse],
@@ -243,7 +243,7 @@ function AllowanceCategory() {
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 年齡</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 特別事故統計 (津貼科) &gt; 特別事故類別</h6>
                 </div>
             </div>
 

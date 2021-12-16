@@ -16,7 +16,7 @@ import { sp } from '@pnp/sp';
 import { graph } from '@pnp/graph';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getUserAdByGraph } from '../../../api/FetchUser';
-import { getOutsiderAccidentById } from '../../../api/FetchFuHongList';
+import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -103,6 +103,14 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
+
+        getAdmin().then((admin) => {
+          admin.forEach((item) => {
+            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.ADMIN });
+            }
+          })
+        }).catch(console.error)
 
         this.checkRole();// Testing Only 
       }).catch(console.error);
