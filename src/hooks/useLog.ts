@@ -1,16 +1,29 @@
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { getLog } from "../api/LogHelper";
 
-export default function useLog(): any {
-    const [log, setLog] = useState<any[]>([]);
+export default function useLog(): [any[], string, Dispatch<SetStateAction<string>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>, Dispatch<SetStateAction<string>>, Dispatch<SetStateAction<string[]>>] {
+    const [data, setData] = useState<any[]>([]);
+    const [searchText, setSearchText] = useState("");
+    const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
+    const [endDate, setEndDate] = useState(new Date());
+    const [serviceUnits, setServiceUnits] = useState<string[]>([]);
+    const [status, setStatus] = useState("");
+    const [formType, setFormType] = useState<string[]>([]);
 
     useEffect(() => {
-        getLog().then((res) => {
-            setLog(res);
+        getLog({
+            searchText,
+            endDate,
+            formType,
+            serviceUnits,
+            startDate,
+            status
+        }).then((res) => {
+            setData(res);
         }).catch(console.error);
-    }, [])
+    }, [startDate, endDate, serviceUnits, status, formType])
 
-    return [log];
+    return [data, searchText, setSearchText, setStartDate, setEndDate, setServiceUnits, setStatus, setFormType];
 }

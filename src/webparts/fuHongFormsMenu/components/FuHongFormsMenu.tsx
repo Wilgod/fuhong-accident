@@ -28,6 +28,7 @@ import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident
 import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
 import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/AllowanceCategory';
 import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
+import ServiceUserAccidentNature from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentNature';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -168,7 +169,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </li>
       </ul>
     }
-
+    console.log(this.state.screenNav)
     const statList = () => {
       return (
         <ul>
@@ -360,7 +361,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'SUI_ASD':
           return <ServiceUserAccidentASD />
         case 'SUI_NATURE':
-          return <div>SUI_NATURE</div>
+          return <ServiceUserAccidentNature />
         case 'SUI_ENV':
           return <ServiceUserAccidentEnv />
         case 'SUI_PERSONAL':

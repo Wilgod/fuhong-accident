@@ -538,7 +538,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 Report: "特別事故報告(牌照事務處)"
                             }).catch(console.error);
 
-                        }else{
+                        } else {
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
                                 Action: "提交",
@@ -936,7 +936,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     setSDEmail(dept.hr_sd);
                 }
 
-                setForm({ ...form, homesName: dept.su_name_tc || "", homesManagerTel: dept.su_phone || "" });
+                setForm({ ...form, homesName: dept.su_name_tc ? `扶康會${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
             }
         }
     }, [departments]);

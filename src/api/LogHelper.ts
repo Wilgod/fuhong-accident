@@ -13,6 +13,16 @@ export interface ILog {
     RecordId: number;
 }
 
+export interface ISearchCriteria {
+    startDate: Date;
+    endDate: Date;
+    searchText: string;
+    serviceUnits: string[];
+    status: string;
+    formType: string[]
+}
+
+
 export async function postLog(body: ILog) {
     try {
         const LIST_NAME = "Log";
@@ -24,15 +34,20 @@ export async function postLog(body: ILog) {
     }
 }
 
-export async function getLog() {
+export async function getLog(searchCriteria: ISearchCriteria) {
     try {
+        console.log(searchCriteria);
         const LIST_NAME = "Log";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .select("*", "Author/Id", "Author/EMail", 'Author/Title')
             .expand("Author")
             .getAll();
 
-        return items;
+        return items.sort((a, b) => {
+            const aTime = new Date(a.AccidentTime).getTime();
+            const bTime = new Date(b.AccidentTime).getTime();
+            return bTime - aTime;
+        });
     } catch (err) {
         console.error(err);
         throw new Error('getLog error');

@@ -320,3 +320,40 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
         throw new Error("getServiceUserAccidentAge error");
     }
 }
+
+// Form 20 統計資料 
+export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
+    try {
+        const LIST_NAME = "Accident Report Form";
+
+        let filterQuery = `Title eq 'SERVICE_USER'`;
+        // filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+        filterQuery = `${filterQuery} and ReceivedDate ge '${searchCriteria.startDate.toISOString()}' and ReceivedDate le '${searchCriteria.endDate.toISOString()}'`;
+
+        // if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+        //     let su = "";
+        //     searchCriteria.serviceUnits.forEach((item, index) => {
+        //         if (index === 0) {
+        //             su = `ServiceLocation eq '${item}'`;
+        //         } else {
+        //             su += `ServiceLocation eq '${item}'`;
+        //         }
+
+        //         if (index !== searchCriteria.serviceUnits.length - 1) {
+        //             su = `${su} or `;
+        //         }
+        //     })
+        //     filterQuery = `${filterQuery} and (${su})`;
+        // }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther")
+            .filter(filterQuery)
+            .getAll();
+            console.log(items);
+        return items
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccidentAge error");
+    }
+}

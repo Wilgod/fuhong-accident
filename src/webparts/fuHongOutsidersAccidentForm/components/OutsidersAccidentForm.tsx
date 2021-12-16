@@ -172,7 +172,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const dataFactory = (status: string) => {
         const body = {};
-        const error: IErrorFields = {};
+        const error = {};
 
 
         if (serviceUnit) {
@@ -638,6 +638,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Trigger notification workflow
                 console.log(res);
 
+                formSubmittedHandler();
+
                 postLog({
                     AccidentTime: accidentTime.toISOString(),
                     Action: "批准",
@@ -648,7 +650,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     RecordId: formData.Id
                 }).catch(console.error);
 
-                formSubmittedHandler();
             }).catch(console.error);
 
         }
@@ -666,7 +667,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             updateOutsiderAccidentFormById(formId, body).then(() => {
 
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: formData.AccidentTime,
                     Action: "拒絕",
                     CaseNumber: formData.CaseNumber,
                     FormType: "PUI",
@@ -699,11 +700,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     if (formOneResponse) {
                         getOutsiderAccidentById(formId).then((outsiderAccidentForm) => {
                             if (outsiderAccidentForm && outsiderAccidentForm.CaseNumber && outsiderAccidentForm.Id) {
-                                let accidentTime = outsiderAccidentForm.AccidentTime
+                                let accidentTimeString = outsiderAccidentForm.AccidentTime
                                 const accidentReportFormBody = {
                                     "CaseNumber": outsiderAccidentForm.CaseNumber,
                                     "ParentFormId": outsiderAccidentForm.Id,
-                                    "EstimatedFinishDate": new Date(new Date(accidentTime).setMonth(new Date(accidentTime).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
+                                    "EstimatedFinishDate": new Date(new Date(accidentTimeString).setMonth(new Date(accidentTimeString).getMonth() + 1)), //預估完成分析日期 意外發生日期+1 month
                                     "ReceivedDate": new Date().toISOString(), // 交付日期
                                     "SPTId": outsiderAccidentForm.SPTId,
                                     "SMId": outsiderAccidentForm.SMId,
@@ -719,8 +720,13 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         updateOutsiderAccidentFormById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
 
+
+
+                                            notifyOutsiderAccident(context, formData.Id, 1);
+                                            formSubmittedHandler()
+
                                             postLog({
-                                                AccidentTime: accidentTime.toISOString(),
+                                                AccidentTime: accidentTimeString,
                                                 Action: "批准",
                                                 CaseNumber: formData.CaseNumber,
                                                 FormType: "PUI",
@@ -728,9 +734,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                                 ServiceUnit: formData.ServiceLocation,
                                                 RecordId: formData.Id
                                             }).catch(console.error);
-
-                                            notifyOutsiderAccident(context, formData.Id, 1);
-                                            formSubmittedHandler()
                                         }).catch(console.error);
                                     }
                                 })
@@ -755,7 +758,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             updateOutsiderAccidentFormById(formId, body).then(() => {
 
                 postLog({
-                    AccidentTime: formData.AccidentTime,
+                    AccidentTime: accidentTime.toISOString(),
                     Action: "拒絕",
                     CaseNumber: formData.CaseNumber,
                     FormType: "PUI",

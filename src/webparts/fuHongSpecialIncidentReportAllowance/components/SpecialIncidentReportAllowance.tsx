@@ -437,7 +437,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.OrgName) setReportOrg(formData.OrgName);
             if (formData.OrgPhone) setReportPhone(formData.OrgPhone);
             if (formData.OrgAddress) setReportAddress(formData.OrgAddress);
-            if (formData.OrgSUName) setSuTcName(formData.OrgSUName);
+            if (formData.OrgSUName) setSuTcName(formData.OrgSUName ? `${formData.OrgSUName}` : "");
 
         }
     }
@@ -495,7 +495,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                             notifySpecialIncidentAllowance(context, formData.Id, 1);
-                       
+
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
                                 Action: "提交",
@@ -505,7 +505,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 ServiceUnit: serviceLocation,
                                 Report: "特別事故報告(津貼科)"
                             }).catch(console.error);
-                        }else{
+                        } else {
                             postLog({
                                 AccidentTime: caseNumber,
                                 Action: "提交",
@@ -537,7 +537,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 Report: "特別事故報告(津貼科)"
                             }).catch(console.error);
 
-                        }else{
+                        } else {
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
                                 Action: "提交",
@@ -811,8 +811,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 }
 
                 if (dept && dept.su_name_tc) {
-                    setSuTcName(dept.su_name_tc);
-                    setReportAddress(dept.su_name_tc);
+                    setSuTcName(dept.su_name_tc ? `扶康會${dept.su_name_tc}` : "");
+                    setReportAddress(dept.su_name_tc ? `扶康會${dept.su_name_tc}` : "");
                 }
                 setReportOrg("扶康會");
 
@@ -1007,12 +1007,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.accidentCategory === "ACCIDENT_CATEGORY_UNUSUAL_DEATH"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-unusual-death">服務使用者不尋常死亡／嚴重受傷導致死亡</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-missing" value="ACCIDENT_CATEGORY_MISSING" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} checked={form.accidentCategory === "ACCIDENT_CATEGORY_MISSING"}/>
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-missing">服務使用者失踪而需要報警求助</label>
                             </div>
                             <div className="form-check">
