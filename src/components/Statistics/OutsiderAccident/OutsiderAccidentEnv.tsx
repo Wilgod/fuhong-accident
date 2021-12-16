@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
 import { useOutsiderStats } from '../../../hooks/useOutsiderStats';
+import { useOutsidersAccidentReportStats } from '../../../hooks/useOutsidersAccidentReportStats';
 
 interface IDataset {
     "envSlipperyGround": number;
@@ -36,23 +37,23 @@ const initialDataset: IDataset = {
 
 const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
     let result = dataset;
-    if (item.EnvSlipperyGround === true) {
+    if (item.EnvFactorSlipperyGround === true) {
         result.envSlipperyGround += 1;
     }
 
-    if (item.EnvUnevenGround === true) {
+    if (item.EnvFactorUnevenGround === true) {
         result.envUnevenGround += 1;
     }
 
-    if (item.EnvObstacleItems === true) {
+    if (item.EnvFactorObstacleItems === true) {
         result.envObstacleItems += 1;
     }
 
-    if (item.EnvInsufficientLight === true) {
+    if (item.EnvFactorInsufficientLight === true) {
         result.envInsufficientLight += 1;
     }
 
-    if (item.EnvNotEnoughSpace === true) {
+    if (item.EnvFactorNotEnoughSpace === true) {
         result.envNotEnoughSpace += 1;
     }
 
@@ -60,19 +61,19 @@ const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
         result.envAcousticStimulation += 1;
     }
 
-    if (item.EnvCollidedByOthers === true) {
+    if (item.EnvFactorCollision === true) {
         result.envCollidedByOthers += 1;
     }
 
-    if (item.EnvHurtByOthers === true) {
+    if (item.EnvFactorHurtByOthers === true) {
         result.envHurtByOthers += 1;
     }
 
-    if (item.EnvImproperEquip === true) {
+    if (item.EnvFactorAssistiveEquipment === true) {
         result.envImproperEquip += 1;
     }
 
-    if (item.EnvOther === true) {
+    if (item.EnvFactorOther === true) {
         result.envOther += 1;
     }
 
@@ -92,7 +93,7 @@ function OutsiderAccidentEnv() {
     const [groupBy, setGroupBy] = useState("NON");
     const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsiderStats();
+    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -104,7 +105,7 @@ function OutsiderAccidentEnv() {
     }
 
     const statsTableSwitch = () => {
-        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 外界人士意外`
         switch (groupBy) {
             case "NON":
                 return (
@@ -116,7 +117,7 @@ function OutsiderAccidentEnv() {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 外界人士意外 - 意外成因-環境因素統計`}</h6>
+                                <h6>{`${title} - 意外成因-環境因素統計`}</h6>
                             </div>
                         </div>
                         <div className="row">

@@ -9,42 +9,50 @@ import { useOutsiderStats } from '../../../hooks/useOutsiderStats';
 import { useOutsidersAccidentReportStats } from '../../../hooks/useOutsidersAccidentReportStats';
 
 interface IDataset {
-    accidentNatureFall: number;
-    accidentNatureChok: number;
-    accidentNatureBehavior: number;
-    accidentNatureEnvFactor: number;
-    accidentNatureOther: number;
+    "personalFactorEmotional": number;
+    "personalFactorImpatient": number;
+    "personalFactorChok": number;
+    "personalFactorUnsteadyWalk": number;
+    "personalFactorTwitch": number;
+    "personalFactorOther": number;
+
 }
 
 const initialDataset: IDataset = {
-    accidentNatureFall: 0,
-    accidentNatureChok: 0,
-    accidentNatureBehavior: 0,
-    accidentNatureEnvFactor: 0,
-    accidentNatureOther: 0
+    personalFactorEmotional: 0,
+    personalFactorImpatient: 0,
+    personalFactorChok: 0,
+    personalFactorUnsteadyWalk: 0,
+    personalFactorTwitch: 0,
+    personalFactorOther: 0
 }
 
-const natureFilter = (item: any, dataset: IDataset): IDataset => {
+const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
     let result = dataset;
-    if (item.AccidentNatureFall === true) {
-        result.accidentNatureFall += 1;
+    if (item.PersonalFactorEmotional === true) {
+        result.personalFactorEmotional += 1;
     }
 
-    if (item.AccidentNatureChok === true) {
-        result.accidentNatureChok += 1;
+    if (item.PersonalFactorImpatient === true) {
+        result.personalFactorImpatient += 1;
     }
 
-    if (item.AccidentNatureBehavior === true) {
-        result.accidentNatureBehavior += 1;
+    if (item.PersonalFactorChok === true) {
+        result.personalFactorChok += 1;
     }
 
-    if (item.AccidentNatureEnvFactor === true) {
-        result.accidentNatureEnvFactor += 1;
+    if (item.PersonalFactorUnsteadyWalk === true) {
+        result.personalFactorUnsteadyWalk += 1;
     }
 
-    if (item.AccidentNatureOther === true) {
-        result.accidentNatureOther += 1;
+    if (item.PersonalFactorTwitch === true) {
+        result.personalFactorTwitch += 1;
     }
+
+    if (item.PersonalFactorOther === true) {
+        result.personalFactorOther += 1;
+    }
+
 
     return result;
 }
@@ -52,15 +60,15 @@ const natureFilter = (item: any, dataset: IDataset): IDataset => {
 const sampleOneParser = (envFactor: any[]): IDataset => {
     let dataset: IDataset = { ...initialDataset };
     envFactor.forEach((item) => {
-        dataset = natureFilter(item, dataset);
+        dataset = envFactorFilter(item, dataset);
     })
     return dataset
 }
 
 
-function OutsiderAccidentNature() {
+function OutsiderAccidentPersonal() {
     const [groupBy, setGroupBy] = useState("NON");
-    const [natureDataset, setNatureDataset] = useState<IDataset>(initialDataset);
+    const [personalFactorDataset, setPersonalFactorDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
@@ -86,7 +94,7 @@ function OutsiderAccidentNature() {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 外界人士意外 - 意外性質統計`}</h6>
+                                <h6>{`${title} - 意外成因-環境因素統計`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -117,24 +125,28 @@ function OutsiderAccidentNature() {
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">跌倒</th>
-                        <th>{natureDataset.accidentNatureFall}</th>
+                        <th scope="row">情緒不穩</th>
+                        <th>{personalFactorDataset.personalFactorEmotional}</th>
                     </tr>
                     <tr>
-                        <th scope="row">哽塞</th>
-                        <th>{natureDataset.accidentNatureChok}</th>
+                        <th scope="row">心急致傷</th>
+                        <th>{personalFactorDataset.personalFactorImpatient}</th>
                     </tr>
                     <tr>
-                        <th scope="row">服務使用者行為問題</th>
-                        <th>{natureDataset.accidentNatureBehavior}</th>
+                        <th scope="row">進食時哽塞</th>
+                        <th>{personalFactorDataset.personalFactorChok}</th>
                     </tr>
                     <tr>
-                        <th scope="row">環境因素</th>
-                        <th>{natureDataset.accidentNatureEnvFactor}</th>
+                        <th scope="row">步履不穩</th>
+                        <th>{personalFactorDataset.personalFactorUnsteadyWalk}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">抽搐</th>
+                        <th>{personalFactorDataset.personalFactorTwitch}</th>
                     </tr>
                     <tr>
                         <th scope="row">其他</th>
-                        <th>{natureDataset.accidentNatureOther}</th>
+                        <th>{personalFactorDataset.personalFactorOther}</th>
                     </tr>
                 </tbody>
             </table >
@@ -142,7 +154,7 @@ function OutsiderAccidentNature() {
     }
 
     const chartSwitch = () => {
-        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 外界人士意外`
 
         switch (groupBy) {
             case "NON":
@@ -155,7 +167,7 @@ function OutsiderAccidentNature() {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        外界人士意外 - 意外性質統計
+                                        外界人士意外 - 意外成因-個人因素統計
                                     </div>
                                 </div>
                                 <div className="">
@@ -163,12 +175,13 @@ function OutsiderAccidentNature() {
                                         chartType={"Bar"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
-                                            ["意外性質", "數量"],
-                                            ["跌倒", natureDataset.accidentNatureFall],
-                                            ["哽塞", natureDataset.accidentNatureChok],
-                                            ["服務使用者行為問題", natureDataset.accidentNatureBehavior],
-                                            ["環境因素", natureDataset.accidentNatureEnvFactor],
-                                            ["其他", natureDataset.accidentNatureOther],
+                                            ["個人因素", "數量"],
+                                            ["情緒不穩", personalFactorDataset.personalFactorEmotional],
+                                            ["心急致傷", personalFactorDataset.personalFactorImpatient],
+                                            ["進食時哽塞", personalFactorDataset.personalFactorChok],
+                                            ["步履不穩", personalFactorDataset.personalFactorUnsteadyWalk],
+                                            ["抽搐", personalFactorDataset.personalFactorTwitch],
+                                            ["其他", personalFactorDataset.personalFactorOther],
                                         ]}
                                     />
 
@@ -180,7 +193,7 @@ function OutsiderAccidentNature() {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        外界人士意外 - 意外性質統計
+                                        外界人士意外 - 意外成因-個人因素統計
                                     </div>
                                 </div>
                                 <Chart
@@ -188,12 +201,13 @@ function OutsiderAccidentNature() {
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
-                                            ["意外性質", "數量"],
-                                            ["跌倒", natureDataset.accidentNatureFall],
-                                            ["哽塞", natureDataset.accidentNatureChok],
-                                            ["服務使用者行為問題", natureDataset.accidentNatureBehavior],
-                                            ["環境因素", natureDataset.accidentNatureEnvFactor],
-                                            ["其他", natureDataset.accidentNatureOther],
+                                            ["個人因素", "數量"],
+                                            ["情緒不穩", personalFactorDataset.personalFactorEmotional],
+                                            ["心急致傷", personalFactorDataset.personalFactorImpatient],
+                                            ["進食時哽塞", personalFactorDataset.personalFactorChok],
+                                            ["步履不穩", personalFactorDataset.personalFactorUnsteadyWalk],
+                                            ["抽搐", personalFactorDataset.personalFactorTwitch],
+                                            ["其他", personalFactorDataset.personalFactorOther],
                                         ]
                                     }
                                 />
@@ -214,7 +228,7 @@ function OutsiderAccidentNature() {
     useEffect(() => {
         switch (groupBy) {
             case "NON":
-                setNatureDataset(sampleOneParser(data));
+                setPersonalFactorDataset(sampleOneParser(data));
             case "BY_MONTH":
             case "BY_MONTH_FINICIAL":
             case "BY_MONTH_CALENDAR":
@@ -229,7 +243,7 @@ function OutsiderAccidentNature() {
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 意外性質</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 意外成因 - 個人因素</h6>
                 </div>
             </div>
 
@@ -310,5 +324,5 @@ function OutsiderAccidentNature() {
     )
 }
 
-export default OutsiderAccidentNature
+export default OutsiderAccidentPersonal
 

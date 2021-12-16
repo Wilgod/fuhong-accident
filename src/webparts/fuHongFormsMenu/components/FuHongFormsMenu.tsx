@@ -29,6 +29,7 @@ import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccid
 import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/AllowanceCategory';
 import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
 import ServiceUserAccidentNature from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentNature';
+import OutsiderAccidentPersonal from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentPersonal';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -242,6 +243,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   意外成因 - 環境因素
                 </div>
               </li>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "PUI_PERSONAL")}>
+                  意外成因 - 個人因素
+                </div>
+              </li>
             </ul>
           </li>
           <li>
@@ -370,6 +376,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           return <OutsiderAccidentNature />
         case 'PUI_ENV':
           return <OutsiderAccidentEnv />
+        case 'PUI_PERSONAL':
+          return <OutsiderAccidentPersonal />
         case 'SIH_CATEGORY':
           return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':

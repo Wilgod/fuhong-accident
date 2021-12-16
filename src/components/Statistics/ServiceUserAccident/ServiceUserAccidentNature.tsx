@@ -245,7 +245,7 @@ function ServiceUserAccidentNature() {
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 年齡</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 意外性質</h6>
                 </div>
             </div>
 
