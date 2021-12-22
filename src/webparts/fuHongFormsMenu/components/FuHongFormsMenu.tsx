@@ -30,6 +30,11 @@ import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/
 import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
 import ServiceUserAccidentNature from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentNature';
 import OutsiderAccidentPersonal from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentPersonal';
+import AllowanceCaseSummary from '../../../components/CaseSummary/AllowanceCaseSummary';
+import OutsiderAccidentCaseSummary from '../../../components/CaseSummary/OutsiderAccidentCaseSummary';
+import ServiceUserAccidentCaseSummary from '../../../components/CaseSummary/ServiceUserAccidentCaseSummary';
+import LicenseIncidentCaseSummary from '../../../components/CaseSummary/LicenseIncidentCaseSummary';
+import OtherIncidentCaseSummary from '../../../components/CaseSummary/OtherIncidentCaseSummary';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -43,6 +48,7 @@ interface IFuHongFormsMenuStates {
   formToggle: boolean;
   reportToggle: boolean;
   statToggle: boolean;
+  caseSummaryToggle: boolean;
   screenNav: string;
   searchDateStart: Date;
   searchDateEnd: Date;
@@ -75,6 +81,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       formToggle: false,
       reportToggle: false,
       statToggle: false,
+      caseSummaryToggle: false,
       screenNav: "",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
@@ -120,6 +127,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     this.setState({ statToggle: !this.state.statToggle });
   }
 
+  private caseSummaryToggleHandler = (event) => {
+    event.stopPropagation();
+    this.setState({ caseSummaryToggle: !this.state.caseSummaryToggle });
+  }
+
   private screenNavHandler = (event, nav: string) => {
     event.stopPropagation();
     this.setState({ screenNav: nav });
@@ -154,8 +166,38 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     const reportList = () => {
       return <ul>
         <li>
-          <div onClick={(event) => this.screenNavHandler(event, "CASE_SUMMARY")}>
+          <div onClick={(event) => this.caseSummaryToggleHandler(event)}>
             個案概要
+            {
+              this.state.caseSummaryToggle &&
+              <ul>
+                <li>
+                  <div className="" onClick={(event) => this.screenNavHandler(event, "CS_SUI")}>
+                    服務使用者意外
+                  </div>
+                </li>
+                <li>
+                  <div className="" onClick={(event) => this.screenNavHandler(event, "CS_PUI")}>
+                    外界人士意外
+                  </div>
+                </li>
+                <li>
+                  <div className="" onClick={(event) => this.screenNavHandler(event, "CS_SIH")}>
+                    特別事故報告 (牌照事務處)
+                  </div>
+                </li>
+                <li>
+                  <div className="" onClick={(event) => this.screenNavHandler(event, "CS_SID")}>
+                    特別事故報告 (津貼科)
+                  </div>
+                </li>
+                <li>
+                  <div className="" onClick={(event) => this.screenNavHandler(event, "CS_OIN")}>
+                    其他事故
+                  </div>
+                </li>
+              </ul>
+            }
           </div>
         </li>
         <li>
@@ -379,11 +421,22 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'PUI_PERSONAL':
           return <OutsiderAccidentPersonal />
         case 'SIH_CATEGORY':
-          return <div>SIH_CATEGORY</div>
+          return <AllowanceCategory />
+        // return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':
           return <AllowanceCategory />
         case 'SID_NATURE':
           return <AllowanceNature />
+        case 'CS_SUI':
+          return <ServiceUserAccidentCaseSummary context={this.props.context} />
+        case 'CS_PUI':
+          return <OutsiderAccidentCaseSummary context={this.props.context} />
+        case 'CS_SIH':
+          return <LicenseIncidentCaseSummary context={this.props.context} />
+        case 'CS_SID':
+          return <AllowanceCaseSummary context={this.props.context} />
+        case 'CS_OIN':
+          return <OtherIncidentCaseSummary context={this.props.context} />
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
