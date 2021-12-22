@@ -116,134 +116,53 @@ const columns = (context) => {
     return [
         {
             dataField: 'CaseNumber',
-            text: '檔案編號',
-            sort: true
-        },
-        {
-            dataField: 'AccidentTime',
-            text: '發生日期',
-            formatter: (value, data) => {
-                let date = value;
-                if (data.AccidentTime) {
-                    date = data.AccidentTime;
-                } else {
-                    date = data.IncidentTime;
-                }
-                return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date().getTime();
-                let bTime = new Date().getTime();
-
-                if (rowA.AccidentTime) {
-                    aTime = new Date(rowA.AccidentTime).getTime();
-                } else {
-                    aTime = new Date(rowA.IncidentTime).getTime();
-                }
-
-
-                if (rowB.AccidentTime) {
-                    bTime = new Date(rowB.AccidentTime).getTime();
-                } else {
-                    bTime = new Date(rowB.IncidentTime).getTime();
-                }
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
-        },
-        {
-            dataField: 'ServiceLocation',
             text: '服務單位',
             sort: true
         },
         {
             dataField: 'CaseNumber',
-            text: '意外/事故',
-            sort: true,
-            formatter: (value, data) => {
-                if (value) {
-                    const [caseType] = value.split("-");
-                    return caseNumberToFormNameParser(caseType);
-                }
-            }
-        },
-        {
-            dataField: 'Status',
-            text: '狀態',
+            text: '意外發生日期及時間',
             sort: true
         },
         {
-            dataField: 'Modified',
-            text: '最後更新報告',
-            formatter: (value, data) => {
-                return <div> {moment(new Date(value)).format("YYYY-MM-DD")}</div>
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date(rowA.Modified).getTime();
-                let bTime = new Date(rowB.Modified).getTime();
-
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
+            dataField: 'CaseNumber',
+            text: '性別',
+            sort: true
         },
         {
-            dataField: 'NextDeadline',
-            text: '下個報告到期日',
-            formatter: (value, data) => {
-                if (data && (data.Status === "CLOSED" || data.Status === "DRAFT")) {
-                    return <div>沒有</div>
-                } else {
-                    return <div>{moment(new Date(value)).format("YYYY-MM-DD")}</div>
-                }
-            },
-            sort: true,
-            sortFunc: (a, b, order, dataField, rowA, rowB) => {
-                let aTime = new Date(rowA.NextDeadline || new Date().getTime()).getTime();
-                let bTime = new Date(rowB.NextDeadline || new Date().getTime()).getTime();
-
-                if (rowA.Status === "CLOSED") {
-                    aTime = new Date(new Date().setFullYear(1970)).getTime();
-                }
-
-                if (rowA.Status === "CLOSED") {
-                    bTime = new Date(new Date().setFullYear(1970)).getTime();
-                }
-
-
-                if (order === 'asc') {
-                    return bTime - aTime;
-                }
-                return aTime - bTime; // desc
-            }
+            dataField: 'CaseNumber',
+            text: '年齡',
+            sort: true
         },
         {
-            dataField: 'Id',
-            text: '[按鈕]',
-            formatter: (value, data) => {
-                let formLink = "";
-                if (data && data.CaseNumber) {
-                    const [caseType] = data.CaseNumber.split("-");
-                    formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
-                } else if (data && data.Title) {
-                    formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
-                } else {
-                    return null;
-                }
-
-                return <div className="d-flex justify-content-center">
-                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_blank")} disabled={value === null}>
-                        檢視
-                    </button>
-                </div>
-            }
-        }
+            dataField: 'CaseNumber',
+            text: '意外發生地點',
+            sort: true
+        },
+        {
+            dataField: 'CaseNumber',
+            text: '意外性質',
+            sort: true
+        },
+        {
+            dataField: 'CaseNumber',
+            text: '意外成因 - 環境因素',
+            sort: true
+        },
+        {
+            dataField: 'CaseNumber',
+            text: '意外成因 - 個人因素',
+            sort: true
+        },
+        {
+            dataField: 'CaseNumber',
+            text: '事發過程',
+            sort: true
+        },
+        {
+            dataField: 'CaseNumber',
+            text: '報告建議',
+            sort: true
+        },
     ]
 };

@@ -103,10 +103,78 @@ function ServiceUserAccidentCaseSummary({ context }: IServiceUserAccidentCaseSum
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${data.length} 筆記錄`}]
                 </div>
-                {/* <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} /> */}
+                <BootstrapTable boot keyField='id' data={data || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )
 }
 
 export default ServiceUserAccidentCaseSummary
+
+const column = [
+    {
+        dataField: 'id',
+        text: '服務單位',
+        sort: true
+    },
+    {
+        dataField: 'AccidentTime',
+        text: '意外發生日期及時間',
+    },
+    {
+        dataField: 'Gender',
+        text: '性別',
+    },
+    {
+        dataField: 'Age',
+        text: '年齡',
+    },
+    {
+        dataField: 'location',
+        text: '意外發生地點',
+    },
+    {
+        dataField: 'intelligence',
+        text: '智力障礙程度',
+    },
+    {
+        dataField: 'ASD',
+        text: '自閉症譜系障礙 (ASD)',
+    },
+    {
+        dataField: 'category',
+        text: '意外性質',
+    },
+    {
+        dataField: 'env',
+        text: '意外成因 - 環境因素',
+    },
+    {
+        dataField: 'personal',
+        text: '意外成因 - 個人因素',
+    },
+    {
+        dataField: 'personal',
+        text: '事發過程',
+    },
+    {
+        dataField: 'reason',
+        text: '成因'
+    },
+    {
+        dataField: 'reason',
+        text: '服務單位即時治療/處理'
+    },
+    {
+        dataField: 'reason',
+        text: '提供予服務使用者的治療'
+    },
+    {
+        dataField: 'reason',
+        text: '意外後中心即時應變措施'
+    },
+    {
+        dataField: 'reason',
+        text: '報告建議'
+    }
+]

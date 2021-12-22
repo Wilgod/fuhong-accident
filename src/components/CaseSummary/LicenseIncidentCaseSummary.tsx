@@ -102,10 +102,29 @@ function LicenseIncidentCaseSummary({ context }: ILicenseIncidentCaseSummary) {
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${data.length} 筆記錄`}]
                 </div>
-                {/* <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} /> */}
+                <BootstrapTable boot keyField='id' data={data || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )
 }
 
 export default LicenseIncidentCaseSummary
+
+const column = [
+    {
+        dataField: 'personal',
+        text: '服務單位',
+    },
+    {
+        dataField: 'personal',
+        text: '事故發生日期',
+    },
+    {
+        dataField: 'personal',
+        text: '特別事故類別',
+    },
+    {
+        dataField: 'personal',
+        text: '虐待／被侵犯私隱性質',
+    },
+]

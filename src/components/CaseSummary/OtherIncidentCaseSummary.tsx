@@ -102,10 +102,37 @@ function OtherIncidentCaseSummary({ context }: IOtherIncidentCaseSummary) {
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${data.length} 筆記錄`}]
                 </div>
-                {/* <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} /> */}
+                <BootstrapTable boot keyField='id' data={data || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )
 }
 
 export default OtherIncidentCaseSummary
+
+const column = [
+    {
+        dataField: 'personal',
+        text: '服務單位',
+    },
+    {
+        dataField: 'personal',
+        text: '事故發生日期及時間',
+    },
+    {
+        dataField: 'personal',
+        text: '事故發生地點',
+    },
+    {
+        dataField: 'personal',
+        text: '事故的描述',
+    },
+    {
+        dataField: 'personal',
+        text: '即時跟進行動',
+    },
+    {
+        dataField: 'personal',
+        text: '跟進計劃',
+    },
+]

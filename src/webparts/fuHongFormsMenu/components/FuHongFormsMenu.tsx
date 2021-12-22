@@ -82,7 +82,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       reportToggle: false,
       statToggle: false,
       caseSummaryToggle: false,
-      screenNav: "",
+      screenNav: "CS_SID",
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
@@ -605,3 +605,4 @@ const getCanvasZone = () => {
     }
   }
 }
+
