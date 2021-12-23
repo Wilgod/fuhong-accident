@@ -33,7 +33,7 @@ interface ISampleFourDataset {
 }
 
 interface ISampleFiveDataset {
-    year: number;
+    finicialYear: string;
     dataset: IDataset;
 }
 
@@ -272,17 +272,30 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
 
     return result
 }
-const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
-    const startYear = startDate.getFullYear()
-    const endYear = endDate.getFullYear();
-    const distance = endYear - startYear;
-    for (let i = distance; i > 0; i--) {
-        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
-        m.set(a + "", { ...initialDataset });
-    }
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+            const formType: string = item.CaseNumber.split("-")[0];
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = unitFilter(formType, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = unitFilter(formType, { ...initialDataset });
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        result.push(item);
+    })
 
     return result;
 }
@@ -811,6 +824,48 @@ function General() {
                     </>
                 )
             case "BY_YEAR_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`年 - 新發生意外或事故總數`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">服務使用者意外</th>
+                                        <th scope="col">外界人士意外</th>
+                                        <th scope="col">特別事故 (牌照事務處)</th>
+                                        <th scope="col">特別事故 (津貼科)</th>
+                                        <th scope="col">其他事故</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleFiveParser(data).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.finicialYear}</th>
+                                                <td>{item.dataset.sui}</td>
+                                                <td>{item.dataset.pui}</td>
+                                                <td>{item.dataset.sih}</td>
+                                                <td>{item.dataset.sid}</td>
+                                                <td>{item.dataset.oin}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_CALENDAR":
                 let titleYear = "";
                 let d = sampleSixParser(data, startDate, endDate);
@@ -959,6 +1014,7 @@ function General() {
                 // sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate)
                 return (
                     <>
+                        {/* SUI */}
                         <div className="row">
                             <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -971,31 +1027,587 @@ function General() {
                                 </div>
                             </div>
                             <div className="col-6">
-                                {/* <Chart
+                                <Chart
                                     width={'600px'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
                                     data={[
                                         [
-                                            { type: 'date', label: 'Day' },
-                                            ...sampleThreeParser(data.filter((item => item.CaseNumber.indexOf("SUI") > -1))).map((item) => item.finicalYear)
+                                            'Day',
+                                            'Guardians of the Galaxy',
+                                            'The Avengers',
+                                            'Transformers: Age of Extinction',
                                         ],
-                                        [new Date(1, 3), 1, 2, 3]
-                                        [new Date(1, 4), 1, 2, 3]
-                                        [new Date(1, 5), 1, 2, 3]
-                                        [new Date(1, 6), 1, 2, 3]
+                                        [1, 37.8, 80.8, 41.8],
+                                        [2, 30.9, 69.5, 32.4],
+                                        [3, 25.4, 57, 25.7],
+                                        [4, 11.7, 18.8, 10.5],
+                                        [5, 11.9, 17.6, 10.4],
+                                        [6, 8.8, 13.6, 7.7],
+                                        [7, 7.6, 12.3, 9.6],
+                                        [8, 12.3, 29.2, 10.6],
+                                        [9, 16.9, 42.9, 14.8],
+                                        [10, 12.8, 30.9, 11.6],
+                                        [11, 5.3, 7.9, 4.7],
+                                        [12, 6.6, 8.4, 5.2],
+                                        [13, 4.8, 6.3, 3.6],
+                                        [14, 4.2, 6.2, 3.4],
                                     ]}
-
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
                                     rootProps={{ 'data-testid': '3' }}
-                                /> */}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'500px'}
+                                    height={'300px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        ['Year', 'Sales', 'Expenses', 'Profit'],
+                                        ['2014', 1000, 400, 200],
+                                        ['2015', 1170, 460, 250],
+                                        ['2016', 660, 1120, 300],
+                                        ['2017', 1030, 540, 350],
+                                    ]}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
+                                    // For tests
+                                    rootProps={{ 'data-testid': '2' }}
+                                />
+                            </div>
+                        </div>
+                        {/* PUI */}
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        [
+                                            'Day',
+                                            'Guardians of the Galaxy',
+                                            'The Avengers',
+                                            'Transformers: Age of Extinction',
+                                        ],
+                                        [1, 37.8, 80.8, 41.8],
+                                        [2, 30.9, 69.5, 32.4],
+                                        [3, 25.4, 57, 25.7],
+                                        [4, 11.7, 18.8, 10.5],
+                                        [5, 11.9, 17.6, 10.4],
+                                        [6, 8.8, 13.6, 7.7],
+                                        [7, 7.6, 12.3, 9.6],
+                                        [8, 12.3, 29.2, 10.6],
+                                        [9, 16.9, 42.9, 14.8],
+                                        [10, 12.8, 30.9, 11.6],
+                                        [11, 5.3, 7.9, 4.7],
+                                        [12, 6.6, 8.4, 5.2],
+                                        [13, 4.8, 6.3, 3.6],
+                                        [14, 4.2, 6.2, 3.4],
+                                    ]}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                    rootProps={{ 'data-testid': '3' }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'500px'}
+                                    height={'300px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        ['Year', 'Sales', 'Expenses', 'Profit'],
+                                        ['2014', 1000, 400, 200],
+                                        ['2015', 1170, 460, 250],
+                                        ['2016', 660, 1120, 300],
+                                        ['2017', 1030, 540, 350],
+                                    ]}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                    // For tests
+                                    rootProps={{ 'data-testid': '2' }}
+                                />
+                            </div>
+                        </div>
+                        {/* SIH */}
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        [
+                                            'Day',
+                                            'Guardians of the Galaxy',
+                                            'The Avengers',
+                                            'Transformers: Age of Extinction',
+                                        ],
+                                        [1, 37.8, 80.8, 41.8],
+                                        [2, 30.9, 69.5, 32.4],
+                                        [3, 25.4, 57, 25.7],
+                                        [4, 11.7, 18.8, 10.5],
+                                        [5, 11.9, 17.6, 10.4],
+                                        [6, 8.8, 13.6, 7.7],
+                                        [7, 7.6, 12.3, 9.6],
+                                        [8, 12.3, 29.2, 10.6],
+                                        [9, 16.9, 42.9, 14.8],
+                                        [10, 12.8, 30.9, 11.6],
+                                        [11, 5.3, 7.9, 4.7],
+                                        [12, 6.6, 8.4, 5.2],
+                                        [13, 4.8, 6.3, 3.6],
+                                        [14, 4.2, 6.2, 3.4],
+                                    ]}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                    rootProps={{ 'data-testid': '3' }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'500px'}
+                                    height={'300px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        ['Year', 'Sales', 'Expenses', 'Profit'],
+                                        ['2014', 1000, 400, 200],
+                                        ['2015', 1170, 460, 250],
+                                        ['2016', 660, 1120, 300],
+                                        ['2017', 1030, 540, 350],
+                                    ]}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                    // For tests
+                                    rootProps={{ 'data-testid': '2' }}
+                                />
+                            </div>
+                        </div>
+                        {/* SID */}
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        [
+                                            'Day',
+                                            'Guardians of the Galaxy',
+                                            'The Avengers',
+                                            'Transformers: Age of Extinction',
+                                        ],
+                                        [1, 37.8, 80.8, 41.8],
+                                        [2, 30.9, 69.5, 32.4],
+                                        [3, 25.4, 57, 25.7],
+                                        [4, 11.7, 18.8, 10.5],
+                                        [5, 11.9, 17.6, 10.4],
+                                        [6, 8.8, 13.6, 7.7],
+                                        [7, 7.6, 12.3, 9.6],
+                                        [8, 12.3, 29.2, 10.6],
+                                        [9, 16.9, 42.9, 14.8],
+                                        [10, 12.8, 30.9, 11.6],
+                                        [11, 5.3, 7.9, 4.7],
+                                        [12, 6.6, 8.4, 5.2],
+                                        [13, 4.8, 6.3, 3.6],
+                                        [14, 4.2, 6.2, 3.4],
+                                    ]}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                    rootProps={{ 'data-testid': '3' }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'500px'}
+                                    height={'300px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        ['Year', 'Sales', 'Expenses', 'Profit'],
+                                        ['2014', 1000, 400, 200],
+                                        ['2015', 1170, 460, 250],
+                                        ['2016', 660, 1120, 300],
+                                        ['2017', 1030, 540, 350],
+                                    ]}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                    // For tests
+                                    rootProps={{ 'data-testid': '2' }}
+                                />
+                            </div>
+                        </div>
+                        {/* OIN */}
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        [
+                                            'Day',
+                                            'Guardians of the Galaxy',
+                                            'The Avengers',
+                                            'Transformers: Age of Extinction',
+                                        ],
+                                        [1, 37.8, 80.8, 41.8],
+                                        [2, 30.9, 69.5, 32.4],
+                                        [3, 25.4, 57, 25.7],
+                                        [4, 11.7, 18.8, 10.5],
+                                        [5, 11.9, 17.6, 10.4],
+                                        [6, 8.8, 13.6, 7.7],
+                                        [7, 7.6, 12.3, 9.6],
+                                        [8, 12.3, 29.2, 10.6],
+                                        [9, 16.9, 42.9, 14.8],
+                                        [10, 12.8, 30.9, 11.6],
+                                        [11, 5.3, 7.9, 4.7],
+                                        [12, 6.6, 8.4, 5.2],
+                                        [13, 4.8, 6.3, 3.6],
+                                        [14, 4.2, 6.2, 3.4],
+                                    ]}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                    rootProps={{ 'data-testid': '3' }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'500px'}
+                                    height={'300px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        ['Year', 'Sales', 'Expenses', 'Profit'],
+                                        ['2014', 1000, 400, 200],
+                                        ['2015', 1170, 460, 250],
+                                        ['2016', 660, 1120, 300],
+                                        ['2017', 1030, 540, 350],
+                                    ]}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                    // For tests
+                                    rootProps={{ 'data-testid': '2' }}
+                                />
                             </div>
                         </div>
                     </>
                 )
             case "BY_MONTH_CALENDAR":
+                return <div className="row">
+                    <div className="col-12">
+                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                            <div className="">
+                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                            </div>
+                            <div className="">
+                                新發生意外或事故總數 (每月總數)
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'600px'}
+                            height={'400px'}
+                            chartType="Line"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                [
+                                    'Day',
+                                    'Guardians of the Galaxy',
+                                    'The Avengers',
+                                    'Transformers: Age of Extinction',
+                                ],
+                                [1, 37.8, 80.8, 41.8],
+                                [2, 30.9, 69.5, 32.4],
+                                [3, 25.4, 57, 25.7],
+                                [4, 11.7, 18.8, 10.5],
+                                [5, 11.9, 17.6, 10.4],
+                                [6, 8.8, 13.6, 7.7],
+                                [7, 7.6, 12.3, 9.6],
+                                [8, 12.3, 29.2, 10.6],
+                                [9, 16.9, 42.9, 14.8],
+                                [10, 12.8, 30.9, 11.6],
+                                [11, 5.3, 7.9, 4.7],
+                                [12, 6.6, 8.4, 5.2],
+                                [13, 4.8, 6.3, 3.6],
+                                [14, 4.2, 6.2, 3.4],
+                            ]}
+                            options={{
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            rootProps={{ 'data-testid': '3' }}
+                        />
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'500px'}
+                            height={'300px'}
+                            chartType="Bar"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                ['Year', 'Sales', 'Expenses', 'Profit'],
+                                ['2014', 1000, 400, 200],
+                                ['2015', 1170, 460, 250],
+                                ['2016', 660, 1120, 300],
+                                ['2017', 1030, 540, 350],
+                            ]}
+                            options={{
+                                // Material design options
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            // For tests
+                            rootProps={{ 'data-testid': '2' }}
+                        />
+                    </div>
+                </div>
             case "BY_YEAR_FINICIAL":
+                return <div className="row">
+                    <div className="col-12">
+                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                            <div className="">
+                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                            </div>
+                            <div className="">
+                                新發生意外或事故總數 (每月總數)
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'600px'}
+                            height={'400px'}
+                            chartType="Line"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                [
+                                    'Day',
+                                    'Guardians of the Galaxy',
+                                    'The Avengers',
+                                    'Transformers: Age of Extinction',
+                                ],
+                                [1, 37.8, 80.8, 41.8],
+                                [2, 30.9, 69.5, 32.4],
+                                [3, 25.4, 57, 25.7],
+                                [4, 11.7, 18.8, 10.5],
+                                [5, 11.9, 17.6, 10.4],
+                                [6, 8.8, 13.6, 7.7],
+                                [7, 7.6, 12.3, 9.6],
+                                [8, 12.3, 29.2, 10.6],
+                                [9, 16.9, 42.9, 14.8],
+                                [10, 12.8, 30.9, 11.6],
+                                [11, 5.3, 7.9, 4.7],
+                                [12, 6.6, 8.4, 5.2],
+                                [13, 4.8, 6.3, 3.6],
+                                [14, 4.2, 6.2, 3.4],
+                            ]}
+                            options={{
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            rootProps={{ 'data-testid': '3' }}
+                        />
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'500px'}
+                            height={'300px'}
+                            chartType="Bar"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                ['Year', 'Sales', 'Expenses', 'Profit'],
+                                ['2014', 1000, 400, 200],
+                                ['2015', 1170, 460, 250],
+                                ['2016', 660, 1120, 300],
+                                ['2017', 1030, 540, 350],
+                            ]}
+                            options={{
+                                // Material design options
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            // For tests
+                            rootProps={{ 'data-testid': '2' }}
+                        />
+                    </div>
+                </div>
             case "BY_YEAR_CALENDAR":
+                return <div className="row">
+                    <div className="col-12">
+                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                            <div className="">
+                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                            </div>
+                            <div className="">
+                                新發生意外或事故總數 (每月總數)
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'600px'}
+                            height={'400px'}
+                            chartType="Line"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                [
+                                    'Day',
+                                    'Guardians of the Galaxy',
+                                    'The Avengers',
+                                    'Transformers: Age of Extinction',
+                                ],
+                                [1, 37.8, 80.8, 41.8],
+                                [2, 30.9, 69.5, 32.4],
+                                [3, 25.4, 57, 25.7],
+                                [4, 11.7, 18.8, 10.5],
+                                [5, 11.9, 17.6, 10.4],
+                                [6, 8.8, 13.6, 7.7],
+                                [7, 7.6, 12.3, 9.6],
+                                [8, 12.3, 29.2, 10.6],
+                                [9, 16.9, 42.9, 14.8],
+                                [10, 12.8, 30.9, 11.6],
+                                [11, 5.3, 7.9, 4.7],
+                                [12, 6.6, 8.4, 5.2],
+                                [13, 4.8, 6.3, 3.6],
+                                [14, 4.2, 6.2, 3.4],
+                            ]}
+                            options={{
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            rootProps={{ 'data-testid': '3' }}
+                        />
+                    </div>
+                    <div className="col-6">
+                        <Chart
+                            width={'500px'}
+                            height={'300px'}
+                            chartType="Bar"
+                            loader={<div>Loading Chart</div>}
+                            data={[
+                                ['Year', 'Sales', 'Expenses', 'Profit'],
+                                ['2014', 1000, 400, 200],
+                                ['2015', 1170, 460, 250],
+                                ['2016', 660, 1120, 300],
+                                ['2017', 1030, 540, 350],
+                            ]}
+                            options={{
+                                // Material design options
+                                chart: {
+                                    title: '財政年度',
+                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                },
+                            }}
+                            // For tests
+                            rootProps={{ 'data-testid': '2' }}
+                        />
+                    </div>
+                </div>
             default:
                 console.log("default");
         }
