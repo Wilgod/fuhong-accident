@@ -7,6 +7,7 @@ import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
 import { useAccidentReportStats } from '../../../hooks/useAccidentReportStats';
+import { getDateFinancialYear } from '../../../utils/DateUtils';
 
 
 //Age interval
@@ -25,6 +26,117 @@ const initialDataset: IDataset = {
     accidentNatureEnvFactor: 0,
     accidentNatureOther: 0
 }
+
+const initialDatasetMonth: IMonth = {
+    apr: 0,
+    aug: 0,
+    dec: 0,
+    feb: 0,
+    jan: 0,
+    jul: 0,
+    jun: 0,
+    mar: 0,
+    may: 0,
+    nov: 0,
+    oct: 0,
+    sep: 0
+}
+interface IMonth {
+    jan: number;
+    feb: number;
+    mar: number;
+    apr: number;
+    may: number;
+    jun: number;
+    jul: number;
+    aug: number;
+    sep: number;
+    oct: number;
+    nov: number;
+    dec: number;
+}
+
+interface ISampleTwoDataset {
+    month: string;
+    dataset: IDataset
+}
+
+interface ISampleThreeDataset {
+    finicalYear: string;
+    dataset: IMonth;
+}
+
+interface ISampleFourDataset {
+    year: number;
+    dataset: IMonth;
+}
+
+interface ISampleFiveDataset {
+    finicialYear: string;
+    dataset: IDataset;
+}
+
+interface ISampleSixDataset {
+    year: number;
+    dataset: IDataset;
+}
+
+const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    switch (month) {
+        case 1:
+            result.jan = result.jan + 1;
+            return result;
+        case 2:
+            result.feb = result.feb + 1;
+            return result;
+        case 3:
+            result.mar = result.mar + 1;
+            return result;
+        case 4:
+            result.apr = result.apr + 1;
+            return result;
+        case 5:
+            result.may = result.may + 1;
+            return result;
+        case 6:
+            result.jun = result.jun + 1;
+            return result;
+        case 7:
+            result.jul = result.jul + 1;
+            return result;
+        case 8:
+            result.aug = result.aug + 1;
+            return result;
+        case 9:
+            result.sep = result.sep + 1;
+            return result;
+        case 10:
+            result.oct = result.oct + 1;
+            return result;
+        case 11:
+            result.nov = result.nov + 1;
+            return result;
+        case 12:
+            result.dec = result.dec + 1;
+            return result;
+        default: return;
+    }
+}
+
+const monthDiff = (d1: Date, d2: Date) => {
+    try {
+        let months: number;
+        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        months -= d1.getMonth();
+        months += d2.getMonth();
+        return months <= 0 ? 0 : months;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
 
 const natureFilter = (item: any, dataset: IDataset): IDataset => {
     let result = dataset;
@@ -59,17 +171,170 @@ const sampleOneParser = (serviceUserAge: any[]) => {
     return dataset;
 }
 
-const sampleTwoParser = (serviceUserAge: any[]): Map<string, IDataset> => {
-    const result = new Map<string, IDataset>();
-    serviceUserAge.forEach((item) => {
-        const year = new Date(item.AccidentTime).getFullYear();
-        if (result.has(`${year}`)) {
-            let dataset = result.get(`${year}`);
+const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTwoDataset[] => {
+    try {
 
-        } else {
 
+        let m = new Map<string, IDataset>();
+        let result: ISampleTwoDataset[] = [];
+
+        const diff = monthDiff(startDate, endDate);
+        for (let i = diff; i > -1; i--) {
+            const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+            m.set(d, { ...initialDataset });
+        }
+
+        data.forEach((item) => {
+            if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+                const formType: string = item.CaseNumber.split("-")[0];
+                const date = new Date(item.AccidentTime || item.IncidentTime || item.Create);
+                const formattedDate = moment(date).format("MM/yyyy");
+                if (m.has(formattedDate)) {
+                    let oldDataset = m.get(formattedDate);
+                    let newDataset = natureFilter(item, oldDataset);
+                    m.set(formattedDate, newDataset);
+                } else {
+                    let newDataset = natureFilter(item, initialDataset);
+                    m.set(formattedDate, newDataset);
+                }
+            }
+        });
+
+        m.forEach((value, key) => {
+            let item: ISampleTwoDataset = { month: key, dataset: value }
+            result.push(item);
+        })
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+    let result: ISampleThreeDataset[] = [];
+    let m = new Map<string, IMonth>();
+
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime || item.Create);
+        if (d) {
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = monthFilter(d.getMonth() + 1);
+                m.set(currentFinicailYear, newDataset);
+            }
         }
     });
+
+    m.forEach((value, key) => {
+        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
+}
+
+
+const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleFourDataset[] => {
+    let result: ISampleFourDataset[] = [];
+    let m = new Map<number, IMonth>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
+        m.set(a, { ...initialDatasetMonth });
+    }
+
+    data.forEach((item) => {
+        if (item.AccidentTime || item.IncidentTime || item.Create) {
+            const year = new Date(item.AccidentTime || item.IncidentTime || item.Create).getFullYear();
+            const month = new Date(item.AccidentTime || item.IncidentTime || item.Create).getMonth() + 1;
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                let newDataset = monthFilter(month, oldDataset);
+                m.set(year, newDataset);
+            } else {
+                let newDataset = monthFilter(month);
+                m.set(year, newDataset);
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleFourDataset = { year: key, dataset: value }
+        result.push(item);
+    })
+
+    return result
+}
+
+const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+    let result: ISampleFiveDataset[] = []
+    let m = new Map<string, IDataset>();
+
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = natureFilter(item, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = natureFilter(item, { ...initialDataset });
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
+}
+
+const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSixDataset[] => {
+    let result: ISampleSixDataset[] = []
+    let m = new Map<string, IDataset>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
+        m.set(a.toString(), { ...initialDataset });
+    }
+
+    data.forEach((item) => {
+        if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+            const year = new Date(item.AccidentTime || item.IncidentTime).getFullYear().toString();
+            const month = new Date(item.AccidentTime || item.IncidentTime).getMonth() + 1;
+
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                let newDataset = natureFilter(item, oldDataset);
+                m.set(year, newDataset);
+            } else {
+                let newDataset = natureFilter(item, { ...initialDataset });
+                m.set(year, newDataset);
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleSixDataset = { year: +key, dataset: value }
+        result.push(item);
+    })
+
     return result;
 }
 
@@ -78,7 +343,7 @@ function ServiceUserAccidentNature() {
     const [groupBy, setGroupBy] = useState("NON");
     const [natureDataset, setNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
-    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAccidentReportStats();
+    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -127,7 +392,7 @@ function ServiceUserAccidentNature() {
     useEffect(() => {
         switch (groupBy) {
             case "NON":
-                setNatureDataset(sampleOneParser(serviceUserAge));
+                setNatureDataset(sampleOneParser(data));
             case "BY_MONTH":
             case "BY_MONTH_FINICIAL":
             case "BY_MONTH_CALENDAR":
@@ -136,7 +401,7 @@ function ServiceUserAccidentNature() {
             default:
                 console.log("default");
         }
-    }, [groupBy, serviceUserAge])
+    }, [groupBy, data])
 
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
@@ -162,10 +427,268 @@ function ServiceUserAccidentNature() {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                return (
+                    <>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">跌倒</th>
+                                            <th scope="col">哽塞</th>
+                                            <th scope="col">服務使用者行為問題</th>
+                                            <th scope="col">環境因素</th>
+                                            <th scope="col">其他</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleTwoParser(data, startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.month}</th>
+                                                    <td>{item.dataset.accidentNatureFall}</td>
+                                                    <td>{item.dataset.accidentNatureChok}</td>
+                                                    <td>{item.dataset.accidentNatureBehavior}</td>
+                                                    <td>{item.dataset.accidentNatureEnvFactor}</td>
+                                                    <td>{item.dataset.accidentNatureOther}</td>
+
+                                                </tr>
+                                            )
+                                        })}
+                                        {
+                                            <tr style={{ color: "red" }}>
+                                                <th scope="row">總數</th>
+                                                <td>{natureDataset.accidentNatureFall}</td>
+                                                <td>{natureDataset.accidentNatureChok}</td>
+                                                <td>{natureDataset.accidentNatureBehavior}</td>
+                                                <td>{natureDataset.accidentNatureEnvFactor}</td>
+                                                <td>{natureDataset.accidentNatureOther}</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>)
             case "BY_MONTH_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleThreeParser(data).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.finicalYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_MONTH_CALENDAR":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">跌倒</th>
+                                        <th scope="col">哽塞</th>
+                                        <th scope="col">服務使用者行為問題</th>
+                                        <th scope="col">環境因素</th>
+                                        <th scope="col">其他</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleFiveParser(data).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.finicialYear}</th>
+                                                <td>{item.dataset.accidentNatureFall}</td>
+                                                <td>{item.dataset.accidentNatureChok}</td>
+                                                <td>{item.dataset.accidentNatureBehavior}</td>
+                                                <td>{item.dataset.accidentNatureEnvFactor}</td>
+                                                <td>{item.dataset.accidentNatureOther}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                    {
+                                        <tr style={{ color: "red" }}>
+                                            <th scope="row">總數</th>
+                                            <td>{natureDataset.accidentNatureFall}</td>
+                                            <td>{natureDataset.accidentNatureChok}</td>
+                                            <td>{natureDataset.accidentNatureBehavior}</td>
+                                            <td>{natureDataset.accidentNatureEnvFactor}</td>
+                                            <td>{natureDataset.accidentNatureOther}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_CALENDAR":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">自閉症譜系障礙 (ASD)</th>
+                                        <th scope="col">沒有自閉症譜系障礙 (ASD)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleSixParser(data, startDate, endDate).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.accidentNatureFall}</td>
+                                                <td>{item.dataset.accidentNatureChok}</td>
+                                                <td>{item.dataset.accidentNatureBehavior}</td>
+                                                <td>{item.dataset.accidentNatureEnvFactor}</td>
+                                                <td>{item.dataset.accidentNatureOther}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             default:
                 return null;
         }

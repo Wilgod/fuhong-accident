@@ -314,7 +314,7 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
             .select("CaseNumber", "IncidentTime", "IncidentCategory", "Abusive_Body", "Abusive_Sexual", "Abusive_Mental", "Abusive_Negligent", "Abusive_Other")
             .filter(filterQuery)
             .getAll();
-            console.log(items)
+        console.log(items)
         return items
     } catch (err) {
         console.error(err);
@@ -348,7 +348,7 @@ export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
         // }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther")
+            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther", "Create")
             .filter(filterQuery)
             .getAll();
         console.log(items);
