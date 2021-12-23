@@ -221,10 +221,10 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
                 let oldDataset = m.get(currentFinicailYear);
-                let newDataset = monthFilter(d.getMonth(), oldDataset);
+                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
                 m.set(currentFinicailYear, newDataset);
             } else {
-                let newDataset = monthFilter(d.getMonth());
+                let newDataset = monthFilter(d.getMonth() + 1);
                 m.set(currentFinicailYear, newDataset);
             }
         }
@@ -1005,7 +1005,6 @@ function General() {
                                         return [item.month, item.dataset.sui, item.dataset.pui, item.dataset.sih, item.dataset.sid, item.dataset.oin]
                                     })]
                                 }
-
                             />
                         </div>
                     </div>

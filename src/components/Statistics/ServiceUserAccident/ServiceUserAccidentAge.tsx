@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
+import { getDateFinancialYear } from '../../../utils/DateUtils';
 
 
 //Age interval
@@ -54,8 +55,23 @@ interface ISampleDataTwoDataset {
     dataset: IDataset;
 }
 
+interface ISampleSixDataset {
+    year: number;
+    dataset: IDataset;
+}
+
+interface ISampleFiveDataset {
+    finicialYear: string;
+    dataset: IDataset;
+}
+
 interface ISampleDataFour {
     year: string;
+    dataset: IMonth;
+}
+
+interface ISampleThreeDataset {
+    finicalYear: string;
     dataset: IMonth;
 }
 
@@ -70,7 +86,7 @@ const initialDataset: IDataset = {
 }
 
 const agefilter = (age: number, dataset: IDataset): IDataset => {
-    let result = dataset;
+    let result = { ...dataset };
     if (age < 15) {
         result.lessThanFifteen = result.lessThanFifteen + 1;
     } else if (age >= 15 && age <= 20) {
@@ -150,10 +166,10 @@ const sampleTwoParser = (serviceUserAge: any[], startDate: Date, endDate: Date):
             const formattedDate = moment(date).format("MM/yyyy");
             if (m.has(formattedDate)) {
                 let oldDataset = m.get(formattedDate);
-                let newDataset = agefilter(item.serviceUserAge, oldDataset);
+                let newDataset = agefilter(item.ServiceUserAge, oldDataset);
                 m.set(formattedDate, newDataset);
             } else {
-                let newDataset = agefilter(item.serviceUserAge, initialDataset);
+                let newDataset = agefilter(item.ServiceUserAge, initialDataset);
                 m.set(formattedDate, newDataset);
             }
         }
@@ -168,8 +184,31 @@ const sampleTwoParser = (serviceUserAge: any[], startDate: Date, endDate: Date):
     return result;
 }
 
-const sampleThreeParser = (serviceUserAge: any[], startDate: Date, endDate: Date) => {
+const sampleThreeParser = (serviceUserAge: any[]) => {
+    let result: ISampleThreeDataset[] = [];
+    let m = new Map<string, IMonth>();
 
+    serviceUserAge.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = monthFilter(d.getMonth() + 1);
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
 }
 
 const sampleFourParser = (serviceUserAge: any[], startDate: Date, endDate: Date): ISampleDataFour[] => {
@@ -208,11 +247,68 @@ const sampleFourParser = (serviceUserAge: any[], startDate: Date, endDate: Date)
 }
 
 const sampleFiveParser = (serviceUserAge: any[]) => {
+    let result: ISampleFiveDataset[] = []
+    let m = new Map<string, IDataset>();
 
+    serviceUserAge.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = agefilter(item.ServiceUserAge, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = agefilter(item.ServiceUserAge, { ...initialDataset });
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
 }
 
-const sampleSixParser = (serviceUserAge: any[]) => {
+const sampleSixParser = (serviceUserAge: any[], startDate: Date, endDate: Date) => {
 
+    let result: ISampleSixDataset[] = []
+    let m = new Map<string, IDataset>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
+        m.set(a.toString(), { ...initialDataset });
+    }
+
+    serviceUserAge.forEach((item) => {
+        if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+            const year = new Date(item.AccidentTime || item.IncidentTime).getFullYear().toString();
+            const month = new Date(item.AccidentTime || item.IncidentTime).getMonth() + 1;
+            const formType: string = item.CaseNumber.split("-")[0];
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                let newDataset = agefilter(item.ServiceUserAge, oldDataset);
+                m.set(year, newDataset);
+            } else {
+                let newDataset = agefilter(item.ServiceUserAge, { ...initialDataset });
+                m.set(year, newDataset);
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleSixDataset = { year: +key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
 }
 
 function ServiceUserAccidentAge() {
@@ -350,6 +446,17 @@ function ServiceUserAccidentAge() {
                                                 )
                                             })
                                         }
+                                        {
+                                            <tr>
+                                                <th scope="row">總數</th>
+                                                <th>{ageDataset.lessThanFifteen}</th>
+                                                <th>{ageDataset.fifteenToTwenty}</th>
+                                                <th>{ageDataset.twentyOneToThirty}</th>
+                                                <th>{ageDataset.thirtyOneToforty}</th>
+                                                <th>{ageDataset.fortyOneTofifty}</th>
+                                                <th>{ageDataset.greaterThanSixty}</th>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table >
                             </div>
@@ -375,26 +482,38 @@ function ServiceUserAccidentAge() {
                                     <thead>
                                         <tr>
                                             <th scope="col"></th>
-                                            <th scope="col">&lt;15歲</th>
-                                            <th scope="col">15-20歲</th>
-                                            <th scope="col">21-30歲</th>
-                                            <th scope="col">31-40歲</th>
-                                            <th scope="col">41-50歲</th>
-                                            <th scope="col">&gt;60歲</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
-                                            sampleTwoParser(serviceUserAge, startDate, endDate).map((item) => {
+                                            sampleThreeParser(serviceUserAge).map((item) => {
                                                 return (
                                                     <tr>
-                                                        <th scope="row">{item.year}</th>
-                                                        <th>{item.dataset.lessThanFifteen}</th>
-                                                        <th>{item.dataset.fifteenToTwenty}</th>
-                                                        <th>{item.dataset.twentyOneToThirty}</th>
-                                                        <th>{item.dataset.thirtyOneToforty}</th>
-                                                        <th>{item.dataset.fortyOneTofifty}</th>
-                                                        <th>{item.dataset.greaterThanSixty}</th>
+                                                        <th scope="row">{item.finicalYear}</th>
+                                                        <td>{item.dataset.apr}</td>
+                                                        <td>{item.dataset.may}</td>
+                                                        <td>{item.dataset.jun}</td>
+                                                        <td>{item.dataset.jun}</td>
+                                                        <td>{item.dataset.aug}</td>
+                                                        <td>{item.dataset.sep}</td>
+                                                        <td>{item.dataset.oct}</td>
+                                                        <td>{item.dataset.nov}</td>
+                                                        <td>{item.dataset.dec}</td>
+                                                        <td>{item.dataset.jan}</td>
+                                                        <td>{item.dataset.feb}</td>
+                                                        <td>{item.dataset.mar}</td>
                                                     </tr>
                                                 )
                                             })
@@ -406,14 +525,159 @@ function ServiceUserAccidentAge() {
                     </>
                 )
             case "BY_MONTH_CALENDAR":
-                sampleFourParser
+
                 return (
                     <>
-
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`年 - 新發生意外或事故`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleFourParser(serviceUserAge, startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </>
                 )
             case "BY_YEAR_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-7">
+                            <table className="table" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">&lt;15歲</th>
+                                        <th scope="col">15-20歲</th>
+                                        <th scope="col">21-30歲</th>
+                                        <th scope="col">31-40歲</th>
+                                        <th scope="col">41-50歲</th>
+                                        <th scope="col">&gt;60歲</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        sampleFiveParser(serviceUserAge).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicialYear}</th>
+                                                    <th>{item.dataset.lessThanFifteen}</th>
+                                                    <th>{item.dataset.fifteenToTwenty}</th>
+                                                    <th>{item.dataset.twentyOneToThirty}</th>
+                                                    <th>{item.dataset.thirtyOneToforty}</th>
+                                                    <th>{item.dataset.fortyOneTofifty}</th>
+                                                    <th>{item.dataset.greaterThanSixty}</th>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table >
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_CALENDAR":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-7">
+                            <table className="table" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">&lt;15歲</th>
+                                        <th scope="col">15-20歲</th>
+                                        <th scope="col">21-30歲</th>
+                                        <th scope="col">31-40歲</th>
+                                        <th scope="col">41-50歲</th>
+                                        <th scope="col">&gt;60歲</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        sampleSixParser(serviceUserAge, startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <th>{item.dataset.lessThanFifteen}</th>
+                                                    <th>{item.dataset.fifteenToTwenty}</th>
+                                                    <th>{item.dataset.twentyOneToThirty}</th>
+                                                    <th>{item.dataset.thirtyOneToforty}</th>
+                                                    <th>{item.dataset.fortyOneTofifty}</th>
+                                                    <th>{item.dataset.greaterThanSixty}</th>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table >
+                        </div>
+                    </div>
+                </>
             default:
                 return null;
         }
@@ -484,10 +748,294 @@ function ServiceUserAccidentAge() {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                return (
+                    <Chart
+                        width={'500px'}
+                        height={'300px'}
+                        chartType="Bar"
+                        loader={<div>Loading Chart</div>}
+                        data={[
+                            ['Year', 'Sales', 'Expenses', 'Profit'],
+                            ['2014', 1000, 400, 200],
+                            ['2015', 1170, 460, 250],
+                            ['2016', 660, 1120, 300],
+                            ['2017', 1030, 540, 350],
+                        ]}
+                        options={{
+                            // Material design options
+                            chart: {
+                                title: 'Company Performance',
+                                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                            },
+                        }}
+                        // For tests
+                        rootProps={{ 'data-testid': '2' }}
+                    />
+                )
             case "BY_MONTH_FINICIAL":
+                return (
+                    <div className="row">
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    [
+                                        'Day',
+                                        'Guardians of the Galaxy',
+                                        'The Avengers',
+                                        'Transformers: Age of Extinction',
+                                    ],
+                                    [1, 37.8, 80.8, 41.8],
+                                    [2, 30.9, 69.5, 32.4],
+                                    [3, 25.4, 57, 25.7],
+                                    [4, 11.7, 18.8, 10.5],
+                                    [5, 11.9, 17.6, 10.4],
+                                    [6, 8.8, 13.6, 7.7],
+                                    [7, 7.6, 12.3, 9.6],
+                                    [8, 12.3, 29.2, 10.6],
+                                    [9, 16.9, 42.9, 14.8],
+                                    [10, 12.8, 30.9, 11.6],
+                                    [11, 5.3, 7.9, 4.7],
+                                    [12, 6.6, 8.4, 5.2],
+                                    [13, 4.8, 6.3, 3.6],
+                                    [14, 4.2, 6.2, 3.4],
+                                ]}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                rootProps={{ 'data-testid': '3' }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                                    ['2014', 1000, 400, 200],
+                                    ['2015', 1170, 460, 250],
+                                    ['2016', 660, 1120, 300],
+                                    ['2017', 1030, 540, 350],
+                                ]}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                // For tests
+                                rootProps={{ 'data-testid': '2' }}
+                            />
+                        </div>
+                    </div>
+                )
             case "BY_MONTH_CALENDAR":
+                return (
+                    <div className="row">
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    [
+                                        'Day',
+                                        'Guardians of the Galaxy',
+                                        'The Avengers',
+                                        'Transformers: Age of Extinction',
+                                    ],
+                                    [1, 37.8, 80.8, 41.8],
+                                    [2, 30.9, 69.5, 32.4],
+                                    [3, 25.4, 57, 25.7],
+                                    [4, 11.7, 18.8, 10.5],
+                                    [5, 11.9, 17.6, 10.4],
+                                    [6, 8.8, 13.6, 7.7],
+                                    [7, 7.6, 12.3, 9.6],
+                                    [8, 12.3, 29.2, 10.6],
+                                    [9, 16.9, 42.9, 14.8],
+                                    [10, 12.8, 30.9, 11.6],
+                                    [11, 5.3, 7.9, 4.7],
+                                    [12, 6.6, 8.4, 5.2],
+                                    [13, 4.8, 6.3, 3.6],
+                                    [14, 4.2, 6.2, 3.4],
+                                ]}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                rootProps={{ 'data-testid': '3' }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                                    ['2014', 1000, 400, 200],
+                                    ['2015', 1170, 460, 250],
+                                    ['2016', 660, 1120, 300],
+                                    ['2017', 1030, 540, 350],
+                                ]}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                // For tests
+                                rootProps={{ 'data-testid': '2' }}
+                            />
+                        </div>
+                    </div>
+                )
             case "BY_YEAR_FINICIAL":
+                return (
+                    <div className="row">
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    [
+                                        'Day',
+                                        'Guardians of the Galaxy',
+                                        'The Avengers',
+                                        'Transformers: Age of Extinction',
+                                    ],
+                                    [1, 37.8, 80.8, 41.8],
+                                    [2, 30.9, 69.5, 32.4],
+                                    [3, 25.4, 57, 25.7],
+                                    [4, 11.7, 18.8, 10.5],
+                                    [5, 11.9, 17.6, 10.4],
+                                    [6, 8.8, 13.6, 7.7],
+                                    [7, 7.6, 12.3, 9.6],
+                                    [8, 12.3, 29.2, 10.6],
+                                    [9, 16.9, 42.9, 14.8],
+                                    [10, 12.8, 30.9, 11.6],
+                                    [11, 5.3, 7.9, 4.7],
+                                    [12, 6.6, 8.4, 5.2],
+                                    [13, 4.8, 6.3, 3.6],
+                                    [14, 4.2, 6.2, 3.4],
+                                ]}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                rootProps={{ 'data-testid': '3' }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                                    ['2014', 1000, 400, 200],
+                                    ['2015', 1170, 460, 250],
+                                    ['2016', 660, 1120, 300],
+                                    ['2017', 1030, 540, 350],
+                                ]}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                // For tests
+                                rootProps={{ 'data-testid': '2' }}
+                            />
+                        </div>
+                    </div>
+                )
             case "BY_YEAR_CALENDAR":
+                return (
+                    <div className="row">
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    [
+                                        'Day',
+                                        'Guardians of the Galaxy',
+                                        'The Avengers',
+                                        'Transformers: Age of Extinction',
+                                    ],
+                                    [1, 37.8, 80.8, 41.8],
+                                    [2, 30.9, 69.5, 32.4],
+                                    [3, 25.4, 57, 25.7],
+                                    [4, 11.7, 18.8, 10.5],
+                                    [5, 11.9, 17.6, 10.4],
+                                    [6, 8.8, 13.6, 7.7],
+                                    [7, 7.6, 12.3, 9.6],
+                                    [8, 12.3, 29.2, 10.6],
+                                    [9, 16.9, 42.9, 14.8],
+                                    [10, 12.8, 30.9, 11.6],
+                                    [11, 5.3, 7.9, 4.7],
+                                    [12, 6.6, 8.4, 5.2],
+                                    [13, 4.8, 6.3, 3.6],
+                                    [14, 4.2, 6.2, 3.4],
+                                ]}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                rootProps={{ 'data-testid': '3' }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[
+                                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                                    ['2014', 1000, 400, 200],
+                                    ['2015', 1170, 460, 250],
+                                    ['2016', 660, 1120, 300],
+                                    ['2017', 1030, 540, 350],
+                                ]}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                    },
+                                }}
+                                // For tests
+                                rootProps={{ 'data-testid': '2' }}
+                            />
+                        </div>
+                    </div>
+                )
             default:
                 return null;
         }
