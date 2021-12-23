@@ -380,7 +380,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
                     let arr = JSON.parse(item.ObserveEnvironmentFactor);
                     if (Array.isArray(arr)) {
                         arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, initialDataset);
+                            let newDataset = envFactorFilter(factor, oldDataset);
                             m.set(year, newDataset);
                         })
                     }
@@ -660,6 +660,7 @@ function ServiceUserAccidentEnv() {
                                                 <th scope="row">{item.finicialYear}</th>
                                                 <td>{item.dataset.envSlipperyGround}</td>
                                                 <td>{item.dataset.envUnevenGround}</td>
+                                                <td>{item.dataset.envObstacleItems}</td>
                                                 <td>{item.dataset.envNotEnoughSpace}</td>
                                                 <td>{item.dataset.envAcousticStimulation}</td>
                                                 <td>{item.dataset.envCollidedByOthers}</td>
@@ -675,6 +676,7 @@ function ServiceUserAccidentEnv() {
                                             <td>{envFactorDataset.envSlipperyGround}</td>
                                             <td>{envFactorDataset.envUnevenGround}</td>
                                             <td>{envFactorDataset.envNotEnoughSpace}</td>
+                                            <td>{envFactorDataset.envObstacleItems}</td>
                                             <td>{envFactorDataset.envAcousticStimulation}</td>
                                             <td>{envFactorDataset.envCollidedByOthers}</td>
                                             <td>{envFactorDataset.envHurtByOthers}</td>
@@ -724,6 +726,7 @@ function ServiceUserAccidentEnv() {
                                                 <td>{item.dataset.envSlipperyGround}</td>
                                                 <td>{item.dataset.envUnevenGround}</td>
                                                 <td>{item.dataset.envNotEnoughSpace}</td>
+                                                <td>{item.dataset.envObstacleItems}</td>
                                                 <td>{item.dataset.envAcousticStimulation}</td>
                                                 <td>{item.dataset.envCollidedByOthers}</td>
                                                 <td>{item.dataset.envHurtByOthers}</td>
@@ -762,7 +765,7 @@ function ServiceUserAccidentEnv() {
                     </tr>
                     <tr>
                         <th scope="row">障礙物品</th>
-                        <th>{envFactorDataset.envNotEnoughSpace}</th>
+                        <th>{envFactorDataset.envObstacleItems}</th>
                     </tr>
                     <tr>
                         <th scope="row">光線不足</th>

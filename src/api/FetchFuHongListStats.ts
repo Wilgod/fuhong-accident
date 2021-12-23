@@ -311,7 +311,7 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime", "IncidentCategory", "Abusive_Body", "Abusive_Sexual", "Abusive_Mental", "Abusive_Negligent", "Abusive_Other")
+            .select("CaseNumber", "IncidentTime", "IncidentCategory", "Abusive_Body", "Abusive_Sexual", "Abusive_Mental", "Abusive_Negligent", "Abusive_Other", "Created")
             .filter(filterQuery)
             .getAll();
         console.log(items)

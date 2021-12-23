@@ -279,7 +279,7 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
     let m = new Map<string, IDataset>();
 
     data.forEach((item) => {
-        const d = new Date(item.AccidentTime || item.IncidentTime);
+        const d = new Date(item.AccidentTime || item.IncidentTime || item.Created);
         if (d) {
 
             const currentFinicailYear = getDateFinancialYear(d);
@@ -634,16 +634,7 @@ function ServiceUserAccidentNature() {
                                             </tr>
                                         )
                                     })}
-                                    {
-                                        <tr style={{ color: "red" }}>
-                                            <th scope="row">總數</th>
-                                            <td>{natureDataset.accidentNatureFall}</td>
-                                            <td>{natureDataset.accidentNatureChok}</td>
-                                            <td>{natureDataset.accidentNatureBehavior}</td>
-                                            <td>{natureDataset.accidentNatureEnvFactor}</td>
-                                            <td>{natureDataset.accidentNatureOther}</td>
-                                        </tr>
-                                    }
+
                                 </tbody>
                             </table>
                         </div>
