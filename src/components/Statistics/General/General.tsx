@@ -6,6 +6,8 @@ import * as moment from 'moment';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
 import useGeneralStats from '../../../hooks/useGeneralStats';
+import { getCurrentFinancialYear } from '../../../utils/CaseNumberParser';
+import { getDateFinancialYear, getFinicialYears } from '../../../utils/DateUtils';
 
 interface IDataset {
     sui: number;
@@ -18,6 +20,11 @@ interface IDataset {
 interface ISampleTwoDataset {
     month: string;
     dataset: IDataset
+}
+
+interface ISampleThreeDataset {
+    finicalYear: string;
+    dataset: IMonth;
 }
 
 interface ISampleFourDataset {
@@ -158,9 +165,28 @@ const sampleOneParser = (data: any[]): IDataset => {
     }
 }
 
-const sampleTwoParser = (data: any[]): ISampleTwoDataset[] => {
+const monthDiff = (d1: Date, d2: Date) => {
+    try {
+        let months: number;
+        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        months -= d1.getMonth();
+        months += d2.getMonth();
+        return months <= 0 ? 0 : months;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTwoDataset[] => {
     let m = new Map<string, IDataset>();
     let result: ISampleTwoDataset[] = [];
+
+    const diff = monthDiff(startDate, endDate);
+    for (let i = diff; i > -1; i--) {
+        const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+        m.set(d, { ...initialDataset });
+    }
+
     data.forEach((item) => {
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
             const formType: string = item.CaseNumber.split("-")[0];
@@ -185,8 +211,31 @@ const sampleTwoParser = (data: any[]): ISampleTwoDataset[] => {
     return result;
 }
 
-const sampleThreeParser = (data: any[]) => {
+const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+    let result: ISampleThreeDataset[] = [];
+    let m = new Map<string, IMonth>();
 
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = monthFilter(d.getMonth(), oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = monthFilter(d.getMonth());
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
 }
 
 const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleFourDataset[] => {
@@ -286,7 +335,8 @@ function General() {
         }
         return result;
     }
-    console.log(sampleTwoParser(data))
+
+
     const byMonthTableComponent = () => {
         return (
             <table className="table" >
@@ -386,7 +436,7 @@ function General() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleTwoParser(data).map((item) => {
+                                        {sampleTwoParser(data, startDate, endDate).map((item) => {
                                             return (
                                                 <tr>
                                                     <th scope="row">{item.month}</th>
@@ -398,6 +448,16 @@ function General() {
                                                 </tr>
                                             )
                                         })}
+                                        {
+                                            <tr style={{ color: "red" }}>
+                                                <th scope="row">總數</th>
+                                                <td>{unitDataset.sui}</td>
+                                                <td>{unitDataset.pui}</td>
+                                                <td>{unitDataset.sih}</td>
+                                                <td>{unitDataset.sid}</td>
+                                                <td>{unitDataset.oin}</td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -407,63 +467,281 @@ function General() {
             case "BY_MONTH_FINICIAL":
                 return (
                     <>
-                        <>
-                            <div className="row">
-                                <div className="col-1">
-                                    <h6 style={{ fontWeight: 600 }}>
-                                        標題:
-                                    </h6>
-                                </div>
-                                <div className="col-7">
-                                    <h6>{`${title} - 新發生意外或事故`}</h6>
-                                </div>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
                             </div>
-                            <div className="row">
-                                <div className="col-12">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Jan</th>
-                                                <th scope="col">Feb</th>
-                                                <th scope="col">Mar</th>
-                                                <th scope="col">Apr</th>
-                                                <th scope="col">May</th>
-                                                <th scope="col">Jun</th>
-                                                <th scope="col">Jul</th>
-                                                <th scope="col">Aug</th>
-                                                <th scope="col">Sep</th>
-                                                <th scope="col">Oct</th>
-                                                <th scope="col">Nov</th>
-                                                <th scope="col">Dec</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {sampleFourParser(data, startDate, endDate).map((item) => {
-                                                return (
-                                                    <tr>
-                                                        <th scope="row">{item.year}</th>
-                                                        <td>{item.dataset.jan}</td>
-                                                        <td>{item.dataset.feb}</td>
-                                                        <td>{item.dataset.mar}</td>
-                                                        <td>{item.dataset.apr}</td>
-                                                        <td>{item.dataset.may}</td>
-                                                        <td>{item.dataset.jun}</td>
-                                                        <td>{item.dataset.jun}</td>
-                                                        <td>{item.dataset.aug}</td>
-                                                        <td>{item.dataset.sep}</td>
-                                                        <td>{item.dataset.oct}</td>
-                                                        <td>{item.dataset.nov}</td>
-                                                        <td>{item.dataset.dec}</td>
-                                                    </tr>
-                                                )
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 財政年度新發生意外或事故 (服務使用者意外每月總數)`}</h6>
                             </div>
-                        </>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">服務使用者意外</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1)).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 財政年度新發生意外或事故 (外界人士意外每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">外界人士意外</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1)).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(牌照事務處)每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">特別事故(牌照事務處)</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1)).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">特別事故(津貼科))</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1)).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">其他事故意外</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1)).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </>
+
                 )
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
@@ -649,11 +927,72 @@ function General() {
                 )
             case "BY_MONTH":
                 return (
-                    <>
 
-                    </>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={1000}
+                                chartType="ColumnChart"
+                                loader={<div>Loading Chart</div>}
+                                data={
+                                    [['月份', '服務使用者意外', '外界人士意外', '特別事故 (牌照事務處)', '特別事故 (津貼科)', '其他事故'],
+                                    ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                        return [item.month, item.dataset.sui, item.dataset.pui, item.dataset.sih, item.dataset.sid, item.dataset.oin]
+                                    })]
+                                }
+
+                            />
+                        </div>
+                    </div>
                 )
             case "BY_MONTH_FINICIAL":
+                // sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate)
+                return (
+                    <>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                {/* <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={[
+                                        [
+                                            { type: 'date', label: 'Day' },
+                                            ...sampleThreeParser(data.filter((item => item.CaseNumber.indexOf("SUI") > -1))).map((item) => item.finicalYear)
+                                        ],
+                                        [new Date(1, 3), 1, 2, 3]
+                                        [new Date(1, 4), 1, 2, 3]
+                                        [new Date(1, 5), 1, 2, 3]
+                                        [new Date(1, 6), 1, 2, 3]
+                                    ]}
+
+                                    rootProps={{ 'data-testid': '3' }}
+                                /> */}
+                            </div>
+                        </div>
+                    </>
+                )
             case "BY_MONTH_CALENDAR":
             case "BY_YEAR_FINICIAL":
             case "BY_YEAR_CALENDAR":

@@ -19,6 +19,46 @@ interface IDataset {
     greaterThanSixty: number;
 }
 
+interface IMonth {
+    jan: number;
+    feb: number;
+    mar: number;
+    apr: number;
+    may: number;
+    jun: number;
+    jul: number;
+    aug: number;
+    sep: number;
+    oct: number;
+    nov: number;
+    dec: number;
+}
+
+const initialDatasetMonth: IMonth = {
+    apr: 0,
+    aug: 0,
+    dec: 0,
+    feb: 0,
+    jan: 0,
+    jul: 0,
+    jun: 0,
+    mar: 0,
+    may: 0,
+    nov: 0,
+    oct: 0,
+    sep: 0
+}
+
+interface ISampleDataTwoDataset {
+    year: string;
+    dataset: IDataset;
+}
+
+interface ISampleDataFour {
+    year: string;
+    dataset: IMonth;
+}
+
 const initialDataset: IDataset = {
     lessThanFifteen: 0,
     fifteenToTwenty: 0,
@@ -49,6 +89,49 @@ const agefilter = (age: number, dataset: IDataset): IDataset => {
     return result;
 }
 
+const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    switch (month) {
+        case 1:
+            result.jan = result.jan + 1;
+            return result;
+        case 2:
+            result.feb = result.feb + 1;
+            return result;
+        case 3:
+            result.mar = result.mar + 1;
+            return result;
+        case 4:
+            result.apr = result.apr + 1;
+            return result;
+        case 5:
+            result.may = result.may + 1;
+            return result;
+        case 6:
+            result.jun = result.jun + 1;
+            return result;
+        case 7:
+            result.jul = result.jul + 1;
+            return result;
+        case 8:
+            result.aug = result.aug + 1;
+            return result;
+        case 9:
+            result.sep = result.sep + 1;
+            return result;
+        case 10:
+            result.oct = result.oct + 1;
+            return result;
+        case 11:
+            result.nov = result.nov + 1;
+            return result;
+        case 12:
+            result.dec = result.dec + 1;
+            return result;
+        default: return;
+    }
+}
+
 const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
     serviceUserAge.forEach((item) => {
@@ -57,18 +140,79 @@ const sampleOneParser = (serviceUserAge: any[]) => {
     return dataset;
 }
 
-const sampleTwoParser = (serviceUserAge: any[]): Map<string, IDataset> => {
-    const result = new Map<string, IDataset>();
+const sampleTwoParser = (serviceUserAge: any[], startDate: Date, endDate: Date): ISampleDataTwoDataset[] => {
+    let result: ISampleDataTwoDataset[] = [];
+    const m = new Map<string, IDataset>();
+
     serviceUserAge.forEach((item) => {
-        const year = new Date(item.AccidentTime).getFullYear();
-        if (result.has(`${year}`)) {
-            let dataset = result.get(`${year}`);
-
-        } else {
-
+        if (item.AccidentTime) {
+            const date = new Date(item.AccidentTime);
+            const formattedDate = moment(date).format("MM/yyyy");
+            if (m.has(formattedDate)) {
+                let oldDataset = m.get(formattedDate);
+                let newDataset = agefilter(item.serviceUserAge, oldDataset);
+                m.set(formattedDate, newDataset);
+            } else {
+                let newDataset = agefilter(item.serviceUserAge, initialDataset);
+                m.set(formattedDate, newDataset);
+            }
         }
-    });
+    })
+
+
+    m.forEach((value, key) => {
+        let item: ISampleDataTwoDataset = { year: key, dataset: value }
+        result.push(item);
+    })
+
     return result;
+}
+
+const sampleThreeParser = (serviceUserAge: any[], startDate: Date, endDate: Date) => {
+
+}
+
+const sampleFourParser = (serviceUserAge: any[], startDate: Date, endDate: Date): ISampleDataFour[] => {
+    let result: ISampleDataFour[] = []
+    const m = new Map<string, IMonth>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear().toString()
+        m.set(a, { ...initialDatasetMonth });
+    }
+
+    serviceUserAge.forEach((item) => {
+        if (item.AccidentTime || item.IncidentTime) {
+            const year = new Date(item.AccidentTime || item.IncidentTime).getFullYear().toString();
+            const month = new Date(item.AccidentTime || item.IncidentTime).getMonth() + 1;
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                let newDataset = monthFilter(month, oldDataset);
+                m.set(year, newDataset);
+            } else {
+                let newDataset = monthFilter(month);
+                m.set(year, newDataset);
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleDataFour = { year: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
+}
+
+const sampleFiveParser = (serviceUserAge: any[]) => {
+
+}
+
+const sampleSixParser = (serviceUserAge: any[]) => {
+
 }
 
 function ServiceUserAccidentAge() {
@@ -77,7 +221,7 @@ function ServiceUserAccidentAge() {
     const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation();
     const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
-    
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -164,8 +308,110 @@ function ServiceUserAccidentAge() {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                return (
+                    <>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-7">
+                                <table className="table" >
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">&lt;15歲</th>
+                                            <th scope="col">15-20歲</th>
+                                            <th scope="col">21-30歲</th>
+                                            <th scope="col">31-40歲</th>
+                                            <th scope="col">41-50歲</th>
+                                            <th scope="col">&gt;60歲</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            sampleTwoParser(serviceUserAge, startDate, endDate).map((item) => {
+                                                return (
+                                                    <tr>
+                                                        <th scope="row">{item.year}</th>
+                                                        <th>{item.dataset.lessThanFifteen}</th>
+                                                        <th>{item.dataset.fifteenToTwenty}</th>
+                                                        <th>{item.dataset.twentyOneToThirty}</th>
+                                                        <th>{item.dataset.thirtyOneToforty}</th>
+                                                        <th>{item.dataset.fortyOneTofifty}</th>
+                                                        <th>{item.dataset.greaterThanSixty}</th>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table >
+                            </div>
+                        </div>
+                    </>
+                )
             case "BY_MONTH_FINICIAL":
+                return (
+                    <>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-7">
+                                <table className="table" >
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">&lt;15歲</th>
+                                            <th scope="col">15-20歲</th>
+                                            <th scope="col">21-30歲</th>
+                                            <th scope="col">31-40歲</th>
+                                            <th scope="col">41-50歲</th>
+                                            <th scope="col">&gt;60歲</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            sampleTwoParser(serviceUserAge, startDate, endDate).map((item) => {
+                                                return (
+                                                    <tr>
+                                                        <th scope="row">{item.year}</th>
+                                                        <th>{item.dataset.lessThanFifteen}</th>
+                                                        <th>{item.dataset.fifteenToTwenty}</th>
+                                                        <th>{item.dataset.twentyOneToThirty}</th>
+                                                        <th>{item.dataset.thirtyOneToforty}</th>
+                                                        <th>{item.dataset.fortyOneTofifty}</th>
+                                                        <th>{item.dataset.greaterThanSixty}</th>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table >
+                            </div>
+                        </div>
+                    </>
+                )
             case "BY_MONTH_CALENDAR":
+                sampleFourParser
+                return (
+                    <>
+
+                    </>
+                )
             case "BY_YEAR_FINICIAL":
             case "BY_YEAR_CALENDAR":
             default:
