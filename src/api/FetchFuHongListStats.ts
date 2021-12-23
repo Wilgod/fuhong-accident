@@ -348,7 +348,7 @@ export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
         // }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther", "Create")
+            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther", "Created")
             .filter(filterQuery)
             .getAll();
         console.log(items);
@@ -387,7 +387,7 @@ export async function getAccidentReportStatsForOutsiders(searchCriteria: ISearch
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther",
                 "EnvFactorSlipperyGround", "EnvFactorUnevenGround", "EnvFactorObstacleItems", "EnvFactorInsufficientLight", "EnvFactorNotEnoughSpace", "EnvFactorNoise", "EnvFactorCollision", "EnvFactorHurtByOthers", "EnvFactorAssistiveEquipment", "EnvFactorOther",
-                "PersonalFactorEmotional", "PersonalFactorImpatient", "PersonalFactorChok", "PersonalFactorUnsteadyWalk", "PersonalFactorTwitch", "PersonalFactorOther")
+                "PersonalFactorEmotional", "PersonalFactorImpatient", "PersonalFactorChok", "PersonalFactorUnsteadyWalk", "PersonalFactorTwitch", "PersonalFactorOther", "Created")
             .filter(filterQuery)
             .getAll();
         console.log(items);

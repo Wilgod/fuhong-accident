@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
+import { getDateFinancialYear } from '../../../utils/DateUtils';
 
 interface IDataset {
     personalEmotionalInstability: number;
@@ -23,6 +24,72 @@ const initialDataset: IDataset = {
     personalOther: 0,
     personalTwitch: 0,
     personalUnsteadyWalking: 0
+}
+
+const initialDatasetMonth: IMonth = {
+    apr: 0,
+    aug: 0,
+    dec: 0,
+    feb: 0,
+    jan: 0,
+    jul: 0,
+    jun: 0,
+    mar: 0,
+    may: 0,
+    nov: 0,
+    oct: 0,
+    sep: 0
+}
+interface IMonth {
+    jan: number;
+    feb: number;
+    mar: number;
+    apr: number;
+    may: number;
+    jun: number;
+    jul: number;
+    aug: number;
+    sep: number;
+    oct: number;
+    nov: number;
+    dec: number;
+}
+
+interface ISampleTwoDataset {
+    month: string;
+    dataset: IDataset
+}
+
+interface ISampleThreeDataset {
+    finicalYear: string;
+    dataset: IMonth;
+}
+
+interface ISampleFourDataset {
+    year: number;
+    dataset: IMonth;
+}
+
+interface ISampleFiveDataset {
+    finicialYear: string;
+    dataset: IDataset;
+}
+
+interface ISampleSixDataset {
+    year: number;
+    dataset: IDataset;
+}
+
+const monthDiff = (d1: Date, d2: Date) => {
+    try {
+        let months: number;
+        months = (d2.getFullYear() - d1.getFullYear()) * 12;
+        months -= d1.getMonth();
+        months += d2.getMonth();
+        return months <= 0 ? 0 : months;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 const envFactorFilter = (factor: string, dataset: IDataset): IDataset => {
@@ -50,6 +117,50 @@ const envFactorFilter = (factor: string, dataset: IDataset): IDataset => {
     }
 }
 
+
+const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    switch (month) {
+        case 1:
+            result.jan = result.jan + 1;
+            return result;
+        case 2:
+            result.feb = result.feb + 1;
+            return result;
+        case 3:
+            result.mar = result.mar + 1;
+            return result;
+        case 4:
+            result.apr = result.apr + 1;
+            return result;
+        case 5:
+            result.may = result.may + 1;
+            return result;
+        case 6:
+            result.jun = result.jun + 1;
+            return result;
+        case 7:
+            result.jul = result.jul + 1;
+            return result;
+        case 8:
+            result.aug = result.aug + 1;
+            return result;
+        case 9:
+            result.sep = result.sep + 1;
+            return result;
+        case 10:
+            result.oct = result.oct + 1;
+            return result;
+        case 11:
+            result.nov = result.nov + 1;
+            return result;
+        case 12:
+            result.dec = result.dec + 1;
+            return result;
+        default: return;
+    }
+}
+
 const sampleOneParser = (envFactor: any[]): IDataset => {
     let dataset: IDataset = { ...initialDataset };
     envFactor.forEach((item) => {
@@ -63,6 +174,215 @@ const sampleOneParser = (envFactor: any[]): IDataset => {
         }
     })
     return dataset
+}
+
+const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTwoDataset[] => {
+    try {
+
+
+        let m = new Map<string, IDataset>();
+        let result: ISampleTwoDataset[] = [];
+
+        const diff = monthDiff(startDate, endDate);
+        for (let i = diff; i > -1; i--) {
+            const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+            m.set(d, { ...initialDataset });
+        }
+
+        data.forEach((item) => {
+            if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+                const formType: string = item.CaseNumber.split("-")[0];
+                const date = new Date(item.AccidentTime || item.IncidentTime || item.Created);
+                const formattedDate = moment(date).format("MM/yyyy");
+                if (m.has(formattedDate)) {
+                    let oldDataset = m.get(formattedDate);
+                    if (item.ObservePersonalFactor) {
+                        let arr = JSON.parse(item.ObservePersonalFactor);
+                        if (Array.isArray(arr)) {
+                            arr.forEach((factor) => {
+                                let newDataset = envFactorFilter(factor, oldDataset);
+                                m.set(formattedDate, newDataset);
+                            })
+                        }
+                    }
+                } else {
+                    if (item.ObservePersonalFactor) {
+                        let arr = JSON.parse(item.ObservePersonalFactor);
+                        if (Array.isArray(arr)) {
+                            arr.forEach((factor) => {
+                                let newDataset = envFactorFilter(factor, initialDataset);
+                                m.set(formattedDate, newDataset);
+                            })
+                        }
+                    }
+                }
+            }
+        });
+
+        m.forEach((value, key) => {
+            let item: ISampleTwoDataset = { month: key, dataset: value }
+            result.push(item);
+        })
+
+        return result;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+    let result: ISampleThreeDataset[] = [];
+    let m = new Map<string, IMonth>();
+
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime || item.Created);
+        if (d) {
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+                let oldDataset = m.get(currentFinicailYear);
+                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+            } else {
+                let newDataset = monthFilter(d.getMonth() + 1);
+                m.set(currentFinicailYear, newDataset);
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
+}
+
+const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleFourDataset[] => {
+    let result: ISampleFourDataset[] = [];
+    let m = new Map<number, IMonth>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
+        m.set(a, { ...initialDatasetMonth });
+    }
+
+    data.forEach((item) => {
+        if (item.AccidentTime || item.IncidentTime || item.Created) {
+            const year = new Date(item.AccidentTime || item.IncidentTime || item.Created).getFullYear();
+            const month = new Date(item.AccidentTime || item.IncidentTime || item.Created).getMonth() + 1;
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                let newDataset = monthFilter(month, oldDataset);
+                m.set(year, newDataset);
+            } else {
+                let newDataset = monthFilter(month);
+                m.set(year, newDataset);
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleFourDataset = { year: key, dataset: value }
+        result.push(item);
+    })
+
+    return result
+}
+
+const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+    let result: ISampleFiveDataset[] = []
+    let m = new Map<string, IDataset>();
+
+    data.forEach((item) => {
+        const d = new Date(item.AccidentTime || item.IncidentTime);
+        if (d) {
+
+            const currentFinicailYear = getDateFinancialYear(d);
+            if (m.has(currentFinicailYear)) {
+
+                let oldDataset = m.get(currentFinicailYear);
+                if (item.ObservePersonalFactor) {
+                    let arr = JSON.parse(item.ObservePersonalFactor);
+                    if (Array.isArray(arr)) {
+                        arr.forEach((factor) => {
+                            let newDataset = envFactorFilter(factor, oldDataset);
+                            m.set(currentFinicailYear, newDataset);
+                        })
+                    }
+                }
+            } else {
+                if (item.ObservePersonalFactor) {
+                    let arr = JSON.parse(item.ObservePersonalFactor);
+                    if (Array.isArray(arr)) {
+                        arr.forEach((factor) => {
+                            let newDataset = envFactorFilter(factor, initialDataset);
+                            m.set(currentFinicailYear, newDataset);
+                        })
+                    }
+                }
+            }
+        }
+    });
+
+    m.forEach((value, key) => {
+        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
+}
+
+const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSixDataset[] => {
+    let result: ISampleSixDataset[] = []
+    let m = new Map<string, IDataset>();
+
+    const startYear = startDate.getFullYear()
+    const endYear = endDate.getFullYear();
+    const distance = endYear - startYear;
+    for (let i = distance; i > 0; i--) {
+        let a = new Date(new Date().setFullYear(endYear - i)).getFullYear()
+        m.set(a.toString(), { ...initialDataset });
+    }
+
+    data.forEach((item) => {
+        if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+            const year = new Date(item.AccidentTime || item.IncidentTime).getFullYear().toString();
+            const month = new Date(item.AccidentTime || item.IncidentTime).getMonth() + 1;
+
+            if (m.has(year)) {
+                let oldDataset = m.get(year);
+                if (item.ObservePersonalFactor) {
+                    let arr = JSON.parse(item.ObservePersonalFactor);
+                    if (Array.isArray(arr)) {
+                        arr.forEach((factor) => {
+                            let newDataset = envFactorFilter(factor, initialDataset);
+                            m.set(year, newDataset);
+                        })
+                    }
+                }
+            } else {
+                if (item.ObservePersonalFactor) {
+                    let arr = JSON.parse(item.ObservePersonalFactor);
+                    if (Array.isArray(arr)) {
+                        arr.forEach((factor) => {
+                            let newDataset = envFactorFilter(factor, initialDataset);
+                            m.set(year, newDataset);
+                        })
+                    }
+                }
+            }
+        }
+    })
+
+    m.forEach((value, key) => {
+        let item: ISampleSixDataset = { year: +key, dataset: value }
+        result.push(item);
+    })
+
+    return result;
 }
 
 function ServiceUserAccidentPersonal() {
@@ -143,10 +463,278 @@ function ServiceUserAccidentPersonal() {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                return (
+                    <>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">情緒不穩</th>
+                                            <th scope="col">心急致傷</th>
+                                            <th scope="col">進食時哽塞</th>
+                                            <th scope="col">步履不穩</th>
+                                            <th scope="col">抽搐</th>
+                                            <th scope="col">其他</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleTwoParser(data, startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.month}</th>
+                                                    <td>{item.dataset.personalEmotionalInstability}</td>
+                                                    <td>{item.dataset.personalHeartbroken}</td>
+                                                    <td>{item.dataset.personalChoking}</td>
+                                                    <td>{item.dataset.personalUnsteadyWalking}</td>
+                                                    <td>{item.dataset.personalTwitch}</td>
+                                                    <td>{item.dataset.personalOther}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                        {
+                                            <tr style={{ color: "red" }}>
+                                                <th scope="row">總數</th>
+                                                <td>{personalFactorDataset.personalEmotionalInstability}</td>
+                                                <td>{personalFactorDataset.personalHeartbroken}</td>
+                                                <td>{personalFactorDataset.personalChoking}</td>
+                                                <td>{personalFactorDataset.personalUnsteadyWalking}</td>
+                                                <td>{personalFactorDataset.personalTwitch}</td>
+                                                <td>{personalFactorDataset.personalOther}</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>)
             case "BY_MONTH_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleThreeParser(data).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.finicalYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_MONTH_CALENDAR":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_FINICIAL":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">情緒不穩</th>
+                                        <th scope="col">心急致傷</th>
+                                        <th scope="col">進食時哽塞</th>
+                                        <th scope="col">步履不穩</th>
+                                        <th scope="col">抽搐</th>
+                                        <th scope="col">其他</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleFiveParser(data).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.finicialYear}</th>
+                                                <td>{item.dataset.personalEmotionalInstability}</td>
+                                                <td>{item.dataset.personalHeartbroken}</td>
+                                                <td>{item.dataset.personalChoking}</td>
+                                                <td>{item.dataset.personalUnsteadyWalking}</td>
+                                                <td>{item.dataset.personalTwitch}</td>
+                                                <td>{item.dataset.personalOther}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                    {
+                                        <tr style={{ color: "red" }}>
+                                            <th scope="row">總數</th>
+                                            <td>{personalFactorDataset.personalEmotionalInstability}</td>
+                                            <td>{personalFactorDataset.personalHeartbroken}</td>
+                                            <td>{personalFactorDataset.personalChoking}</td>
+                                            <td>{personalFactorDataset.personalUnsteadyWalking}</td>
+                                            <td>{personalFactorDataset.personalTwitch}</td>
+                                            <td>{personalFactorDataset.personalOther}</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             case "BY_YEAR_CALENDAR":
+                return <>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 性別統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">情緒不穩</th>
+                                        <th scope="col">心急致傷</th>
+                                        <th scope="col">進食時哽塞</th>
+                                        <th scope="col">步履不穩</th>
+                                        <th scope="col">抽搐</th>
+                                        <th scope="col">其他</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sampleSixParser(data, startDate, endDate).map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{personalFactorDataset.personalEmotionalInstability}</td>
+                                                <td>{personalFactorDataset.personalHeartbroken}</td>
+                                                <td>{personalFactorDataset.personalChoking}</td>
+                                                <td>{personalFactorDataset.personalUnsteadyWalking}</td>
+                                                <td>{personalFactorDataset.personalTwitch}</td>
+                                                <td>{personalFactorDataset.personalOther}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             default:
                 return null;
         }

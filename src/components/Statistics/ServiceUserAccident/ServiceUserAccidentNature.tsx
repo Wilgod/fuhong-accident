@@ -187,7 +187,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         data.forEach((item) => {
             if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
                 const formType: string = item.CaseNumber.split("-")[0];
-                const date = new Date(item.AccidentTime || item.IncidentTime || item.Create);
+                const date = new Date(item.AccidentTime || item.IncidentTime || item.Created);
                 const formattedDate = moment(date).format("MM/yyyy");
                 if (m.has(formattedDate)) {
                     let oldDataset = m.get(formattedDate);
@@ -216,7 +216,7 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
     let m = new Map<string, IMonth>();
 
     data.forEach((item) => {
-        const d = new Date(item.AccidentTime || item.IncidentTime || item.Create);
+        const d = new Date(item.AccidentTime || item.IncidentTime || item.Created);
         if (d) {
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
@@ -252,9 +252,9 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
     }
 
     data.forEach((item) => {
-        if (item.AccidentTime || item.IncidentTime || item.Create) {
-            const year = new Date(item.AccidentTime || item.IncidentTime || item.Create).getFullYear();
-            const month = new Date(item.AccidentTime || item.IncidentTime || item.Create).getMonth() + 1;
+        if (item.AccidentTime || item.IncidentTime || item.Created) {
+            const year = new Date(item.AccidentTime || item.IncidentTime || item.Created).getFullYear();
+            const month = new Date(item.AccidentTime || item.IncidentTime || item.Created).getMonth() + 1;
             if (m.has(year)) {
                 let oldDataset = m.get(year);
                 let newDataset = monthFilter(month, oldDataset);
