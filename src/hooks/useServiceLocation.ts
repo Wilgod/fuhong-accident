@@ -19,11 +19,11 @@ export function locationFilterParser(serviceUnit: any[]) {
     return result.sort((a, b) => a.localeCompare(b));
 }
 
-export default function useServiceLocation() {
+export default function useServiceLocation(siteCollectionUrl) {
     const [serviceLocations, setServiceLocation] = useState<any[]>([]);
 
     useEffect(() => {
-        getAllServiceUnit().then((data) => {
+        getAllServiceUnit(siteCollectionUrl).then((data) => {
             const result = locationFilterParser(data);
             setServiceLocation(result);
         }).catch(console.error);

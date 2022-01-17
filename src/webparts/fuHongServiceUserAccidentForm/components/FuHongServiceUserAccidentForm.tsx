@@ -14,10 +14,12 @@ import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/Accid
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getAdmin, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
+import { getAdmin, getServiceUserAccidentById, getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
+import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
-
+import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
+import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -41,13 +43,19 @@ if (document.querySelector('.CanvasZone') != null) {
 
 interface IFuHongServiceUserAccidentFormState {
   currentUserRole: Role;
+  permissionList:any;
   serviceUserAccidentFormData: any;
   stage: string;
   formSubmitted: boolean;
   isPrintMode: boolean;
+  loading:boolean;
 }
 
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
+  private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
+	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
+	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
+	
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -57,10 +65,12 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
     this.state = {
       currentUserRole: Role.GENERAL,
+      permissionList: [],
       serviceUserAccidentFormData: null,
       stage: "",
       formSubmitted: false,
       isPrintMode: false,
+      loading:true
     }
     console.log("Flow 1");
   }
@@ -69,14 +79,23 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     const queryParameter = getQueryParameterString("role");
     if (queryParameter) {
       const role = jobTitleParser(queryParameter);
+      debugger
       this.setState({
         currentUserRole: role
       });
     }
   }
 
+  private initialState = async () => {
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    debugger
+    this.setState({ permissionList: PermissionList, loading:false });
+  }
+
   public componentDidMount() {
+    this.initialState();
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      debugger
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
@@ -105,16 +124,17 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
-
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
               console.log(Role.ADMIN === 4)
-              this.setState({ currentUserRole: Role.ADMIN });
+              this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'] });
             }
           })
         }).catch(console.error)
-        this.checkRole();// Testing Only 
+
+        
+        //this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
   }
@@ -140,14 +160,24 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private printModeHandler = () => { this.setState({ isPrintMode: !this.state.isPrintMode }); }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-
+    console.log('currentUserRole : ' + this.state.currentUserRole);
+    console.log('permissionList :, ',this.state.permissionList);
+    {/**
+                  this.state.currentUserRole == 7 ? 
+              <NoAccessComponent redirectLink={this.redirectPath} />
+              :
+    */}
     return (
       <div className={styles.fuHongServiceUserAccidentForm}>
         <div className={styles.container}>
           {
-            this.state.formSubmitted ?
+            !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
+              !this.state.loading && this.state.permissionList.length == 0 ? 
+              <NoAccessComponent redirectLink={this.redirectPath} />
+              :
+              !this.state.loading ?
               <Tabs variant="fullWidth">
                 <TabList>
                   <Tab>服務使用者意外填報表(一)</Tab>
@@ -155,7 +185,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                   <Tab>意外跟進/結束表(三)</Tab>
                 </TabList>
                 <TabPanel>
-                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
+                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
                 </TabPanel>
                 <TabPanel>
                   <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
@@ -164,6 +194,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                   <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
                 </TabPanel>
               </Tabs>
+              : <div></div>
+              
           }
         </div>
       </div>

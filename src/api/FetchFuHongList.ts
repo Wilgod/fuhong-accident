@@ -2,6 +2,7 @@ import { sp } from "@pnp/sp";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import { Web } from "@pnp/sp/webs";
 import { ISearchCriteria } from "../hooks/useFetchAllForms";
 
 export async function getAdmin() {
@@ -18,6 +19,40 @@ export async function getAdmin() {
     }
 }
 
+export async function getUserInfo(siteCollectionUrl, email) {
+    try {
+        const web = Web(siteCollectionUrl);
+        const LIST_NAME = "UserInfoAD";
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Email eq '`+email+ `'`).get()
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
+
+export async function getAccessRight() {
+    try {
+        const LIST_NAME = "Access Rights";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.get()
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
+
+export async function getSMSDMapping(siteCollectionUrl,deptId) {
+    try {
+        const web = Web(siteCollectionUrl);
+        const LIST_NAME = "SM SD Mapping";
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).get()
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
 export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";
@@ -129,15 +164,16 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
     }
 }
 
-export async function getServiceUserAccidentBySPId(spId: number) {
+export async function getServiceUserAccidentBySPId(spId: number,permissionList:any[]) {
     try {
         const LIST_NAME = "Service User Accident";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.
-            filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
+            //filter(`(SMId eq ${spId} or SDId eq ${spId} or AuthorId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
+            filter(`Status ne 'CLOSED'`)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
-
+        debugger
         return items.filter((item) => {
             if (item.Status === "DRAFT") {
                 if (item.AuthorId === spId) {
@@ -146,7 +182,16 @@ export async function getServiceUserAccidentBySPId(spId: number) {
                     return false
                 }
             } else {
-                return true
+                let canRead = false;
+                if (item.ServiceUserUnit == 'COATC') 
+                debugger
+                let permission = permissionList.filter(p => {return p == item.ServiceUserUnit});
+                /*for(let permission of permissionList) {
+                    if (permission == item.ServiceUserUnit) {
+                        canRead = true;
+                    }
+                }*/
+                return permission.length > 0
             }
         });
     } catch (err) {

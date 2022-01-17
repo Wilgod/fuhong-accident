@@ -25,14 +25,14 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
     const [serviceLocation, setServiceLocation] = useState("");
-    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const { departments, setHrDepartment } = useDepartmentMangers();

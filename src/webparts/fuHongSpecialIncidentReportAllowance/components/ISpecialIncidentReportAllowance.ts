@@ -8,6 +8,7 @@ export interface ISpecialIncidentReportAllowanceProps {
     currentUserRole: Role;
     formData: any;
     isPrintMode: boolean;
+    siteCollectionUrl:string;
 }
 
 export interface IAccidentCategoryAbuseDetails {

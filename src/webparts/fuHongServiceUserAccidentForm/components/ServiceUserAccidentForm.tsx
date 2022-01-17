@@ -46,7 +46,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -63,7 +63,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
-    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2();
+    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
     const [serviceUnit, setServiceUnit] = useState("");
     const [serviceLocation, setServiceLocation] = useState("");
     const [sptList] = useSPT();
@@ -72,9 +72,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [uploadedInjuryFiles, setUploadedInjuryFiles] = useState([]);
     const [selectedCctvPhoto, setSelectedCctvPhoto] = useState([]);
     const [uploadedCctvPhoto, setUploadedCctvPhoto] = useState([]);
-    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const { departments, setHrDepartment } = useDepartmentMangers();
 
 
@@ -1141,7 +1141,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     // Get SD & SM
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
-
+            debugger
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
 
@@ -1224,7 +1224,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             >
                                 {
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.Title}>{item.Title}</option>
+                                        return <option value={item.su_Eng_name_display}>{item.su_Eng_name_display}</option>
                                     })
                                 }
                             </select>

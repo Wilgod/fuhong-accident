@@ -339,11 +339,11 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function AllowanceNature() {
+function AllowanceNature(siteCollectionUrl) {
 
     const [groupBy, setGroupBy] = useState("NON");
     const [abuseNatureDataset, setAbuseNatureDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
 
     const multipleOptionsSelectParser = (event) => {

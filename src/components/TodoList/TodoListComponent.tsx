@@ -9,13 +9,13 @@ import * as moment from 'moment';
 import { IUser } from '../../interface/IUser';
 import useFetchUserJob from '../../hooks/useFetchUserJob';
 
-export default function TodoListComponent({ context }: ITodoListComponentProps) {
+export default function TodoListComponent({ context, permissionList }: ITodoListComponentProps) {
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
         id: context.pageContext.legacyPageContext.userId,
     }
-    const [data] = useFetchUserJob(CURRENT_USER.id);
+    const [data] = useFetchUserJob(CURRENT_USER.id, permissionList);
 
 
     return (

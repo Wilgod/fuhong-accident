@@ -6,6 +6,7 @@ export enum Role {
     ADMIN,
     GENERAL,
     CEO,
+    NoAccessRight
 }
 
 

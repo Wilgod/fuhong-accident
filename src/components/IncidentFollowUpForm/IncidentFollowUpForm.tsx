@@ -24,6 +24,7 @@ interface IIncidentFollowUpFormProps {
     currentUserRole: Role;
     parentFormData: any;
     isPrintMode: any;
+    siteCollectionUrl:String;
 }
 
 interface IIncidentFollowUpFormStates {
@@ -45,7 +46,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,
@@ -56,8 +57,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const [smDate, setSmDate] = useState(new Date());
     const [sdDate, setSdDate] = useState(new Date());
     const [sdComment, setSdComment] = useState("");
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
 
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");

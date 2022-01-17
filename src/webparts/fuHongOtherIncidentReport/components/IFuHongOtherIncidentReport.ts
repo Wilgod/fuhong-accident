@@ -9,6 +9,7 @@ export interface IOtherIncidentReportProps {
     currentUserRole: Role;
     formData: any;
     isPrintMode: boolean;
+    siteCollectionUrl:string;
 }
 
 export interface IOtherIncidentReportStates {

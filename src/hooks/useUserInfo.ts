@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getUserInfoByEmailInUserInfoAD, getDepartmentByShortName, getUserInfoByEmail } from "../api/FetchUser";
 
-export default function useUserInfo() {
+export default function useUserInfo(siteCollectionUrl) {
     const [email, setEmail] = useState<string>("");
     const [userInfo, setUserInfo] = useState<any>();
     const [spUserInfo, setSpUserInfo] = useState<any>();
@@ -9,7 +9,7 @@ export default function useUserInfo() {
 
         if (email) {
             // UserInfoAd list
-            getUserInfoByEmailInUserInfoAD(email).then((userInfosRes) => {
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,email).then((userInfosRes) => {
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     const [user] = userInfosRes;
                     setUserInfo(user);

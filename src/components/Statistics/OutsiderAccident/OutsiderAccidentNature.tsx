@@ -346,10 +346,10 @@ const natureFilter = (item: any, dataset: IDataset): IDataset => {
 
 
 
-function OutsiderAccidentNature() {
+function OutsiderAccidentNature(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [natureDataset, setNatureDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {

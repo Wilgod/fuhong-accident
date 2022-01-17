@@ -10,12 +10,13 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import useServiceLocation from '../../hooks/useServiceLocation';
 interface IAllowanceCaseSummary {
     context: WebPartContext;
+    siteCollectionUrl:string;
 }
 
-function AllowanceCaseSummary({ context }: IAllowanceCaseSummary) {
+function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceLocation] = useServiceLocation();
+    const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const multipleOptionsSelectParser = (event) => {
         let result = [];

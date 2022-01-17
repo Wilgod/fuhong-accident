@@ -10,7 +10,7 @@ import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 import MainTableComponent from '../../../components/MainTable/MainTableComponent';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getAllServiceUnit } from '../../../api/FetchUser';
+import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 import { IUser } from '../../../interface/IUser';
 import { locationFilterParser } from '../../../hooks/useServiceLocation';
 import ServiceUserAccidentAge from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentAge';
@@ -35,7 +35,7 @@ import OutsiderAccidentCaseSummary from '../../../components/CaseSummary/Outside
 import ServiceUserAccidentCaseSummary from '../../../components/CaseSummary/ServiceUserAccidentCaseSummary';
 import LicenseIncidentCaseSummary from '../../../components/CaseSummary/LicenseIncidentCaseSummary';
 import OtherIncidentCaseSummary from '../../../components/CaseSummary/OtherIncidentCaseSummary';
-
+import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -59,6 +59,8 @@ interface IFuHongFormsMenuStates {
   serviceUnitList: any[];
   searchKeyword: string;
   tempKeyword: string;
+  permissionList:any[];
+  loading:boolean;
 }
 
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
@@ -69,6 +71,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private SPECIAL_INCIDENT_REPORT_ALLOWANCE = "SpecialIncidentReportAllowance"; // form 24
   private SPECIAL_INCIDENT_REPORT_LICENSE = "SpecialIncidentReportLicense"; //form 25
   private SITE_CONTENT = `${this.props.context.pageContext.web.absoluteUrl}/_layouts/15/viewlsts.aspx?view=14`;
+
+  private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
+	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
+	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
+	
 
   public constructor(props) {
     super(props);
@@ -91,7 +98,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       searchFormType: ["ALL"],
       searchServiceUnit: ["ALL"],
       searchKeyword: "",
-      tempKeyword: ""
+      tempKeyword: "",
+      permissionList:[],
+      loading:true
     }
   }
 
@@ -106,10 +115,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   }
 
   private initialState = async () => {
-    const serviceUnitList = await getAllServiceUnit();
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    debugger
+    const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
 
-    this.setState({ serviceUnitList: serviceLocations });
+    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false });
   }
 
   private formToggleHandler = (event) => {
@@ -147,6 +158,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   }
 
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
+    console.log('permissionList :' ,this.state.permissionList);
     const ItemComponent = (href, name) => {
       return <a className="text-decoration-none" href={href + ".aspx"} target="_blank" data-interception="off">
         {name}
@@ -393,11 +405,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     const screenSwitch = () => {
       switch (this.state.screenNav) {
         case 'CASE_SUMMARY':
-          return <CaseSummaryScreen context={this.props.context} />
+          return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'INSURANCE_EMAIL':
-          return <InsuranceEmailReportScreen context={this.props.context} />
+          return <InsuranceEmailReportScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} />
         case 'LOG':
-          return <LogScreen context={this.props.context} />
+          return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'GENERAL':
           return <General />
         case 'SUI_AGE':
@@ -428,15 +440,15 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'SID_NATURE':
           return <AllowanceNature />
         case 'CS_SUI':
-          return <ServiceUserAccidentCaseSummary context={this.props.context} />
+          return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'CS_PUI':
-          return <OutsiderAccidentCaseSummary context={this.props.context} />
+          return <OutsiderAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'CS_SIH':
-          return <LicenseIncidentCaseSummary context={this.props.context} />
+          return <LicenseIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'CS_SID':
-          return <AllowanceCaseSummary context={this.props.context} />
+          return <AllowanceCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'CS_OIN':
-          return <OtherIncidentCaseSummary context={this.props.context} />
+          return <OtherIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
@@ -445,13 +457,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         // return <div>DASHBOARD</div>
         case "HOME":
         default:
+          console.log('1')
           return (
             <div>
               <div className="mb-3" style={{ fontSize: 19, fontWeight: 600 }}>
                 主頁
               </div>
               <div className="mb-3">
-                <TodoListComponent context={this.props.context} />
+                {!this.state.loading &&
+                <TodoListComponent context={this.props.context} permissionList={this.state.permissionList}/>
+                } 
               </div>
               <div className="mb-3">
                 <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }}>

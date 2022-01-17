@@ -11,12 +11,13 @@ import useLog from '../../hooks/useLog';
 import useServiceLocation from '../../hooks/useServiceLocation';
 interface ILogScreenProps {
     context: WebPartContext;
+    siteCollectionUrl:string;
 }
 
-function LogScreen({ context }: ILogScreenProps) {
+function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceLocation] = useServiceLocation();
+    const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const [log] = useLog();
 

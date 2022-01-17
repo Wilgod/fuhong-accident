@@ -309,10 +309,10 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 }
 
 //自閉症譜系障礙
-function ServiceUserAccidentASD() {
+function ServiceUserAccidentASD(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [asdDataset, setAsdDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {

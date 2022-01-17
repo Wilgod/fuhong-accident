@@ -10,13 +10,14 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import useServiceLocation from '../../hooks/useServiceLocation';
 
 interface ILicenseIncidentCaseSummary {
-    context: WebPartContext
+    context: WebPartContext;
+    siteCollectionUrl:string;
 }
 
-function LicenseIncidentCaseSummary({ context }: ILicenseIncidentCaseSummary) {
+function LicenseIncidentCaseSummary({ context,siteCollectionUrl }: ILicenseIncidentCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceLocation] = useServiceLocation();
+    const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const multipleOptionsSelectParser = (event) => {
         let result = [];

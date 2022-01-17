@@ -336,10 +336,10 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function OutsiderAccidentPersonal() {
+function OutsiderAccidentPersonal(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [personalFactorDataset, setPersonalFactorDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {

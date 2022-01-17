@@ -11,14 +11,15 @@ import useEmailRecord from '../../hooks/useEmailRecords';
 import useServiceLocation from '../../hooks/useServiceLocation';
 interface IInsuranceEmailReportScreenProps {
     context: WebPartContext;
+    siteCollectionUrl:string;
 }
 
 
-function InsuranceEmailReportScreen({ context }: IInsuranceEmailReportScreenProps) {
+function InsuranceEmailReportScreen({ context,siteCollectionUrl }: IInsuranceEmailReportScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceUnitList] = useServiceUnit2();
-    const [serviceLocation] = useServiceLocation();
+    const [serviceUnitList] = useServiceUnit2(siteCollectionUrl);
+    const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data] = useEmailRecord();
     console.log(data);
     const multipleOptionsSelectParser = (event) => {

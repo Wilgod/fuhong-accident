@@ -25,7 +25,7 @@ import { postLog } from '../../../api/LogHelper';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: ISpecialIncidentReportAllowanceProps) {
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [formStage, setFormStage] = useState("");
@@ -92,9 +92,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [sdPhoneNo, setSdPhoneNo] = useState("");
-    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
 
     const { departments, setHrDepartment } = useDepartmentMangers();
 

@@ -8,6 +8,7 @@ export interface ISpecialIncidentReportLicenseProps {
     currentUserRole: Role;
     formData: any;
     isPrintMode: boolean;
+    siteCollectionUrl:string;
 }
 
 export interface ISpecialIncidentReportLicenseStates {

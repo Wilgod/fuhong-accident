@@ -11,12 +11,13 @@ import useServiceLocation from '../../hooks/useServiceLocation';
 
 interface IOutsiderAccidentCaseSummary {
     context: WebPartContext;
+    siteCollectionUrl:string;
 }
 
-function OutsiderAccidentCaseSummary({ context }: IOutsiderAccidentCaseSummary) {
+function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAccidentCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceLocation] = useServiceLocation();
+    const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const multipleOptionsSelectParser = (event) => {
         let result = [];

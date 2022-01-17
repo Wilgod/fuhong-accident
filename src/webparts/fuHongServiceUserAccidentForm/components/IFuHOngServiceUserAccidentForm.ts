@@ -45,6 +45,7 @@ interface IServiceUserAccidentFormProps {
     formData: any;
     formSubmittedHandler(): void;
     isPrintMode: boolean;
+    siteCollectionUrl:string;
 }
 
 interface IErrorFields {

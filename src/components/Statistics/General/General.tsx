@@ -335,9 +335,9 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function General() {
+function General(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useGeneralStats();
     const [unitDataset, setUnitDataset] = useState<IDataset>(initialDataset);
     const multipleOptionsSelectParser = (event) => {

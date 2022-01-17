@@ -21,7 +21,7 @@ import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -76,9 +76,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [sdComment, setSdComment] = useState("");
     const [smComment, setSmComment] = useState("");
     const [error, setError] = useState<IErrorFields>();
-    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
 
     const { departments, setHrDepartment } = useDepartmentMangers();
 

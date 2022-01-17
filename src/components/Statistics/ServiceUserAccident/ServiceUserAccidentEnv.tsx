@@ -407,10 +407,10 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function ServiceUserAccidentEnv() {
+function ServiceUserAccidentEnv(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {

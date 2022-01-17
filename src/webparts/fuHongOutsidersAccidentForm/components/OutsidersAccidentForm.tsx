@@ -41,9 +41,10 @@ interface IOutsidersAccidentFormProps {
     formSubmittedHandler(): void;
     formData: any;
     isPrintMode: boolean;
+    siteCollectionUrl:string;
 }
 
-export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: IOutsidersAccidentFormProps) {
     const [error, setError] = useState<IErrorFields>();
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -63,9 +64,9 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceLocation, setServiceLocation] = useState("");
-    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo();
-    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo();
-    const [smInfo, setSMEmail, spSmInfo] = useUserInfo();
+    const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const { departments, setHrDepartment } = useDepartmentMangers();
     const [sptList] = useSPT();
     const [familyContactDate, setFamilyContactDate] = useState(new Date());

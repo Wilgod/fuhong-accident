@@ -311,11 +311,11 @@ const sampleSixParser = (serviceUserAge: any[], startDate: Date, endDate: Date) 
     return result;
 }
 
-function ServiceUserAccidentAge() {
+function ServiceUserAccidentAge(siteCollectionUrl) {
 
     const [groupBy, setGroupBy] = useState("NON");
     const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation();
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
     const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {
