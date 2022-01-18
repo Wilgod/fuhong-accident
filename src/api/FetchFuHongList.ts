@@ -182,16 +182,13 @@ export async function getServiceUserAccidentBySPId(spId: number,permissionList:a
                     return false
                 }
             } else {
-                let canRead = false;
-                if (item.ServiceUserUnit == 'COATC') 
-                debugger
-                let permission = permissionList.filter(p => {return p == item.ServiceUserUnit});
-                /*for(let permission of permissionList) {
-                    if (permission == item.ServiceUserUnit) {
-                        canRead = true;
-                    }
-                }*/
-                return permission.length > 0
+                let admin = permissionList.filter(p => {return p == 'All'});
+                if (admin.length > 0) {
+                    return true;
+                } else {
+                    let permission = permissionList.filter(p => {return p == item.ServiceUserUnit});
+                    return permission.length > 0
+                }
             }
         });
     } catch (err) {
