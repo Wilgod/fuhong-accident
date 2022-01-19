@@ -44,6 +44,18 @@ export async function getDepartmentByShortName(shortName: string) {
     }
 }
 
+export async function getDepartmentBySuEngNameDisplay(shortName: string) {
+    try {
+        const LIST_NAME = "SM SD Mapping";
+        const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
+        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`su_Eng_name_display eq '${shortName}'`).top(1).orderBy("Modified", false).get();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getDepartmentBySuEngNameDisplay error");
+    }
+}
+
 export async function getAllServiceUnit(siteCollectionUrl) {
     try {
         const LIST_NAME = "SM SD Mapping";

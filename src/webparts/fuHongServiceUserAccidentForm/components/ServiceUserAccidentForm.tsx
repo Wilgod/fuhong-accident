@@ -20,7 +20,7 @@ import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormP
 import { IUser } from '../../../interface/IUser';
 import { addBusinessDays, addDays, addMonths, dateFieldRawHandler } from '../../../utils/DateUtils';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
-import { getSeniorPhysiotherapistByGraph, getServiceDirectorsByGraph, getServiceManagersByGraph, getUserInfoByEmail } from '../../../api/FetchUser';
+import { getSeniorPhysiotherapistByGraph, getServiceDirectorsByGraph, getServiceManagersByGraph, getUserInfoByEmail,getDepartmentBySuEngNameDisplay } from '../../../api/FetchUser';
 import { Role } from '../../../utils/RoleParser';
 import { getServiceUserList } from '../../../api/FetchServiceUser';
 import useServiceUser from '../../../hooks/useServiceUser';
@@ -675,7 +675,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                         }).catch(console.error);
                     }
-
+                    notifyServiceUserAccident(context, formData.Id, 1);
                     postLog({
                         AccidentTime: formData.AccidentTime,
                         Action: "提交至服務經理",
@@ -730,9 +730,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     }
                                 }).catch(console.error);
                             }
-                            if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, formData.Id, 1);
-                            }
+                            //}
 
 
                             postLog({
@@ -1041,7 +1041,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             //setAccidentTime
 
             // Service Unit
-            setServiceUnit(data.ServiceUserUnit);
+            setServiceUnit(data.ServiceUnit);
 
             //Service User
             setServiceUserRecordId(data.ServiceUser);
@@ -1152,9 +1152,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
             debugger
+            
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
-
+                setServiceLocation(dept.location);
                 if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
                     setSMEmail(dept.hr_deptmgr);
                 }
@@ -1166,7 +1167,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }, [departments])
 
-    
+    useEffect(() => {
+        debugger
+        setHrDepartment(patientServiceUnit)
+        /*getDepartmentBySuEngNameDisplay(patientServiceUnit).then((res) => {
+            if (Array.isArray(res) && res.length) {
+                const dept = res[0];
+
+            }
+        }).catch(console.error);*/
+    }, [patientServiceUnit])
+
 
     useEffect(() => {
         if (formData && serviceUserRecordId === -1) {
@@ -1203,7 +1214,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         }
     }, [serviceUser, serviceUserRecordId]);
-
+    console.log('departments: ' + departments);
     return (
         <>
             {
