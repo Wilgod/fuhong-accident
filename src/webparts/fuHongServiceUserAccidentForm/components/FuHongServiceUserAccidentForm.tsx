@@ -64,7 +64,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.GENERAL,
+      currentUserRole: Role.NoAccessRight,//Role.GENERAL,
       permissionList: [],
       serviceUserAccidentFormData: null,
       stage: "",
@@ -89,7 +89,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     debugger
-    this.setState({ permissionList: PermissionList, loading:false });
+    this.setState({ permissionList: PermissionList });
   }
 
   public componentDidMount() {
@@ -99,7 +99,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
-
+      debugger
       this.initialDataByFormId().then((data) => {
         if (data && data.Investigator && data.Investigator.EMail) {
           if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -132,7 +132,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             }
           })
         }).catch(console.error)
-
+        this.setState({ loading: false });
         
         //this.checkRole();// Testing Only 
       }).catch(console.error);
@@ -144,6 +144,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
+        debugger
         this.setState({ serviceUserAccidentFormData: data });
         return data;
       }
@@ -160,7 +161,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private printModeHandler = () => { this.setState({ isPrintMode: !this.state.isPrintMode }); }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
-    console.log('currentUserRole : ' + this.state.currentUserRole);
+    console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.permissionList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
     console.log('permissionList :, ',this.state.permissionList);
     {/**
                   this.state.currentUserRole == 7 ? 
@@ -174,7 +175,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && this.state.permissionList.length == 0 ? 
+              !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?

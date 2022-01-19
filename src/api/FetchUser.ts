@@ -132,7 +132,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
       console.log('user hr_jobcode : ' +  user[0].hr_jobcode);
       let getSMSD = await getSMSDMapping(siteCollectionUrl, user[0].hr_deptid);
       access.forEach(async(item) => {
-          console.log('item.JobCode : ' + item.JobCode + ', item.CMS : ' + item.CMS);
+         // console.log('item.JobCode : ' + item.JobCode + ', item.CMS : ' + item.CMS);
         
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push('All');

@@ -960,7 +960,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     const loadData = async (data: any) => {
-
+        
         if (data) {
 
             setServiceUserNameCN(data.ServiceUserNameCN);
@@ -978,9 +978,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setFormStatus(data.Status);
             setFormStage(data.Stage);
 
-            if (data.ServiceUnit) {
-                setServiceUnit(data.ServiceUnit);
-            }
+            /*if (data.ServiceUnit) {
+                setServiceUnit(data.ServiceUserUnit);
+            }*/
 
             if (data.ServiceUserUnit) {
                 setPatientServiceUnit(data.ServiceUserUnit);
@@ -1041,7 +1041,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             //setAccidentTime
 
             // Service Unit
-            setServiceUnit(data.ServiceUnit);
+            setServiceUnit(data.ServiceUserUnit);
 
             //Service User
             setServiceUserRecordId(data.ServiceUser);
@@ -1064,6 +1064,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (data.SPT) {
                 setSPhysicalTherapyEmail(data.SPT.EMail)
                 // setSptDate(new Date(data.SPTDate));
+                debugger
             }
 
             if (data.SM) {
@@ -1103,11 +1104,25 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
-
     useEffect(() => {
+        debugger
+        if (Array.isArray(sptList) && sptList.length > 0) {
+            //setSPhysicalTherapyEmail(sptList[0].mail);
+        }
+    }, [sptList]);
+    
+    useEffect(() => {
+        
         if (formData) {
             loadData(formData);
         } else {
+            if (userInfo && userInfo.hr_deptid) {
+                setHrDepartment(userInfo.hr_deptid);
+                debugger
+                setServiceUnit(userInfo.hr_deptid);
+                setServiceLocation(userInfo.hr_location);
+                setPatientServiceUnit(userInfo.hr_deptid);
+            }
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
     }, [formData]);
@@ -1129,12 +1144,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 return;
             }
 
-            if (userInfo && userInfo.hr_deptid) {
-                setHrDepartment(userInfo.hr_deptid);
-                setServiceUnit(userInfo.hr_deptid);
-                setServiceLocation(userInfo.hr_location);
-                setPatientServiceUnit(userInfo.hr_deptid);
-            }
+            
         }
     }, [userInfo]);
 
@@ -1156,11 +1166,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }, [departments])
 
-    useEffect(() => {
-        if (Array.isArray(sptList) && sptList.length > 0) {
-            setSPhysicalTherapyEmail(sptList[0].mail);
-        }
-    }, [sptList]);
+    
 
     useEffect(() => {
         if (formData && serviceUserRecordId === -1) {
@@ -1222,9 +1228,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             <select className="custom-select" value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                             >
+                                <option value={""} ></option>
                                 {
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.su_Eng_name_display}>{item.su_Eng_name_display}</option>
+                                        console.log('serviceUnit : ' + serviceUnit);
+                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_Eng_name_display}</option>
                                     })
                                 }
                             </select>
@@ -2310,9 +2318,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             /> */}
                             <select className={`custom-select  ${error.spt ? "is-invalid" : ""}`} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                    <option value={""} ></option>
                                 {
                                     sptList.map((spt) => {
-                                        return <option value={spt.mail}>{spt.displayName}</option>
+                                        console.log('spt mail :'+ spt.mail + ', ' + (spt.mail == sPhysicalTherapyEmail));
+                                        return <option value={spt.mail} selected={spt.mail == sPhysicalTherapyEmail}>{spt.displayName}</option>
                                     })
                                 }
                             </select>

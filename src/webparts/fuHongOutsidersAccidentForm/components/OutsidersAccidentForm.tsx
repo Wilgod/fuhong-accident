@@ -1513,6 +1513,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <div className="col-12 col-md-4">
                             <select className={`custom-select  `} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                    <option value={""} ></option>
                                 {
                                     sptList.map((spt) => {
                                         return <option value={spt.mail}>{spt.displayName}</option>
