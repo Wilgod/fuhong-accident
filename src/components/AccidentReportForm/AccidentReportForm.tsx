@@ -500,7 +500,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
-    console.log(parentFormData)
+    console.log(parentFormData);
+    console.log('formType :',formType);
+    console.log('serviceUser :',serviceUser);
+    
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -516,7 +519,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUnit ? `${parentFormData.ServiceUnit}` : ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserUnit ? `${parentFormData.ServiceUserUnit}` : ""}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>

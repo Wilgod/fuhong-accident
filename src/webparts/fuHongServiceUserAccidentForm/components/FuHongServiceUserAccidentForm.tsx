@@ -49,6 +49,7 @@ interface IFuHongServiceUserAccidentFormState {
   formSubmitted: boolean;
   isPrintMode: boolean;
   loading:boolean;
+  indexTab:number;
 }
 
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
@@ -70,7 +71,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       stage: "",
       formSubmitted: false,
       isPrintMode: false,
-      loading:true
+      loading:true,
+      indexTab: 0
     }
     console.log("Flow 1");
   }
@@ -145,7 +147,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
         debugger
-        this.setState({ serviceUserAccidentFormData: data });
+        this.setState({ serviceUserAccidentFormData: data, indexTab:(parseInt(data.Stage)-1) });
         return data;
       }
     } catch (err) {
@@ -179,7 +181,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?
-              <Tabs variant="fullWidth">
+              <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                 <TabList>
                   <Tab>服務使用者意外填報表(一)</Tab>
                   <Tab>服務使用者意外報告(二)</Tab>

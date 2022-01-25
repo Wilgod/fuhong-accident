@@ -607,7 +607,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const submitHandler = (event) => {
         event.preventDefault();
-
+        debugger;
         if (currentUserRole === Role.ADMIN) {
             updateServiceUserAccidentById(formId, {
                 "InsuranceCaseNo": insuranceNumber
@@ -773,9 +773,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     }).catch(console.error);
                                 }
                             }
-                            if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
                                 notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1);
-                            }
+                            //}
 
                             postLog({
                                 AccidentTime: accidentTime.toISOString(),
