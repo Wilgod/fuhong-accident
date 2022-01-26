@@ -20,7 +20,7 @@ import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, u
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
-import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
+import { notifyOutsiderAccident, notifyServiceUserAccident,notifyServiceUserAccidentSMSDComment } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
@@ -110,6 +110,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const smSubmitHandler = (event) => {
 
         if (stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage)) { // SPT
+            notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3);
             sptCommentUpdate();
         } else {
             const [body, error] = dataFactory();
@@ -122,7 +123,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 }
 
                 // Create a new follow up Form
-                createAccidentFollowUpRepotForm({
+                /*createAccidentFollowUpRepotForm({
                     "CaseNumber": parentFormData.CaseNumber,
                     "ParentFormId": parentFormData.Id,
                     "SPTId": parentFormData.SPTId,
@@ -182,6 +183,58 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             }).catch(console.error);
                         }
                     }).catch(console.error);
+                }).catch(console.error);*/
+                updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
+                    ...body,
+                    "SMDate": new Date().toISOString(),
+                    //"Completed": true
+                }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+                    // Update parent form
+                    if (formType === "SERVICE_USER") {
+                        updateServiceUserAccidentById(parentFormData.Id, {
+                            /*"AccidentFollowUpFormId": {
+                                results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
+                            },*/
+                            "Status": "PENDING_SD_APPROVE",
+                            "NextDeadline": addMonths(new Date(), 6),
+                        }).then((updateServiceUserAccidentByIdRes) => {
+                            console.log(updateServiceUserAccidentByIdRes);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3);
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "SUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            }).catch(console.error)
+
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else if (formType === "OUTSIDERS") {
+                        updateOutsiderAccidentFormById(parentFormData.Id, {
+                            /*"AccidentFollowUpFormId": {
+                                results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
+                            },*/
+                            "Status": "PENDING_SD_APPROVE",
+                            "NextDeadline": addMonths(new Date(), 6),
+                        }).then((res) => {
+                            console.log(res);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3);
+                            postLog({
+                                AccidentTime: parentFormData.AccidentTime,
+                                Action: "提交",
+                                CaseNumber: parentFormData.CaseNumber,
+                                FormType: "PUI",
+                                RecordId: parentFormData.Id,
+                                Report: "意外跟進/結束表(三)",
+                                ServiceUnit: parentFormData.ServiceLocation
+                            }).catch(console.error)
+
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
                 }).catch(console.error);
             } else {
                 // Update current form
@@ -384,14 +437,15 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const sdSubmitHandler = (event) => {
         const [body] = dataFactory();
+        debugger
         if (form.accidentalFollowUpContinue) {
             if (confirm("確認繼續 ?") === false) return;
 
             let title = "";
             if (parentFormData.AccidentFollowUpFormId) {
-                title = `意外跟進/結束表 - ${parentFormData.AccidentFollowUpFormId.length + 1}`;
+                title = `意外跟進/結束表(三) - ${parentFormData.AccidentFollowUpFormId.length + 1}`;
             } else {
-                title = `意外跟進/結束表 - 1`;
+                title = `意外跟進/結束表(三) - 1`;
             }
 
             // Create a new follow up Form
@@ -420,7 +474,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
-
+                            notifyServiceUserAccident(context, parentFormData.Id, 3);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -596,7 +650,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
-
+    console.log("SdApproveForSpt : " + stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage));
+    console.log("SmFillIn : " + stageThreePendingSmFillIn(currentUserRole, formStatus, formStage));
+    console.log("completed : " + completed);
+    
     return (
         <>
             {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}
@@ -623,7 +680,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務單位 */}
                         <label className={`col-12 col-lg-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUnit || ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserUnit || ""}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
@@ -942,11 +999,11 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             !completed &&
                             <>
                                 {stageThreePendingSdApprove(currentUserRole, formStatus, formStage) &&
-                                    <button className="btn btn-warning" onClick={(event) => sdSubmitHandler(event)}>提交</button>
+                                    <button className="btn btn-warning" onClick={(event) => sdSubmitHandler(event)}>提交1</button>
                                 }
                                 {
                                     (stageThreePendingSdApproveForSpt(currentUserRole, formStatus, formStage) || stageThreePendingSmFillIn(currentUserRole, formStatus, formStage)) &&
-                                    <button className="btn btn-warning" onClick={(event => smSubmitHandler(event))}>提交</button>
+                                    <button className="btn btn-warning" onClick={(event => smSubmitHandler(event))}>提交2</button>
                                 }
                                 {
                                     stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) &&

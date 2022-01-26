@@ -198,7 +198,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             ServiceUnit: parentFormData.ServiceLocation,
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 1);
+                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
