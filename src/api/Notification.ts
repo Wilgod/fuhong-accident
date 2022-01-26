@@ -23,7 +23,8 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
-                "stage": stage
+                "stage": stage,
+                "comment":""
             })
         };
         await context.httpClient.post(SERVICE_USER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
@@ -32,6 +33,29 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
         throw new Error("notifyServiceUserAccident error");
     }
 }
+//Form 19
+export async function notifyServiceUserAccidentSMSDComment(context: WebPartContext, formId: number, stage: number) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "id": formId,
+                "stage": stage,
+                "comment": "Comment"
+            })
+        };
+        await context.httpClient.post(SERVICE_USER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyServiceUserAccident error");
+    }
+}
+
+
 // form 22
 export async function notifyOutsiderAccident(context: WebPartContext, formId: number, stage: number) {
     try {

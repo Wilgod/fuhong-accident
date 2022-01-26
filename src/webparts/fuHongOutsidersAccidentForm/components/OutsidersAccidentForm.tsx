@@ -384,7 +384,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                 formSubmittedHandler();
             }).catch(console.error);
-        } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage)) {
+        } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage, sptDate)) {
             updateOutsiderAccidentFormById(formId, {
                 "SDComment": sdComment,
                 "SDDate": sdDate.toISOString(),
@@ -1488,7 +1488,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(currentUserRole, formStatus, formStage, sptDate)} />
                         </div>
                     </div>
                     {/* <div className="form-row row mb-2">
@@ -1582,7 +1582,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {
                             (
                                 formInitial(currentUserRole, formStatus) ||
-                                pendingSptApproveForSD(currentUserRole, formStatus, formStage) ||
+                                pendingSptApproveForSD(currentUserRole, formStatus, formStage, sptDate) ||
                                 currentUserRole === Role.ADMIN)
                             &&
                             <button className="btn btn-warning" onClick={submitHandler}>提交</button>

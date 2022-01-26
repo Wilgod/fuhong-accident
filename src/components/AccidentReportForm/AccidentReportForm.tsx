@@ -15,7 +15,7 @@ import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
-import { notifyOutsiderAccident, notifyServiceUserAccident } from '../../api/Notification';
+import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 
 
@@ -170,7 +170,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const submitHandler = () => {
         if (parentFormData.AccidentReportFormId) {
 
-            if (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage)) {
+            if (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)) {
                 // SM
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
@@ -198,7 +198,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             ServiceUnit: parentFormData.ServiceLocation,
                         }).catch(console.error);
                     }
-
+                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 1);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -402,6 +402,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
+        debugger
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)
         }
@@ -846,7 +847,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)} />
                         </div>
                     </div>
 
@@ -915,7 +916,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage) || pendingInvestigate(currentUserRole, formStatus, formStage))
+                            (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate) || pendingInvestigate(currentUserRole, formStatus, formStage))
                             &&
                             <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
                         }

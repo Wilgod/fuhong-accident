@@ -36,8 +36,9 @@ export const pendingSptApproveForSPT = (currentUserRole: Role, status: string, s
 }
 
 //Stage 1 / PENDING_SPT_APPROVE
-export const pendingSptApproveForSD = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "1" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR) {
+export const pendingSptApproveForSD = (currentUserRole: Role, status: string, stage: string, sptDate:Date): boolean => {
+    debugger;
+    if ((stage === "1" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR) || (stage === "2" && status === "PENDING_INVESTIGATE" && currentUserRole === Role.SERVICE_DIRECTOR && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) {
         return true;
     }
     return false;
@@ -60,8 +61,8 @@ export const stageTwoPendingSptApprove = (currentUserRole: Role, status: string,
 }
 
 //Stage 2 /PENDING_SPT_APPROVE
-export const stageTwoPendingSptApproveForSM = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "2" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_MANAGER) {
+export const stageTwoPendingSptApproveForSM = (currentUserRole: Role, status: string, stage: string,sptDate:Date): boolean => {
+    if ((stage === "2" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_MANAGER) || (stage === "3" && status === "PENDING_SM_FILL_IN" && currentUserRole === Role.SERVICE_MANAGER && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) {
         return true;
     }
     return false;

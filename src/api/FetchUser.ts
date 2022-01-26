@@ -9,7 +9,7 @@ import { graph } from "@pnp/graph";
 import "@pnp/graph/users";
 import { getAccessRight,getSMSDMapping } from './FetchFuHongList';
 import { IContextInfo } from "@pnp/sp/sites";
-
+import arraySort from 'array-sort';
 export async function getUserInfoByEmail(email: string) {
     try {
         const result = await sp.web.siteUsers.getByEmail(email).get();
@@ -60,7 +60,8 @@ export async function getAllServiceUnit(siteCollectionUrl) {
     try {
         const LIST_NAME = "SM SD Mapping";
         const URL = siteCollectionUrl//"https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
-        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc", "location", "su_Eng_name_display").orderBy("Title", true).getAll();
+        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc", "location", "su_Eng_name_display").getAll();
+        arraySort(result, 'su_Eng_name_display');
         let units = [];
         for (let item of result) {
             let addUnit = true;

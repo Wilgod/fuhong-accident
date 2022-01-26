@@ -23,7 +23,7 @@ export async function getUserInfo(siteCollectionUrl, email) {
     try {
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "UserInfoAD";
-        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Email eq '`+email+ `'`).get()
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Email eq '`+email+ `'`).getAll()
         return items;
     } catch (err) {
         console.log(err);
@@ -34,7 +34,7 @@ export async function getUserInfo(siteCollectionUrl, email) {
 export async function getAccessRight() {
     try {
         const LIST_NAME = "Access Rights";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.get()
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.getAll()
         return items;
     } catch (err) {
         console.log(err);
@@ -46,7 +46,7 @@ export async function getSMSDMapping(siteCollectionUrl,deptId) {
     try {
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "SM SD Mapping";
-        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).get()
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).getAll()
         return items;
     } catch (err) {
         console.log(err);
@@ -56,7 +56,7 @@ export async function getSMSDMapping(siteCollectionUrl,deptId) {
 export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";
-        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("ShortForm", true).get();
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("ShortForm", true).getAll();
         return items;
     } catch (err) {
         console.error(err);

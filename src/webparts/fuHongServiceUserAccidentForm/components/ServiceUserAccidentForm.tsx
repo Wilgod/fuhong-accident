@@ -35,7 +35,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import { notifyServiceUserAccident } from '../../../api/Notification';
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -627,7 +627,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                 formSubmittedHandler();
             }).catch(console.error);
-        } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage)) {
+        } else if (pendingSptApproveForSD(currentUserRole, formStatus, formStage,sptDate)) {
             updateServiceUserAccidentById(formId, {
                 "SDComment": sdComment,
                 "SDDate": sdDate.toISOString(),
@@ -635,7 +635,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-
+                notifyServiceUserAccidentSMSDComment(context, formData.Id, 1);
                 postLog({
                     AccidentTime: formData.AccidentTime,
                     Action: "評語",
@@ -1032,6 +1032,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setSdDate(new Date(data.SDDate));
             }
             setSptComment(data.SPTComment);
+            debugger;
             if (data.SPTDate) {
                 setSptDate(new Date(data.SPTDate));
             }
@@ -2293,7 +2294,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(currentUserRole, formStatus, formStage,sptDate)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -2398,7 +2399,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 (
                                     formInitial(currentUserRole, formStatus) ||
-                                    pendingSptApproveForSD(currentUserRole, formStatus, formStage) ||
+                                    pendingSptApproveForSD(currentUserRole, formStatus, formStage,sptDate) ||
                                     currentUserRole === Role.ADMIN)
                                 &&
                                 <button className="btn btn-warning" onClick={submitHandler}>提交</button>
