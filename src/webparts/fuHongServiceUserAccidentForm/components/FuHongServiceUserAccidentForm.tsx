@@ -20,6 +20,7 @@ import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
+import { getAccidentReportFormById } from '../../../api/FetchFuHongList';
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -147,7 +148,20 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
         debugger
-        this.setState({ serviceUserAccidentFormData: data, indexTab:(parseInt(data.Stage)-1) });
+        let stage = parseInt(data.Stage)-1;
+        if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(data.SPTDate.setDate(data.SPTDate.getDate() + 7)) > new Date()) {
+          this.setState({ serviceUserAccidentFormData: data, indexTab:0 });
+        } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
+          let formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
+          if (formTwentyData.SMId == this.props.context.pageContext.legacyPageContext.userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(formTwentyData.SPTDate.setDate(formTwentyData.SPTDate.getDate() + 7)) > new Date()) {
+            this.setState({ serviceUserAccidentFormData: data, indexTab:1 });
+          } else {
+            this.setState({ serviceUserAccidentFormData: data, indexTab:stage });
+          }
+        } else {
+          this.setState({ serviceUserAccidentFormData: data, indexTab:stage });
+        }
+        
         return data;
       }
     } catch (err) {

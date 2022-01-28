@@ -240,6 +240,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
+                    notifyServiceUserAccident(context, parentFormData.Id, 2);
                 }).catch(console.error);
 
             }
@@ -307,7 +308,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
-                                notifyServiceUserAccident(context, parentFormData.Id, 2);
+                                notifyServiceUserAccident(context, parentFormData.Id, 3);
 
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
@@ -323,7 +324,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             }).catch(console.error);
                         } else {
                             updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
-                                notifyOutsiderAccident(context, parentFormData.Id, 2);
+                                notifyOutsiderAccident(context, parentFormData.Id, 3);
 
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
