@@ -35,7 +35,9 @@ import OutsiderAccidentCaseSummary from '../../../components/CaseSummary/Outside
 import ServiceUserAccidentCaseSummary from '../../../components/CaseSummary/ServiceUserAccidentCaseSummary';
 import LicenseIncidentCaseSummary from '../../../components/CaseSummary/LicenseIncidentCaseSummary';
 import OtherIncidentCaseSummary from '../../../components/CaseSummary/OtherIncidentCaseSummary';
+import Admin from '../../../components/AdminPage/Admin';
 import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
+import { isArray } from '@pnp/pnpjs';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -160,7 +162,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
     console.log('permissionList :' ,this.state.permissionList);
     const ItemComponent = (href, name) => {
-      return <a className="text-decoration-none" href={href + ".aspx"} target="_blank" data-interception="off">
+      return <a className="text-decoration-none" href={this.props.context.pageContext.site.absoluteUrl +'/accident-and-incident/SitePages/'+ href + ".aspx"} target="_blank" data-interception="off">
         {name}
       </a>
     }
@@ -345,6 +347,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     }
 
     const navigationMenu = () => {
+      console.log(Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0);
+      console.log("permissionList ", this.state.permissionList);
+      console.log("ALL ", this.state.permissionList.indexOf("All") >=0);
       return <div className={`${styles.navigationMenu}`}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
           <div className="d-flex justify-content-between align-items center">
@@ -399,6 +404,18 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
             </div>
           </div>
         </div>
+        {Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0 &&
+        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "ADMIN")}>
+          <div className="d-flex justify-content-between align-items center">
+            <div>
+              Admin
+            </div>
+            <div className="">
+              <FontAwesomeIcon size="lg" icon={fontawesome.faUserCog} title={"Admin"} />
+            </div>
+          </div>
+        </div>
+        }
       </div>
     }
 
@@ -455,6 +472,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         // return <div>STAT</div>
         case "DASHBOARD":
         // return <div>DASHBOARD</div>
+        case "ADMIN":
+            return <Admin context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case "HOME":
         default:
           console.log('1')

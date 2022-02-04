@@ -164,6 +164,21 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
     }
 }
 
+export async function getAllServiceUserAccident() {
+    try {
+        const LIST_NAME = "Service User Accident";
+        let filterQuery = `Status ne 'DRAFT'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllServiceUserAccident failed");
+    }
+}
+
 export async function getServiceUserAccidentBySPId(spId: number,permissionList:any[]) {
     try {
         const LIST_NAME = "Service User Accident";
@@ -227,6 +242,20 @@ export async function getAccidentReportFormById(formId: number) {
     }
 }
 
+export async function getAllAccidentReportForm() {
+    try {
+        const LIST_NAME = "Accident Report Form";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+        .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", 'Investigator/Title')
+        .expand("Author", "SM", "SPT", "Investigator")
+        .getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllAccidentReportForm failed");
+    }
+}
 // form 21
 export async function getAccidentFollowUpFormById(formId: number) {
     try {
@@ -239,6 +268,21 @@ export async function getAccidentFollowUpFormById(formId: number) {
     } catch (err) {
         console.error(err);
         throw new Error("getAccidentFollowUpFormById failed");
+    }
+}
+
+export async function getAllAccidentFollowUpForm() {
+    try {
+        const LIST_NAME = "Accident Follow Up Form";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
+            .expand("Author", "SM", "SPT", "SD")
+            .getAll();
+
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllAccidentReportForm failed");
     }
 }
 
