@@ -167,9 +167,11 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
 export async function getAllServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
+            .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
 
         return items;
@@ -188,7 +190,6 @@ export async function getServiceUserAccidentBySPId(spId: number,permissionList:a
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Author", "Investigator")
             .getAll();
-        debugger
         return items.filter((item) => {
             if (item.Status === "DRAFT") {
                 if (item.AuthorId === spId) {
