@@ -9,13 +9,36 @@ import {getAllServiceUserAccident, getAllAccidentReportForm,  getAllAccidentFoll
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
-
+import Modal from 'react-modal';
+import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import useDepartmentMangers from '../../hooks/useDepartmentManagers';
+import useUserInfo from '../../hooks/useUserInfo';
+import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
 interface IDashboard {
     item: any;
     index:number;
+    position:string;
+    context: WebPartContext;
+    serviceUnit:string;
+    siteCollectionUrl:string;
+    getAllData:any;
 }
 
-export default function Dashboard({ item,index }: IDashboard) {
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      //minWidth: '500px',
+      width: '80vw',
+      //maxWidth: '1000px',
+      animation: 'fadeMe 0.5s'
+    }
+  };
+export default function Dashboard({ context, siteCollectionUrl, serviceUnit, item,index, position,getAllData }: IDashboard) {
     const column = [
         {
             dataField: 'ID',
@@ -27,78 +50,122 @@ export default function Dashboard({ item,index }: IDashboard) {
             text: '服務單位',
         },
         {
+            dataField: 'Form',
+            text: '表格',
+        },
+        {
             dataField: 'Status',
             text: '狀態',
         },
         {
-            dataField: 'SM',
+            dataField: 'CurrentSM',
             text: '高級服務經理姓名',
             formatter: smFormatter.bind(this)
         },
         {
-            dataField: 'SD',
+            dataField: 'CurrentSD',
             text: '服務總監姓名',
             formatter: sdFormatter.bind(this)
         }
         ,
         {
-            dataField: 'SPT',
+            dataField: 'CurrentSPT',
             text: '高級物理治療師姓名',
             formatter: sptFormatter.bind(this)
         }
     ]
 
+    const { departments, setHrDepartment } = useDepartmentMangers();
+    const [openModel, setOpenModel] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState([]);
+    const [selectedItem, setSelectedItem] = useState([]);
+    const [groupByServiceUserList, setGroupByServiceUserUnitList] = useState({key: '', child:[], display: false, groupby: ''});
+    const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     function smFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
         return div;
     }
 
     function sdFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
         return div;
     }
 
     function sptFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
         return div;
     }
 
-    const [selectedItem, setSelectedItem] = useState([]);
-    const [groupByServiceUserList, setGroupByServiceUserUnitList] = useState({key: '', child:[], display: false, groupby: ''});
+    function openDialog() {
+        setHrDepartment(serviceUnit);
+        setOpenModel(true);
+    }
+    
+
+    
 
     useEffect(() => {
         setGroupByServiceUserUnitList(item);
     }, []);
     
     const handleOnSelect = (row, isSelect) => {
+        let newSelectedItemId = [...selectedItemId];
         let newSelectedItem = [...selectedItem];
         if (isSelect) {
-            newSelectedItem.push(row.ID);
+            newSelectedItemId.push(row.ID);
+            newSelectedItem.push({Id:row.ID, stage:row.Stage, status:row.Status});
+            setSelectedItemId(newSelectedItemId);
             setSelectedItem(newSelectedItem);
         } else {
-            newSelectedItem = newSelectedItem.filter(function(elem){
+            newSelectedItemId = newSelectedItemId.filter(function(elem){
                 return elem != row.ID; 
              });
-            let selected = newSelectedItem.filter(x => x !== row.ID)
+            let selectedId = newSelectedItemId.filter(x => x !== row.ID);
+            let selected = newSelectedItem.filter(x => x.Id !== row.ID)
+
+            setSelectedItemId(selectedId);
             setSelectedItem(selected);
         }
     }
+
+    const handleOnSelectAll = (isSelect, rows) => {
+		const ids = rows.map(r => r.ID);
+        let newSelectedItemId = [];
+        let newSelectedItem = [];
+        debugger
+		if (isSelect) {
+			for (let i=0; i<rows.length; i++) {
+				newSelectedItemId.push(rows[i].ID)
+                newSelectedItem.push({Id:rows[i].ID, stage:rows[i].Stage, status:rows[i].Status});
+			}
+			setSelectedItemId(newSelectedItemId);
+            setSelectedItem(newSelectedItem);
+		} else {
+			setSelectedItemId(newSelectedItemId);
+            setSelectedItem(newSelectedItem);
+		}
+	}
+
     const selectRow = {
         mode: 'checkbox',
         clickToSelect: true,
         clickToEdit: true,
         clickToExpand: true,
-        selected: selectedItem,
-        onSelect: handleOnSelect
+        selected: selectedItemId,
+        onSelect: handleOnSelect,
+        onSelectAll: handleOnSelectAll
     };
 
 
@@ -109,9 +176,55 @@ export default function Dashboard({ item,index }: IDashboard) {
         setGroupByServiceUserUnitList(newArr);
     }
 
+    const  update = async() => {
+        console.log('smInfo : ', smInfo)
+        console.log('spSmInfo : ', spSmInfo)
+        if (item.groupby == 'CurrentSM') {
+            for (let selected of selectedItem) {
+                if (selected.stage == '1') {
+                    await updateServiceUserAccidentById(selected.Id, {
+                        "SMId": spSmInfo.Id
+                    });
+                } else if (selected.stage == '2') {
+                    const arf = item.child.filter(item => item.Id == selected.Id);
+                    if (arf.length > 0 ) {
+                        await updateAccidentReportFormById(arf[0].AccidentReportForm[0].Id, {
+                            "SMId": spSmInfo.Id
+                        });
+                    }
+                } else if (selected.stage == '3') {
+                    const afur = item.child.filter(item => item.Id == selected.Id);
+                    if (afur.length > 0 ) {
+                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[0], {
+                            "SMId": spSmInfo.Id
+                        });
+                    }
+                    
+                }
+            }
+        } else if (item.groupby == 'CurrentSD') {
+            for (let selected of selectedItem) {
+                if (selected.stage == '1') {
+                    await updateServiceUserAccidentById(selected.Id, {
+                        "SMId": spSmInfo.Id
+                    });
+                } else if (selected.stage == '3') {
+                    const afur = item.child.filter(item => item.Id == selected.Id);
+                    if (afur.length > 0 ) {
+                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[0], {
+                            "SMId": spSmInfo.Id
+                        });
+                    }
+                    
+                }
+            }
+        }
+        
+        getAllData();
+    }
+    console.log("groupByServiceUserList",groupByServiceUserList);
     return (
         <div>
-
             <div>
                 <div style={{cursor:'pointer'}} className="col-sm-12" onClick={() => showGroupByPositionSMUser(groupByServiceUserList,index)}>
                 {!groupByServiceUserList.display && <span><span style={{paddingRight:'5px', paddingLeft:'80px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>{groupByServiceUserList['key']}&nbsp;</span></span>}
@@ -120,7 +233,47 @@ export default function Dashboard({ item,index }: IDashboard) {
                 </div>
             </div>
             {groupByServiceUserList.display &&
-            <BootstrapTable boot keyField='ID' data={groupByServiceUserList.child} columns={column} selectRow={selectRow} bootstrap4={true} />
+            <div>
+                <div className="form-group row mt-3 mb-2">
+                    <div className="col-12">
+                        <div className="d-flex">
+                            <button className="btn btn-warning mr-3" onClick={() => openDialog()}>更改</button>
+                        </div>
+                    </div>
+                </div>
+                <BootstrapTable boot keyField='ID' data={groupByServiceUserList.child} columns={column} selectRow={selectRow} bootstrap4={true} />
+            </div>
+            }
+            {
+              openModel && <Modal
+                isOpen={openModel}
+                style={customStyles}
+                onClick={() => { setOpenModel(false) }}
+              >
+                <div style={{ maxHeight: '500px', padding: '5px', width: '95%' }} >
+                  <div >
+                    <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false) } />
+                  </div>
+                  <div style={{ marginTop: '15px', overflowX: 'hidden' }}>
+                      {position == 'SM' && '更改高級服務經理'}
+                      {position == 'SD' && '更改服務總監 '}
+                      {position == 'SPT' && '更改高級物理治療師 '}
+                  </div>
+                  <div className="form-row mb-2">
+
+                        <div className="col-6 col-xl-4">
+                            {Array.isArray(departments) && departments.length > 0 &&
+                                <select className={`custom-select`} onChange={(event => setSMEmail(event.target.value))}>
+                                    <option value=""></option>
+                                    <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
+                                    <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
+                                </select>
+                            }
+                        </div>
+                    </div>
+                  <div><button className="btn btn-warning mr-3" onClick={() => update()}>更改</button></div>
+                </div>
+              </Modal>
             }
         </div>
     )

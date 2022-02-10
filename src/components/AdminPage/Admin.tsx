@@ -59,24 +59,28 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function smFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
+		
         return div;
     }
 
     function sdFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
         return div;
     }
 
     function sptFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
-		div.push(<div >{cell.Title}</div>
-		);
+        if (cell != undefined) {
+            div.push(<div >{cell.Title}</div>);
+        }
         return div;
     }
 
@@ -106,6 +110,38 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function groupByPosition(list, position) {
         let groupBy = [];
         list.map(function(item) {
+            if (position == 'CurrentSM') {
+                if (item.Stage =='1') {
+                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                        return; 
+                    }
+                } else if (item.Stage =='2') {
+                    debugger
+                    if (item.Status !='PENDING_SM_FILL_IN' && item.Status !='PENDING_INVESTIGATE') {
+                        return; 
+                    }
+                } else if (item.Stage =='3') {
+                    if (item.Status !='PENDING_SM_FILL_IN') {
+                        return;
+                    }
+                }
+            } else if (position == 'CurrentSD') {
+                if (item.Stage =='1') {
+                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                        return; 
+                    }
+                } else if (item.Stage =='2') {
+                    return;
+                }
+            } else if (position == 'CurrentSPT') {
+                if (item.Stage =='1') {
+                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                        return; 
+                    }
+                } else if (item.Stage =='2') {
+                    return;
+                }
+            }
             
 			let addItem = true;
 			for(let groupItem of groupBy) {
@@ -176,23 +212,38 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         setGroupByServiceUserUnitList(newArr);
     }
 
-    
-    useEffect(() => {
-        async function getAllData() {
-            let allServiceUserAccident = await getAllServiceUserAccident();
-            let allAccidentReportForm = await getAllAccidentReportForm();
-            let allAccidentFollowUpForm = await getAllAccidentFollowUpForm();
-            for (let sa of allServiceUserAccident) {
-                console.log('All CaseNumber', sa['CaseNumber'])
-                let getARF = allAccidentReportForm.filter(item => {item.ParentFormId == sa.ID});
-                let getAFUF = allAccidentFollowUpForm.filter(item => {item.ParentFormId == sa.ID});
-                sa['AccidentReportForm'] = getARF;
-                sa['AccidentFollowUpForm'] = getAFUF;
+    async function getAllData() {
+        let allServiceUserAccident = await getAllServiceUserAccident();
+        let allAccidentReportForm = await getAllAccidentReportForm();
+        let allAccidentFollowUpForm = await getAllAccidentFollowUpForm();
+        for (let sa of allServiceUserAccident) {
+            console.log('All CaseNumber', sa['CaseNumber'])
+            let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+            let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+            sa['AccidentReportForm'] = getARF;
+            sa['AccidentFollowUpForm'] = getAFUF;
+            if (sa['Stage'] == '1') {
+                sa['Form'] = '服務使用者意外填報表(一)';
+                sa['CurrentSM'] = sa['SM'];
+                sa['CurrentSD'] = sa['SD'];
+                sa['CurrentSPT'] = sa['SPT'];
+            } else if (sa['Stage'] == '2') {
+                sa['Form'] = '服務使用者意外報告(二)';
+                sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
+                sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
+                sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+            } else if (sa['Stage'] == '3') {
+                sa['Form'] = '意外跟進/結束表(三)';
+                sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[0]['SM'] : null;
+                sa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[0]['SD'] : null;
+                sa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[0]['SPT'] : null;
             }
-            //setGroupBy1List(allServiceUserAccident);
-            setServiceUserAccident(allServiceUserAccident);
-            
         }
+        //setGroupBy1List(allServiceUserAccident);
+        setServiceUserAccident(allServiceUserAccident);
+        
+    }
+    useEffect(() => {
         getAllData()
     }, []);
 
@@ -201,10 +252,11 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         if (Array.isArray(serviceUserAccident) && serviceUserAccident.length > 0) {
             let groupByList = groupByServiceUnit();
             for (let i=0; i<groupByList.length; i++) {
-                groupByList[i].childSM = groupByPosition(groupByList[i].child, 'SM');
-                groupByList[i].childSD = groupByPosition(groupByList[i].child, 'SD');
-                groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'SPT');
+                groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM');
+                groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD');
+                groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'CurrentSPT');
             }
+            debugger
             setGroupByServiceUserUnitList(groupByList);
         }
         
@@ -230,7 +282,8 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 					    </div>
                         {item.displaySM && 
                             item.childSM.map((item1, index1) => {
-                                return <Dashboard item={item1} index={index1}/>
+                                debugger
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SM'} getAllData={getAllData}/>
                             })
                         }
                             
@@ -242,6 +295,10 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         
                         {item.displaySD && 
                             item.childSD.map((item1, index1) => {
+                                debugger
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SD'} getAllData={getAllData}/>
+                            })
+                            /*item.childSD.map((item1, index1) => {
                                 return (
                                     <div style={{paddingLeft:'80px'}}>
 
@@ -257,7 +314,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                                         }
                                     </div>
                                 )
-                            })
+                            })*/
                         }
 
                         <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupBySPT(item,index)}>
@@ -266,6 +323,10 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 					    </div>
                         {item.displaySPT && 
                             item.childSPT.map((item1, index1) => {
+                                debugger
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'SPT'} getAllData={getAllData}/>
+                            })
+                            /*item.childSPT.map((item1, index1) => {
                                 return (
                                     <div style={{paddingLeft:'80px'}}>
 
@@ -281,7 +342,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                                         }
                                     </div>
                                 )
-                            })
+                            })*/
                         }
                          
                     </div>

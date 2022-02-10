@@ -29,6 +29,12 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
+interface UserInfo {
+    userId: string;
+    userEmail: string;
+    userDisplayName: string;
+  }
+
 export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -63,7 +69,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     });
 
     const [investigator, setInvestigator] = useUserInfoAD();
-
+    const [getCurrentUser, setCurrentUser] = useState(context.pageContext.user.email);
     const [sptDate, setSptDate] = useState(new Date());
     const [smDate, setSmDate] = useState(new Date());
     const [sptComment, setSptComment] = useState("");
@@ -91,6 +97,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         setForm({ ...form, [name]: !form[name] });
     }
 
+
+    
     const dataFactory = () => {
         let body = {};
         let error: IAccidentFollowUpReportFormError = {};
@@ -432,7 +440,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         // Get Accident report form
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
-
+                debugger
 
                 //收到「意外填報表」日期
                 if (formTwentyData.ReceivedDate) {
@@ -448,7 +456,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 }
 
                 if (formTwentyData.SM && formTwentyData.SM.EMail) {
-                    setServiceManagerEmail(formTwentyData.SM.EMail)
+                    setServiceManagerEmail(formTwentyData.SM.EMail);
                 }
 
                 setSmComment(formTwentyData.SMComment);
@@ -505,7 +513,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     console.log(parentFormData);
     console.log('formType :',formType);
     console.log('serviceUser :',serviceUser);
-    
+    console.log('serviceManager :',serviceManager);
+    console.log('getCurrentUser :',getCurrentUser);
+    console.log('currentUserRole :',currentUserRole);
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -838,7 +848,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                     })
                                 }
                             </select> */}
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />
+                            {/*<input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />*/}
+                            <input type="text" className="form-control" readOnly value={`${serviceManager && serviceManager.Title ? `${serviceManager.Title}` : ""}`} />
+                            
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -848,7 +860,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={getCurrentUser == serviceManager && !stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)} />
                         </div>
                     </div>
 
