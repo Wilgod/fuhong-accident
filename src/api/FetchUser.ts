@@ -156,7 +156,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
           }
         } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
             debugger
-          let groups = user[0].Group.split(',')
+          let groups = user[0].Group == null ? [] :user[0].Group.split(',')
           for (let group of groups) {
             if (group.indexOf('_CMS_SU_') >=0 ) {
               dept.push(group.trim().replace('_CMS_SU_', ''));

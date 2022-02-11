@@ -20,7 +20,7 @@ import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
-import { getAccidentReportFormById } from '../../../api/FetchFuHongList';
+import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -51,6 +51,8 @@ interface IFuHongServiceUserAccidentFormState {
   isPrintMode: boolean;
   loading:boolean;
   indexTab:number;
+  formTwentyData:any;
+  formTwentyOneData:any;
 }
 
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
@@ -73,7 +75,9 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       formSubmitted: false,
       isPrintMode: false,
       loading:true,
-      indexTab: 0
+      indexTab: 0,
+      formTwentyData: [],
+      formTwentyOneData: []
     }
     console.log("Flow 1");
   }
@@ -110,21 +114,47 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
           }
         }
 
-        if (data && data.SM && data.SM.EMail) {
-          if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+        if (data) {
+          if (data.Stage == '1' && data.SM && data.SM.EMail) {
+            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '2') {
+            if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '3') {
+            if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+              this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || 
+              data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
           }
-        }
-
-        if (data && data.SD && data.SD.EMail) {
-          if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+          if ((data.Stage == '1' && data.SD && data.SD.EMail) || data.Stage == '2') {
+            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+            }
+          } else if (data.Stage == '3') {
+            debugger
+            if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+            }
           }
-        }
-
-        if (data && data.SPT && data.SPT.EMail) {
-          if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+          if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
+            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
+          } else if (data.Stage == '2') {
+            if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+              data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
+          } else if (data.Stage == '3') {
+            if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+              this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+              data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
           }
         }
         getAdmin().then((admin) => {
@@ -149,17 +179,24 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         const data = await getServiceUserAccidentById(formId);
         debugger
         let stage = parseInt(data.Stage)-1;
-        if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(data.SPTDate.setDate(data.SPTDate.getDate() + 7)) > new Date()) {
-          this.setState({ serviceUserAccidentFormData: data, indexTab:0 });
+        let formTwentyData:any = [];
+        let formTwentyOneData:any = [];
+        if (data.AccidentReportFormId != null) {
+          formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
+        }
+        if (data.AccidentFollowUpFormId != null && data.AccidentFollowUpFormId.length > 0) {
+          formTwentyOneData = await getAccidentFollowUpFormById(data.AccidentFollowUpFormId[data.AccidentFollowUpFormId.length - 1]);
+        }
+        if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
+          this.setState({ serviceUserAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
         } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
-          let formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
-          if (formTwentyData.SMId == this.props.context.pageContext.legacyPageContext.userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(formTwentyData.SPTDate.setDate(formTwentyData.SPTDate.getDate() + 7)) > new Date()) {
-            this.setState({ serviceUserAccidentFormData: data, indexTab:1 });
+          if (formTwentyData.SMId == this.props.context.pageContext.legacyPageContext.userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(new Date(formTwentyData.SPTDate).setDate(new Date(formTwentyData.SPTDate).getDate() + 7)) > new Date()) {
+            this.setState({ serviceUserAccidentFormData: data, indexTab:1, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
           } else {
-            this.setState({ serviceUserAccidentFormData: data, indexTab:stage });
+            this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
           }
         } else {
-          this.setState({ serviceUserAccidentFormData: data, indexTab:stage });
+          this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
         }
         
         return data;
@@ -202,13 +239,13 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                   <Tab>意外跟進/結束表(三)</Tab>
                 </TabList>
                 <TabPanel>
-                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}/>
                 </TabPanel>
               </Tabs>
               : <div></div>

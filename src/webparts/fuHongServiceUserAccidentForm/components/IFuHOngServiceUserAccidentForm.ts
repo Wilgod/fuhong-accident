@@ -36,7 +36,7 @@ interface IServiceUserAccidentFormStates {
     uncomfortableOtherRemark: string;
     uncomfortableDescription: string;
     behaviorOtherRemark: string;
-
+    
 }
 
 interface IServiceUserAccidentFormProps {
@@ -46,6 +46,7 @@ interface IServiceUserAccidentFormProps {
     formSubmittedHandler(): void;
     isPrintMode: boolean;
     siteCollectionUrl:string;
+    permissionList:any;
 }
 
 interface IErrorFields {

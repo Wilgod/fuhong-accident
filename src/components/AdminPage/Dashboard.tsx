@@ -13,6 +13,8 @@ import Modal from 'react-modal';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import useDepartmentMangers from '../../hooks/useDepartmentManagers';
 import useUserInfo from '../../hooks/useUserInfo';
+import useSPT from '../../hooks/useSPT';
+import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
 interface IDashboard {
     item: any;
@@ -74,13 +76,15 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
             formatter: sptFormatter.bind(this)
         }
     ]
-
+    const [sptList] = useSPT();
+    const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup();
     const { departments, setHrDepartment } = useDepartmentMangers();
     const [openModel, setOpenModel] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState([]);
     const [selectedItem, setSelectedItem] = useState([]);
     const [groupByServiceUserList, setGroupByServiceUserUnitList] = useState({key: '', child:[], display: false, groupby: ''});
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     function smFormatter(cell,rowIndex){
         //debugger;
 		let div = [];
@@ -195,7 +199,8 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                 } else if (selected.stage == '3') {
                     const afur = item.child.filter(item => item.Id == selected.Id);
                     if (afur.length > 0 ) {
-                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[0], {
+                        let idList = afur[0].AccidentFollowUpFormId;
+                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[idList.length - 1], {
                             "SMId": spSmInfo.Id
                         });
                     }
@@ -206,13 +211,31 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
                     await updateServiceUserAccidentById(selected.Id, {
-                        "SMId": spSmInfo.Id
+                        "SDId": spSdInfo.Id
                     });
                 } else if (selected.stage == '3') {
                     const afur = item.child.filter(item => item.Id == selected.Id);
                     if (afur.length > 0 ) {
-                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[0], {
-                            "SMId": spSmInfo.Id
+                        let idList = afur[0].AccidentFollowUpFormId
+                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[idList.length - 1], {
+                            "SDId": spSdInfo.Id
+                        });
+                    }
+                    
+                }
+            }
+        } else if (item.groupby == 'CurrentSPT') {
+            for (let selected of selectedItem) {
+                if (selected.stage == '1') {
+                    await updateServiceUserAccidentById(selected.Id, {
+                        "SPTId": sPhysicalTherapy.Id
+                    });
+                } else if (selected.stage == '3') {
+                    const afur = item.child.filter(item => item.Id == selected.Id);
+                    if (afur.length > 0 ) {
+                        let idList = afur[0].AccidentFollowUpFormId
+                        await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[idList.length - 1], {
+                            "SPTId": sPhysicalTherapy.Id
                         });
                     }
                     
@@ -262,13 +285,31 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                   <div className="form-row mb-2">
 
                         <div className="col-6 col-xl-4">
-                            {Array.isArray(departments) && departments.length > 0 &&
+                            {item.groupby == 'CurrentSM' && Array.isArray(departments) && departments.length > 0 &&
                                 <select className={`custom-select`} onChange={(event => setSMEmail(event.target.value))}>
                                     <option value=""></option>
                                     <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
                                     <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
                                 </select>
                             }
+                            {item.groupby == 'CurrentSD' && Array.isArray(departments) && departments.length > 0 &&
+                                <select className={`custom-select`} onChange={(event => setSDEmail(event.target.value))}>
+                                    <option value=""></option>
+                                    <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
+                                    <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
+                                </select>
+                            }
+                            {item.groupby == 'CurrentSPT' && 
+                                    <select className={`custom-select`} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}>
+                                        <option value={""} ></option>
+                                    {
+                                        sptList.map((spt) => {
+                                            console.log('spt mail :'+ spt.mail + ', ' + (spt.mail == sPhysicalTherapyEmail));
+                                            return <option value={spt.mail} selected={spt.mail == sPhysicalTherapyEmail}>{spt.displayName}</option>
+                                        })
+                                    }
+                                </select>
+                                }
                         </div>
                     </div>
                   <div><button className="btn btn-warning mr-3" onClick={() => update()}>更改</button></div>

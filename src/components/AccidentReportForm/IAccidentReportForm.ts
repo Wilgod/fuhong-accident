@@ -9,6 +9,7 @@ export interface IAccidentFollowUpRepotFormProps {
     parentFormData: any;
     formSubmittedHandler(): void;
     isPrintMode: boolean;
+    formTwentyData:any;
 }
 
 export interface IAccidentFollowUpRepotFormStates {

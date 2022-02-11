@@ -18,71 +18,9 @@ interface IAdmin {
 
 
 export default function Admin({ context,siteCollectionUrl }: IAdmin) {
-    const column = [
-        {
-            dataField: 'ID',
-            text: 'ID',
-            hidden: true
-        },
-        {
-            dataField: 'CaseNumber',
-            text: '服務單位',
-        },
-        {
-            dataField: 'Status',
-            text: '狀態',
-        },
-        {
-            dataField: 'SM',
-            text: '高級服務經理姓名',
-            formatter: smFormatter.bind(this)
-        },
-        {
-            dataField: 'SD',
-            text: '服務總監姓名',
-            formatter: sdFormatter.bind(this)
-        }
-        ,
-        {
-            dataField: 'SPT',
-            text: '高級物理治療師姓名',
-            formatter: sptFormatter.bind(this)
-        }
-    ]
     const [serviceUserAccident, setServiceUserAccident] = useState([]);
-    const [accidentReportForm, setAccidentReportForm] = useState([]);
-    const [accidentFollowUpForm, setAccidentFollowUpForm] = useState([]);
     const [groupByServiceUserList, setGroupByServiceUserUnitList] = useState([]);
-    const [groupByPositionList, setGroupByPositionList] = useState([]);
-    
 
-    function smFormatter(cell,rowIndex){
-        //debugger;
-		let div = [];
-        if (cell != undefined) {
-            div.push(<div >{cell.Title}</div>);
-        }
-		
-        return div;
-    }
-
-    function sdFormatter(cell,rowIndex){
-        //debugger;
-		let div = [];
-        if (cell != undefined) {
-            div.push(<div >{cell.Title}</div>);
-        }
-        return div;
-    }
-
-    function sptFormatter(cell,rowIndex){
-        //debugger;
-		let div = [];
-        if (cell != undefined) {
-            div.push(<div >{cell.Title}</div>);
-        }
-        return div;
-    }
 
     function groupByServiceUnit() {
         let groupBy = [];
@@ -95,7 +33,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 				}
 			}
 			if (addItem) {
-				groupBy.push({key:item['ServiceUserUnit'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, groupby:'ServiceUserUnit'});
+				groupBy.push({key:item['ServiceUserUnit'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
 			} else {
 				for(let i=0; i< groupBy.length; i++) {
 					if (groupBy[i].key == item['ServiceUserUnit']) {
@@ -117,7 +55,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                     }
                 } else if (item.Stage =='2') {
                     debugger
-                    if (item.Status !='PENDING_SM_FILL_IN' && item.Status !='PENDING_INVESTIGATE') {
+                    if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
                         return; 
                     }
                 } else if (item.Stage =='3') {
@@ -127,7 +65,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 }
             } else if (position == 'CurrentSD') {
                 if (item.Stage =='1') {
-                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
                         return; 
                     }
                 } else if (item.Stage =='2') {
@@ -135,11 +73,19 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 }
             } else if (position == 'CurrentSPT') {
                 if (item.Stage =='1') {
-                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
                         return; 
                     }
                 } else if (item.Stage =='2') {
                     return;
+                }
+            } else if (position == 'Investigator') {
+                if (item.Stage =='1' || item.Stage =='3') {
+                    return; 
+                } else if (item.Stage =='2') {
+                    if (item.Status !='PENDING_INVESTIGATE') {
+                        return; 
+                    }
                 }
             }
             
@@ -191,27 +137,14 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 
         setGroupByServiceUserUnitList(newArr);
     }
-
-
-    const showGroupByPositionSDUser = (item,index,index1) => {
-        let display = item.display;
+    const showGroupByInv = (item,index) => {
+        let display = item.displayInv;
         let newArr = [...groupByServiceUserList]; // copying the old datas array
-        newArr[index].childSD[index1].display = !display;
+        newArr[index].displayInv = !display;
+
         setGroupByServiceUserUnitList(newArr);
     }
-    const showGroupByPositionSMUser = (item,index,index1) => {
-        let display = item.display;
-        let newArr = [...groupByServiceUserList]; // copying the old datas array
-        newArr[index].childSM[index1].display = !display;
-        setGroupByServiceUserUnitList(newArr);
-    }
-    const showGroupByPositionSPTUser = (item,index,index1) => {
-        let display = item.display;
-        let newArr = [...groupByServiceUserList]; // copying the old datas array
-        newArr[index].childSPT[index1].display = !display;
-        setGroupByServiceUserUnitList(newArr);
-    }
-
+    
     async function getAllData() {
         let allServiceUserAccident = await getAllServiceUserAccident();
         let allAccidentReportForm = await getAllAccidentReportForm();
@@ -234,9 +167,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
             } else if (sa['Stage'] == '3') {
                 sa['Form'] = '意外跟進/結束表(三)';
-                sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[0]['SM'] : null;
-                sa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[0]['SD'] : null;
-                sa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[0]['SPT'] : null;
+                sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
+                sa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
+                sa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
             }
         }
         //setGroupBy1List(allServiceUserAccident);
@@ -255,6 +188,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD');
                 groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'CurrentSPT');
+                groupByList[i].childInv = groupByPosition(groupByList[i].child, 'Investigator');
             }
             debugger
             setGroupByServiceUserUnitList(groupByList);
@@ -298,23 +232,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                                 debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SD'} getAllData={getAllData}/>
                             })
-                            /*item.childSD.map((item1, index1) => {
-                                return (
-                                    <div style={{paddingLeft:'80px'}}>
-
-                                        <div>
-                                            <div style={{cursor:'pointer'}} className="col-sm-12" onClick={() => showGroupByPositionSDUser(item1,index,index1)}>
-                                            {!item1.display && <span><span style={{paddingRight:'5px', paddingLeft:'80px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>{item1['key']}&nbsp;</span></span>}
-                                            {item1.display && <span><span style={{paddingRight:'5px', paddingLeft:'80px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>{item1['key']}&nbsp;</span></span>}
-                                            ({item1.child.length})
-                                            </div>
-                                        </div>
-                                        {item1.display &&
-                                        <BootstrapTable boot keyField='id' data={item1.child} columns={column} pagination={paginationFactory()} bootstrap4={true} />
-                                        }
-                                    </div>
-                                )
-                            })*/
                         }
 
                         <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupBySPT(item,index)}>
@@ -326,25 +243,17 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                                 debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'SPT'} getAllData={getAllData}/>
                             })
-                            /*item.childSPT.map((item1, index1) => {
-                                return (
-                                    <div style={{paddingLeft:'80px'}}>
-
-                                        <div>
-                                            <div style={{cursor:'pointer'}} className="col-sm-12" onClick={() => showGroupByPositionSPTUser(item1,index,index1)}>
-                                            {!item1.display && <span><span style={{paddingRight:'5px', paddingLeft:'80px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>{item1['key']}&nbsp;</span></span>}
-                                            {item1.display && <span><span style={{paddingRight:'5px', paddingLeft:'80px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>{item1['key']}&nbsp;</span></span>}
-                                            ({item1.child.length})
-                                            </div>
-                                        </div>
-                                        {item1.display &&
-                                        <BootstrapTable boot keyField='id' data={item1.child} columns={column} pagination={paginationFactory()} bootstrap4={true} />
-                                        }
-                                    </div>
-                                )
-                            })*/
                         }
-                         
+                        <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupByInv(item,index)}>
+                            {!item.childInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
+                            {item.childInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
+					    </div>
+                        {item.displayInv && 
+                            item.childInv.map((item1, index1) => {
+                                debugger
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'INV'} getAllData={getAllData}/>
+                            })
+                        }
                     </div>
                     }
                     </div>

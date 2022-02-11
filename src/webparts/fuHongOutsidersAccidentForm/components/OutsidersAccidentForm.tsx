@@ -977,12 +977,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (中文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <input type="text" className="form-control" name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                         </div>
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (英文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <input type="text" className="form-control" name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
@@ -990,17 +990,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <input type="number" className="form-control" name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" id="gender-male" onClick={() => setForm({ ...form, serviceUserGender: "male" })} checked={form.serviceUserGender === "male"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" id="gender-male" onClick={() => setForm({ ...form, serviceUserGender: "male" })} checked={form.serviceUserGender === "male"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" id="gender-female" onClick={() => setForm({ ...form, serviceUserGender: "female" })} checked={form.serviceUserGender === "female"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" id="gender-female" onClick={() => setForm({ ...form, serviceUserGender: "female" })} checked={form.serviceUserGender === "female"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>
                             </div>
                         </div>
@@ -1010,7 +1010,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 身份*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control" name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                            <select className="form-control" name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                 <option value="">請選擇</option>
                                 <option value="visitor">訪客</option>
                                 <option value="family">家屬</option>
@@ -1021,7 +1021,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {
                                 form.serviceUserIdentity === "others" &&
                                 <div className="mt-2">
-                                    <input type="text" className="form-control" placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input type="text" className="form-control" placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 </div>
                             }
                         </div>
@@ -1036,7 +1036,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 timeFormat="p"
                                 timeIntervals={15}
                                 dateFormat="yyyy/MM/dd h:mm aa"
-                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                             />
                         </div>
                     </div>
@@ -1046,7 +1046,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 地點 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>地點</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                 </section>
@@ -1068,49 +1068,49 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>
                             <div className="col">
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envSlipperyGround" id="ENV-SLIPPERY-GROUND" checked={form.envSlipperyGround === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envSlipperyGround" id="ENV-SLIPPERY-GROUND" checked={form.envSlipperyGround === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envUnevenGround" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" checked={form.envUnevenGround === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envUnevenGround" id="ENV-UNEVEN-GROUND" value="ENV_UNEVEN_GROUND" checked={form.envUnevenGround === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-UNEVEN-GROUND">地面不平</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envObstacleItems" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" checked={form.envObstacleItems === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envObstacleItems" id="ENV-OBSTACLE-ITEMS" value="ENV_OBSTACLE_ITEMS" checked={form.envObstacleItems === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OBSTACLE-ITEMS">障礙物品</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envInsufficientLight" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" checked={form.envInsufficientLight === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envInsufficientLight" id="ENV-INSUFFICIENT-LIGHT" value="ENV_INSUFFICIENT_LIGHT" checked={form.envInsufficientLight === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-INSUFFICIENT-LIGHT">光線不足</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envNotEnoughSpace" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" checked={form.envNotEnoughSpace === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envNotEnoughSpace" id="ENV-NOT-ENOUGH-SPACE" value="ENV_NOT_ENOUGH_SPACE" checked={form.envNotEnoughSpace === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-NOT-ENOUGH-SPACE">空間不足</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envAcousticStimulation" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" checked={form.envAcousticStimulation === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envAcousticStimulation" id="ENV-ACOUSTIC-STIMULATION" value="ENV_ACOUSTIC_STIMULATION" checked={form.envAcousticStimulation === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-ACOUSTIC-STIMULATION">聲響刺激</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envCollidedByOthers" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" checked={form.envCollidedByOthers === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envCollidedByOthers" id="ENV-COLLIDED-BY-OTHERS" value="ENV_COLLIDED_BY_OTHERS" checked={form.envCollidedByOthers === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-COLLIDED-BY-OTHERS">被別人碰撞</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envHurtByOthers" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" checked={form.envHurtByOthers === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envHurtByOthers" id="ENV-HURT-BY-OTHERS" value="ENV_HURT_BY_OTHERS" checked={form.envHurtByOthers === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-HURT-BY-OTHERS">被別人傷害</label>
                                 </div>
                                 <div className="form-check form-check-inline">
-                                    <input className="form-check-input" type="checkbox" name="envImproperEquip" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" checked={form.envImproperEquip === true} value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envImproperEquip" id="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" checked={form.envImproperEquip === true} value="ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT" onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" name="envOther" id="ENV-OTHER" value="ENV_OTHER" checked={form.envOther === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="checkbox" name="envOther" id="ENV-OTHER" value="ENV_OTHER" checked={form.envOther === true} onClick={checkboxBoolHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他</label>
                                 </div>
                                 {
                                     form.envOther &&
                                     <div className="">
-                                        <AutosizeTextarea className="form-control" placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <AutosizeTextarea className="form-control" placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                 }
                             </div>
@@ -1119,7 +1119,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {/* (2.1.2) 其他因素 */}
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>其他因素</label>
                             <div className="col">
-                                <AutosizeTextarea className="form-control" name="otherFactor" value={form.otherFactor} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <AutosizeTextarea className="form-control" name="otherFactor" value={form.otherFactor} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                             </div>
                         </div>
                     </div>
@@ -1127,7 +1127,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/*(2.2)  事發過程 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentDetail" value={form.accidentDetail} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="accidentDetail" value={form.accidentDetail} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
@@ -1136,11 +1136,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外事件有否證人目擊事故發生經過?</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" onClick={() => setForm({ ...form, witness: true })} checked={form.witness === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" onClick={() => setForm({ ...form, witness: true })} checked={form.witness === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="witness-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="witness" id="witness-false" value="witness-false" onClick={() => setForm({ ...form, witness: false })} checked={form.witness === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="witness" id="witness-false" value="witness-false" onClick={() => setForm({ ...form, witness: false })} checked={form.witness === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="witness-false">沒有</label>
                             </div>
                             {
@@ -1148,11 +1148,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div>
                                         <label className="form-label">證人姓名</label>
-                                        <input type="text" className="form-control" name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <input type="text" className="form-control" name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                     <div>
                                         <label className="form-label">聯絡電話</label>
-                                        <input type="text" className="form-control" name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <input type="text" className="form-control" name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                 </>
                             }
@@ -1166,7 +1166,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="photoRecord" id="photo-true" value="PHOTO_TRUE" onClick={() => setForm({ ...form, photoRecord: true })} checked={form.photoRecord === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="radio" name="photoRecord" id="photo-true" value="PHOTO_TRUE" onClick={() => setForm({ ...form, photoRecord: true })} checked={form.photoRecord === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-true">有 (上載照片)</label>
                                 </div>
                                 {
@@ -1185,18 +1185,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     </>
                                 }
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="photoRecord" id="photo-false" value="PHOTO_FALSE" onClick={() => setForm({ ...form, photoRecord: false })} checked={form.photoRecord === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="radio" name="photoRecord" id="photo-false" value="PHOTO_FALSE" onClick={() => setForm({ ...form, photoRecord: false })} checked={form.photoRecord === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
                             <div className={`${styles.buttonLabel} mt-3`}>CCTV紀錄</div>
                             <div className="pl-2">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={() => setForm({ ...form, cctvRecord: false })} checked={form.cctvRecord === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                    <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={() => setForm({ ...form, cctvRecord: false })} checked={form.cctvRecord === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
                                 {
@@ -1204,7 +1204,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
-                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                         </div>
                                     </div>
                                 }
@@ -1224,19 +1224,19 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_DOCTOR_VISIT"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_DOCTOR_VISIT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_OUTPATIENT"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_OUTPATIENT" value="ARRANGEMENT_OUTPATIENT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_OUTPATIENT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_OUTPATIENT">門診</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_EMERGENCY_DEPARTMENT" value="ARRANGEMENT_EMERGENCY_DEPARTMENT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_EMERGENCY_DEPARTMENT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_EMERGENCY_DEPARTMENT">急症室</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_EMERGENCY_REJECT" value="ARRANGEMENT_EMERGENCY_REJECT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_EMERGENCY_REJECT"} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_EMERGENCY_REJECT" value="ARRANGEMENT_EMERGENCY_REJECT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_EMERGENCY_REJECT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_EMERGENCY_REJECT">拒絕就診</label>
                             </div>
                             {
@@ -1244,7 +1244,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div className="">
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className="form-control" value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <input type="text" className="form-control" value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                     <div className="">
                                         <label className="form-label">到達時間</label>
@@ -1256,7 +1256,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                            readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                         />
                                     </div>
                                     <div className="">
@@ -1269,7 +1269,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                            readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                         />
                                     </div>
                                 </>
@@ -1283,11 +1283,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-false" value="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="police" id="police-false" value="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有</label>
                             </div>
                             {
@@ -1303,12 +1303,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                            readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                         />
                                     </div>
                                     <div>
                                         <label className="form-label">警署名稱</label>
-                                        <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                 </>
                             }
@@ -1320,11 +1320,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬聯絡</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="familyContact" id="family-true" value="family-true" onClick={() => setForm({ ...form, familyContact: true })} checked={form.familyContact === true} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="familyContact" id="family-true" value="family-true" onClick={() => setForm({ ...form, familyContact: true })} checked={form.familyContact === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="family-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="familyContact" id="family-false" value="family-false" onClick={() => setForm({ ...form, familyContact: false })} checked={form.familyContact === false} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="radio" name="familyContact" id="family-false" value="family-false" onClick={() => setForm({ ...form, familyContact: false })} checked={form.familyContact === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="family-false">沒有</label>
                             </div>
                             {
@@ -1340,12 +1340,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                            readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                         />
                                     </div>
                                     <div>
                                         <label className="form-label">與傷者關係</label>
-                                        <input type="text" className="form-control" name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
+                                        <input type="text" className="form-control" name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)} />
                                     </div>
                                 </>
                             }
@@ -1413,7 +1413,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                         <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
                                         <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
                                     </select>
@@ -1430,11 +1430,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
-                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
+                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {
-                        pendingSmApprove(currentUserRole, formStatus, formStage) &&
+                        pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) &&
                         <div className="form-row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
@@ -1470,7 +1470,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
                                     >
                                         <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
                                         <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
@@ -1512,7 +1512,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師姓名</label>
                         <div className="col-12 col-md-4">
                             <select className={`custom-select  `} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
-                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
+                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}>
                                     <option value={""} ></option>
                                 {
                                     sptList.map((spt) => {

@@ -17,7 +17,7 @@ import { graph } from '@pnp/graph';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
-
+import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -45,6 +45,8 @@ interface IFuHongOutsidersAccidentFormState {
   outsiderAccidentFormData: any;
   stage: string;
   isPrintMode: boolean;
+  formTwentyData:any;
+  formTwentyOneData:any
 }
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
@@ -64,7 +66,9 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       outsiderAccidentFormData: null,
       stage: "",
       formSubmitted: false,
-      isPrintMode: false
+      isPrintMode: false,
+      formTwentyData:[],
+      formTwentyOneData:[]
     }
   }
 
@@ -91,24 +95,43 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           }
         }
 
-        if (data && data.SM && data.SM.EMail) {
-          if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+        if (data) {
+          if (data.Stage == '1' && data.SM && data.SM.EMail) {
+            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '2') {
+            if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '3') {
+            if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          }
+          if (data.Stage == '1' && data.SD && data.SD.EMail) {
+            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '3') {
+            if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          }
+          if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
+            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '2') {
+            if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          } else if (data.Stage == '3') {
+            if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
           }
         }
-
-        if (data && data.SD && data.SD.EMail) {
-          if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
-          }
-        }
-
-        if (data && data.SPT && data.SPT.EMail) {
-          if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-          }
-        }
-
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -128,7 +151,15 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getOutsiderAccidentById(formId);
-        this.setState({ outsiderAccidentFormData: data });
+        let formTwentyData:any = [];
+        let formTwentyOneData:any = [];
+        if (data.AccidentReportFormId != null) {
+          formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
+        }
+        if (data.AccidentFollowUpFormId != null && data.AccidentFollowUpFormId.length > 0) {
+          formTwentyOneData = await getAccidentFollowUpFormById(data.AccidentFollowUpFormId);
+        }
+        this.setState({ outsiderAccidentFormData: data, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
         return data;
       }
     } catch (err) {
@@ -160,10 +191,10 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode}/>
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} />
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}/>
                 </TabPanel>
               </Tabs>
           }

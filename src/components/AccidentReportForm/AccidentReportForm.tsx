@@ -29,13 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-interface UserInfo {
-    userId: string;
-    userEmail: string;
-    userDisplayName: string;
-  }
-
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -178,7 +172,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const submitHandler = () => {
         if (parentFormData.AccidentReportFormId) {
 
-            if (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)) {
+            if (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData)) {
                 // SM
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
@@ -296,7 +290,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     // Create Accident Follow Up Report Form
                     const accidentFollowUpReportFormBody = {
                         "SPTId": parentFormData.SPTId,
-                        "SMId": parentFormData.SMId,
+                        "SMId": serviceManager.Id,
                         "SDId": parentFormData.SDId,
                         "CaseNumber": parentFormData.CaseNumber,
                         "ParentFormId": parentFormData.Id,
@@ -650,29 +644,29 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外性質</label>
                         <div className="col">
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentNatureFall" id="accidental-nature-fall" checked={form.accidentNatureFall} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="accidentNatureFall" id="accidental-nature-fall" checked={form.accidentNatureFall} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-fall">跌倒</label>
                             </div>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentNatureChok" id="accidental-nature-choking" checked={form.accidentNatureChok} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="accidentNatureChok" id="accidental-nature-choking" checked={form.accidentNatureChok} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-choking">哽塞</label>
                             </div>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentNatureBehavior" id="accidental-nature-behavior" checked={form.accidentNatureBehavior} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="accidentNatureBehavior" id="accidental-nature-behavior" checked={form.accidentNatureBehavior} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-behavior">服務使用者行為問題</label>
                             </div>
                             <div className="form-check form-check-inline  mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentNatureEnvFactor" id="accidental-nature-env-factor" checked={form.accidentNatureEnvFactor} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="accidentNatureEnvFactor" id="accidental-nature-env-factor" checked={form.accidentNatureEnvFactor} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-env-factor">環境因素</label>
                             </div>
                             <div className="form-check mr-0 mr-md-3">
-                                <input className="form-check-input" type="checkbox" name="accidentNatureOther" id="accidental-nature-other" checked={form.accidentNatureOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="accidentNatureOther" id="accidental-nature-other" checked={form.accidentNatureOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-other">其他</label>
                             </div>
                             {
                                 form.accidentNatureOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="accidentalNatureOtherRemark" value={form.accidentalNatureOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="accidentalNatureOtherRemark" value={form.accidentalNatureOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 </div>
                             }
                         </div>
@@ -684,49 +678,49 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         <div className="col">
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorSlipperyGround" id="env-slippery-ground" checked={form.envFactorSlipperyGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorSlipperyGround" id="env-slippery-ground" checked={form.envFactorSlipperyGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-slippery-ground">地面濕滑</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorUnevenGround" id="env-uneven-ground" checked={form.envFactorUnevenGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorUnevenGround" id="env-uneven-ground" checked={form.envFactorUnevenGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-uneven-ground">地面不平</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorObstacleItems" id="env-obstacle-items" checked={form.envFactorObstacleItems} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorObstacleItems" id="env-obstacle-items" checked={form.envFactorObstacleItems} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-obstacle-items">障礙物品</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorInsufficientLight" id="env-insufficient-light" checked={form.envFactorInsufficientLight} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorInsufficientLight" id="env-insufficient-light" checked={form.envFactorInsufficientLight} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-insufficient-light">光線不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorNotEnoughSpace" id="env-not-enough-space" checked={form.envFactorNotEnoughSpace} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorNotEnoughSpace" id="env-not-enough-space" checked={form.envFactorNotEnoughSpace} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-not-enough-space">空間不足</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorNoise" id="env-acoustic-stimulation" checked={form.envFactorNoise} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorNoise" id="env-acoustic-stimulation" checked={form.envFactorNoise} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-acoustic-stimulation">聲響刺激</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorCollision" id="env-collided-by-others" checked={form.envFactorCollision} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorCollision" id="env-collided-by-others" checked={form.envFactorCollision} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-collided-by-others">被別人碰撞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorHurtByOthers" id="env-hurt-by-others" checked={form.envFactorHurtByOthers} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorHurtByOthers" id="env-hurt-by-others" checked={form.envFactorHurtByOthers} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-hurt-by-others">被別人傷害</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="envFactorAssistiveEquipment" id="env-improper-use-of-assistive-equipment" checked={form.envFactorAssistiveEquipment} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorAssistiveEquipment" id="env-improper-use-of-assistive-equipment" checked={form.envFactorAssistiveEquipment} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="env-improper-use-of-assistive-equipment">輔助器材使用不當 (如輪椅／便椅未上鎖)</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="envFactorOther" id="ENV-OTHER" checked={form.envFactorOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="envFactorOther" id="ENV-OTHER" checked={form.envFactorOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-OTHER">其他</label>
                             </div>
                             {
                                 form.envFactorOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 </div>
                             }
                         </div>
@@ -737,33 +731,33 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         <div className="col">
                             <div>個人因素</div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactorEmotional" id="PERSONAL-EMOTIONAL-INSTABILITY" checked={form.personalFactorEmotional} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorEmotional" id="PERSONAL-EMOTIONAL-INSTABILITY" checked={form.personalFactorEmotional} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactorImpatient" id="PERSONAL-HEARTBROKEN" checked={form.personalFactorImpatient} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorImpatient" id="PERSONAL-HEARTBROKEN" checked={form.personalFactorImpatient} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-HEARTBROKEN">心急致傷</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactorChok" id="PERSONAL-CHOKING" checked={form.personalFactorChok} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorChok" id="PERSONAL-CHOKING" checked={form.personalFactorChok} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-CHOKING">進食時哽塞</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name={"personalFactorUnsteadyWalk"} id="PERSONAL-UNSTEADY-WALKING" checked={form.personalFactorUnsteadyWalk} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name={"personalFactorUnsteadyWalk"} id="PERSONAL-UNSTEADY-WALKING" checked={form.personalFactorUnsteadyWalk} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-UNSTEADY-WALKING">步履不穩</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="personalFactorTwitch" id="PERSONAL-TWITCH" checked={form.personalFactorTwitch} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorTwitch" id="PERSONAL-TWITCH" checked={form.personalFactorTwitch} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-TWITCH">抽搐</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="personalFactorOther" id="PERSONAL-OTHER" checked={form.personalFactorOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                <input className="form-check-input" type="checkbox" name="personalFactorOther" id="PERSONAL-OTHER" checked={form.personalFactorOther} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-OTHER">其他</label>
                             </div>
                             {
                                 form.personalFactorOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                                 </div>
                             }
                         </div>
@@ -772,21 +766,21 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發現之經過</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>可能引致意外之因素</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
+                            <AutosizeTextarea className="form-control" name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, currentUserRole, formStatus, formStage) && !stageTwoPendingSptApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
 
@@ -860,7 +854,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={getCurrentUser == serviceManager && !stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData)} />
                         </div>
                     </div>
 
@@ -929,12 +923,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            (stageTwoPendingSptApproveForSM(currentUserRole, formStatus, formStage,sptDate) || pendingInvestigate(currentUserRole, formStatus, formStage))
+                            (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData) || pendingInvestigate(context, currentUserRole, formStatus, formStage))
                             &&
                             <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
                         }
                         {
-                            pendingInvestigate(currentUserRole, formStatus, formStage) &&
+                            pendingInvestigate(context, currentUserRole, formStatus, formStage) &&
                             <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
