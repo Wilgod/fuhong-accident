@@ -5,6 +5,31 @@ import "@pnp/sp/items";
 import { Web } from "@pnp/sp/webs";
 import { ISearchCriteria } from "../hooks/useFetchAllForms";
 
+
+export async function getUpdateUserWorkflow(siteCollectionUrl) {
+    try {
+        //const web = Web(siteCollectionUrl);
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'SERVICE_USER_ACCIDENT_UPDATE'").top(1).getAll();
+        if (item.length > 0) return item[0].Url;
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
+export async function getServiceUserAccidentWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'SERVICE_USER_ACCIDENT'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
 export async function getAdmin() {
     try {
         const LIST_NAME = "Admin";

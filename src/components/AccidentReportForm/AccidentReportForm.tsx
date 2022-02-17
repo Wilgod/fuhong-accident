@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,serviceUserAccidentWorkflow }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -200,7 +200,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             ServiceUnit: parentFormData.ServiceLocation,
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2);
+                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2,serviceUserAccidentWorkflow);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -242,7 +242,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccident(context, parentFormData.Id, 2);
+                    notifyServiceUserAccident(context, parentFormData.Id, 2, serviceUserAccidentWorkflow);
                 }).catch(console.error);
 
             }
@@ -310,7 +310,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
-                                notifyServiceUserAccident(context, parentFormData.Id, 3);
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
 
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
@@ -560,22 +560,24 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(英文)</span></label>
                         <div className="col-12 col-md-4">
-                            {
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameEN || ""}`} />
+                            {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameEN ? `${serviceUser.NameEN}` : ""}`} />
                                     :
                                     <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameEN || ""}`} />
-                            }
+                            */}
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
-                            {
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
+                            {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
                                     :
                                     <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
-                            }
+                            */}
                         </div>
                     </div>
 
@@ -583,22 +585,24 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            {
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserAge || ""} `} />
+                            {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.Age ? `${serviceUser.Age}` : ""}`} />
                                     :
                                     <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserAge || ""} `} />
-                            }
+                            */}
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
-                            {
+                            <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.ServiceUserGender === "male" ? "男" : "女"} />
+                            {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={serviceUser && serviceUser.Gender === "Male" ? "男" : "女"} />
                                     :
                                     <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.ServiceUserGender === "male" ? "男" : "女"} />
-                            }
+                            */}
                         </div>
                     </div>
 

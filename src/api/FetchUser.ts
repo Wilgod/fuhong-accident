@@ -121,8 +121,18 @@ export async function getServiceDirectorsByGraph() {
 }
 
 // SPT
-export async function getSeniorPhysiotherapistByGraph() {
+export async function getSeniorPhysiotherapistByGraph(siteCollectionUrl) {
     try {
+        const web = Web(siteCollectionUrl);
+        const LIST_NAME = "UserInfoAD";
+        const item = await web.lists.getByTitle(LIST_NAME).items.filter("hr_jobcode eq 'SPT'").getAll();
+        debugger
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+    /*try {
         let query = `jobTitle eq 'Senior Physiotherapist'`
 
         // Testing account
@@ -134,7 +144,7 @@ export async function getSeniorPhysiotherapistByGraph() {
     } catch (err) {
         console.error(err);
         throw new Error("getSeniorPhysiotherapistByGraph error");
-    }
+    }*/
 }
 
 export async function checkPermissionList(siteCollectionUrl,userEmail) {

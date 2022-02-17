@@ -18,6 +18,7 @@ import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
 import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
+import { getServiceUserAccidentWorkflow } from '../../../api/FetchFuHongList';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -46,7 +47,8 @@ interface IFuHongOutsidersAccidentFormState {
   stage: string;
   isPrintMode: boolean;
   formTwentyData:any;
-  formTwentyOneData:any
+  formTwentyOneData:any;
+  serviceUserAccidentWorkflow:string;
 }
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
@@ -68,7 +70,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       formSubmitted: false,
       isPrintMode: false,
       formTwentyData:[],
-      formTwentyOneData:[]
+      formTwentyOneData:[],
+      serviceUserAccidentWorkflow:''
     }
   }
 
@@ -82,7 +85,13 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     }
   }
 
+  private initialState = async () => {
+    const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
+    this.setState({ serviceUserAccidentWorkflow:serviceUserAccidentWorkflow });
+  }
+
   public componentDidMount() {
+    this.initialState();
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
@@ -191,10 +200,10 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData}/>
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}/>
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
                 </TabPanel>
               </Tabs>
           }

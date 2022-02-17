@@ -12,6 +12,7 @@ export interface IAccidentFollowUpFormProps {
     isPrintMode: boolean;
     formTwentyData:any;
     formTwentyOneData:any;
+    serviceUserAccidentWorkflow:string;
 }
 
 export interface IAccidentFollowUpFormStates {

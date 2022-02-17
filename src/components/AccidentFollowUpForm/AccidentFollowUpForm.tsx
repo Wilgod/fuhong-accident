@@ -9,9 +9,6 @@ import "./AccidentFollowUpForm.css";
 import AutosizeTextarea from "../AutosizeTextarea/AutosizeTextarea";
 import { IAccidentFollowUpFormStates, IAccidentFollowUpFormProps, IFollowUpAction } from './IAccidentFollowUpForm';
 import useUserInfoAD from '../../hooks/useUserInfoAD';
-import useSPT from '../../hooks/useSPT';
-import useSM from '../../hooks/useSM';
-import useSD from '../../hooks/useSD';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
@@ -32,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, serviceUserAccidentWorkflow }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
@@ -115,7 +112,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const smSubmitHandler = (event) => {
 
         if (stageThreePendingSdApproveForSpt(context,currentUserRole, formStatus, formStage, formTwentyOneData)) { // SPT
-            notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3);
+            notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
             sptCommentUpdate();
         } else {
             const [body, error] = dataFactory();
@@ -204,7 +201,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -226,7 +223,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((res) => {
                             console.log(res);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -363,7 +360,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (formType === "SERVICE_USER") {
                 updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
                     // trigger notification workflow
-                    notifyServiceUserAccident(context, parentFormData.Id, 3);
+                    notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
 
                     postLog({
                         AccidentTime: parentFormData.AccidentTime,
@@ -480,7 +477,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",

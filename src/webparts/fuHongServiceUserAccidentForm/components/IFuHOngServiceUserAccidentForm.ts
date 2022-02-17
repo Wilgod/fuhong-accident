@@ -47,6 +47,7 @@ interface IServiceUserAccidentFormProps {
     isPrintMode: boolean;
     siteCollectionUrl:string;
     permissionList:any;
+    serviceUserAccidentWorkflow:string
 }
 
 interface IErrorFields {

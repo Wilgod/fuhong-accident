@@ -10,6 +10,7 @@ export interface IAccidentFollowUpRepotFormProps {
     formSubmittedHandler(): void;
     isPrintMode: boolean;
     formTwentyData:any;
+    serviceUserAccidentWorkflow:string;
 }
 
 export interface IAccidentFollowUpRepotFormStates {

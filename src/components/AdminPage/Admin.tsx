@@ -6,6 +6,7 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import * as moment from 'moment';
 import {getAllServiceUserAccident, getAllAccidentReportForm,  getAllAccidentFollowUpForm} from '../../api/FetchFuHongList';
+import {getUpdateUserWorkflow} from '../../api/FetchFuHongList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +21,7 @@ interface IAdmin {
 export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     const [serviceUserAccident, setServiceUserAccident] = useState([]);
     const [groupByServiceUserList, setGroupByServiceUserUnitList] = useState([]);
-
+    const [updateUserWorkflow, setUpdateUserWorkflow] = useState("");
 
     function groupByServiceUnit() {
         let groupBy = [];
@@ -176,8 +177,13 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         setServiceUserAccident(allServiceUserAccident);
         
     }
+    async function getWorkflow() {
+        let workflow = await getUpdateUserWorkflow(siteCollectionUrl);
+        setUpdateUserWorkflow(workflow);
+    }
     useEffect(() => {
-        getAllData()
+        getAllData();
+        getWorkflow();
     }, []);
 
    
@@ -217,7 +223,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         {item.displaySM && 
                             item.childSM.map((item1, index1) => {
                                 debugger
-                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SM'} getAllData={getAllData}/>
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SM'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
                             
@@ -230,7 +236,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         {item.displaySD && 
                             item.childSD.map((item1, index1) => {
                                 debugger
-                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SD'} getAllData={getAllData}/>
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SD'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
 
@@ -241,7 +247,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         {item.displaySPT && 
                             item.childSPT.map((item1, index1) => {
                                 debugger
-                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'SPT'} getAllData={getAllData}/>
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'SPT'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
                         <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupByInv(item,index)}>
@@ -251,7 +257,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         {item.displayInv && 
                             item.childInv.map((item1, index1) => {
                                 debugger
-                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'INV'} getAllData={getAllData}/>
+                                return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'INV'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
                     </div>

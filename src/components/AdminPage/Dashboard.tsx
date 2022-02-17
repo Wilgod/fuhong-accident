@@ -16,6 +16,8 @@ import useUserInfo from '../../hooks/useUserInfo';
 import useSPT from '../../hooks/useSPT';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
+import { notifyServiceUserAccidentUpdate } from '../../api/Notification';
+
 interface IDashboard {
     item: any;
     index:number;
@@ -24,6 +26,7 @@ interface IDashboard {
     serviceUnit:string;
     siteCollectionUrl:string;
     getAllData:any;
+    workflow:string
 }
 
 const customStyles = {
@@ -40,7 +43,7 @@ const customStyles = {
       animation: 'fadeMe 0.5s'
     }
   };
-export default function Dashboard({ context, siteCollectionUrl, serviceUnit, item,index, position,getAllData }: IDashboard) {
+export default function Dashboard({ context, siteCollectionUrl, serviceUnit, item,index, position,getAllData, workflow }: IDashboard) {
     const column = [
         {
             dataField: 'ID',
@@ -68,15 +71,14 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
             dataField: 'CurrentSD',
             text: '服務總監姓名',
             formatter: sdFormatter.bind(this)
-        }
-        ,
+        },
         {
             dataField: 'CurrentSPT',
             text: '高級物理治療師姓名',
             formatter: sptFormatter.bind(this)
         }
     ]
-    const [sptList] = useSPT();
+    const [sptList] = useSPT(siteCollectionUrl);
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup();
     const { departments, setHrDepartment } = useDepartmentMangers();
     const [openModel, setOpenModel] = useState(false);
@@ -183,6 +185,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     const  update = async() => {
         console.log('smInfo : ', smInfo)
         console.log('spSmInfo : ', spSmInfo)
+        debugger
         if (item.groupby == 'CurrentSM') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
@@ -207,6 +210,8 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
+            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, smInfo);
+            debugger
         } else if (item.groupby == 'CurrentSD') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
@@ -242,7 +247,6 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                 }
             }
         }
-        
         getAllData();
     }
     console.log("groupByServiceUserList",groupByServiceUserList);
@@ -304,8 +308,8 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                                         <option value={""} ></option>
                                     {
                                         sptList.map((spt) => {
-                                            console.log('spt mail :'+ spt.mail + ', ' + (spt.mail == sPhysicalTherapyEmail));
-                                            return <option value={spt.mail} selected={spt.mail == sPhysicalTherapyEmail}>{spt.displayName}</option>
+                                            //console.log('spt mail :'+ spt.mail + ', ' + (spt.mail == sPhysicalTherapyEmail));
+                                            return <option value={spt.Email} selected={spt.Email == sPhysicalTherapyEmail}>{spt.Name}</option>
                                         })
                                     }
                                 </select>

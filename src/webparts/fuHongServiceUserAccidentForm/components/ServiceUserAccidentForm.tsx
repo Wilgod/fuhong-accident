@@ -46,7 +46,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -66,7 +66,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
     const [serviceUnit, setServiceUnit] = useState("");
     const [serviceLocation, setServiceLocation] = useState("");
-    const [sptList] = useSPT();
+    const [sptList] = useSPT(siteCollectionUrl);
     const [insuranceNumber, setInsuranceNumber] = useState("");
     const [injuryFiles, setInjuryFiles] = useState([]);
     const [uploadedInjuryFiles, setUploadedInjuryFiles] = useState([]);
@@ -607,7 +607,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const submitHandler = (event) => {
         event.preventDefault();
-        debugger;
         if (currentUserRole === Role.ADMIN) {
             updateServiceUserAccidentById(formId, {
                 "InsuranceCaseNo": insuranceNumber
@@ -635,7 +634,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-                notifyServiceUserAccidentSMSDComment(context, formData.Id, 1);
+                notifyServiceUserAccidentSMSDComment(context, formData.Id, 1, serviceUserAccidentWorkflow);
                 postLog({
                     AccidentTime: formData.AccidentTime,
                     Action: "評語",
@@ -675,7 +674,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccident(context, formData.Id, 1);
+                    notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                     postLog({
                         AccidentTime: formData.AccidentTime,
                         Action: "提交至服務經理",
@@ -731,7 +730,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }).catch(console.error);
                             }
                             //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, formData.Id, 1);
+                                notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                             //}
 
 
@@ -774,7 +773,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                             }
                             //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1);
+                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
                             //}
 
                             postLog({
@@ -823,7 +822,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-                notifyServiceUserAccident(context, formData.Id, 1);
+                notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
 
                 postLog({
                     AccidentTime: accidentTime.toISOString(),
@@ -906,7 +905,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                         updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
 
-                                            notifyServiceUserAccident(context, formData.Id, 1);
+                                            notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                                             formSubmittedHandler()
                                         }).catch(console.error);
                                     }
@@ -1032,7 +1031,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setSdDate(new Date(data.SDDate));
             }
             setSptComment(data.SPTComment);
-            debugger;
             if (data.SPTDate) {
                 setSptDate(new Date(data.SPTDate));
             }
@@ -1065,7 +1063,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (data.SPT) {
                 setSPhysicalTherapyEmail(data.SPT.EMail)
                 // setSptDate(new Date(data.SPTDate));
-                debugger
             }
 
             if (data.SM) {
@@ -1119,7 +1116,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
-                debugger
                 setServiceUnit(userInfo.hr_deptid);
                 setServiceLocation(userInfo.hr_location);
                 setPatientServiceUnit(userInfo.hr_deptid);
@@ -1152,8 +1148,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     // Get SD & SM
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
-            debugger
-            
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
                 setServiceLocation(dept.location);
@@ -1169,7 +1163,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }, [departments])
 
     useEffect(() => {
-        debugger
         setHrDepartment(patientServiceUnit)
         /*getDepartmentBySuEngNameDisplay(patientServiceUnit).then((res) => {
             if (Array.isArray(res) && res.length) {
@@ -2339,8 +2332,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     <option value={""} ></option>
                                 {
                                     sptList.map((spt) => {
-                                        console.log('spt mail :'+ spt.mail + ', ' + (spt.mail == sPhysicalTherapyEmail));
-                                        return <option value={spt.mail} selected={spt.mail == sPhysicalTherapyEmail}>{spt.displayName}</option>
+                                        console.log('spt mail :'+ spt.Email + ', ' + (spt.Email == sPhysicalTherapyEmail));
+                                        return <option value={spt.Email} selected={spt.Email == sPhysicalTherapyEmail}>{spt.Name}</option>
                                     })
                                 }
                             </select>
