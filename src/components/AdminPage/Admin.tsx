@@ -55,7 +55,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         return; 
                     }
                 } else if (item.Stage =='2') {
-                    debugger
                     if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
                         return; 
                     }
@@ -196,7 +195,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'CurrentSPT');
                 groupByList[i].childInv = groupByPosition(groupByList[i].child, 'Investigator');
             }
-            debugger
             setGroupByServiceUserUnitList(groupByList);
         }
         
@@ -222,7 +220,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 					    </div>
                         {item.displaySM && 
                             item.childSM.map((item1, index1) => {
-                                debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SM'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
@@ -235,7 +232,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         
                         {item.displaySD && 
                             item.childSD.map((item1, index1) => {
-                                debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1} position={'SD'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
@@ -246,17 +242,15 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 					    </div>
                         {item.displaySPT && 
                             item.childSPT.map((item1, index1) => {
-                                debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'SPT'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }
                         <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupByInv(item,index)}>
-                            {!item.childInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
-                            {item.childInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
+                            {!item.displayInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
+                            {item.displayInv && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>調查員&nbsp;</span></span>}
 					    </div>
                         {item.displayInv && 
                             item.childInv.map((item1, index1) => {
-                                debugger
                                 return <Dashboard context={context} siteCollectionUrl={siteCollectionUrl} serviceUnit={item['key']} item={item1} index={index1}  position={'INV'} getAllData={getAllData} workflow={updateUserWorkflow}/>
                             })
                         }

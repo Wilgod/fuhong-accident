@@ -17,7 +17,7 @@ import useSPT from '../../hooks/useSPT';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
 import { notifyServiceUserAccidentUpdate } from '../../api/Notification';
-
+import useUserInfoAD from '../../hooks/useUserInfoAD';
 interface IDashboard {
     item: any;
     index:number;
@@ -44,6 +44,7 @@ const customStyles = {
     }
   };
 export default function Dashboard({ context, siteCollectionUrl, serviceUnit, item,index, position,getAllData, workflow }: IDashboard) {
+    const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD();
     const column = [
         {
             dataField: 'ID',
@@ -185,6 +186,8 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     const  update = async() => {
         console.log('smInfo : ', smInfo)
         console.log('spSmInfo : ', spSmInfo)
+        console.log('investigator : ', investigator)
+        console.log('investigatorPickerInfo : ', investigatorPickerInfo)
         debugger
         if (item.groupby == 'CurrentSM') {
             for (let selected of selectedItem) {
@@ -246,6 +249,23 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
+        } else if (item.groupby == 'Investigator') {
+            if (investigatorPickerInfo.length >0) {
+                for (let selected of selectedItem) {
+                    if (selected.stage == '2') {
+                        const arf = await item.child.filter(item => {return item.Id == selected.Id});
+                        if (arf.length > 0 ) {
+                            await updateAccidentReportFormById(arf[0].AccidentReportForm[0].Id, {
+                                "InvestigatorId": investigatorPickerInfo[0].id
+                            });
+                        }
+                        await updateServiceUserAccidentById(selected.Id, {
+                            "InvestigatorId": investigatorPickerInfo[0].id
+                        });
+                    }
+                }
+            }
+            
         }
         getAllData();
     }
@@ -313,7 +333,19 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                                         })
                                     }
                                 </select>
-                                }
+                            }
+                            {item.groupby == 'Investigator' && 
+                            <PeoplePicker
+                                context={context}
+                                titleText=""
+                                showtooltip={false}
+                                personSelectionLimit={1}
+                                ensureUser={true}
+                                isRequired={false}
+                                showHiddenInUI={false}
+                                selectedItems={setInvestigator}
+                            />
+                            }
                         </div>
                     </div>
                   <div><button className="btn btn-warning mr-3" onClick={() => update()}>更改</button></div>

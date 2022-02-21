@@ -571,7 +571,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>{formTypeParser(formType, "姓名")}<span className="d-sm-inline d-md-block">(中文)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameCN || ""}`} />
                             {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
