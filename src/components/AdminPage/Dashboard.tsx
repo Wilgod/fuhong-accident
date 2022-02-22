@@ -81,7 +81,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     ]
     const [sptList] = useSPT(siteCollectionUrl);
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup();
-    const { departments, setHrDepartment } = useDepartmentMangers();
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [openModel, setOpenModel] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState([]);
     const [selectedItem, setSelectedItem] = useState([]);

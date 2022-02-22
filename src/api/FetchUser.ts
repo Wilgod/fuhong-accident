@@ -7,7 +7,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { graph } from "@pnp/graph";
 import "@pnp/graph/users";
-import { getAccessRight,getSMSDMapping } from './FetchFuHongList';
+import { getAccessRight,getSMSDMapping,getAllSMSDMapping } from './FetchFuHongList';
 import { IContextInfo } from "@pnp/sp/sites";
 import arraySort from 'array-sort';
 export async function getUserInfoByEmail(email: string) {
@@ -32,11 +32,12 @@ export async function getUserInfoByEmailInUserInfoAD(siteCollectionUrl:string, e
     }
 }
 
-export async function getDepartmentByShortName(shortName: string) {
+export async function getDepartmentByShortName(shortName: string, siteCollectionUrl:string) {
     try {
         const LIST_NAME = "SM SD Mapping";
-        const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
+        const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`Title eq '${shortName}'`).top(1).orderBy("Modified", false).get();
+        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -44,11 +45,12 @@ export async function getDepartmentByShortName(shortName: string) {
     }
 }
 
-export async function getDepartmentBySuEngNameDisplay(shortName: string) {
+export async function getDepartmentBySuEngNameDisplay(shortName: string, siteCollectionUrl:string) {
     try {
         const LIST_NAME = "SM SD Mapping";
-        const URL = "https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
+        const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`su_Eng_name_display eq '${shortName}'`).top(1).orderBy("Modified", false).get();
+        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -59,7 +61,7 @@ export async function getDepartmentBySuEngNameDisplay(shortName: string) {
 export async function getAllServiceUnit(siteCollectionUrl) {
     try {
         const LIST_NAME = "SM SD Mapping";
-        const URL = siteCollectionUrl//"https://fuhongsociety.sharepoint.com/sites/FHS.Portal.dev";
+        const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.select("Title", "su_name_tc", "location", "su_Eng_name_display").filter("Accident_SU_dropdown eq 1").getAll();
         arraySort(result, 'su_Eng_name_display');
         let units = [];
@@ -147,6 +149,44 @@ export async function getSeniorPhysiotherapistByGraph(siteCollectionUrl) {
     }*/
 }
 
+
+export async function checkDepartmentList(siteCollectionUrl,userEmail) {
+    let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
+    let dept = [];
+    if (user.length > 0) {
+      let access = await getAccessRight();
+      console.log('user hr_jobcode : ' +  user[0].hr_jobcode);
+      let getAllSMSD = await getAllSMSDMapping(siteCollectionUrl);
+      access.forEach(async(item) => {
+         // console.log('item.JobCode : ' + item.JobCode + ', item.CMS : ' + item.CMS);
+        
+        if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
+          dept.push({"All":true});
+        } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
+          debugger
+          let getSMSD = getAllSMSD.filter(item => {return item.Title == user[0].hr_deptid})
+          if (getSMSD.length > 0) {
+            dept.push({"location":getSMSD[0].location,"hr_deptid":getSMSD[0].hr_deptid,"departmentNameEng" : getSMSD[0].su_Eng_name_display,"departmentNameTc" : getSMSD[0].su_name_tc});
+          }
+        } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
+            debugger
+          let groups = user[0].Group == null ? [] :user[0].Group.split(',')
+          for (let group of groups) {
+            if (group.indexOf('_CMS_SU_') >=0 ) {
+                let deptName = group.trim().replace('_CMS_SU_', '')
+                let getSMSD = getAllSMSD.filter(item => {return item.su_Eng_name_display == deptName});
+                if (getSMSD.length > 0) {
+                    dept.push({"location":getSMSD[0].su_Eng_name_display,"hr_deptid":getSMSD[0].Title,"departmentNameEng" : getSMSD[0].su_Eng_name_display,"departmentNameTc" : getSMSD[0].su_name_tc});
+                }
+            }
+          }
+        }
+      })
+      return dept;
+    } else {
+      return dept;
+    }
+  }
 export async function checkPermissionList(siteCollectionUrl,userEmail) {
     let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
     let dept = [];

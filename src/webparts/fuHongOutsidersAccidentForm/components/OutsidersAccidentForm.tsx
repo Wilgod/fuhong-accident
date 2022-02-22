@@ -67,7 +67,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
-    const { departments, setHrDepartment } = useDepartmentMangers();
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [sptList] = useSPT(siteCollectionUrl);
     const [familyContactDate, setFamilyContactDate] = useState(new Date());
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);

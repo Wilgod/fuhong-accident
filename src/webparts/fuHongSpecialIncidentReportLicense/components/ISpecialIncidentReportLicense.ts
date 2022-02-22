@@ -9,6 +9,7 @@ export interface ISpecialIncidentReportLicenseProps {
     formData: any;
     isPrintMode: boolean;
     siteCollectionUrl:string;
+    departmentList:any;
 }
 
 export interface ISpecialIncidentReportLicenseStates {

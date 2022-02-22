@@ -80,7 +80,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
 
-    const { departments, setHrDepartment } = useDepartmentMangers();
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
 
     console.log(sdInfo);
     const radioButtonHandler = (event) => {

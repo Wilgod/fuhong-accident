@@ -78,6 +78,31 @@ export async function getSMSDMapping(siteCollectionUrl,deptId) {
         throw new Error("getAdmin error")
     }
 }
+
+export async function getAllSMSDMapping(siteCollectionUrl) {
+    try {
+        const web = Web(siteCollectionUrl);
+        const LIST_NAME = "SM SD Mapping";
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.getAll();
+        let distinct = [];
+        debugger
+        for (let item of items) {
+            if (distinct.length == 0) {
+                distinct.push(item);
+            } else {
+                let newDistinct = distinct.filter(item1 => item1.su_Eng_name_display == item.su_Eng_name_display);
+                if (newDistinct.length == 0) {
+                    distinct.push(item);
+                }
+            }
+        }
+        return distinct;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
+
 export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";

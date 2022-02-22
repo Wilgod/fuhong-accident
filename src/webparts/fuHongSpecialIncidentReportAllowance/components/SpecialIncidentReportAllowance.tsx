@@ -96,7 +96,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
 
-    const { departments, setHrDepartment } = useDepartmentMangers();
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
 
     const [policeDatetime, setPoliceDatetime] = useState(new Date());
     const [guardianDatetime, setGuardianDatetime] = useState(new Date());

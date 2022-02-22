@@ -25,7 +25,7 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl }: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList}: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -35,8 +35,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
-    const { departments, setHrDepartment } = useDepartmentMangers();
-
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
+    const [ selectDepartment, setSelectDepartment ] = useState("");
+    
     const [form, setForm] = useState<ISpecialIncidentReportLicenseStates>({
         abuser: "",
         abuserDescription: "",
@@ -907,21 +908,33 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         // } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
         //     setHrDepartment("CSWATC(D)");
         // }
-
-        if (formInitial(currentUserRole, formStatus)) {
-            if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
-                setHrDepartment("CHH");
-                setServiceUnit("CHH");
-                return;
-            }
-
-            if (userInfo && userInfo.hr_deptid) {
-                setHrDepartment(userInfo.hr_deptid);
-                setServiceUnit(userInfo.hr_deptid);
-                setServiceLocation(userInfo.hr_location);
+        debugger
+        if (userInfo != null && userInfo != '') {
+            if (formInitial(currentUserRole, formStatus)) {
+                if (departmentList.length == 1) {
+                    if (userInfo && userInfo.hr_deptid) {
+                        setHrDepartment(userInfo.hr_deptid);
+                        setServiceUnit(userInfo.hr_deptid);
+                        setServiceLocation(userInfo.hr_location);
+                    }
+                }
+                
             }
         }
+        
     }, [userInfo]);
+
+    useEffect(() => {
+        debugger
+        if (selectDepartment != null && selectDepartment != '') {
+            if (formInitial(currentUserRole, formStatus)) {
+                setServiceLocation(selectDepartment);
+                setServiceUnit(selectDepartment);
+                setHrDepartment(selectDepartment);
+            }
+        }
+        
+    }, [selectDepartment]);
 
     // Get SD & SM
     useEffect(() => {
@@ -935,14 +948,16 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
                     setSDEmail(dept.hr_sd);
                 }
-
-                setForm({ ...form, homesName: dept.su_name_tc ? `扶康會${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
+                debugger
+                //setForm({ ...form, homesName: dept.su_name_tc ? `扶康會${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
+                setForm({ ...form, homesName: dept.su_name_tc ? `${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
             }
         }
     }, [departments]);
 
     useEffect(() => {
         if (smInfo) {
+            debugger
             setForm({ ...form, homesManagerName: smInfo.Name })
         }
     }, [smInfo])
@@ -954,7 +969,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }, [notifyStaff])
 
-
+    console.log('departmentList',departmentList)
     return (
         <>
 
@@ -1022,8 +1037,22 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* 殘疾人士院舍名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
                         <div className="col">
+                            {departmentList.length == 1 &&
                             <input type="text" className="form-control" value={form.homesName} name="homesName" onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
+
+                            }
+                            {departmentList.length > 1 &&
+                            <select className={`custom-select`} onChange={(event) => {setSelectDepartment(event.target.value);}}
+                                disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}>
+                                    <option value={""} ></option>
+                                {
+                                    departmentList.map((list) => {
+                                        return <option value={list.location} data-location={list.location} selected={list.departmentNameTc == form.homesName}>{list.departmentNameTc}</option>
+                                    })
+                                }
+                            </select>
+                            }
                         </div>
                     </div>
                     <div className="form-row mb-2">

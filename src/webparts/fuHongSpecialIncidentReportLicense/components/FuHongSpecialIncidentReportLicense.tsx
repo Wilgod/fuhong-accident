@@ -17,7 +17,7 @@ import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getAdmin, getSpecialIncidentReportLicenseById } from '../../../api/FetchFuHongList';
 import { getUserAdByGraph } from '../../../api/FetchUser';
-
+import {checkDepartmentList } from '../../../api/FetchUser';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -45,6 +45,8 @@ interface IFuHongSpecialIncidentReportLicenseStates {
   stage: string;
   formSubmitted: boolean;
   isPrintMode: boolean;
+  departmentList:any;
+  loading:boolean;
 }
 
 export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, IFuHongSpecialIncidentReportLicenseStates> {
@@ -65,11 +67,20 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       specialINcidentReportLicenseData: null,
       stage: "",
       formSubmitted: false,
-      isPrintMode: false
+      isPrintMode: false,
+      departmentList:[],
+      loading:false
     }
   }
 
+  private initialState = async () => {
+    const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    //const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
+    this.setState({ departmentList: DepartmentList, loading:true });
+  }
+
   public componentDidMount() {
+    this.initialState();
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
@@ -103,7 +114,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.ADMIN });
+              this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true} });
             }
           })
         }).catch(console.error)
@@ -142,6 +153,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongSpecialIncidentReportLicenseProps> {
+    console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.departmentList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
+    console.log('departmentList :, ',this.state.departmentList);
     return (
       <div className={styles.fuHongSpecialIncidentReportLicense}>
         <div className={styles.container}>
@@ -149,18 +162,21 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
+              this.state.loading ?
               <Tabs variant="fullWidth">
                 <TabList>
                   <Tab>特別事故報告(牌照事務處)</Tab>
                   <Tab>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList}/>
                 </TabPanel>
                 <TabPanel>
                   <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
                 </TabPanel>
               </Tabs>
+              :
+              <div></div>
           }
         </div>
       </div>
