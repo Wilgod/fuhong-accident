@@ -215,8 +215,8 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                     {item.display && 
                      <div>
                         <div style={{cursor:'pointer', paddingLeft:'40px'}} className="col-sm-12" onClick={() => showGroupBySM(item,index)}>
-                            {!item.displaySM && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>高級服務經理&nbsp;</span></span>}
-                            {item.displaySM && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>高級服務經理&nbsp;</span></span>}
+                            {!item.displaySM && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronRight"]} color="black" size="1x"/></span><span>服務經理/高級服務經理&nbsp;</span></span>}
+                            {item.displaySM && <span><span style={{paddingRight:'5px'}}><FontAwesomeIcon icon={fontawesome["faChevronDown"]} color="black" size="1x"/></span><span>服務經理/高級服務經理&nbsp;</span></span>}
 					    </div>
                         {item.displaySM && 
                             item.childSM.map((item1, index1) => {

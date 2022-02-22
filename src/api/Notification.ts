@@ -36,6 +36,32 @@ export async function notifyServiceUserAccidentUpdate(context: WebPartContext, w
     }
 }
 
+//Form 19 Update User Investigator
+export async function notifyServiceUserAccidentInvestigatorUpdate(context: WebPartContext, workflowUrl:string,serviceUnit:string, groupBy, userInfo) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "serviceUnit":serviceUnit,
+                "groupBy":groupBy,
+                "userEMail":userInfo.mail,
+                "userTitle":userInfo.displayName
+            })
+        };
+        let result = await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyServiceUserAccident error");
+    }
+}
+
+
+
 //Form 19
 export async function notifyServiceUserAccident(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
     try {

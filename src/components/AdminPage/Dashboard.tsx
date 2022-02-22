@@ -16,7 +16,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import useSPT from '../../hooks/useSPT';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
-import { notifyServiceUserAccidentUpdate } from '../../api/Notification';
+import { notifyServiceUserAccidentUpdate, notifyServiceUserAccidentInvestigatorUpdate } from '../../api/Notification';
 import useUserInfoAD from '../../hooks/useUserInfoAD';
 interface IDashboard {
     item: any;
@@ -53,7 +53,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
         },
         {
             dataField: 'CaseNumber',
-            text: '服務單位',
+            text: '案件編號',
         },
         {
             dataField: 'Form',
@@ -232,6 +232,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
+            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, spSdInfo);
         } else if (item.groupby == 'CurrentSPT') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
@@ -249,6 +250,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
+            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, sPhysicalTherapy);
         } else if (item.groupby == 'Investigator') {
             if (investigatorPickerInfo.length >0) {
                 for (let selected of selectedItem) {
@@ -264,6 +266,8 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                         });
                     }
                 }
+                debugger
+                let notif = await notifyServiceUserAccidentInvestigatorUpdate(context, workflow, serviceUnit, item.groupby, investigator);
             }
             
         }

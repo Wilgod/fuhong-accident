@@ -17,7 +17,7 @@ export default function TodoListComponent({ context, permissionList }: ITodoList
     }
     const [data] = useFetchUserJob(CURRENT_USER.id, permissionList);
 
-
+    console.log('data',data);
     return (
         <div>
             <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
@@ -45,8 +45,18 @@ const columns = (context) => {
             }
         },
         {
+            dataField: 'CaseNumber',
+            text: '案件編號',
+            sort: true
+        },
+        {
             dataField: 'ServiceLocation',
             text: '服務單位',
+            sort: true
+        },
+        {
+            dataField: 'ServiceUserNameCN',
+            text: '姓名',
             sort: true
         },
         {
@@ -84,6 +94,11 @@ const columns = (context) => {
                 }
                 return aTime - bTime; // desc
             }
+        },
+        {
+            dataField: 'Status',
+            text: '狀態',
+            sort: true
         },
         {
             dataField: 'Id',
