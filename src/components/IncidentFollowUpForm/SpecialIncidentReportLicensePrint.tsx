@@ -327,7 +327,7 @@ export default function SpecialIncidentReportLicensePrint({ context, formSubmitt
             <style media="print">
 				{`@page {
                     size: auto;
-                    margin: 0;
+                    margin: 10 0;
                 }`}
 			</style>
             <div style={{color:'black'}}>
