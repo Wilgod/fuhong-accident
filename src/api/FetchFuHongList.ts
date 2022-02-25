@@ -85,7 +85,6 @@ export async function getAllSMSDMapping(siteCollectionUrl) {
         const LIST_NAME = "SM SD Mapping";
         const items: any[] = await web.lists.getByTitle(LIST_NAME).items.getAll();
         let distinct = [];
-        debugger
         for (let item of items) {
             if (distinct.length == 0) {
                 distinct.push(item);

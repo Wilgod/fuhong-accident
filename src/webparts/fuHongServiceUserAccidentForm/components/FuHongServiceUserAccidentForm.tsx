@@ -100,7 +100,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
-    this.setState({ permissionList: PermissionList, serviceUserAccidentWorkflow:serviceUserAccidentWorkflow });
+    this.setState({ permissionList: PermissionList, serviceUserAccidentWorkflow:serviceUserAccidentWorkflow.Url });
   }
 
   public componentDidMount() {

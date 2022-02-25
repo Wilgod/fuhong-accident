@@ -65,6 +65,7 @@ export async function notifyServiceUserAccidentInvestigatorUpdate(context: WebPa
 //Form 19
 export async function notifyServiceUserAccident(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
     try {
+        debugger
         const CONFIG: ISPHttpClientOptions = {
             headers: {
                 "Accept": "application/json;odata=verbose",
@@ -129,6 +130,7 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
 
 // form 24
 export async function notifySpecialIncidentLicense(context: WebPartContext, formId: number, stage: number) {
+    debugger
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {

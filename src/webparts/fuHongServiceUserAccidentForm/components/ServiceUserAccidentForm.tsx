@@ -607,6 +607,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const submitHandler = (event) => {
         event.preventDefault();
+        debugger
         if (currentUserRole === Role.ADMIN) {
             updateServiceUserAccidentById(formId, {
                 "InsuranceCaseNo": insuranceNumber
@@ -747,10 +748,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             formSubmittedHandler();
                         }).catch(console.error);
                     } else {
+                        console.log("body : ",body);
+                        console.log("extraBody : ",extraBody);
                         createServiceUserAccident({
                             ...body,
                             ...extraBody
                         }).then(async (createServiceUserAccidentRes) => {
+
                             if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
 
                                 // Attachement
@@ -773,6 +777,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                             }
                             //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                debugger
                                 notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
                             //}
 

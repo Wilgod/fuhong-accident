@@ -14,12 +14,17 @@ $label-color: hsl(0, 2%, 23%);
     overflow-wrap: normal;
   }
 
+  .form {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
   .container {
     max-width: 1200px;
     margin: 0px auto;
+    //box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+  .eform {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
   }
-
   h5 {
     color: #9f6b21;
     font-weight: 600;

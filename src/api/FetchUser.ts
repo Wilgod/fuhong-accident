@@ -37,7 +37,6 @@ export async function getDepartmentByShortName(shortName: string, siteCollection
         const LIST_NAME = "SM SD Mapping";
         const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`Title eq '${shortName}'`).top(1).orderBy("Modified", false).get();
-        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -50,7 +49,6 @@ export async function getDepartmentBySuEngNameDisplay(shortName: string, siteCol
         const LIST_NAME = "SM SD Mapping";
         const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`su_Eng_name_display eq '${shortName}'`).top(1).orderBy("Modified", false).get();
-        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -128,7 +126,6 @@ export async function getSeniorPhysiotherapistByGraph(siteCollectionUrl) {
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "UserInfoAD";
         const item = await web.lists.getByTitle(LIST_NAME).items.filter("hr_jobcode eq 'SPT'").getAll();
-        debugger
         return item;
     } catch (err) {
         console.error(err);
@@ -163,13 +160,11 @@ export async function checkDepartmentList(siteCollectionUrl,userEmail) {
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push({"All":true});
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
-          debugger
           let getSMSD = getAllSMSD.filter(item => {return item.Title == user[0].hr_deptid})
           if (getSMSD.length > 0) {
             dept.push({"location":getSMSD[0].location,"hr_deptid":getSMSD[0].hr_deptid,"departmentNameEng" : getSMSD[0].su_Eng_name_display,"departmentNameTc" : getSMSD[0].su_name_tc});
           }
         } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
-            debugger
           let groups = user[0].Group == null ? [] :user[0].Group.split(',')
           for (let group of groups) {
             if (group.indexOf('_CMS_SU_') >=0 ) {
@@ -200,12 +195,10 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push('All');
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
-          debugger
           if (getSMSD.length > 0) {
             dept.push(getSMSD[0].su_Eng_name_display);
           }
         } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
-            debugger
           let groups = user[0].Group == null ? [] :user[0].Group.split(',')
           for (let group of groups) {
             if (group.indexOf('_CMS_SU_') >=0 ) {

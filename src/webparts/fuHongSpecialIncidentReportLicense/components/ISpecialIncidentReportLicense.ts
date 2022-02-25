@@ -15,6 +15,7 @@ export interface ISpecialIncidentReportLicenseProps {
 export interface ISpecialIncidentReportLicenseStates {
     responsibleName: string;
     insuranceCaseNo: string;
+    incidentTime:string;
     homesName: string;
     homesManagerName: string;
     homesManagerTel: string;
@@ -63,13 +64,17 @@ export interface ISpecialIncidentReportLicenseStates {
     residentAge: number;
     residentGender: string;
     residentRoomNo: string;
-
+    reporterName:string;
+    reporterJobTitle:string;
+    reporterDate:Date;
     guardian: boolean;
     guardianName: string;
     guardianRelation: string;
 
     guardianDate: Date;
     guardianReason: string;
+    guardianStaffName:string;
+    guardianStaffJobTitle:string;
     affectedName: string;
     affectedIdCardNo: string;
     affectedGender: string
