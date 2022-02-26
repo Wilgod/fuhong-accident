@@ -405,7 +405,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
-        debugger
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)
         }
@@ -434,8 +433,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         // Get Accident report form
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
-                debugger
-
                 //收到「意外填報表」日期
                 if (formTwentyData.ReceivedDate) {
                     setFormReceivedDate(new Date(formTwentyData.ReceivedDate));

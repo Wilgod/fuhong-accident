@@ -9,6 +9,7 @@ export default function useUserInfoAD() {
     const [peoplePicker, setPeoplePicker] = useState(null);
 
     useEffect(() => {
+        debugger
         if (peoplePicker) {
             if (Array.isArray(peoplePicker)) {
                 if (peoplePicker.length > 0) {

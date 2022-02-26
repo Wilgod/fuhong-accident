@@ -70,7 +70,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[]) {
                 }
             }
         }
-        debugger
         const outsiderAccidentData = await getOutsiderAccidentBySPId(spId);
         const otherIncidentData = await getOtherIncidentReportBySPId(spId);
         const specialIncidentReportLicense = await getSpecialIncidentReportLicenseBySPId(spId);

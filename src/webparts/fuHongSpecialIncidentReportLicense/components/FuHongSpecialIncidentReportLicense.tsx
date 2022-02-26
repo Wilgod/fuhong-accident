@@ -175,8 +175,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                   <SpecialIncidentReportLicensePrint context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
                   :
                   <div className={styles.eform}>
-                    <div className="row">
-                      <div className="col-12" style={{padding:'10px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                    <div className="row" style={{ float:'right'}}>
+                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
                     </div>
                     <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                       <TabList>

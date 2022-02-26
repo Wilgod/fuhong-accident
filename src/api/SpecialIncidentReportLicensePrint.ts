@@ -299,7 +299,6 @@ export async function generate(form) {
     if (form.guardianReason != null) {
         guardianReason = `<span style="text-decoration: underline;">` +  form.guardianReason + `</span>`;
     }
-    debugger
     if (form.reporterName != null) {
         reporterName = `<span style="text-decoration: underline;">` +  form.reporterName + `</span>`;
     }
@@ -601,7 +600,6 @@ export async function generate(form) {
             </table>
         </div>
     </div>`;
-    debugger
     let r = [];
     for (var i = 0; i < content.length; i++) {
         if(content.charCodeAt(i)>255){

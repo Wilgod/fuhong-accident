@@ -22,6 +22,7 @@ import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightCo
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
 import { getServiceUserAccidentWorkflow } from '../../../api/FetchFuHongList';
+import ServiceUserAccidentFormPrint from "../../../components/ServiceUserAccidentForm/ServiceUserAccidentFormPrint";
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -90,7 +91,6 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     const queryParameter = getQueryParameterString("role");
     if (queryParameter) {
       const role = jobTitleParser(queryParameter);
-      debugger
       this.setState({
         currentUserRole: role
       });
@@ -106,11 +106,9 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   public componentDidMount() {
     this.initialState();
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
-      debugger
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
-      debugger
       this.initialDataByFormId().then((data) => {
         if (data && data.Investigator && data.Investigator.EMail) {
           if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -139,7 +137,6 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
             }
           } else if (data.Stage == '3') {
-            debugger
             if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
               this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
             }
@@ -181,7 +178,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
-        debugger
+        const contactStaff = await getUserAdByGraph(data.ContactFamilyStaff.EMail);
+        const author = await getUserAdByGraph(data.Author.EMail);
+        data["ContactStaff"] = contactStaff;
+        data["Author"] =author;
         let stage = parseInt(data.Stage)-1;
         let formTwentyData:any = [];
         let formTwentyOneData:any = [];
@@ -215,7 +215,11 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
-  private printModeHandler = () => { this.setState({ isPrintMode: !this.state.isPrintMode }); }
+  private print() {
+    this.setState({
+      isPrintMode:true
+    })
+  }
 
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
     console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.permissionList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
@@ -236,22 +240,30 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?
-              <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
-                <TabList>
-                  <Tab>服務使用者意外填報表(一)</Tab>
-                  <Tab>服務使用者意外報告(二)</Tab>
-                  <Tab>意外跟進/結束表(三)</Tab>
-                </TabList>
-                <TabPanel>
-                  <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
-                </TabPanel>
-                <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
-                </TabPanel>
-                <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
-                </TabPanel>
-              </Tabs>
+                this.state.isPrintMode ?
+                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData}  siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
+                  :
+                  <div className={styles.eform}>
+                    <div className="row" style={{float:'right'}}>
+                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                    </div>
+                      <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
+                        <TabList>
+                          <Tab>服務使用者意外填報表(一)</Tab>
+                          <Tab>服務使用者意外報告(二)</Tab>
+                          <Tab>意外跟進/結束表(三)</Tab>
+                        </TabList>
+                        <TabPanel>
+                          <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                        </TabPanel>
+                        <TabPanel>
+                          <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                        </TabPanel>
+                        <TabPanel>
+                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                        </TabPanel>
+                      </Tabs>
+              </div>
               : <div></div>
               
           }

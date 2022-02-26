@@ -15,7 +15,6 @@ export default function useUserInfo(siteCollectionUrl) {
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     getSMSDMapping(siteCollectionUrl,userInfosRes[0].hr_deptid).then((userSMSD) => {
                         userInfosRes[0].hr_deptid = userSMSD[0].su_Eng_name_display;
-                        debugger;
                         const [user] = userInfosRes;
                         setUserInfo(user);
                     }).catch((err) => {

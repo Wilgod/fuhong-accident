@@ -607,7 +607,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const submitHandler = (event) => {
         event.preventDefault();
-        debugger
         if (currentUserRole === Role.ADMIN) {
             updateServiceUserAccidentById(formId, {
                 "InsuranceCaseNo": insuranceNumber
@@ -777,7 +776,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                             }
                             //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                debugger
                                 notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
                             //}
 
@@ -1108,7 +1106,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     useEffect(() => {
-        debugger
         if (Array.isArray(sptList) && sptList.length > 0) {
             //setSPhysicalTherapyEmail(sptList[0].mail);
         }
@@ -1213,7 +1210,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         }
     }, [serviceUser, serviceUserRecordId]);
-    console.log('departments: ' + departments);
+    
     return (
         <>
             {

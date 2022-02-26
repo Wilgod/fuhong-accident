@@ -943,7 +943,7 @@ export default function SpecialIncidentReportLicensePrint({ context, formSubmitt
                     </div>
                 </div>
 
-                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className="form-row mb-3" style={{fontSize:'18px', marginTop:'30px'}}>
                     <div className={`col-12`}>
                         <table>
                             <tr>
@@ -1074,7 +1074,7 @@ export default function SpecialIncidentReportLicensePrint({ context, formSubmitt
                         {form.affectedFollowUp != null && form.affectedFollowUp}
                     </div>
                 </div>
-                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className="form-row mb-3" style={{fontSize:'18px', marginTop:'30px'}}>
                     <div className={`col-12`}>
                         <table>
                             <tr>
