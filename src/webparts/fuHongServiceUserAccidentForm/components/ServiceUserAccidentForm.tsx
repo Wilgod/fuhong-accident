@@ -530,9 +530,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["SMApproved"] = true;
             body["Status"] = "PENDING_SPT_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+            body["SubmitDate"] = new Date();
         } else if (status === "SUBMIT") {
             body["Status"] = "PENDING_SM_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+            body["SubmitDate"] = new Date();
         } else if (status === "DRAFT") {
             // body["Status"] = "DRAFT";
         }

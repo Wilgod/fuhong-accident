@@ -221,6 +221,11 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     })
   }
 
+  private tab(index) {
+    this.setState({
+      indexTab:index
+    })
+  }
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
     console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.permissionList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
     console.log('permissionList :, ',this.state.permissionList);
@@ -241,17 +246,19 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               :
               !this.state.loading ?
                 this.state.isPrintMode ?
-                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData}  siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
+                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
                   :
                   <div className={styles.eform}>
-                    <div className="row" style={{float:'right'}}>
-                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
-                    </div>
+                    {this.state.serviceUserAccidentFormData != null &&
+                      <div className="row" style={{float:'right'}}>
+                        <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                      </div>
+                    }
                       <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                         <TabList>
-                          <Tab>服務使用者意外填報表(一)</Tab>
-                          <Tab>服務使用者意外報告(二)</Tab>
-                          <Tab>意外跟進/結束表(三)</Tab>
+                          <Tab onClick={()=>this.tab(0)}>服務使用者意外填報表(一)</Tab>
+                          <Tab onClick={()=>this.tab(1)}>服務使用者意外報告(二)</Tab>
+                          <Tab onClick={()=>this.tab(2)}>意外跟進/結束表(三)</Tab>
                         </TabList>
                         <TabPanel>
                           <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
