@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, serviceUserAccidentWorkflow }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, serviceUserAccidentWorkflow, changeFormTwentyOneDataSelected }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
@@ -618,7 +618,9 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const formChangeHandler = (event) => {
         const value = +event.target.value;
+        debugger
         setSelectedAccidentFollowUpFormId(value);
+        changeFormTwentyOneDataSelected(value);
     }
 
     const updateState = () => {

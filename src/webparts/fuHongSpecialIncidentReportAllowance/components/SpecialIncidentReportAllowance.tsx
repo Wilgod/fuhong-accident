@@ -25,7 +25,7 @@ import { postLog } from '../../../api/LogHelper';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, departmentList, speicalIncidentReportWorkflow }: ISpecialIncidentReportAllowanceProps) {
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [formStage, setFormStage] = useState("");
@@ -494,7 +494,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     }).then(res => {
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentAllowance(context, formData.Id, 1);
+                            notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -525,7 +525,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     }).then(res => {
                         console.log(res)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentAllowance(context, res.data.Id, 1);
+                            notifySpecialIncidentAllowance(context, res.data.Id, 1, speicalIncidentReportWorkflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -717,7 +717,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         Report: "特別事故報告(津貼科)"
                     }).catch(console.error);
 
-                    notifySpecialIncidentAllowance(context, formData.Id, 1);
+                    notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
                     formSubmittedHandler();
                 }).catch(console.error);
             }).catch(console.error);

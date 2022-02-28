@@ -25,7 +25,7 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import { generate } from '../../../api/SpecialIncidentReportLicensePrint';
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList}: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow}: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -499,7 +499,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).then(async (res) => {
                         await uploadFile(formData.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, formData.Id, 1);
+                            notifySpecialIncidentLicense(context, formData.Id, 1, speicalIncidentReportWorkflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -533,7 +533,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).then(async (createSpecialIncidentReportLicenseRes) => {
                         await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1);
+                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -546,7 +546,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }).catch(console.error);
 
                         } else {
-                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1);
+                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
                                 Action: "提交",
@@ -655,7 +655,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         Report: "特別事故報告(牌照事務處)"
                     }).catch(console.error);
 
-                    notifySpecialIncidentLicense(context, formData.Id, 1);
+                    notifySpecialIncidentLicense(context, formData.Id, 2, speicalIncidentReportWorkflow);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
@@ -724,7 +724,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "SMComment": smComment
             }).then(res => {
                 console.log(res);
-                notifySpecialIncidentLicense(context, formData.Id, 1);
+                notifySpecialIncidentLicense(context, formData.Id, 1, speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "批准",

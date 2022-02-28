@@ -30,6 +30,42 @@ export async function getServiceUserAccidentWorkflow() {
         throw new Error("getLastCaseNo failed");
     }
 }
+
+export async function getSpeicalIncidentReportLicenseWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'SPEICAL_INCIDENT_REPORT_LICENSE'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
+export async function getSpeicalIncidentReportAllowanceWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'SPEICAL_INCIDENT_REPORT_ALLOWANCE'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
+export async function getOtherIncidentReportWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'OTHER_INCIDENT_REPORT'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
 export async function getAdmin() {
     try {
         const LIST_NAME = "Admin";
@@ -357,8 +393,8 @@ export async function getAllAccidentFollowUpFormByCaseNumber(caseNumber: string)
         const LIST_NAME = "Accident Follow Up Form";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(`CaseNumber eq '${caseNumber}'`)
-            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
-            .expand("Author", "SM", "SD")
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title')
+            .expand("Author", "SM", "SD", "SPT")
             .orderBy("Created", false)
             .get();
         return item;

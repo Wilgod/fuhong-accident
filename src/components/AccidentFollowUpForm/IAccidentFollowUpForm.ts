@@ -13,6 +13,7 @@ export interface IAccidentFollowUpFormProps {
     formTwentyData:any;
     formTwentyOneData:any;
     serviceUserAccidentWorkflow:string;
+    changeFormTwentyOneDataSelected:any;
 }
 
 export interface IAccidentFollowUpFormStates {

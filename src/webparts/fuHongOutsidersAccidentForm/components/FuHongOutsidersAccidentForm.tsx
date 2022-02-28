@@ -48,6 +48,7 @@ interface IFuHongOutsidersAccidentFormState {
   isPrintMode: boolean;
   formTwentyData:any;
   formTwentyOneData:any;
+  formTwentyOneDataSelected:number;
   serviceUserAccidentWorkflow:string;
 }
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
@@ -71,6 +72,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       isPrintMode: false,
       formTwentyData:[],
       formTwentyOneData:[],
+      formTwentyOneDataSelected:null,
       serviceUserAccidentWorkflow:''
     }
   }
@@ -177,6 +179,13 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     }
   }
 
+  public changeFormTwentyOneDataSelected(value) {
+    debugger
+    this.setState({
+      formTwentyOneDataSelected:value
+    })
+  }
+
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
@@ -203,7 +212,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
                 </TabPanel>
               </Tabs>
           }

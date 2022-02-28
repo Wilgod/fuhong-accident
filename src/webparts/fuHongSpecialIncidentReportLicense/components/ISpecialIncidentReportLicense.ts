@@ -10,6 +10,7 @@ export interface ISpecialIncidentReportLicenseProps {
     isPrintMode: boolean;
     siteCollectionUrl:string;
     departmentList:any;
+    speicalIncidentReportWorkflow:string
 }
 
 export interface ISpecialIncidentReportLicenseStates {

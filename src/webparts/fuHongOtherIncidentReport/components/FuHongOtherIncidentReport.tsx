@@ -15,8 +15,8 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getUserAdByGraph } from '../../../api/FetchUser';
-import { getAdmin, getOtherIncidentReportById } from '../../../api/FetchFuHongList';
-
+import { getAdmin, getOtherIncidentReportById, getOtherIncidentReportWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
+import {checkDepartmentList } from '../../../api/FetchUser';
 
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -44,7 +44,14 @@ interface IFuHongOtherIncidentReportStates {
   otherIncidentReportFormData: any,
   stage: string,
   formSubmitted: boolean,
-  isPrintMode: boolean
+  isPrintMode: boolean,
+  speicalIncidentReportWorkflow: string,
+  departmentList:any,
+  loading:boolean,
+  formTwentySixData:any;
+  formTwentySixDataPrint:any;
+  formTwentySixDataSelected:number;
+  indexTab:number;
 }
 
 export default class FuHongOtherIncidentReport extends React.Component<IFuHongOtherIncidentReportProps, IFuHongOtherIncidentReportStates> {
@@ -64,7 +71,14 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
       otherIncidentReportFormData: null,
       stage: "",
       formSubmitted: false,
-      isPrintMode: false
+      isPrintMode: false,
+      speicalIncidentReportWorkflow:'',
+      departmentList:[],
+      loading:false,
+      formTwentySixData:[],
+      formTwentySixDataPrint:[],
+      formTwentySixDataSelected:null,
+      indexTab:0
     }
 
     console.log("Flow 5");
@@ -80,13 +94,26 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     }
   }
 
+  private initialState = async () => {
+    const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const speicalIncidentReportWorkflow = await getOtherIncidentReportWorkflow();
+    this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url });
+  }
+
   public componentDidMount() {
+    this.initialState();
     getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
       if (value && value.jobTitle) {
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
 
-      this.initialDataByFormId().then((data) => {
+      this.initialDataByFormId().then(async(data) => {
+        let formTwentySixData :any = [];
+        let formTwentySixDataPrint :any = [];
+        let formTwentySixDataSelected = null;
+        formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+        formTwentySixData = formTwentySixDataPrint[0];
+        formTwentySixDataSelected = formTwentySixData.Id
         if (data && data.Investigator && data.Investigator.EMail) {
           if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
             this.setState({ currentUserRole: Role.INVESTIGATOR });
@@ -110,7 +137,11 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
-
+        if (data.Stage == '1') {
+          this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
+        } else if (data.Stage == '2') {
+          this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataSelected:formTwentySixDataSelected });
+        }
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -144,6 +175,18 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
+  public changeFormTwentySixDataSelected = (value) =>{
+    this.setState({
+      formTwentySixDataSelected:value
+    })
+  }
+
+  private tab(index) {
+    this.setState({
+      indexTab:index
+    })
+  }
+  
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
       <div className={styles.fuHongOtherIncidentReport}>
@@ -152,16 +195,16 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              <Tabs variant="fullWidth">
+              <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                 <TabList>
-                  <Tab>其他事故呈報表</Tab>
-                  <Tab>事故跟進/結束報告</Tab>
+                  <Tab onClick={()=>this.tab(0)}>其他事故呈報表</Tab>
+                  <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
                 </TabList>
                 <TabPanel>
-                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow}/>
                 </TabPanel>
                 <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} />
+                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
                 </TabPanel>
               </Tabs>
           }

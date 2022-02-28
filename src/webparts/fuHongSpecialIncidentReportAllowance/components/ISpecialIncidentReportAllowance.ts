@@ -9,6 +9,8 @@ export interface ISpecialIncidentReportAllowanceProps {
     formData: any;
     isPrintMode: boolean;
     siteCollectionUrl:string;
+    departmentList:any;
+    speicalIncidentReportWorkflow:string;
 }
 
 export interface IAccidentCategoryAbuseDetails {

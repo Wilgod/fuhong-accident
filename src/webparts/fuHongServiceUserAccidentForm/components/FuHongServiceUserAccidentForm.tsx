@@ -14,15 +14,15 @@ import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/Accid
 import AccidentReportForm from "../../../components/AccidentReportForm/AccidentReportForm";
 import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getAdmin, getServiceUserAccidentById, getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
-import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
+import { getAccidentReportFormById, getAccidentFollowUpFormById, getAllAccidentFollowUpFormByCaseNumber,getAdmin, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { getServiceUserAccidentWorkflow } from '../../../api/FetchFuHongList';
 import ServiceUserAccidentFormPrint from "../../../components/ServiceUserAccidentForm/ServiceUserAccidentFormPrint";
+
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
   for (let i = 0; i < x.length; i++) {
@@ -55,7 +55,9 @@ interface IFuHongServiceUserAccidentFormState {
   indexTab:number;
   formTwentyData:any;
   formTwentyOneData:any;
+  formTwentyOneDataPrint:any;
   serviceUserAccidentWorkflow:string;
+  formTwentyOneDataSelected:number;
 }
 
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
@@ -82,7 +84,9 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       indexTab: 0,
       formTwentyData: [],
       formTwentyOneData: [],
-      serviceUserAccidentWorkflow:''
+      formTwentyOneDataPrint:[],
+      serviceUserAccidentWorkflow:'',
+      formTwentyOneDataSelected:null
     }
     console.log("Flow 1");
   }
@@ -185,22 +189,28 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         let stage = parseInt(data.Stage)-1;
         let formTwentyData:any = [];
         let formTwentyOneData:any = [];
+        let formTwentyOneDataPrint= [];
+        let formTwentyOneDataSelected = null;
         if (data.AccidentReportFormId != null) {
           formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
         }
         if (data.AccidentFollowUpFormId != null && data.AccidentFollowUpFormId.length > 0) {
           formTwentyOneData = await getAccidentFollowUpFormById(data.AccidentFollowUpFormId[data.AccidentFollowUpFormId.length - 1]);
+          formTwentyOneDataPrint = await getAllAccidentFollowUpFormByCaseNumber(data.CaseNumber);
+          formTwentyOneData = formTwentyOneDataPrint[0];
+          formTwentyOneDataSelected = formTwentyOneData.Id
+          debugger
         }
         if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
-          this.setState({ serviceUserAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
+          this.setState({ serviceUserAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint });
         } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
           if (formTwentyData.SMId == this.props.context.pageContext.legacyPageContext.userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(new Date(formTwentyData.SPTDate).setDate(new Date(formTwentyData.SPTDate).getDate() + 7)) > new Date()) {
-            this.setState({ serviceUserAccidentFormData: data, indexTab:1, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
+            this.setState({ serviceUserAccidentFormData: data, indexTab:1, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });
           } else {
-            this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
+            this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });
           }
         } else {
-          this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
+          this.setState({ serviceUserAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });
         }
         
         return data;
@@ -226,6 +236,12 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       indexTab:index
     })
   }
+
+  public changeFormTwentyOneDataSelected = (value) =>{
+    this.setState({
+      formTwentyOneDataSelected:value
+    })
+  }
   public render(): React.ReactElement<IFuHongServiceUserAccidentFormProps> {
     console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.permissionList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
     console.log('permissionList :, ',this.state.permissionList);
@@ -246,7 +262,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               :
               !this.state.loading ?
                 this.state.isPrintMode ?
-                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
+                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
                   :
                   <div className={styles.eform}>
                     {this.state.serviceUserAccidentFormData != null &&
@@ -267,7 +283,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                           <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
                         </TabPanel>
                         <TabPanel>
-                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
                         </TabPanel>
                       </Tabs>
               </div>

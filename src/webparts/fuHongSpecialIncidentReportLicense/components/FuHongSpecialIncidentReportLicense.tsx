@@ -16,7 +16,7 @@ import "./react-tabs.css";
 import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
-import { getAdmin, getSpecialIncidentReportLicenseById } from '../../../api/FetchFuHongList';
+import { getAdmin, getSpecialIncidentReportLicenseById, getSpeicalIncidentReportLicenseWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import {checkDepartmentList } from '../../../api/FetchUser';
 if (document.getElementById('workbenchPageContent') != null) {
@@ -49,6 +49,10 @@ interface IFuHongSpecialIncidentReportLicenseStates {
   departmentList:any;
   loading:boolean;
   indexTab:number;
+  speicalIncidentReportWorkflow:string;
+  formTwentySixData:any;
+  formTwentySixDataPrint:any;
+  formTwentySixDataSelected:number;
 }
 
 export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, IFuHongSpecialIncidentReportLicenseStates> {
@@ -73,13 +77,18 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       departmentList:[],
       loading:false,
       indexTab: 0,
+      speicalIncidentReportWorkflow:'',
+      formTwentySixData:[],
+      formTwentySixDataPrint:[],
+      formTwentySixDataSelected:null
     }
   }
 
   private initialState = async () => {
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
-    //const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
-    this.setState({ departmentList: DepartmentList, loading:true });
+    const speicalIncidentReportWorkflow = await getSpeicalIncidentReportLicenseWorkflow();
+    debugger
+    this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url });
   }
 
   public componentDidMount() {
@@ -89,7 +98,16 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
       }
 
-      this.initialDataByFormId().then((data) => {
+      this.initialDataByFormId().then(async (data) => {
+        let formTwentySixData :any = [];
+        let formTwentySixDataPrint :any = [];
+        let formTwentySixDataSelected = null;
+        formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+        debugger
+        if (formTwentySixDataPrint.length > 0) {
+          formTwentySixData = formTwentySixDataPrint[0];
+          formTwentySixDataSelected = formTwentySixData.Id
+        }
         if (data && data.Investigator && data.Investigator.EMail) {
           if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
             this.setState({ currentUserRole: Role.INVESTIGATOR });
@@ -113,7 +131,11 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
-
+        if (data.Stage == '1') {
+          this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
+        } else if (data.Stage == '2') {
+          this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
+        }
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -160,6 +182,19 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       isPrintMode:true
     })
   }
+
+  private tab(index) {
+    this.setState({
+      indexTab:index
+    })
+  }
+
+  public changeFormTwentySixDataSelected = (value) =>{
+    this.setState({
+      formTwentySixDataSelected:value
+    })
+  }
+  
   public render(): React.ReactElement<IFuHongSpecialIncidentReportLicenseProps> {
     console.log('currentUserRole : ' + this.state.currentUserRole + ', Status :'+  (this.state.departmentList.length == 0 || this.state.currentUserRole != Role.NoAccessRight));
     console.log('departmentList :, ',this.state.departmentList);
@@ -172,7 +207,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
               :
               this.state.loading ?
                 this.state.isPrintMode ?
-                  <SpecialIncidentReportLicensePrint context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <SpecialIncidentReportLicensePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl}/>
                   :
                   <div className={styles.eform}>
                     <div className="row" style={{ float:'right'}}>
@@ -180,14 +215,14 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                     </div>
                     <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                       <TabList>
-                        <Tab>特別事故報告(牌照事務處)</Tab>
-                        <Tab>事故跟進/結束報告</Tab>
+                        <Tab onClick={()=>this.tab(0)}>特別事故報告(牌照事務處)</Tab>
+                        <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
                       </TabList>
                       <TabPanel>
-                        <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList}/>
+                        <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList} speicalIncidentReportWorkflow={this.state.speicalIncidentReportWorkflow}/>
                       </TabPanel>
                       <TabPanel>
-                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
                       </TabPanel>
                     </Tabs>
                   </div>

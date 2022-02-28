@@ -9,16 +9,16 @@ export const initialForm = (currentUserRole: Role, parentStatus: string, stage: 
 }
 
 //Stage 2 / PENDING_SM_FILL_IN
-export const pendingSmFillIn = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "2" && status === "PENDING_SM_FILL_IN" && currentUserRole === Role.SERVICE_MANAGER) {
+export const pendingSmFillIn = (context:any, currentUserRole: Role, status: string, stage: string, formTwentySixData:any): boolean => {
+    if (stage === "2" && status === "PENDING_SM_FILL_IN" && currentUserRole === Role.SERVICE_MANAGER && formTwentySixData.SM.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
 }
 
 //Stage 2 / PENDING_SD_APPROVE
-export const pendingSdApprove = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "2" && status === "PENDING_SD_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR) {
+export const pendingSdApprove = (context:any, currentUserRole: Role, status: string, stage: string, formTwentySixData:any): boolean => {
+    if (stage === "2" && status === "PENDING_SD_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR && formTwentySixData.SD.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;

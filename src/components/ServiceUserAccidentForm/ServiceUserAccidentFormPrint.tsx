@@ -8,23 +8,34 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './ServiceUserAccidentFormPrint.module.scss';
+import { JSONParser } from '@pnp/pnpjs';
 
 
 interface IServiceUserAccidentFormPrintProps {
     index: number;
     formData: any;
     formTwentyData :any;
+    formTwentyOneDataPrint :any;
+    formTwentyOneDataSelected:number;
     siteCollectionUrl:string;
     permissionList:any;
 }
 
-export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, siteCollectionUrl, permissionList}: IServiceUserAccidentFormPrintProps ) {
+export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList}: IServiceUserAccidentFormPrintProps ) {
     console.log('index :', index);
     let EstimatedPart2CompletionDate = null;
     if (formData.SubmitDate != null) {
-        debugger
         let SubmitDate = new Date(formData.SubmitDate);
         EstimatedPart2CompletionDate = SubmitDate.setMonth(SubmitDate.getMonth() + 1);
+    }
+    let followUpActions = null;
+    let formTwentyOneData = null;
+    if (formTwentyOneDataPrint != null) {
+        debugger
+        formTwentyOneData = formTwentyOneDataPrint.filter(item => {return item.Id == formTwentyOneDataSelected});
+        if (Array.isArray(formTwentyOneData) && formTwentyOneData[0].FollowUpActions != null) {
+            followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
+        }
     }
 return <>
     <div style={{color:'black'}}>
@@ -915,10 +926,10 @@ return <>
                                 {formData.Investigator.Title}
                                 </td>
                                 <td  style={{width:'200px'}}>
-                                簽署
+                                日期
                                 </td>
                                 <td style={{width:'200px'}}>
-                                ______________________________
+                                {formTwentyData != null && new Date(formTwentyData.Created).getFullYear() + `-` +(`0`+(new Date(formTwentyData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
@@ -930,7 +941,7 @@ return <>
                         <table>
                             <tr>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formTwentyData != null && formTwentyData.SPTComment != null ? formTwentyData.SPTComment : '____________________'}
+                                {formTwentyData != null && formTwentyData.SPTComment != null ? formTwentyData.SPTComment : ''}
                                 </td>
                             </tr>
                         </table>
@@ -942,19 +953,144 @@ return <>
                                 高級物理治療師簽署
                                 </td>
                                 <td style={{width:'200px'}}>
-                                ______________________________
+                                {formTwentyData != null && formTwentyData.SPT.Title != null ? formTwentyData.SPT.Title : '____________________'}
                                 </td>
                                 <td  style={{width:'200px'}}>
                                 日期
                                 </td>
                                 <td style={{width:'200px'}}>
-                                ______________________________
+                                {formTwentyData != null && formTwentyData.SPTDate != null ? new Date(formTwentyData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formTwentyData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.SPTDate).getDate()).slice(-2) : '____________________'}
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
+        }
+        {index == 2 &&
+        <div>
+            <div className="form-row mb-3">
+                <div style={{position:'absolute', width:'160px'}}>
+                    <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
+                </div>
+                
+                <div className={`col-12 font-weight-bold ${styles.header}`}>
+                    意外跟進/結束表(三)
+                </div>
+                <div className={`col-12 ${styles.header}`}>
+                    服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                </div>
+                <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
+                    保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid'}}>{formData.InsuranceCaseNo}</span> : '____________'}
+                </div>
+                <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
+                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid'}}>{formData.CaseNumber}</span> : '____________'}
+                </div>
+            </div>
+            <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className={`col-12`}>
+                    意外性質&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>&#9745;</span>
+                    服務使用者意外&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>&#9744;</span>
+                    外界人士意外
+                </div>
+            </div>
+            <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className={`col-12 mb-2`} style={{fontSize:'18px'}}>
+                    <table style={{width:'850px'}}>
+                        <tr>
+                            <td style={{width:'150px'}}>發生意外者姓名</td>
+                            <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
+                            <td style={{width:'100px'}}>發生意外日期</td>
+                            <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className={`col-12 mb-2 ${styles.tableBorder}`}>
+                    <table >
+                        <tr>
+                            <td colSpan={3} style={{textAlign:'center'}}>意外跟進行動表</td>
+                        </tr>
+                        <tr>
+                            <td>意外報告的跟進措施</td>
+                            <td>執行時段</td>
+                            <td>備註</td>
+                        </tr>
+                        {followUpActions != null && followUpActions.map(function(item, i){
+                            return (<tr>
+                            <td>{item.action}</td>
+                            <td>{new Date(item.date).getFullYear() + `-` +(`0`+(new Date(item.date).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(item.date).getDate()).slice(-2)}</td>
+                            <td>{item.remark}</td>
+                            </tr>)
+                            })
+                        }
+                    </table>
+                </div>
+            </div>
+            <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className={`col-12`}>
+                    {formTwentyOneData != null && formTwentyOneData[0].AccidentalFollowUpContinue && <span>&#9745;</span>}
+                    {formTwentyOneData != null && !formTwentyOneData[0].AccidentalFollowUpContinue && <span>&#9744;</span>}
+                    意外跟進繼續&nbsp;&nbsp;
+                    {formTwentyOneData != null && !formTwentyOneData[0].AccidentalFollowUpContinue && <span>&#9745;</span>}
+                    {formTwentyOneData != null && formTwentyOneData[0].AccidentalFollowUpContinue && <span>&#9744;</span>}
+                    意外跟進結束
+                </div>
+            </div>
+            <div className="form-row" style={{fontSize:'18px'}}>
+                <div className={`col-12`}>
+                    <table style={{width:'870px',margin:'40px 0 20px'}}>
+                        <tr>
+                            <td  style={{width:'250px'}}>
+                            高級服務經理/服務經理姓名
+                            </td>
+                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            {formTwentyOneData != null && formTwentyOneData[0].SM.Title}
+                            </td>
+                            <td  style={{width:'200px'}}>
+                            日期
+                            </td>
+                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            {formTwentyOneData != null && new Date(formTwentyOneData[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SMDate).getDate()).slice(-2)}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div className={`col-12`}>
+                    評語
+                </div>
+                <div className={`col-12`}>
+                    <table>
+                        <tr>
+                            <td style={{borderBottom:'1px solid'}}>
+                            {formTwentyOneData != null && formTwentyOneData[0].SMComment != null ? formTwentyOneData[0].SMComment : ''}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div className={`col-12`}>
+                    <table style={{width:'870px',margin:'40px 0 20px'}}>
+                        <tr>
+                            <td  style={{width:'250px'}}>
+                            服務總監姓名
+                            </td>
+                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            {formTwentyOneData != null && formTwentyOneData[0].SD.Title}
+                            </td>
+                            <td  style={{width:'200px'}}>
+                            日期
+                            </td>
+                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            {formTwentyOneData != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
         }
     </div>
 </>

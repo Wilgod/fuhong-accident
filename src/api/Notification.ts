@@ -128,7 +128,7 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
 }
 
 // form 24
-export async function notifySpecialIncidentLicense(context: WebPartContext, formId: number, stage: number) {
+export async function notifySpecialIncidentLicense(context: WebPartContext, formId: number, stage: number,workflowUrl:string) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -141,14 +141,15 @@ export async function notifySpecialIncidentLicense(context: WebPartContext, form
                 "stage": stage
             })
         };
-        await context.httpClient.post(SPEICAL_INCIDENT_REPORT_LICENSE, SPHttpClient.configurations.v1, CONFIG);
+        //await context.httpClient.post(SPEICAL_INCIDENT_REPORT_LICENSE, SPHttpClient.configurations.v1, CONFIG);
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
     } catch (err) {
         console.error(err);
         throw new Error("notifySpecialIncidentLicense error");
     }
 }
 // form 25
-export async function notifySpecialIncidentAllowance(context: WebPartContext, formId: number, stage: number) {
+export async function notifySpecialIncidentAllowance(context: WebPartContext, formId: number, stage: number,workflowUrl:string) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -161,7 +162,8 @@ export async function notifySpecialIncidentAllowance(context: WebPartContext, fo
                 "stage": stage
             })
         };
-        await context.httpClient.post(SPEICAL_INCIDENT_REPORT_ALLOWANCE, SPHttpClient.configurations.v1, CONFIG);
+        //await context.httpClient.post(SPEICAL_INCIDENT_REPORT_ALLOWANCE, SPHttpClient.configurations.v1, CONFIG);
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
     } catch (err) {
         console.error(err);
         throw new Error("notifyIncidentReportAllownace error");
@@ -169,7 +171,7 @@ export async function notifySpecialIncidentAllowance(context: WebPartContext, fo
 }
 
 // form 23
-export async function notifyOtherIncident(context: WebPartContext, formId: number, stage: number) {
+export async function notifyOtherIncident(context: WebPartContext, formId: number, stage: number,workflowUrl:string) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -182,7 +184,8 @@ export async function notifyOtherIncident(context: WebPartContext, formId: numbe
                 "stage": stage
             })
         };
-        await context.httpClient.post(OTHER_INCIDENT_REPORT, SPHttpClient.configurations.v1, CONFIG);
+        //await context.httpClient.post(OTHER_INCIDENT_REPORT, SPHttpClient.configurations.v1, CONFIG);
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
     } catch (err) {
         console.error(err);
         throw new Error("notifyOtherIncident error");

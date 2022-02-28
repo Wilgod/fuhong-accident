@@ -10,6 +10,7 @@ export interface IOtherIncidentReportProps {
     formData: any;
     isPrintMode: boolean;
     siteCollectionUrl:string;
+    workflow:string;
 }
 
 export interface IOtherIncidentReportStates {

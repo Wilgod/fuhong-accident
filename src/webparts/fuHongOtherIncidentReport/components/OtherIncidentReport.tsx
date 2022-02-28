@@ -21,7 +21,7 @@ import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl,workflow }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -357,7 +357,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }).then((updateOtherIncidentReportRes) => {
                         console.log(updateOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifyOtherIncident(context, formData.Id, 1);
+                            notifyOtherIncident(context, formData.Id, 1, workflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -388,7 +388,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     }).then(createOtherIncidentReportRes => {
                         console.log(createOtherIncidentReportRes)
                         if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1);
+                            notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1,workflow);
 
                             postLog({
                                 AccidentTime: incidentTime.toISOString(),
@@ -512,7 +512,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         Report: "其他事故呈報表"
                     })
 
-                    notifyOtherIncident(context, formData.Id, 1);
+                    notifyOtherIncident(context, formData.Id, 1,workflow);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
