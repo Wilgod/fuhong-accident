@@ -111,7 +111,9 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
         let formTwentySixData :any = [];
         let formTwentySixDataPrint :any = [];
         let formTwentySixDataSelected = null;
-        formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+        if (data) {
+          formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+        }
         formTwentySixData = formTwentySixDataPrint[0];
         formTwentySixDataSelected = formTwentySixData.Id
         if (data && data.Investigator && data.Investigator.EMail) {
@@ -137,9 +139,9 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
           }
         }
-        if (data.Stage == '1') {
+        if (data && data.Stage == '1') {
           this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
-        } else if (data.Stage == '2') {
+        } else if (data && data.Stage == '2') {
           this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataSelected:formTwentySixDataSelected });
         }
         getAdmin().then((admin) => {

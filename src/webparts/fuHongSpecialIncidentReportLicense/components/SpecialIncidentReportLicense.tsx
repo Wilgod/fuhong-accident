@@ -907,6 +907,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         if (formData) {
             loadData();
         } else {
+            debugger
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
     }, [formData]);
@@ -996,6 +997,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     
     console.log('departmentList',departmentList);
     console.log('isPrintMode',isPrintMode);
+    console.log('reporter',reporter);
     return (
         <>
 

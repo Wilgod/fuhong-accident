@@ -665,9 +665,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
-    console.log("SdApproveForSpt : " + stageThreePendingSdApproveForSpt(context,currentUserRole, formStatus, formStage, formTwentyOneData));
-    console.log("SmFillIn : " + stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData));
-    console.log("completed : " + completed);
     
     return (
         <>
@@ -727,12 +724,13 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 發生意外者姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>發生意外者姓名</label>
                         <div className="col-12 col-md-4">
-                            {
+                            {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={`${serviceUser && serviceUser.NameCN ? `${serviceUser.NameCN}` : ""}`} />
                                     :
                                     <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameTC || ""}`} />
-                            }
+                            */}
+                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserNameCN || ""}`} />
                         </div>
                     </div>
                     <div className="form-row">

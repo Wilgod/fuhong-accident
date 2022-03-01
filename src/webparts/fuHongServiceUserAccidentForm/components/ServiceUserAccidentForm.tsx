@@ -1058,7 +1058,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
             //Created By whom
             if (data.Author) {
-                setReporter([{ secondaryText: data.Author.EMail, id: data.Author.Id }]);
+                setReporter([{ secondaryText: data.Author.mail, id: data.AuthorId }]);
             }
 
             if (data.Created) {
@@ -1240,13 +1240,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >=0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit : ' + serviceUnit);
                                         return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_Eng_name_display}</option>
                                     })
                                 }
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
-                                        console.log('serviceUnit : ' + serviceUnit);
                                         return <option value={item} selected={item == serviceUnit}>{item}</option>
                                     })
                                 }
