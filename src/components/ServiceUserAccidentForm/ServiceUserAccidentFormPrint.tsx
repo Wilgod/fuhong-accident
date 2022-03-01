@@ -560,7 +560,7 @@ return <>
                     </div>
                 </div>
                 <div className={`${styles.pagebreak}`} ></div>
-                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className="form-row mb-3" style={{marginTop:'150px', fontSize:'18px'}}>
                     <div className={`col-12`} style={{fontWeight:'bold'}}>
                     6. 家屬聯絡
                     </div>
@@ -965,8 +965,8 @@ return <>
                                 <td  style={{width:'200px'}}>
                                 高級物理治療師簽署
                                 </td>
-                                <td style={{width:'200px'}}>
-                                {formTwentyData != null && formTwentyData.SPT.Title != null ? formTwentyData.SPT.Title : '____________________'}
+                                <td style={{width:'200px', borderBottom:'1px solid'}}>
+                                {formTwentyData != null && formTwentyData.SPT.Title != null ? formTwentyData.SPT.Title : ''}
                                 </td>
                                 <td  style={{width:'200px'}}>
                                 日期
