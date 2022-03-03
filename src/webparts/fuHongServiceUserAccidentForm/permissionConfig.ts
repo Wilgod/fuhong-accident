@@ -86,9 +86,15 @@ export const stageThreePendingSdApprove = (context:any, currentUserRole: Role, s
 }
 
 //Stage 3 / PENDING_SD_APPROVE
-export const stageThreePendingSdApproveForSpt = (context:any, currentUserRole: Role, status: string, stage: string, formTwentyOneData:any): boolean => {
-    if (stage === "3" && status === "PENDING_SD_APPROVE" && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST && formTwentyOneData.SPT.EMail == context.pageContext.legacyPageContext.userEmail) {
-        return true;
+export const stageThreePendingSdApproveForSpt = (context:any, currentUserRole: Role, status: string, stage: string, formTwentyOneData:any, accidentFollowUpFormList:any, selectedAccidentFollowUpFormId:number): boolean => {
+    
+    if (accidentFollowUpFormList.length > 0 && selectedAccidentFollowUpFormId != null) {
+        debugger
+        const data= accidentFollowUpFormList.filter((item) => item.ID === selectedAccidentFollowUpFormId);
+        if (stage === "3" && data[0].SMDate !=null && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST && formTwentyOneData.SPT.EMail == context.pageContext.legacyPageContext.userEmail && (data[0].SDDate == null || new Date(new Date(data[0].SDDate).setDate(new Date(data[0].SDDate).getDate() + 7)) > new Date())) {
+            return true;
+        }
     }
+    
     return false;
 }

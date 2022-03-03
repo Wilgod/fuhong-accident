@@ -27,7 +27,8 @@ import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifyOutsiderAccident } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
-
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../../api/Notification';
+import useServiceUnit2 from '../../../hooks/useServiceUser2';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -42,9 +43,11 @@ interface IOutsidersAccidentFormProps {
     formData: any;
     isPrintMode: boolean;
     siteCollectionUrl:string;
+    permissionList:any;
+    workflow:string;
 }
 
-export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, permissionList, workflow }: IOutsidersAccidentFormProps) {
     const [error, setError] = useState<IErrorFields>();
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -72,6 +75,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [familyContactDate, setFamilyContactDate] = useState(new Date());
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
     const [uploadedPhotoRecordFiles, setUploadedPhotoRecordFiles] = useState([]);
+    const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
@@ -404,6 +408,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 }).catch(console.error);
 
                 formSubmittedHandler();
+                notifyOutsiderAccident(context, formData.Id, 1, workflow);
             }).catch(console.error);
         } else {
 
@@ -427,7 +432,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }
                         }).catch(console.error);
                     }
-
                     postLog({
                         AccidentTime: accidentTime.toISOString(),
                         Action: "提交",
@@ -438,7 +442,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         RecordId: formData.Id
                     }).catch(console.error);
 
-                    notifyOutsiderAccident(context, formData.Id, 1);
+                    notifyOutsiderAccident(context, formData.Id, 1, workflow);
                     formSubmittedHandler();
                 })
             } else {
@@ -480,8 +484,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }
                                 }).catch(console.error);
                             }
-
                             if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+                                
                                 postLog({
                                     AccidentTime: accidentTime.toISOString(),
                                     Action: "提交",
@@ -503,7 +507,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 }).catch(console.error);
                             }
 
-                            notifyOutsiderAccident(context, formData.Id, 1);
+                            notifyOutsiderAccident(context, formData.Id, 1,workflow);
                             formSubmittedHandler();
                         })
                     } else {
@@ -526,7 +530,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         }
                                     }).catch(console.error);
                                 }
-
                                 if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
                                     postLog({
                                         AccidentTime: accidentTime.toISOString(),
@@ -549,7 +552,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }).catch(console.error);
                                 }
 
-                                notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1);
+                                notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1,workflow);
                                 formSubmittedHandler();
                             }
                         }).catch(console.error);
@@ -723,7 +726,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
 
 
-                                            notifyOutsiderAccident(context, formData.Id, 1);
+                                            notifyOutsiderAccident(context, formData.Id, 1, workflow);
                                             formSubmittedHandler()
 
                                             postLog({
@@ -892,6 +895,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (formData) {
             loadData(formData);
         } else {
+            if (userInfo && userInfo.hr_deptid) {
+                setHrDepartment(userInfo.hr_deptid);
+                setServiceUnit(userInfo.hr_deptid);
+                setServiceLocation(userInfo.hr_location);
+                setPatientServiceUnit(userInfo.hr_deptid);
+            }
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
     }, [formData]);
@@ -937,6 +946,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
     }, [sptList]);
 
+    useEffect(() => {
+        setHrDepartment(patientServiceUnit)
+        /*getDepartmentBySuEngNameDisplay(patientServiceUnit).then((res) => {
+            if (Array.isArray(res) && res.length) {
+                const dept = res[0];
+
+            }
+        }).catch(console.error);*/
+    }, [patientServiceUnit])
+
     return (
         <>
             {isPrintMode && <Header displayName="外界人士意外填報表(一)" />}
@@ -957,7 +976,22 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
                                 })}
                             </select> */}
-                            <input type="text" className="form-control" value={serviceUnit || ""} disabled />
+                            {/*<input type="text" className="form-control" value={serviceUnit || ""} disabled />*/}
+                            <select className="custom-select" value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(currentUserRole, formStatus, formStage)}
+                            >
+                                <option value={""} ></option>
+                                {permissionList.indexOf('All') >=0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_Eng_name_display}</option>
+                                    })
+                                }
+                                {permissionList.indexOf('All') < 0 && 
+                                    permissionList.map((item) => {
+                                        return <option value={item} selected={item == serviceUnit}>{item}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
@@ -1057,12 +1091,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <h5>意外事件紀錄</h5>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="form-row">
                         <div className="col-12 font-weight-bold">
                             <h6>初步觀察的意外成因</h6>
                         </div>
                     </div>
-                    <div className="pl-3">
+                    <div>
                         <div className="form-row mb-4">
                             {/* (2.1.1) 環境因素 */}
                             <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>

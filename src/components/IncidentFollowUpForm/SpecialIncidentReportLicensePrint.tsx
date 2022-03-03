@@ -108,7 +108,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     let followUpActions = null;
     let formTwentySixDataPrint = null;
-    if (formTwentySixData != null) {
+    if (formTwentySixData != null && formTwentySixData.length > 0) {
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);

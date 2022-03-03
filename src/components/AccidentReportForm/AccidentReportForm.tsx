@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,serviceUserAccidentWorkflow }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -200,7 +200,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             ServiceUnit: parentFormData.ServiceLocation,
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2,serviceUserAccidentWorkflow);
+                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2,workflow);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -242,7 +242,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccident(context, parentFormData.Id, 2, serviceUserAccidentWorkflow);
+                    notifyServiceUserAccident(context, parentFormData.Id, 2, workflow);
                 }).catch(console.error);
 
             }
@@ -310,7 +310,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {
                                 //trigger notification work flow
-                                notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
 
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
@@ -326,7 +326,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             }).catch(console.error);
                         } else {
                             updateOutsiderAccidentFormById(parentFormData.Id, serviceUserAccidentFormBody).then((outsiderAccidentFormResponse) => {
-                                notifyOutsiderAccident(context, parentFormData.Id, 3);
+                                notifyOutsiderAccident(context, parentFormData.Id, 3, workflow);
 
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
@@ -593,7 +593,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.ServiceUserGender === "male" ? "男" : "女"} />
+                            <input type="text" className="form-control" readOnly value={parentFormData && parentFormData.ServiceUserGender === "Male" ? "男" : "女"} />
                             {/*
                                 formType === "SERVICE_USER" ?
                                     <input type="text" className="form-control" readOnly value={serviceUser && serviceUser.Gender === "Male" ? "男" : "女"} />

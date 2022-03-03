@@ -18,7 +18,8 @@ import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
 import { getAccidentReportFormById, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
-import { getServiceUserAccidentWorkflow } from '../../../api/FetchFuHongList';
+import { getOutsiderAccidentWorkflow } from '../../../api/FetchFuHongList';
+import { checkPermissionList } from '../../../api/FetchUser';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -42,6 +43,7 @@ const getCanvasZone = () => {
 
 interface IFuHongOutsidersAccidentFormState {
   currentUserRole: Role;
+  permissionList:any;
   formSubmitted: boolean;
   outsiderAccidentFormData: any;
   stage: string;
@@ -49,7 +51,7 @@ interface IFuHongOutsidersAccidentFormState {
   formTwentyData:any;
   formTwentyOneData:any;
   formTwentyOneDataSelected:number;
-  serviceUserAccidentWorkflow:string;
+  outsiderAccidentWorkflow:string;
 }
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
@@ -66,6 +68,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
 
     this.state = {
       currentUserRole: Role.GENERAL,
+      permissionList: [],
       outsiderAccidentFormData: null,
       stage: "",
       formSubmitted: false,
@@ -73,7 +76,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       formTwentyData:[],
       formTwentyOneData:[],
       formTwentyOneDataSelected:null,
-      serviceUserAccidentWorkflow:''
+      outsiderAccidentWorkflow:''
     }
   }
 
@@ -88,8 +91,9 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   }
 
   private initialState = async () => {
-    const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
-    this.setState({ serviceUserAccidentWorkflow:serviceUserAccidentWorkflow });
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
+    this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow });
   }
 
   public componentDidMount() {
@@ -146,7 +150,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
         getAdmin().then((admin) => {
           admin.forEach((item) => {
             if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.ADMIN });
+              this.setState({ currentUserRole: Role.ADMIN,permissionList:['All']  });
             }
           })
         }).catch(console.error)
@@ -206,13 +210,13 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   <Tab>意外跟進/結束表(三)</Tab>
                 </TabList>
                 <TabPanel>
-                  <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                  <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.outsiderAccidentWorkflow}/>
                 </TabPanel>
                 <TabPanel>
-                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
+                  <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} workflow={this.state.outsiderAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
                 </TabPanel>
               </Tabs>
           }

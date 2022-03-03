@@ -107,7 +107,7 @@ export async function notifyServiceUserAccidentSMSDComment(context: WebPartConte
 
 
 // form 22
-export async function notifyOutsiderAccident(context: WebPartContext, formId: number, stage: number) {
+export async function notifyOutsiderAccident(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -120,7 +120,8 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
                 "stage": stage
             })
         };
-        await context.httpClient.post(OUTSIDER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+        //await context.httpClient.post(OUTSIDER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
     } catch (err) {
         console.error(err);
         throw new Error("notifyOutsiderAccident error");

@@ -79,7 +79,7 @@ return <>
                             <tr>
                                 <td>接受服務類別</td>
                                 <td>{formData.ServiceCategory != null ? formData.ServiceCategory : ''}</td>
-                                <td>服務使用者姓名: (中文)</td>
+                                <td>接受服務類別</td>
                                 <td>
                                     {formData.ServiceCategory == "住宿" && <span>&#9745;</span>}
                                     {formData.ServiceCategory != "住宿" && <span>&#9744;</span>}
@@ -800,8 +800,8 @@ return <>
                     <div className={`col-12 mb-2`} style={{fontSize:'22px'}}>
                     意外成因
                     </div>
-                    <div className={`col-12`} style={{borderBottom:'1px solid'}}>
-                    環境因素
+                    <div className={`col-12`}>
+                    <span style={{borderBottom:'1px solid'}}>環境因素</span>
                     </div>
                     <div className={`col-12 mb-2`}>
                         <table>
@@ -851,7 +851,7 @@ return <>
                         </table>
                     </div>
                     <div className={`col-12`}>
-                    個人因素
+                    <span style={{borderBottom:'1px solid'}}>個人因素</span>
                     </div>
                     <div className={`col-12 mb-2`}>
                     <table>
@@ -886,7 +886,7 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px'}}>
+                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
                     <div className={`col-12 mb-2`} >
                     意外發現之經過
                     </div>
@@ -900,7 +900,7 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px'}}>
+                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
                     <div className={`col-12 mb-2`} >
                     可能引致意外之因素
                     </div>
@@ -914,7 +914,7 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px'}}>
+                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
                     <div className={`col-12 mb-2`} >
                     建議
                     </div>
@@ -1016,7 +1016,9 @@ return <>
                             <td style={{width:'150px'}}>發生意外者姓名</td>
                             <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
                             <td style={{width:'100px'}}>發生意外日期</td>
-                            <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                            <td style={{width:'200px', borderBottom:'1px solid'}}>
+                            {formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                            </td>
                         </tr>
                     </table>
                 </div>

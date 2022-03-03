@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, serviceUserAccidentWorkflow, changeFormTwentyOneDataSelected }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
     const [sdDate, setSdDate] = useState(new Date()); // 服務總監
     const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
@@ -111,8 +111,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     //For SM only
     const smSubmitHandler = (event) => {
 
-        if (stageThreePendingSdApproveForSpt(context,currentUserRole, formStatus, formStage, formTwentyOneData)) { // SPT
-            notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+        if (stageThreePendingSdApproveForSpt(context,currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)) { // SPT
+            notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3, workflow);
             sptCommentUpdate();
         } else {
             const [body, error] = dataFactory();
@@ -201,7 +201,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -223,7 +223,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((res) => {
                             console.log(res);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -360,7 +360,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (formType === "SERVICE_USER") {
                 updateServiceUserAccidentById(parentFormData.Id, { "Status": "CLOSED" }).then(() => {
                     // trigger notification workflow
-                    notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+                    notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
 
                     postLog({
                         AccidentTime: parentFormData.AccidentTime,
@@ -387,7 +387,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         ServiceUnit: parentFormData.ServiceLocation
                     }).catch(console.error)
 
-                    notifyOutsiderAccident(context, parentFormData.Id, 3);
+                    notifyOutsiderAccident(context, parentFormData.Id, 3, workflow);
                     formSubmittedHandler();
                 }).catch(console.error);
             }
@@ -477,7 +477,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             "NextDeadline": addMonths(new Date(), 6),
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, serviceUserAccidentWorkflow);
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -665,7 +665,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
-    
+    console.log('accidentFollowUpFormList', accidentFollowUpFormList);
     return (
         <>
             {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}
@@ -928,7 +928,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={completed || !stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData)} />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={!stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -1015,7 +1015,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     <button className="btn btn-warning" onClick={(event) => smSubmitHandler(event)}>提交1</button>
                                 }
                                 {
-                                    (stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData) || stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage,formTwentyOneData)) &&
+                                    (stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId) || stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage,formTwentyOneData)) &&
                                     <button className="btn btn-warning" onClick={(event => sdSubmitHandler(event))}>提交2</button>
                                 }
                                 {
