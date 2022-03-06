@@ -1069,7 +1069,7 @@ return <>
                             日期
                             </td>
                             <td style={{width:'200px',borderBottom:'1px solid'}}>
-                            {formTwentyOneData != null && new Date(formTwentyOneData[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SMDate).getDate()).slice(-2)}
+                            {formTwentyOneData != null && formTwentyOneData[0].SMDate != null && new Date(formTwentyOneData[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SMDate).getDate()).slice(-2)}
                             </td>
                         </tr>
                     </table>
@@ -1099,7 +1099,7 @@ return <>
                             日期
                             </td>
                             <td style={{width:'200px',borderBottom:'1px solid'}}>
-                            {formTwentyOneData != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
+                            {formTwentyOneData != null && formTwentyOneData[0].SDDate != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
                             </td>
                         </tr>
                     </table>

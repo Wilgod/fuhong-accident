@@ -1009,14 +1009,17 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 <section className="py-3">
                     <div className="d-flex justify-content-center" style={{ gap: 10 }}>
                         {
-                            !completed &&
                             <>
-                                {stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage, formTwentyOneData) &&
-                                    <button className="btn btn-warning" onClick={(event) => smSubmitHandler(event)}>提交1</button>
+                                {!completed && stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage, formTwentyOneData) &&
+                                    <button className="btn btn-warning" onClick={(event) => smSubmitHandler(event)}>提交</button>
                                 }
                                 {
-                                    (stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId) || stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage,formTwentyOneData)) &&
-                                    <button className="btn btn-warning" onClick={(event => sdSubmitHandler(event))}>提交2</button>
+                                    stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage,formTwentyOneData) &&
+                                    <button className="btn btn-warning" onClick={(event => sdSubmitHandler(event))}>提交</button>
+                                }
+                                {
+                                    stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage,formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId) &&
+                                    <button className="btn btn-warning" onClick={(event => sptCommentUpdate())}>提交</button>
                                 }
                                 {
                                     stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) &&

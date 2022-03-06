@@ -93,7 +93,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
-    this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow });
+    this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow.Url });
   }
 
   public componentDidMount() {
