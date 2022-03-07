@@ -63,6 +63,7 @@ interface ISpecialIncidentReportAllowanceStates {
     policeDatetime: Date;
     policeInvestigate: boolean;
     policeInvestigateDate: Date;
+    policeDescription:string;
     residentMissing: string;
     residentMissingReason: string;
     missingPoliceDate: Date;
@@ -226,6 +227,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         policeInvestigate: undefined,
         policeInvestigateDate: new Date(),
         policeReportNumber: "",
+        policeDescription:"",
         referDate: new Date(),
         referServiceUnit: "",
         referSocialWorker: undefined,
@@ -340,6 +342,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 policeInvestigate: formData.PoliceInvestigate,
                 policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date(),
                 policeReportNumber: formData.PoliceReportNumber,
+                policeDescription:formData.PoliceDescription,
                 ra_abandoned: formData.RA_Abandoned,
                 ra_body: formData.RA_Body,
                 ra_embezzleProperty: formData.RA_EmbezzleProperty,
@@ -664,6 +667,56 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td>&nbsp;&nbsp;職位</td>
                                     <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionThree}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                            跟進行動
+                        </div>
+                        <div className={`col-12`}>
+                            <table >
+                                <tr>
+                                    <td colSpan={2}>(a) 報警處理</td>
+                                </tr>
+                                <tr>
+                                    <td><div style={{width:'50px'}}></div></td>
+                                    <td >
+                                        {form.police&& <span>&#9745;</span>}
+                                        {!form.police && <span>&#9744;</span>}
+                                        有&nbsp;&nbsp;(報警日期和時間:
+                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
+                                            {form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)}
+                                            </span>
+                                    </td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style={{paddingLeft:'150px'}}>(報案編號
+                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
+                                            {form.policeReportNumber != null ? form.policeReportNumber: '______________'})
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td >
+                                        {!form.police&& <span>&#9745;</span>}
+                                        {form.police && <span>&#9744;</span>}
+                                        沒有&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style={{paddingLeft:'150px'}}>(備註
+                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
+                                            {form.policeDescription != null ? form.policeDescription: '__________________'})
+                                            </span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
