@@ -471,7 +471,7 @@ return <>
                                     {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9745;</span>}
                                     {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
                                     急症室&nbsp;&nbsp;(醫院名稱 :
-                                    {formData.MedicalArrangementHospital != null ? <span style={{borderBottom:'1px solid'}}>{formData.MedicalArrangementHospital}</span> : '____________________'})
+                                    {formData.MedicalArrangementHospital != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.MedicalArrangementHospital}</span> : '____________________'})
                                 </td>
                                 <td>
                                     到達時間
@@ -650,7 +650,7 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                    交由 : <span style={{borderBottom:'1px solid'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
+                    交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
                     <div className={`col-12`} style={{fontWeight:'bold'}}>
                     評語 ____________________________________________________
@@ -692,10 +692,10 @@ return <>
                         服務使用者意外填報表(二)
                     </div>
                     <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                        保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid'}}>{formData.InsuranceCaseNo}</span> : '____________'}
+                        保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.InsuranceCaseNo}</span> : '____________'}
                     </div>
                     <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
-                        檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid'}}>{formData.CaseNumber}</span> : '____________'}
+                        檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.CaseNumber}</span> : '____________'}
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -790,7 +790,7 @@ return <>
                                     {formTwentyData != null && formTwentyData.AccidentNatureOther  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.AccidentNatureOther) && <span>&#9744;</span>}
                                     5 其他 : &nbsp;&nbsp;
-                                    {formTwentyData != null && formTwentyData.AccidentNatureOtherRemark != null ? <span style={{borderBottom:'1px solid'}}>{formTwentyData.AccidentNatureOtherRemark}</span> : '____________________'}
+                                    {formTwentyData != null && formTwentyData.AccidentNatureOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.AccidentNatureOtherRemark}</span> : '____________________'}
                                 </td>    
                             </tr>
                         </table>
@@ -845,7 +845,7 @@ return <>
                                     {formTwentyData != null && formTwentyData.EnvFactorOther  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.EnvFactorOther) && <span>&#9744;</span>}
                                     10 其他&nbsp;&nbsp; (請註明
-                                    {formTwentyData.EnvFactorOtherRemark != null ? <span style={{borderBottom:'1px solid'}}>{formTwentyData.EnvFactorOtherRemark}</span> : '____________________'})
+                                    {formTwentyData.EnvFactorOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.EnvFactorOtherRemark}</span> : '____________________'})
                                 </td>
                             </tr>
                         </table>
@@ -880,7 +880,7 @@ return <>
                                     {formTwentyData != null && formTwentyData.PersonalFactorOther  && <span>&#9745;</span>}
                                     {!formTwentyData.PersonalFactorOther && <span>&#9744;</span>}
                                     6 其他&nbsp;&nbsp;(請註明
-                                    {formTwentyData != null && formTwentyData.PersonalFactorOtherRemark != null ? <span style={{borderBottom:'1px solid'}}>{formTwentyData.PersonalFactorOtherRemark}</span> : '____________________'})
+                                    {formTwentyData != null && formTwentyData.PersonalFactorOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.PersonalFactorOtherRemark}</span> : '____________________'})
                                 </td>
                             </tr>
                         </table>
@@ -994,10 +994,10 @@ return <>
                     服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                    保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid'}}>{formData.InsuranceCaseNo}</span> : '____________'}
+                    保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.InsuranceCaseNo}</span> : '____________'}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
-                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid'}}>{formData.CaseNumber}</span> : '____________'}
+                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.CaseNumber}</span> : '____________'}
                 </div>
             </div>
             <div className="form-row mb-3" style={{fontSize:'18px'}}>
