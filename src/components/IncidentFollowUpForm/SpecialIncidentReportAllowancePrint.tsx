@@ -20,6 +20,7 @@ interface ISpecialIncidentReportAllowancePrint {
 }
 
 interface ISpecialIncidentReportAllowanceStates {
+    toDepartment:string;
     responsibleName: string;
     insuranceCaseNo: string;
     incidentTime:string;
@@ -145,6 +146,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     }
 
     const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
+        toDepartment:"",
         abuser: "",
         abuserDescription: "",
         abuser_police: undefined,
@@ -270,6 +272,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             debugger
             setForm({
                 ...form,
+                toDepartment:formData.ToDepartment,
                 abuser: formData.Abuser,
                 abuserDescription: formData.AbuserDescription,
                 abuser_police: formData.Abuser_Police,
@@ -429,33 +432,33 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table style={{width:'800'}}>
                                 <tr>
                                     <td style={{width:"100px"}}>致 :</td>
-                                    <td style={{width:"200px"}}>津貼科</td>
-                                    <td style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632)</td>
+                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{width:"200px"}}>津貼科</td>
+                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td className={styles.deleteLine} style={{width:"200px"}}>*安老服務科</td>
-                                    <td className={styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2832 2936)</td>
+                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*安老服務科</td>
+                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2832 2936)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td className={styles.deleteLine} style={{width:"200px"}}>*家庭及兒童福利科</td>
-                                    <td className={styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2833 5840)</td>
+                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*家庭及兒童福利科</td>
+                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2833 5840)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td className={styles.deleteLine} style={{width:"200px"}}>*康復及醫務社會服務科</td>
-                                    <td className={styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2893 6983)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td className={styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*感化服務組	*(傳真: 2833 5861)</td>
+                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*康復及醫務社會服務科</td>
+                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2893 6983)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td></td>
-                                    <td className={styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*青年事務組	*(傳真: 2838 7021)</td>
+                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*感化服務組	*(傳真: 2833 5861)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*青年事務組	*(傳真: 2838 7021)</td>
                                 </tr>
                             </table>
                         </div>
