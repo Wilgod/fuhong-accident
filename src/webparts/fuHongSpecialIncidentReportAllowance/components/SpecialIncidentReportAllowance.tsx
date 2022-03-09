@@ -1533,16 +1533,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            {/* <PeoplePicker
-                                context={context}
-                                titleText=""
-                                showtooltip={false}
-                                personSelectionLimit={1}
-                                ensureUser={true}
-                                isRequired={false}
-                                selectedItems={(e) => { console }}
-                                showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+                            {/*<input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />*/}
+                            {
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}>
+                                        <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
+                                        <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${smInfo && smInfo.Lastname || ""} ${smInfo && smInfo.Firstname || ""}`.trim() || `${smInfo && smInfo.Name || ""}`} disabled={true} />
+                            }
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle}`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -1586,16 +1587,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名</label>
                         <div className="col-12 col-md-4">
-                            {/* <PeoplePicker
-                                context={context}
-                                titleText=""
-                                showtooltip={false}
-                                personSelectionLimit={1}
-                                ensureUser={true}
-                                isRequired={false}
-                                selectedItems={(e) => { console.log }}
-                                showHiddenInUI={false} /> */}
-                            <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            {/*<input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />*/}
+                            {
+                                formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
+                                    <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
+                                        disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
+                                    >
+                                        <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
+                                        <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
+                                    </select>
+                                    :
+                                    <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
+                            }
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">

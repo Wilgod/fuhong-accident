@@ -36,7 +36,7 @@ interface ISpecialIncidentReportAllowanceStates {
     abusiveDescription:string,
     mediaReports:boolean,
     incidentDescription:string,
-
+    serviceLocation:string,
     serviceUserGenderOne:string,
     serviceUserGenderTwo:string,
     serviceUserGenderThree:string,
@@ -172,7 +172,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         abusiveDescription:"",
         mediaReports:false,
         incidentDescription:"",
-
+        serviceLocation:"",
         serviceUserGenderOne:"",
         serviceUserGenderTwo:"",
         serviceUserGenderThree:"",
@@ -318,7 +318,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 mediaReports:formData.MediaReports,
                 abusiveDescription:formData.AbusiveDescription,
                 incidentDescription:formData.IncidentDescription,
-
+                serviceLocation:formData.ServiceLocation,
                 serviceUserGenderOne:formData.ServiceUserGenderOne,
                 serviceUserGenderTwo:formData.ServiceUserGenderTwo,
                 serviceUserGenderThree:formData.ServiceUserGenderThree,
@@ -454,84 +454,16 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     <div>
                         <div className="form-row mb-3">
                         <div className={`col-12 font-weight-bold ${styles.header}`}>
-                            特別事故報告
+                        其他事故呈報表
                         </div>
                         <div className={`col-12 ${styles.header}`}>
-                        (特別事故發生後三個工作天內提交社會福利署津貼組及相關服務科)
+                        服務單位 <span style={{border:'1px solid'}}>{form.serviceLocation}</span>
                         </div>
                     </div>
-                    <div className="form-row mb-3">
-                        <div className={`col-12`}>
-                            注意：請在合適方格內加上「&#10003;」號，並連同附頁／載有相關資料的自訂報告一併呈交
-                        </div>
-                    </div>
+
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
-                        <div className={`col-12`}>
-                            <table style={{width:'800'}}>
-                                <tr>
-                                    <td style={{width:"100px"}}>致 :</td>
-                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{width:"200px"}}>津貼科</td>
-                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*安老服務科</td>
-                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2832 2936)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*家庭及兒童福利科</td>
-                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2833 5840)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*康復及醫務社會服務科</td>
-                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2893 6983)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*感化服務組	*(傳真: 2833 5861)</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*青年事務組	*(傳真: 2838 7021)</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                    </div>
-                    <div className="form-row mb-3" style={{fontSize:'18px'}}>
-                        <div className={`col-12`} style={{fontWeight:'bold'}}>
-                        報告單位資料
-                        </div>
-                        <div className={`col-12`}>
-                            <table>
-                                <tr>
-                                    <td>機構名稱 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgName}</td>
-                                </tr>
-                                <tr>
-                                    <td>單位名稱 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgSUName}</td>
-                                </tr>
-                                <tr>
-                                    <td>單位地址 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgAddress}</td>
-                                </tr>
-                                <tr>
-                                    <td>負責職員姓名 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.reporterName}</td>
-                                </tr>
-                                <tr>
-                                    <td>聯絡電話 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgPhone}</td>
-                                </tr>
-                            </table>
-                        </div>
                         <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
-                        特別事故資料
+                        事故資料
                         </div>
                         <div className={`col-12`}>
                             <table>
@@ -547,76 +479,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td>(c)事故發生地點	:</td>
                                     <td style={{borderBottom:'1px solid'}}>{form.incidentLocation}</td>
-                                </tr>
-                                <tr>
-                                    <td>(d)事故類別	:</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div>
-                                            {form.incidentCategory == "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9745;</span>}
-                                            {form.incidentCategory != "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9744;</span>}
-                                            服務使用者不尋常死亡／嚴重受傷導致死亡
-                                        </div>
-                                        <div>
-                                            {form.incidentCategory == "ACCIDENT_CATEGORY_MISSING" && <span>&#9745;</span>}
-                                            {form.incidentCategory != "ACCIDENT_CATEGORY_MISSING" && <span>&#9744;</span>}
-                                            服務使用者失踪而需要報警求助
-                                        </div>
-                                        <div>
-                                            {form.incidentCategory == "ACCIDENT_CATEGORY_ABUSE" && <span>&#9745;</span>}
-                                            {form.incidentCategory != "ACCIDENT_CATEGORY_ABUSE" && <span>&#9744;</span>}
-                                            *已
-                                            {form.absuseDetailsStatus == "ACCIDENT_CATEGORY_STATUS_ESTABLISH" && <span>確立</span>}
-                                            {form.absuseDetailsStatus == "ACCIDENT_CATEGORY_STATUS_DOUBT" && <span>懷疑</span>}
-                                            有服務使用者被
-                                            {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>職員</span>}
-                                            {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>其他服務使用者</span>}
-                                            虐待
-                                        </div>
-                                        <div style={{paddingLeft:'30px'}}>
-                                            <div style={{marginTop:'10px'}}>
-                                                <span style={{borderBottom:'1px solid'}}>虐待性質 : </span>
-                                            </div>
-                                            <div>
-                                            {form.abusive_body && <span>&#9745;</span>}
-                                            {!form.abusive_body && <span>&#9744;</span>}
-                                                身體虐待
-                                            </div>
-                                            <div>
-                                            {form.abusive_sexual && <span>&#9745;</span>}
-                                            {!form.abusive_sexual && <span>&#9744;</span>}
-                                                性侵犯
-                                            </div>
-                                            <div>
-                                            {form.abusive_mental && <span>&#9745;</span>}
-                                            {!form.abusive_mental && <span>&#9744;</span>}
-                                                精神虐待
-                                            </div>
-                                            <div>
-                                            {form.abusive_negligent && <span>&#9745;</span>}
-                                            {!form.abusive_negligent && <span>&#9744;</span>}
-                                                疏忽照顧
-                                            </div>
-                                            <div>
-                                            {form.abusive_other && <span>&#9745;</span>}
-                                            {!form.abusive_other && <span>&#9744;</span>}
-                                                其他(請註明 : {form.abusiveDescription != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{form.abusiveDescription}</span> : '__________________'})
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {form.incidentCategory == "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9745;</span>}
-                                            {form.incidentCategory != "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9744;</span>}
-                                            爭執以致有人身體受傷而需要報警求助
-                                        </div>
-                                        <div>
-                                            {form.incidentCategory == "ACCIDENT_CATEGORY_OTHER" && <span>&#9745;</span>}
-                                            {form.incidentCategory != "ACCIDENT_CATEGORY_OTHER" && <span>&#9744;</span>}
-                                            其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注
-                                        </div>
-                                    </td>
                                 </tr>
                                 <tr>
                                     <td>(e))事故被傳媒報導 :</td>

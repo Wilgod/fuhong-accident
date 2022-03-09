@@ -17,7 +17,7 @@ import { getQueryParameterNumber, getQueryParameterString } from '../../../utils
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getAdmin, getOtherIncidentReportById, getOtherIncidentReportWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
 import {checkDepartmentList } from '../../../api/FetchUser';
-
+import OtherIncidentReportPrint from "../../../components/IncidentFollowUpForm/OtherIncidentReportPrint";
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -159,7 +159,6 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
 
   private async initialDataByFormId() {
     try {
-
       const formId = getQueryParameterNumber("formId");
       if (formId) {
 
@@ -189,6 +188,12 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     })
   }
   
+  private print() {
+    this.setState({
+      isPrintMode:true
+    })
+  }
+
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
       <div className={styles.fuHongOtherIncidentReport}>
@@ -197,18 +202,29 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
-                <TabList>
-                  <Tab onClick={()=>this.tab(0)}>其他事故呈報表</Tab>
-                  <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
-                </TabList>
-                <TabPanel>
-                  <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow}/>
-                </TabPanel>
-                <TabPanel>
-                  <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
-                </TabPanel>
-              </Tabs>
+              this.state.loading ?
+                this.state.isPrintMode ?
+                  <OtherIncidentReportPrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl}/>
+                  :
+                  <div className={styles.eform}>
+                    <div className="row" style={{ float:'right'}}>
+                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                    </div>
+                      <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
+                        <TabList>
+                          <Tab onClick={()=>this.tab(0)}>其他事故呈報表</Tab>
+                          <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
+                        </TabList>
+                        <TabPanel>
+                          <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow}/>
+                        </TabPanel>
+                        <TabPanel>
+                          <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
+                        </TabPanel>
+                      </Tabs>
+                  </div>
+                  :
+                <div></div>
           }
         </div>
       </div>

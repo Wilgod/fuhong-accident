@@ -432,6 +432,18 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     在院舍內發生事故及送院後死亡
                                 </div>
                                 <div className={`col-12`}>
+                                    <table>
+                                        <tr>
+                                            <td style={{width:'280px'}}>
+                                            請註明事件
+                                            </td>
+                                            <td className={`${styles.underlineTable}`}>
+                                            {form.unusalIncideintGeneral != null ? form.unusalIncideintGeneral : ''}
+                                            </td>
+                                        </tr>
+                                    </table> 
+                                </div>
+                                <div className={`col-12`}>
                                     {form.unusalIncident == "UNUSAL_INCIDENT_SUICIDE" && <span>&#9745;</span>}
                                     {form.unusalIncident != "UNUSAL_INCIDENT_SUICIDE" && <span>&#9744;</span>}
                                     在院舍內自殺及送院後死亡

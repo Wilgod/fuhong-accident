@@ -652,10 +652,20 @@ return <>
                     <div className={`col-12`}>
                     交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
-                    <div className={`col-12`} style={{fontWeight:'bold'}}>
-                    評語 ____________________________________________________
+                    <div className={`col-12`}>
+                    <table>
+                        <tr>
+                            <td style={{width:'60px'}}>
+                            評語 :
+                            </td>
+                            <td style={{borderBottom:'1px solid'}}>
+                            &nbsp;&nbsp;{formTwentyData != null && formData.SPTComment != null ? formData.SPTComment : ''}
+                            </td>
+                        </tr>
+                    </table>
                     </div>
                 </div>
+                
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
                         <table>

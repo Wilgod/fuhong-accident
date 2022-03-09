@@ -250,7 +250,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              <div>
+              <div className={styles.eform}>
                   {this.state.outsiderAccidentFormData != null &&
                     <div className="row" style={{float:'right'}}>
                       <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
