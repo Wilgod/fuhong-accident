@@ -11,6 +11,7 @@ export default function useUserInfoAD() {
     useEffect(() => {
         if (peoplePicker) {
             if (Array.isArray(peoplePicker)) {
+                debugger
                 if (peoplePicker.length > 0) {
                     const email = peoplePicker[0].EMail != undefined ? peoplePicker[0].EMail : peoplePicker[0].secondaryText || peoplePicker[0];
                     getUserAdByGraph(email).then(setUser).catch(console.error);

@@ -13,7 +13,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[]) {
         let allAccidentFollowUpForm = await getAllAccidentFollowUpForm();
         let serviceUserAccidentData = [];
         for (let sa of allServiceUserAccident) {
-            console.log('All CaseNumber', sa['CaseNumber'])
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             sa['AccidentReportForm'] = getARF;
@@ -71,8 +70,37 @@ export default function useFetchUserJob(spId: number,permissionList:any[]) {
             }
         }
         const outsiderAccidentData = await getOutsiderAccidentBySPId(spId);
+        for (let oa of outsiderAccidentData) {
+            let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
+            let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
+            oa['AccidentReportForm'] = getARF;
+            oa['AccidentFollowUpForm'] = getAFUF;
+            if (oa['Stage'] == '1') {
+                oa['Form'] = '外界人士意外填報表(一)';
+                oa['CurrentSM'] = oa['SM'];
+                oa['CurrentSD'] = oa['SD'];
+                oa['CurrentSPT'] = oa['SPT'];
+                oa['CurrentInvestigator'] = oa['Investigator'];
+            } else if (oa['Stage'] == '2') {
+                oa['Form'] = '外界人士意外報告(二)';
+                oa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
+                oa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
+                oa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                oa['CurrentInvestigator'] = oa['Investigator'];
+            } else if (oa['Stage'] == '3') {
+                oa['Form'] = '意外跟進/結束表(三)';
+                oa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
+                oa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
+                oa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
+            }
+            oa['ServiceUserNameCN'] = oa['ServiceUserNameTC']
+        }
         const otherIncidentData = await getOtherIncidentReportBySPId(spId);
         const specialIncidentReportLicense = await getSpecialIncidentReportLicenseBySPId(spId);
+        for (let sirl of specialIncidentReportLicense) {
+            sirl['ServiceUserNameCN'] = sirl['ResponsibleName']
+            
+        }
         const specialIncidentReportAllowance = await getSpecialIncidentReportAllowanceBySPId(spId);
         let result = [...serviceUserAccidentData, ...outsiderAccidentData, ...otherIncidentData, ...specialIncidentReportLicense, ...specialIncidentReportAllowance].sort((a, b) => {
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()

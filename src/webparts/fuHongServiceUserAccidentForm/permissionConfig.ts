@@ -29,16 +29,19 @@ export const pendingSmApprove = (context:any, currentUserRole: Role, status: str
 }
 
 // Stage 1 / PENDING_SPT_APPROVE
-export const pendingSptApproveForSPT = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "1" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST) {
+export const pendingSptApproveForSPT = (context:any, currentUserRole: Role, status: string, stage: string, sPhysicalTherapyEmail:string): boolean => {
+    if (stage === "1" && status === "PENDING_SPT_APPROVE" && sPhysicalTherapyEmail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
+    /*if (stage === "1" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST) {
+        return true;
+    }*/
     return false;
 }
 
 //Stage 1 / PENDING_SPT_APPROVE
-export const pendingSptApproveForSD = (currentUserRole: Role, status: string, stage: string, sptDate:Date): boolean => {
-    if ((stage === "1" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR) || (stage === "2" && status === "PENDING_INVESTIGATE" && currentUserRole === Role.SERVICE_DIRECTOR && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) {
+export const pendingSptApproveForSD = (context:any, currentUserRole: Role, status: string, stage: string, sptDate:Date, sdInfo:any): boolean => {
+    if ((stage === "1" && status === "PENDING_SPT_APPROVE" && sdInfo != null && sdInfo.Email == context.pageContext.legacyPageContext.userEmail) || (stage === "2" && status === "PENDING_INVESTIGATE" &&  sdInfo != null && sdInfo.Email == context.pageContext.legacyPageContext.userEmail && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) {
         return true;
     }
     return false;

@@ -132,6 +132,9 @@ interface ISpecialIncidentReportAllowanceStates {
     affectedMedicalRecord: string;
     affectedDetail: string;
     affectedFollowUp: string;
+    sdDate:Date;
+    sdName:string;
+    sdJobTitle:string;
 
 }
 
@@ -142,6 +145,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         id: context.pageContext.legacyPageContext.userId,
     }
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD();
+    const [sdInfo, setSDEmail, spSdInfo] = useUserInfoAD();
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [incidentTime, setIncidentTime] = useState(new Date());
     const [reportDate, setReportDate] = useState(new Date());
@@ -270,7 +274,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         reporterJobTitle:"",
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
-        unusalIncident: ""
+        unusalIncident: "",
+        sdDate:null,
+        sdName:"",
+        sdJobTitle:""
     });
 
     useEffect(() => {
@@ -288,6 +295,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             setIncidentTime(new Date(formData.IncidentTime));
             if (formData.Author) {
                 setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            }
+            if (formData.SD) {
+                setSDEmail([{ secondaryText: formData.SD.EMail, id: formData.SD.Id }]);
             }
             setReportDate(new Date(formData.Created));
             if (formData.GuardianStaff) {
@@ -405,7 +415,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 reporterDate:formData.Created,
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
-                unusalIncident: formData.UnusalIncident
+                unusalIncident: formData.UnusalIncident,
+                sdDate: formData.sdDate ? new Date(formData.sdDate) : null
             })
 
         
@@ -440,6 +451,15 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         }
     }, [reporter])
 
+    useEffect(() => {
+        if (sdInfo) {
+            debugger
+            setForm({ ...form, 
+                sdName: sdInfo.displayName,
+                sdJobTitle: sdInfo.jobTitle
+            });
+        }
+    }, [sdInfo])
     console.log('index :', index);
     return (
         <>
@@ -598,7 +618,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td>
                                         <div style={{paddingLeft:'150px'}}>(報案編號
                                             <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.policeReportNumber != null ? form.policeReportNumber: '______________'})
+                                            {form.policeReportNumber != null ? form.policeReportNumber: ''})
                                             </span>
                                         </div>
                                     </td>
@@ -749,38 +769,56 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td style={{width:'100px'}}>
-                                    填報人簽署 : 
-                                    </td>
-                                    <td style={{width:'300px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-
-                                        </div>
-                                    </td>
-                                    <td style={{width:'100px'}}>
-                                    填報人職位 : 
-                                    </td>
-                                    <td style={{width:'300px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterJobTitle}
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:'100px'}}>
                                     填報人姓名 : 
                                     </td>
-                                    <td style={{width:'300px'}}>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
                                         {form.reporterName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
-                                    填報日期 : 
+                                    批簽人姓名 : 
                                     </td>
-                                    <td style={{width:'300px'}}>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {form.sdName}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{width:'100px'}}>
+                                    填報人職位 : 
+                                    </td>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {form.reporterJobTitle}
+                                        </div>
+                                    </td>
+                                    <td style={{width:'100px'}}>
+                                    批簽人職位 : 
+                                    </td>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {form.sdJobTitle}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{width:'100px'}}>
+                                    日期 : 
+                                    </td>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                         </div>
+                                    </td>
+                                    <td style={{width:'100px'}}>
+                                    日期 : 
+                                    </td>
+                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {form.sdDate != null && new Date(form.sdDate).getFullYear() + `-` +(`0`+(new Date(form.sdDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.sdDate).getDate()).slice(-2)}
+                                    </div>
                                     </td>
                                 </tr>
                             </table>
