@@ -13,7 +13,7 @@ import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByPar
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { faPager } from '@fortawesome/free-solid-svg-icons';
-import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense } from '../../api/Notification';
+import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense, notifyIncidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 
 interface IIncidentFollowUpFormProps {
@@ -54,11 +54,11 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,
     });
-    const [incidentDatetime, setIncidentDatetime] = useState(new Date());
+    const [incidentDatetime, setIncidentDatetime] = useState(null);
     const [insuranceCaseNo, setInsuranceCaseNo] = useState("");
     const [caseNo, setCaseNo] = useState("");
-    const [smDate, setSmDate] = useState(new Date());
-    const [sdDate, setSdDate] = useState(new Date());
+    const [smDate, setSmDate] = useState(null);
+    const [sdDate, setSdDate] = useState(null);
     const [sdComment, setSdComment] = useState("");
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
@@ -381,7 +381,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     "SDComment": sdComment,
                 }).then((updateOtherIncidentReportRes) => {
                     console.log(updateOtherIncidentReportRes)
-
+                    notifyIncidentReject(context, parentFormData.Id, 2, workflow);
                     postLog({
                         AccidentTime: parentFormData.IncidentTime,
                         Action: "拒絕",

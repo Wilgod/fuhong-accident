@@ -22,7 +22,7 @@ import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { IAttachmentFileInfo } from '@pnp/sp/attachments';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
-import { notifySpecialIncidentLicense } from '../../../api/Notification';
+import { notifySpecialIncidentLicense, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import { generate } from '../../../api/SpecialIncidentReportLicensePrint';
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow}: ISpecialIncidentReportLicenseProps) {
@@ -111,14 +111,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
 
 
-    const [incidentTime, setIncidentTime] = useState(new Date());
+    const [incidentTime, setIncidentTime] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
 
 
-    const [reportDate, setReportDate] = useState(new Date());
-    const [smDate, setSmDate] = useState(new Date());
+    const [reportDate, setReportDate] = useState(null);
+    const [smDate, setSmDate] = useState(null);
     const [smComment, setSmComment] = useState("");
-    const [sdDate, setSdDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(null);
     const [sdComment, setSdComment] = useState("");
 
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
@@ -654,7 +654,6 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         ServiceUnit: serviceLocation,
                         Report: "特別事故報告(牌照事務處)"
                     }).catch(console.error);
-
                     notifySpecialIncidentLicense(context, formData.Id, 2, speicalIncidentReportWorkflow);
                     formSubmittedHandler();
                 });
@@ -671,7 +670,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
                 console.log(res);
-
+                notifyIncidentReject(context, formData.Id, 1,speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",
@@ -752,7 +751,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
-
+                notifyIncidentReject(context, formData.Id, 1,speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",

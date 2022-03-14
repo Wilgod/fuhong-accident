@@ -35,7 +35,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../../api/Notification';
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
 
 if (document.getElementById('workbenchPageContent') != null) {
@@ -50,11 +50,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
-    const [accidentTime, setAccidentTime] = useState(new Date()); // AccidentTime
-    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date()); // CCTV record receive date
-    const [medicalArrangementDate, setMedicalArrangementDate] = useState(new Date());
-    const [policeDate, setPoliceDate] = useState(new Date());
-    const [contactFamilyDate, setContactFamilyDate] = useState(new Date());
+    const [accidentTime, setAccidentTime] = useState(null); // AccidentTime
+    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(null); // CCTV record receive date
+    const [medicalArrangementDate, setMedicalArrangementDate] = useState(null);
+    const [policeDate, setPoliceDate] = useState(null);
+    const [contactFamilyDate, setContactFamilyDate] = useState(null);
     const [contactStaff, setContactStaff, contactStaffPickerInfo] = useUserInfoAD();//負責通知家屬的職員姓名
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     // const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
@@ -125,12 +125,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         behaviorOtherRemark: "",
     });
     const [sdComment, setSdComment] = useState("");
-    const [sdDate, setSdDate] = useState(new Date());
+    const [sdDate, setSdDate] = useState(null);
     const [sptComment, setSptComment] = useState("");
-    const [sptDate, setSptDate] = useState(new Date());
+    const [sptDate, setSptDate] = useState(null);
     const [smComment, setSmComment] = useState("");
-    const [smDate, setSmDate] = useState(new Date());
-    const [reportedDate, setReportedDate] = useState(new Date());
+    const [smDate, setSmDate] = useState(null);
+    const [reportedDate, setReportedDate] = useState(null);
     const [error, setError] = useState<IErrorFields>({});
 
     const CURRENT_USER: IUser = {
@@ -856,6 +856,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             };
             updateServiceUserAccidentById(formId, body).then((res) => {
                 console.log(res);
+                notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                 postLog({
                     AccidentTime: accidentTime.toISOString(),
                     Action: "拒絕",
@@ -947,7 +948,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             updateServiceUserAccidentById(formData.Id, body).then((res) => {
                 console.log(res);
                 // Trigger notification workflow
-
+                
                 postLog({
                     AccidentTime: accidentTime.toISOString(),
                     Action: "拒絕",
@@ -957,7 +958,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     ServiceUnit: serviceLocation,
                     RecordId: formData.Id
                 }).catch(console.error);
-
+                notifyServiceUserAccidentReject(context, formData.Id, 1, serviceUserAccidentWorkflow);
                 formSubmittedHandler();
             }).catch(console.error);
         }

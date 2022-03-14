@@ -189,7 +189,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     服務使用者意外
                   </div>
                 </li>
-                <li>
+                {/*<li>
                   <div className="" onClick={(event) => this.screenNavHandler(event, "CS_PUI")}>
                     外界人士意外
                   </div>
@@ -208,7 +208,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   <div className="" onClick={(event) => this.screenNavHandler(event, "CS_OIN")}>
                     其他事故
                   </div>
-                </li>
+                </li>*/}
               </ul>
             }
           </div>
@@ -603,11 +603,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           <div className="container-fluid">
             <div className="row no-gutters">
               {/* Navigation menu */}
-              <div className="col-12 col-md-3 col-lg-2" style={{ backgroundColor: "#F7CD70", minHeight: 500, padding: "10px 0px" }}>
+              <div className="col-sm-12 col-md-3 col-lg-2" style={{ backgroundColor: "#F7CD70", minHeight: 500, padding: "10px 0px" }}>
                 {navigationMenu()}
               </div>
               {/* Main Content */}
-              <div className="col" >
+              <div className="col-sm-12 col-md-9 col-lg-10" >
                 <div className={`${styles.systemTitle}`}>
                   意外及事故呈報系統
                   <div style={{ float: "right" }}>

@@ -18,7 +18,7 @@ import { adminUpdateInsuranceNumber, formInitBySm, formInitial, pendingSdApprove
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
-import { notifyOtherIncident } from '../../../api/Notification';
+import { notifyOtherIncident, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl,workflow }: IOtherIncidentReportProps) {
@@ -62,16 +62,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         preparationStaffPhone: ""
     });
 
-    const [incidentTime, setIncidentTime] = useState(new Date());
-    const [policeDatetime, setPoliceDatetime] = useState(new Date());
-    const [guardianDatetime, setGuardianDatetime] = useState(new Date());
+    const [incidentTime, setIncidentTime] = useState(null);
+    const [policeDatetime, setPoliceDatetime] = useState(null);
+    const [guardianDatetime, setGuardianDatetime] = useState(null);
     //IncidentTime
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [serviceLocation, setServiceLocation] = useState("");
-    const [preparationDate, setPreparationDate] = useState(new Date());
-    const [smDate, setSmDate] = useState(new Date());
-    const [sdDate, setSdDate] = useState(new Date());
+    const [preparationDate, setPreparationDate] = useState(null);
+    const [smDate, setSmDate] = useState(null);
+    const [sdDate, setSdDate] = useState(null);
     const [sdPhone, setSdPhone] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [smComment, setSmComment] = useState("");
@@ -530,7 +530,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 "SMDate": new Date().toISOString(),
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
-
+                notifyIncidentReject(context, formData.Id, 1, workflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",
@@ -613,7 +613,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 ...body,
                 "Status": "SM_VOID"
             }).then((res) => {
-
+                notifyIncidentReject(context, formData.Id, 1, workflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",

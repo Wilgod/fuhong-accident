@@ -18,7 +18,7 @@ import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
-import { notifySpecialIncidentAllowance } from '../../../api/Notification';
+import { notifySpecialIncidentAllowance,notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
 
@@ -84,11 +84,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         person: ""
     });
     const [reporterPhone, setReporterPhone] = useState("");
-    const [incidentTime, setIncidentTime] = useState(new Date());
-    const [reportDate, setReportDate] = useState(new Date());
-    const [date, setDate] = useState(new Date());
-    const [smDate, setSmDate] = useState(new Date());
-    const [sdDate, setSdDate] = useState(new Date());
+    const [incidentTime, setIncidentTime] = useState(null);
+    const [reportDate, setReportDate] = useState(null);
+    const [date, setDate] = useState(null);
+    const [smDate, setSmDate] = useState(null);
+    const [sdDate, setSdDate] = useState(null);
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [sdPhoneNo, setSdPhoneNo] = useState("");
@@ -98,8 +98,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
 
-    const [policeDatetime, setPoliceDatetime] = useState(new Date());
-    const [guardianDatetime, setGuardianDatetime] = useState(new Date());
+    const [policeDatetime, setPoliceDatetime] = useState(null);
+    const [guardianDatetime, setGuardianDatetime] = useState(null);
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -640,7 +640,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Status": "SM_VOID"
             }).then((res) => {
                 console.log(res);
-
+                
+                notifyIncidentReject(context, formData.Id, 1,speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",
@@ -734,7 +735,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Status": "PENDING_SM_APPROVE"
             }).then((res) => {
                 console.log(res);
-
+                notifyIncidentReject(context, formData.Id, 1,speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "拒絕",

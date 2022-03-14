@@ -15,7 +15,7 @@ import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
-import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../api/Notification';
+import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment,notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 
 
@@ -64,15 +64,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
     const [investigator, setInvestigator] = useUserInfoAD();
     const [getCurrentUser, setCurrentUser] = useState(context.pageContext.user.email);
-    const [sptDate, setSptDate] = useState(new Date());
-    const [smDate, setSmDate] = useState(new Date());
+    const [sptDate, setSptDate] = useState(null);
+    const [smDate, setSmDate] = useState(null);
     const [sptComment, setSptComment] = useState("");
     const [smComment, setSmComment] = useState("");
 
 
-    const [accidentTime, setAccidentTime] = useState(new Date());
-    const [estimatedFinishDate, setEstimatedFinishDate] = useState(new Date());
-    const [formReceivedDate, setFormReceivedDate] = useState(new Date());
+    const [accidentTime, setAccidentTime] = useState(null);
+    const [estimatedFinishDate, setEstimatedFinishDate] = useState(null);
+    const [formReceivedDate, setFormReceivedDate] = useState(null);
     const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
 
@@ -370,7 +370,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                     if (formType === "SERVICE_USER") {
                         updateServiceUserAccidentById(parentFormData.Id, body).then((serviceUserAccidentFormResponse) => {
-
+                            notifyServiceUserAccidentReject(context, parentFormData.Id, 2, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "高級物理治療師拒絕",
@@ -385,7 +385,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         }).catch(console.error);
                     } else {
                         updateOutsiderAccidentFormById(parentFormData.Id, body).then((outsiderAccidentFormResponse) => {
-
+                            notifyOutsiderAccidentReject(context, parentFormData.Id, 2, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "高級物理治療師拒絕",

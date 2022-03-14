@@ -1,19 +1,8 @@
 import { SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, HttpClient, MSGraphClient, AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-// form 19
-const SERVICE_USER_ACCIDENT = "https://prod-26.southeastasia.logic.azure.com:443/workflows/2b5b78b3a41d4e2e8344861a660b75f6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=0dZlZlIyRLgUivA0CjR3WmEDZwYHl4OWS8xtSJMKvwU";
-// form 22
-const OUTSIDER_ACCIDENT = "https://prod-25.southeastasia.logic.azure.com:443/workflows/0682e9e95a7e4ae6bcaa41bdf8685cb2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=N6HKhU9dIoy2296cMNgKrT1C_MO8V7Ypi-QEthikYpg";
-// form 24
-const SPEICAL_INCIDENT_REPORT_ALLOWANCE = "https://prod-30.southeastasia.logic.azure.com:443/workflows/8e7d363bd409461faaee8c5c2a85200f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LBlIfgLzoFOF8bTOHP23qs4MhKTKDktJ2jk2Q3N_q4U";
-// form 25
-const SPEICAL_INCIDENT_REPORT_LICENSE = "https://prod-22.southeastasia.logic.azure.com:443/workflows/b7f9ae2e910f4f928b6d6df3f9635110/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=06CWh3aLcZ6W4Mr459u1un2zk6ekx3XLVyFWIfcEZ2k";
-// form 23 
-const OTHER_INCIDENT_REPORT = "https://prod-29.southeastasia.logic.azure.com:443/workflows/b63eae455f434a2c83dd0371ea4aa083/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=BuDseSvFRuKDCijnsGD3xv97UHx77dtkVeYeKLfRNkE";
-
 
 //Form 19 Update User
-export async function notifyServiceUserAccidentUpdate(context: WebPartContext, workflowUrl:string,serviceUnit:string, groupBy, userInfo) {
+export async function notifyUpdate(context: WebPartContext, workflowUrl:string,serviceUnit:string, groupBy, userInfo) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -37,7 +26,7 @@ export async function notifyServiceUserAccidentUpdate(context: WebPartContext, w
 }
 
 //Form 19 Update User Investigator
-export async function notifyServiceUserAccidentInvestigatorUpdate(context: WebPartContext, workflowUrl:string,serviceUnit:string, groupBy, userInfo) {
+export async function notifyInvestigatorUpdate(context: WebPartContext, workflowUrl:string,serviceUnit:string, groupBy, userInfo) {
     try {
         const CONFIG: ISPHttpClientOptions = {
             headers: {
@@ -74,7 +63,8 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
                 "stage": stage,
-                "comment":""
+                "comment":"",
+                "approval":""
             })
         };
         await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
@@ -83,6 +73,29 @@ export async function notifyServiceUserAccident(context: WebPartContext, formId:
         throw new Error("notifyServiceUserAccident error");
     }
 }
+
+export async function notifyServiceUserAccidentReject(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "id": formId,
+                "stage": stage,
+                "comment":"",
+                "approval":"Reject"
+            })
+        };
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyServiceUserAccident error");
+    }
+}
+
 //Form 19
 export async function notifyServiceUserAccidentSMSDComment(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
     try {
@@ -95,7 +108,8 @@ export async function notifyServiceUserAccidentSMSDComment(context: WebPartConte
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
                 "stage": stage,
-                "comment": "Comment"
+                "comment": "Comment",
+                "approval":""
             })
         };
         await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
@@ -117,7 +131,9 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
-                "stage": stage
+                "stage": stage,
+                "comment": "",
+                "approval":""
             })
         };
         await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
@@ -125,6 +141,51 @@ export async function notifyOutsiderAccident(context: WebPartContext, formId: nu
     } catch (err) {
         console.error(err);
         throw new Error("notifyOutsiderAccident error");
+    }
+}
+
+export async function notifyOutsiderAccidentSMSDComment(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "id": formId,
+                "stage": stage,
+                "comment": "Comment",
+                "approval":""
+            })
+        };
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+        //await context.httpClient.post(OUTSIDER_ACCIDENT, SPHttpClient.configurations.v1, CONFIG);
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyOutsiderAccident error");
+    }
+}
+
+export async function notifyOutsiderAccidentReject(context: WebPartContext, formId: number, stage: number, workflowUrl:string) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "id": formId,
+                "stage": stage,
+                "comment":"",
+                "approval":"Reject"
+            })
+        };
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyServiceUserAccident error");
     }
 }
 
@@ -139,7 +200,8 @@ export async function notifySpecialIncidentLicense(context: WebPartContext, form
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
-                "stage": stage
+                "stage": stage,
+                "approval":""
             })
         };
         //await context.httpClient.post(SPEICAL_INCIDENT_REPORT_LICENSE, SPHttpClient.configurations.v1, CONFIG);
@@ -160,7 +222,8 @@ export async function notifySpecialIncidentAllowance(context: WebPartContext, fo
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
-                "stage": stage
+                "stage": stage,
+                "approval":""
             })
         };
         //await context.httpClient.post(SPEICAL_INCIDENT_REPORT_ALLOWANCE, SPHttpClient.configurations.v1, CONFIG);
@@ -182,7 +245,30 @@ export async function notifyOtherIncident(context: WebPartContext, formId: numbe
             }, body: JSON.stringify({
                 __metadata: { type: 'SP.Data.TestListItem' },
                 "id": formId,
-                "stage": stage
+                "stage": stage,
+                "approval":""
+            })
+        };
+        //await context.httpClient.post(OTHER_INCIDENT_REPORT, SPHttpClient.configurations.v1, CONFIG);
+        await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG);
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyOtherIncident error");
+    }
+}
+// form 23, 24, 25 Reject
+export async function notifyIncidentReject(context: WebPartContext, formId: number, stage: number,workflowUrl:string) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "id": formId,
+                "stage": stage,
+                "approval":"Reject"
             })
         };
         //await context.httpClient.post(OTHER_INCIDENT_REPORT, SPHttpClient.configurations.v1, CONFIG);

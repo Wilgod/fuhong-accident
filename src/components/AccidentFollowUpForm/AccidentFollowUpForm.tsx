@@ -17,7 +17,7 @@ import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, u
 import { addMonths } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
-import { notifyOutsiderAccident, notifyServiceUserAccident,notifyServiceUserAccidentSMSDComment } from '../../api/Notification';
+import { notifyOutsiderAccident, notifyServiceUserAccident,notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
@@ -30,14 +30,14 @@ const formTypeParser = (formType: string, additonalString: string) => {
 }
 
 export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected }: IAccidentFollowUpFormProps) {
-    const [smDate, setSmDate] = useState(new Date()); // 高級服務經理
-    const [sdDate, setSdDate] = useState(new Date()); // 服務總監
-    const [sptDate, setSptDate] = useState(new Date()); // 高級物理治療師
+    const [smDate, setSmDate] = useState(null); // 高級服務經理
+    const [sdDate, setSdDate] = useState(null); // 服務總監
+    const [sptDate, setSptDate] = useState(null); // 高級物理治療師
 
     const [sptComment, setSptComment] = useState("");
     const [sdComment, setSdComment] = useState("");
 
-    const [accidentTime, setAccidentTime] = useState(new Date());
+    const [accidentTime, setAccidentTime] = useState(null);
 
     const [serviceUnitDetail, setServiceUnitByShortForm] = useServiceUnitByShortForm();
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
@@ -404,7 +404,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 if (formType === "SERVICE_USER") {
                     updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SM_FILL_IN" }).then(() => {
                         // trigger notification workflow
-
+                        notifyServiceUserAccidentReject(context, parentFormData.Id, 3, workflow);
                         postLog({
                             AccidentTime: parentFormData.AccidentTime,
                             Action: "拒絕",
@@ -419,7 +419,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     }).catch(console.error);
                 } else if (formType === "OUTSIDERS") {
                     updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SM_FILL_IN" }).then(() => {
-
+                        notifyOutsiderAccidentReject(context, parentFormData.Id, 3, workflow);
                         postLog({
                             AccidentTime: parentFormData.AccidentTime,
                             Action: "拒絕",
@@ -584,12 +584,21 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
                     if (formTwentyOneData.SM && formTwentyOneData.SM.EMail) {
                         setServiceManagerEmail(formTwentyOneData.SM.EMail);
+                        if (formTwentyOneData.SMDate != null) {
+                            setSmDate(new Date(formTwentyOneData.SMDate))
+                        }
                     }
                     if (formTwentyOneData.SD && formTwentyOneData.SD.EMail) {
                         setServiceDirectorEmail(formTwentyOneData.SD.EMail);
+                        if (formTwentyOneData.SDDate != null) {
+                            setSdDate(new Date(formTwentyOneData.SDDate))
+                        }
                     }
                     if (formTwentyOneData.SPT && formTwentyOneData.SPT.EMail) {
                         setSPhysicalTherapyEmail(formTwentyOneData.SPT.EMail);
+                        if (formTwentyOneData.SPTDate != null) {
+                            setSptDate(new Date(formTwentyOneData.SPTDate))
+                        }
                     }
                     
                     // setIsSDApproved(accidentFollowUpFormRepseonseRes[0].SDApproved === true ? true : false);
@@ -858,23 +867,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            {/* <PeoplePicker
-                                context={context}
-                                personSelectionLimit={1}
-                                showtooltip={false}
-                                principalTypes={[PrincipalType.User]}
-                                resolveDelay={1000}
-                                selectedItems={setSmPicker}
-                                defaultSelectedUsers={smAD && [smAD.mail]}
-                            /> */}
-                            {/* <select className="form-control" value={serviceManagerEmail} onChange={(event) => setServiceManagerEmail(event.target.value)}>
-                                <option>請選擇服務經理</option>
-                                {
-                                    smList.map((sm) => {
-                                        return <option value={sm.mail}>{sm.displayName}</option>
-                                    })
-                                }
-                            </select> */}
                             <input type="text" className="form-control" readOnly value={`${serviceManager && serviceManager.Title ? `${serviceManager.Title}` : ""}`} disabled={completed || (!stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))} />
                         </div>
                         {/* 日期*/}

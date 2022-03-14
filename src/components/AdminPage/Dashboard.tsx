@@ -5,7 +5,6 @@ import useServiceUnit2 from '../../hooks/useServiceUser2';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import * as moment from 'moment';
-import {getAllServiceUserAccident, getAllAccidentReportForm,  getAllAccidentFollowUpForm} from '../../api/FetchFuHongList';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +14,8 @@ import useDepartmentMangers from '../../hooks/useDepartmentManagers';
 import useUserInfo from '../../hooks/useUserInfo';
 import useSPT from '../../hooks/useSPT';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
-import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById } from '../../api/PostFuHongList';
-import { notifyServiceUserAccidentUpdate, notifyServiceUserAccidentInvestigatorUpdate } from '../../api/Notification';
+import { updateAccidentReportFormById, updateServiceUserAccidentById, updateAccidentFollowUpRepotFormById, updateOutsiderAccidentFormById, updateOtherIncidentReport, updateSpecialIncidentReportLicense, updateSpecialIncidentReportAllowance, updateIncidentFollowUpForm} from '../../api/PostFuHongList';
+import { notifyUpdate, notifyInvestigatorUpdate } from '../../api/Notification';
 import useUserInfoAD from '../../hooks/useUserInfoAD';
 interface IDashboard {
     item: any;
@@ -26,7 +25,8 @@ interface IDashboard {
     serviceUnit:string;
     siteCollectionUrl:string;
     getAllData:any;
-    workflow:string
+    workflow:string;
+    type:string;
 }
 
 const customStyles = {
@@ -43,7 +43,7 @@ const customStyles = {
       animation: 'fadeMe 0.5s'
     }
   };
-export default function Dashboard({ context, siteCollectionUrl, serviceUnit, item,index, position,getAllData, workflow }: IDashboard) {
+export default function Dashboard({ context, siteCollectionUrl, type, serviceUnit, item,index, position,getAllData, workflow }: IDashboard) {
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD();
     const column = [
         {
@@ -89,7 +89,6 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     function smFormatter(cell,rowIndex){
-        //debugger;
 		let div = [];
         if (cell != undefined) {
             div.push(<div >{cell.Title}</div>);
@@ -98,7 +97,6 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     }
 
     function sdFormatter(cell,rowIndex){
-        //debugger;
 		let div = [];
         if (cell != undefined) {
             div.push(<div >{cell.Title}</div>);
@@ -107,7 +105,6 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
     }
 
     function sptFormatter(cell,rowIndex){
-        //debugger;
 		let div = [];
         if (cell != undefined) {
             div.push(<div >{cell.Title}</div>);
@@ -151,7 +148,6 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
 		const ids = rows.map(r => r.ID);
         let newSelectedItemId = [];
         let newSelectedItem = [];
-        debugger
 		if (isSelect) {
 			for (let i=0; i<rows.length; i++) {
 				newSelectedItemId.push(rows[i].ID)
@@ -188,19 +184,43 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
         console.log('spSmInfo : ', spSmInfo)
         console.log('investigator : ', investigator)
         console.log('investigatorPickerInfo : ', investigatorPickerInfo)
-        debugger
         if (item.groupby == 'CurrentSM') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
-                    await updateServiceUserAccidentById(selected.Id, {
-                        "SMId": spSmInfo.Id
-                    });
+                    if (type =='ServiceUser') {
+                        await updateServiceUserAccidentById(selected.Id, {
+                            "SMId": spSmInfo.Id
+                        }); 
+                    } else if (type =='OutsiderAccident') {
+                        await updateOutsiderAccidentFormById(selected.Id, {
+                            "SMId": spSmInfo.Id
+                        }); 
+                    } else if (type =='SpecialIncidentReportLicense') {
+                        await updateSpecialIncidentReportLicense(selected.Id, {
+                            "SMId": spSmInfo.Id
+                        }); 
+                    } else if (type =='SpecialIncidentReportAllowance') {
+                        await updateSpecialIncidentReportAllowance(selected.Id, {
+                            "SMId": spSmInfo.Id
+                        }); 
+                    } else if (type =='OtherIncidentReport') {
+                        await updateOtherIncidentReport(selected.Id, {
+                            "SMId": spSmInfo.Id
+                        }); 
+                    }
+                    
                 } else if (selected.stage == '2') {
                     const arf = item.child.filter(item => item.Id == selected.Id);
                     if (arf.length > 0 ) {
-                        await updateAccidentReportFormById(arf[0].AccidentReportForm[0].Id, {
-                            "SMId": spSmInfo.Id
-                        });
+                        if (type =='ServiceUser' || type =='OutsiderAccident') {
+                            await updateAccidentReportFormById(arf[0].AccidentReportForm[0].Id, {
+                                "SMId": spSmInfo.Id
+                            });
+                        } else if (type =='SpecialIncidentReportLicense' || type =='SpecialIncidentReportAllowance' || type =='OtherIncidentReport') {
+                            await updateIncidentFollowUpForm(arf[0].AccidentReportForm[0].Id, {
+                                "SMId": spSmInfo.Id
+                            });
+                        }
                     }
                 } else if (selected.stage == '3') {
                     const afur = item.child.filter(item => item.Id == selected.Id);
@@ -210,17 +230,44 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                             "SMId": spSmInfo.Id
                         });
                     }
-                    
                 }
             }
-            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, smInfo);
-            debugger
+            let notif = await notifyUpdate(context, workflow, serviceUnit, item.groupby, smInfo);
+            
         } else if (item.groupby == 'CurrentSD') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
-                    await updateServiceUserAccidentById(selected.Id, {
-                        "SDId": spSdInfo.Id
-                    });
+                    if (type =='ServiceUser') {
+                        await updateServiceUserAccidentById(selected.Id, {
+                            "SDId": spSdInfo.Id
+                        }); 
+                    } else if (type =='OutsiderAccident') {
+                        await updateOutsiderAccidentFormById(selected.Id, {
+                            "SDId": spSdInfo.Id
+                        }); 
+                    } else if (type =='SpecialIncidentReportLicense') {
+                        await updateSpecialIncidentReportLicense(selected.Id, {
+                            "SDId": spSdInfo.Id
+                        }); 
+                    } else if (type =='SpecialIncidentReportAllowance') {
+                        await updateSpecialIncidentReportAllowance(selected.Id, {
+                            "SDId": spSdInfo.Id
+                        }); 
+                    } else if (type =='OtherIncidentReport') {
+                        await updateOtherIncidentReport(selected.Id, {
+                            "SDId": spSdInfo.Id
+                        }); 
+                    }
+                    
+                } else if (selected.stage == '2') { 
+                    const arf = item.child.filter(item => item.Id == selected.Id);
+                    if (arf.length > 0 ) {
+                        if (type =='SpecialIncidentReportLicense' || type =='SpecialIncidentReportAllowance' || type =='OtherIncidentReport') {
+                            await updateIncidentFollowUpForm(arf[0].AccidentReportForm[0].Id, {
+                                "SMId": spSmInfo.Id
+                            });
+                        }
+                    }
                 } else if (selected.stage == '3') {
                     const afur = item.child.filter(item => item.Id == selected.Id);
                     if (afur.length > 0 ) {
@@ -232,13 +279,19 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
-            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, spSdInfo);
+            let notif = await notifyUpdate(context, workflow, serviceUnit, item.groupby, spSdInfo);
         } else if (item.groupby == 'CurrentSPT') {
             for (let selected of selectedItem) {
                 if (selected.stage == '1') {
-                    await updateServiceUserAccidentById(selected.Id, {
-                        "SPTId": sPhysicalTherapy.Id
-                    });
+                    if (type =='ServiceUser') {
+                        await updateServiceUserAccidentById(selected.Id, {
+                            "SPTId": sPhysicalTherapy.Id
+                        }); 
+                    } else if (type =='OutsiderAccident') {
+                        await updateOutsiderAccidentFormById(selected.Id, {
+                            "SPTId": sPhysicalTherapy.Id
+                        }); 
+                    }
                 } else if (selected.stage == '3') {
                     const afur = item.child.filter(item => item.Id == selected.Id);
                     if (afur.length > 0 ) {
@@ -250,7 +303,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                     
                 }
             }
-            let notif = await notifyServiceUserAccidentUpdate(context, workflow, serviceUnit, item.groupby, sPhysicalTherapy);
+            let notif = await notifyUpdate(context, workflow, serviceUnit, item.groupby, sPhysicalTherapy);
         } else if (item.groupby == 'Investigator') {
             if (investigatorPickerInfo.length >0) {
                 for (let selected of selectedItem) {
@@ -266,8 +319,7 @@ export default function Dashboard({ context, siteCollectionUrl, serviceUnit, ite
                         });
                     }
                 }
-                debugger
-                let notif = await notifyServiceUserAccidentInvestigatorUpdate(context, workflow, serviceUnit, item.groupby, investigator);
+                let notif = await notifyInvestigatorUpdate(context, workflow, serviceUnit, item.groupby, investigator);
             }
             
         }

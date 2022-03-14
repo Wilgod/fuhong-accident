@@ -55,7 +55,7 @@ interface IFuHongOutsidersAccidentFormState {
   formTwentyOneDataSelected:number;
   outsiderAccidentWorkflow:string;
   indexTab:number;
-  
+  loading:boolean;
 }
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
@@ -82,7 +82,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       formTwentyOneDataPrint:[],
       formTwentyOneDataSelected:null,
       outsiderAccidentWorkflow:'',
-      indexTab:0
+      indexTab:0,
+      loading:true,
     }
   }
 
@@ -165,7 +166,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             }
           })
         }).catch(console.error)
-
+        this.setState({ loading: false });
         this.checkRole();// Testing Only 
       }).catch(console.error);
     }).catch(console.error);
@@ -177,11 +178,14 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getOutsiderAccidentById(formId);
-        const author = await getUserAdByGraph(data.Author.EMail);
-        const investigator = data.InvestigatorId != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
+        //const author = await getUserAdByGraph(data.Author.EMail);
+        //const investigator = data.InvestigatorId != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
         debugger
         //data["Author"] =author;
         //data["InvestigatorAD"] =investigator;
+        data["ServiceUserUnit"] = data["ServiceLocation"];
+        data["ServiceUserNameCN"] = data["ServiceUserNameTC"];
+        
         let stage = parseInt(data.Stage)-1;
         let formTwentyData:any = [];
         let formTwentyOneData:any = [];
@@ -197,6 +201,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           formTwentyOneDataSelected = formTwentyOneData.Id
         }
         //this.setState({ outsiderAccidentFormData: data, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
+        debugger
         if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
           this.setState({ outsiderAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint });
         } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
@@ -240,7 +245,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
-
+    console.log('indexTab', this.state.indexTab)
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
@@ -250,6 +255,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
+              !this.state.loading ?
               <div className={styles.eform}>
                   {this.state.outsiderAccidentFormData != null &&
                     <div className="row" style={{float:'right'}}>
@@ -273,6 +279,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   </TabPanel>
                 </Tabs>
               </div>
+              :
+              <div></div>
           }
         </div>
       </div>

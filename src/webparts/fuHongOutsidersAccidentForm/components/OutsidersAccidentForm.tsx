@@ -25,9 +25,8 @@ import useSPT from '../../../hooks/useSPT';
 import { formInitBySm, formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
-import { notifyOutsiderAccident } from '../../../api/Notification';
+import { notifyOutsiderAccident, notifyOutsiderAccidentSMSDComment, notifyOutsiderAccidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
-import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment } from '../../../api/Notification';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
@@ -52,15 +51,15 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
-    const [reportDate, setReportDate] = useState(new Date());
-    const [accidentTime, setAccidentTime] = useState(new Date());
-    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(new Date());
-    const [hospitalArriveTime, setHospitalArriveTime] = useState(new Date());
-    const [hospitalLeaveTime, setHospitalLeaveTime] = useState(new Date());
-    const [policeDatetime, setPoliceDatetime] = useState(new Date());
-    const [smDate, setSmDate] = useState(new Date());
-    const [sdDate, setSdDate] = useState(new Date());
-    const [sptDate, setSptDate] = useState(new Date());
+    const [reportDate, setReportDate] = useState(null);
+    const [accidentTime, setAccidentTime] = useState(null);
+    const [cctvRecordReceiveDate, setCctvRecordReceiveDate] = useState(null);
+    const [hospitalArriveTime, setHospitalArriveTime] = useState(null);
+    const [hospitalLeaveTime, setHospitalLeaveTime] = useState(null);
+    const [policeDatetime, setPoliceDatetime] = useState(null);
+    const [smDate, setSmDate] = useState(null);
+    const [sdDate, setSdDate] = useState(null);
+    const [sptDate, setSptDate] = useState(null);
     const [smComment, setSmComment] = useState("");
     const [sdComment, setSdComment] = useState("");
     const [sptComment, setSptComment] = useState("");
@@ -72,7 +71,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [sptList] = useSPT(siteCollectionUrl);
-    const [familyContactDate, setFamilyContactDate] = useState(new Date());
+    const [familyContactDate, setFamilyContactDate] = useState(null);
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
     const [uploadedPhotoRecordFiles, setUploadedPhotoRecordFiles] = useState([]);
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
@@ -396,7 +395,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 // Update form to stage 1-2
                 // Trigger notification workflow
                 console.log(res);
-
+                notifyOutsiderAccidentSMSDComment(context, formData.Id, 1, workflow);
                 postLog({
                     AccidentTime: accidentTime.toISOString(),
                     Action: "評語",
@@ -669,7 +668,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 "Status": "SM_VOID"
             };
             updateOutsiderAccidentFormById(formId, body).then(() => {
-
+                notifyOutsiderAccident(context, formData.Id, 1, workflow);
                 postLog({
                     AccidentTime: formData.AccidentTime,
                     Action: "拒絕",
@@ -770,7 +769,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     ServiceUnit: formData.ServiceLocation,
                     RecordId: formData.Id
                 }).catch(console.error);
-
+                notifyOutsiderAccidentReject(context, formData.Id, 1, workflow);
                 formSubmittedHandler();
             }).catch(console.error);
         }
