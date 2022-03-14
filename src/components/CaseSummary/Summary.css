@@ -1,0 +1,6 @@
+.react-bootstrap-table {
+    overflow: auto;
+    display: block;
+    table-layout: auto;
+    width:100%
+}
