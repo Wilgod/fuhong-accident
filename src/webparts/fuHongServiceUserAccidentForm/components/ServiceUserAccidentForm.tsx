@@ -631,7 +631,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
             updateServiceUserAccidentById(formId, {
                 "SDComment": sdComment,
-                "SDDate": sdDate.toISOString(),
+                "SDDate": new Date().toISOString(),
             }).then((res) => {
                 // Update form to stage 1-2
                 // Trigger notification workflow
@@ -820,7 +820,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 ...body,
                 "SMApproved": true,
                 "SMComment": smComment,
-                "SMDate": smDate.toISOString(),
+                "SMDate": new Date().toISOString(),
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
                 "Status": "PENDING_SPT_APPROVE"
             }).then((res) => {
@@ -851,7 +851,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
-                "SMDate": smDate.toISOString(),
+                "SMDate": new Date().toISOString(),
                 "Status": "SM_VOID"
             };
             updateServiceUserAccidentById(formId, body).then((res) => {
@@ -880,7 +880,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     ...body,
                     "SPTApproved": true,
                     "SPTComment": sptComment,
-                    "SPTDate": sptDate.toISOString(),
+                    "SPTDate": new Date().toISOString(),
                     "InvestigatorId": investigatorPickerInfo[0].id,
                     "Status": "PENDING_INVESTIGATE",
                     "Stage": "2",

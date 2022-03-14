@@ -481,8 +481,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     "CaseNumber": caseNumber,
                     "SDId": spSdInfo.Id,
                     "SMId": spSmInfo.Id,
-                    "SDDate": sdDate.toISOString(),
-                    "SMDate": smDate.toISOString(),
+                    "SDDate": new Date().toISOString(),
+                    "SMDate": new Date().toISOString(),
                     "ServiceLocation": serviceLocation
                 }
 

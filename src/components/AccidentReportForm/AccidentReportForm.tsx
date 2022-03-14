@@ -176,7 +176,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 // SM
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
-                    "SMDate": smDate.toISOString()
+                    "SMDate": new Date().toISOString()
                 }).then((updateAccidentReportFormResponse) => {
 
                     if (formType === "SERVICE_USER") {

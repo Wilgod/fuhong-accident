@@ -390,7 +390,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
             updateOutsiderAccidentFormById(formId, {
                 "SDComment": sdComment,
-                "SDDate": sdDate.toISOString(),
+                "SDDate": new Date().toISOString(),
             }).then((res) => {
                 // Update form to stage 1-2
                 // Trigger notification workflow
@@ -633,7 +633,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 ...body,
                 "SMApproved": true,
                 "SMComment": smComment,
-                "SMDate": smDate.toISOString(),
+                "SMDate": new Date().toISOString(),
                 "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
                 "Status": "PENDING_SPT_APPROVE"
             }).then((res) => {
@@ -664,7 +664,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
-                "SMDate": smDate.toISOString(),
+                "SMDate": new Date().toISOString(),
                 "Status": "SM_VOID"
             };
             updateOutsiderAccidentFormById(formId, body).then(() => {
@@ -692,7 +692,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     ...body,
                     "SPTApproved": true,
                     "SPTComment": sptComment,
-                    "SPTDate": sptDate.toISOString(),
+                    "SPTDate": new Date().toISOString(),
                     "InvestigatorId": investigatorPickerInfo[0].id,
                     "Status": "PENDING_INVESTIGATE",
                     "Stage": "2",
