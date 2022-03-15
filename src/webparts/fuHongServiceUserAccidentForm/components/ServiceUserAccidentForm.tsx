@@ -1117,7 +1117,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     useEffect(() => {
         
         if (formData) {
-            loadData(formData);
+            setTimeout(() => {
+                loadData(formData);
+            },1000)
+            //loadData(formData);
         } else {
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);

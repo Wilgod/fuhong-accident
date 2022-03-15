@@ -796,7 +796,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             if (data.SPTDate) {
                 setSptDate(new Date(data.SPTDate));
             }
-
+            debugger
             setServiceUnit(data.ServiceUnit);
 
             setAccidentTime(new Date(data.AccidentTime));
@@ -814,25 +814,28 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }
 
             if (data.SPT) {
-                setSPhysicalTherapyEmail(data.SPT.EMail)
+                /*setTimeout(() => {
+                    setSPhysicalTherapyEmail(data.SPT.EMail);
+                },2000)*/
+                setSPhysicalTherapyEmail(data.SPT.EMail);
                 // setSptDate(new Date(data.SPTDate));
             }
 
             if (data.SM) {
-                setTimeout(() => {
+                /*setTimeout(() => {
                     setSMEmail(data.SM.EMail);
-                },2000)
-                
+                },2000)*/
+                setSMEmail(data.SM.EMail);
                 // setServiceManagerEmail(data.SM.EMail);
                 //    setSmDate(new Date(data.SMDate));
             }
 
             if (data.SD) {
                 debugger
-                setTimeout(() => {
+                /*setTimeout(() => {
                     setSDEmail(data.SD.EMail);
-                }, 2000);
-                
+                }, 2000);*/
+                setSDEmail(data.SD.EMail);
                 // setServiceDirectorEmail(data.SD.EMail);
                 //setSdDate(new Date(data.SDDate));
             }
@@ -899,7 +902,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     useEffect(() => {
         if (formData) {
-            loadData(formData);
+            setTimeout(() => {
+                loadData(formData);
+            },1000);
+            
         } else {
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
@@ -948,7 +954,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     useEffect(() => {
         if (Array.isArray(sptList) && sptList.length > 0) {
-            setSPhysicalTherapyEmail(sptList[0].mail);
+            //debugger
+            setSPhysicalTherapyEmail(sptList[0].Email);
         }
     }, [sptList]);
 
@@ -961,6 +968,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }
         }).catch(console.error);*/
     }, [patientServiceUnit])
+    console.log('pendingSptApproveForSPT : ',pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail))
     return (
         <>
             {isPrintMode && <Header displayName="外界人士意外填報表(一)" />}
