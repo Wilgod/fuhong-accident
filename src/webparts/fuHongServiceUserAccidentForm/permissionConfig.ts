@@ -56,8 +56,9 @@ export const pendingInvestigate = (context:any, currentUserRole: Role, status: s
 }
 
 //Stage 2 /PENDING_SPT_APPROVE
-export const stageTwoPendingSptApprove = (currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "2" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST) {
+export const stageTwoPendingSptApprove = (context:any, currentUserRole: Role, status: string, stage: string, formTwentyData:any): boolean => {
+    //console.log('stage', stage + ', status : ', status + ', userEmail :',context.pageContext.legacyPageContext.userEmail)
+    if (stage === "2" && status === "PENDING_SPT_APPROVE" && formTwentyData.SPT.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
