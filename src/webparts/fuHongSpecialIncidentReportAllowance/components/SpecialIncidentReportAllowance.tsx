@@ -28,6 +28,7 @@ const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍�
 export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, departmentList, speicalIncidentReportWorkflow }: ISpecialIncidentReportAllowanceProps) {
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formStatus, setFormStatus] = useState("");
     const [error, setError] = useState<IErrorFields>()
@@ -40,9 +41,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         serviceUserGenderOne: "",
         serviceUserGenderTwo: "",
         serviceUserGenderThree: "",
-        serviceUserAgeOne: 0,
-        serviceUserAgeTwo: 0,
-        serviceUserAgeThree: 0,
+        serviceUserAgeOne: null,
+        serviceUserAgeTwo: null,
+        serviceUserAgeThree: null,
         staffGenderOne: "",
         staffGenderTwo: "",
         staffGenderThree: "",
@@ -71,7 +72,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         abusive_negligent: false,
         abusive_other: false,
         abusive_sexual: false,
-        abusiveDescription: ""
+        abusiveDescription: "",
+        insuranceCaseNo:""
     });
 
     const [reportOrg, setReportOrg] = useState("");//機構名稱
@@ -260,8 +262,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
         //報警處理
         body["Police"] = form.police;
+        debugger
         if (form.police === true) {
-            body["PoliceDatetime"] = policeDatetime.toISOString();
+            if (policeDatetime) {
+                body["PoliceDatetime"] = policeDatetime.toISOString();
+            } else {
+                error["PoliceDatetime"] = true;
+            }
+            
             if (form.policeReportNumber) {
                 body["PoliceReportNumber"] = form.policeReportNumber;
             } else {
@@ -280,8 +288,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         //通知家人 / 親屬 / 監護人 / 保證人
         body["Guardian"] = form.guardian;
         if (form.guardian === true) {
-            body["GuardianDatetime"] = guardianDatetime.toISOString();
-
+            
+            if (guardianDatetime) {
+                body["GuardianDatetime"] = guardianDatetime.toISOString();
+            } else {
+                error["GuardianDatetime"] = true;
+            }
             if (form.guardianRelationship) {
                 body["GuardianRelationship"] = form.guardianRelationship;
             } else {
@@ -297,7 +309,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         } else if (form.guardian === false) {
             body["GuardianDescription"] = form.guardianDescription;
         } else if (form.guardian === undefined) {
-            error["form.guardian"] = true;
+            error["Guardian"] = true;
         }
 
         //醫療安排
@@ -348,7 +360,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             error['FollowUpPlan'] = true;
         }
 
-        body["ReporterPhone"] = reporterPhone;
+        body["SubmitDate"] = new Date();
 
 
 
@@ -361,7 +373,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
             setIncidentTime(new Date(formData.IncidentTime));
-
+            if (formData.SubmitDate) {
+                setReportDate(new Date(formData.SubmitDate));
+            }
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
             }
@@ -418,6 +432,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 immediateFollowUp: formData.ImmediateFollowUp,
                 incidentDescription: formData.IncidentDescription,
                 incidentLocation: formData.IncidentLocation,
+                insuranceCaseNo: formData.InsuranceCaseNo,
                 mediaReports: formData.MediaReports,
                 medicalArrangement: formData.MedicalArrangement,
                 medicalArrangmentDetail: formData.MedicalArrangmentDetail,
@@ -601,15 +616,24 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         window.open(path, "_self");
     }
 
-    // const adminSubmitHanlder = (event) => {
-    //     event.preventDefault();
-    //     updateSpecialIncidentReportAllowance(formData.Id, {
-    //         "InsuranceCaseNo": form.insuranceCaseNo
-    //     }).then(res => {
-    //         console.log(res);
-    //         formSubmittedHandler();
-    //     }).catch(console.error);
-    // }
+    const adminSubmitHanlder = (event) => {
+         event.preventDefault();
+         updateSpecialIncidentReportAllowance(formData.Id, {
+             "InsuranceCaseNo": form.insuranceCaseNo
+         }).then(res => {
+             console.log(res);
+             postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "更新",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SID",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(津貼科)"
+            }).catch(console.error);
+             formSubmittedHandler();
+         }).catch(console.error);
+     }
 
     const smApproveHandler = (event) => {
         event.preventDefault();
@@ -786,8 +810,23 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
 
     useEffect(() => {
+        debugger
         if (reporter && reporter.mobilePhone) {
             setReporterPhone(reporter.mobilePhone || "");
+            
+        }
+        if (reporter) {
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                }
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
         }
     }, [reporter])
 
@@ -949,6 +988,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-2">
+                        {/* Insurance */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
+                        <div className="col-12 col-md-4">
+                            <input type="text" className="form-control" value={form.insuranceCaseNo} name="insuranceCaseNo" onChange={inputFieldHandler}
+                                        disabled={!adminUpdateInsuranceNumber(currentUserRole, formStatus)} />
+                        </div>
+
+                    </div>
+                    <div className="form-row mb-2">
                         {/* 事故性質 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>機構名稱</label>
                         <div className="col-12 col-md-4">
@@ -993,9 +1041,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生日期和時間</label>
-                        <div className={`col-12 col-md-4 ${(error && error['IncidentTime'] ) ? styles.divInvalid: ""}`} > 
+                        <div className={`col-12 col-md-4`} > 
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error &&error['IncidentTime'] ) ? "is-invalid": ""}`}
                                 selected={incidentTime}
                                 onChange={(date) => setIncidentTime(date)}
                                 showTimeSelect
@@ -1009,7 +1057,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生地點</label>
                         <div className="col">
-                            <input type="text" className="form-control" name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler}
+                            <input type="text" className={`form-control  ${(error &&error['IncidentTime'] ) ? "is-invalid": ""}`} name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
@@ -1121,7 +1169,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故被傳媒報導</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['MediaReports'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" id="media-reported-true" onClick={() => setForm({ ...form, mediaReports: true })} checked={form.mediaReports === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1150,10 +1198,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <h5>有關服務使用者的資料 (如適用)</h5>
                         </div>
                     </div>
-                    <div className="form-row mb-2">
+                    <div className={`form-row mb-2 ${(error && (error['ServiceUserGenderOne'] || error['ServiceUserAgeOne'])) ? styles.divInvalid: ""}`}>
                         <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 服務使用者 (一)<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
-                        <div className="col-12 col-md-4">
+                        <div className={`col-12 col-md-4`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" id="serviceUserGenderMale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "male" })} checked={form.serviceUserGenderOne === "male"}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1221,7 +1269,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <h5><span style={{ cursor: "help" }} title={footNoteTwo}>有關職員<sup>2</sup></span>的資料 (如適用)</h5>
                         </div>
                     </div>
-                    <div className="form-row mb-2">
+                    <div className={`form-row mb-2 ${(error && error['StaffPositionOne']) ? styles.divInvalid: ""}`}>
                         <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 職員 ( 一 )<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >性別</label>
                         <div className="col-12 col-md-4">
@@ -1294,7 +1342,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['Police'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1310,34 +1358,36 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 <>
                                     <div>
                                         <label className="form-label">報警日期和時間</label>
-                                        <DatePicker
-                                            className="form-control"
-                                            selected={policeDatetime}
-                                            onChange={(date) => setPoliceDatetime(date)}
-                                            showTimeSelect
-                                            timeFormat="p"
-                                            timeIntervals={15}
-                                            dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
-                                        />
+                                        <div className={`col-12 col-md-4`} style={{padding:0}} > 
+                                            <DatePicker
+                                                className={`form-control ${(error &&error['PoliceDatetime'] ) ? "is-invalid": ""}`}
+                                                selected={policeDatetime}
+                                                onChange={(date) => setPoliceDatetime(date)}
+                                                showTimeSelect
+                                                timeFormat="p"
+                                                timeIntervals={15}
+                                                dateFormat="yyyy/MM/dd h:mm aa"
+                                                readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)}
+                                            />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="form-label">報案編號</label>
-                                        <input type="text" className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler}
+                                        <input type="text" className={`form-control ${(error &&error['PoliceReportNumber'] ) ? "is-invalid": ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
                             }
                             {
                                 form.police === false &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler}
+                                <AutosizeTextarea className={`form-control ${(error &&error['PoliceDescription'] ) ? "is-invalid": ""}`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             }
                         </div>
                     </div>
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>通知家人 / 親屬 / 監護人 / 保證人</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['Guardian'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-true" value="NOTIFY_FAMILY_TRUE" checked={form.guardian === true} onClick={() => setForm({ ...form, guardian: true })}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1354,7 +1404,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     <div>
                                         <label className="form-label">通知日期和時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error &&error['GuardianDatetime'] ) ? styles.divInvalid: ""}`}
                                             selected={guardianDatetime}
                                             onChange={(date) => setGuardianDatetime(date)}
                                             showTimeSelect
@@ -1366,12 +1416,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     </div>
                                     <div>
                                         <label className="form-label">與服務使用者的關係</label>
-                                        <input type="text" className="form-control" name="guardianRelationship" value={form.guardianRelationship} onChange={inputFieldHandler}
+                                        <input type="text" className={`form-control ${(error &&error['GuardianRelationship'] ) ? "is-invalid": ""}`} name="guardianRelationship" value={form.guardianRelationship} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                     <div>
                                         <label className="form-label">負責職員姓名</label>
-                                        <input type="text" className="form-control" name="guardianStaff" value={form.guardianStaff} onChange={inputFieldHandler}
+                                        <input type="text" className={`form-control ${(error &&error['GuardianStaff'] ) ? "is-invalid": ""}`} name="guardianStaff" value={form.guardianStaff} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
@@ -1387,7 +1437,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>醫療安排</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['MedicalArrangement'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medical" id="medical-true" value="MEDICAL_TRUE" checked={form.medicalArrangement === true} onClick={() => setForm({ ...form, medicalArrangement: true })}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1401,7 +1451,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             {
                                 form.medicalArrangement === true &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="medicalArrangmentDetail" value={form.medicalArrangmentDetail} onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error &&error['MedicalArrangmentDetail'] ) ? "is-invalid": ""}`} placeholder="請註明" name="medicalArrangmentDetail" value={form.medicalArrangmentDetail} onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
@@ -1410,7 +1460,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['CarePlan'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="meeting" id="meeting-true" value="MEETING_TRUE" onChange={() => setForm({ ...form, carePlan: true })} checked={form.carePlan === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1424,14 +1474,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             {
                                 form.carePlan === true &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明，包括時間" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error &&error['CarePlanYesDescription'] ) ? "is-invalid": ""}`} placeholder="請註明，包括時間" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
                             {
                                 form.carePlan === false &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error &&error['CarePlanNoDescription'] ) ? "is-invalid": ""}`} placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
@@ -1440,7 +1490,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
-                        <div className="col">
+                        <div className={`col ${(error &&error['NeedResponse'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={() => setForm({ ...form, needResponse: true })} checked={form.needResponse === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1472,7 +1522,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>跟進計劃</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler}
+                            <AutosizeTextarea className={`form-control ${(error &&error['FollowUpPlan'] ) ? styles.divInvalid: ""}`} name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
@@ -1504,7 +1554,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">
-                            <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
+                            <input type="text" className="form-control" value={reporterJobTitle} disabled={true} />
                         </div>
 
                     </div>
@@ -1614,7 +1664,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-5">
-                            <input type="text" className="form-control" value={sdInfo && sdInfo.Title || ""} disabled />
+                            <input type="text" className="form-control" value={sdInfo && sdInfo.hr_jobcode || ""} disabled />
                         </div>
                     </div>
                     <div className="row mb-0 mb-md-2">
@@ -1660,6 +1710,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         {
                             formInitial(currentUserRole, formStatus) &&
                             <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                        }
+                        {
+                            adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                            <button className="btn btn-warning" onClick={adminSubmitHanlder}>儲存</button>
                         }
                         {
                             pendingSmApprove(currentUserRole, formStatus, formStage) &&

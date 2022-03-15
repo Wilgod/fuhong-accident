@@ -102,9 +102,13 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
         let formTwentySixDataSelected = null;
         if (data) {
           formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+          if (formTwentySixDataPrint.length > 0) {
+            formTwentySixData = formTwentySixDataPrint[0];
+            formTwentySixDataSelected = formTwentySixData.Id;
+          }
+          
         }
-        formTwentySixData = formTwentySixDataPrint[0];
-        formTwentySixDataSelected = formTwentySixData.Id
+        
         if (data && data.Investigator && data.Investigator.EMail) {
           if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
             this.setState({ currentUserRole: Role.INVESTIGATOR });

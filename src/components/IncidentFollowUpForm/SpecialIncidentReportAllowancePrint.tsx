@@ -8,6 +8,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 interface ISpecialIncidentReportAllowancePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -15,7 +16,7 @@ interface ISpecialIncidentReportAllowancePrint {
     formData: any;
     formTwentySixData:any;
     formTwentySixDataSelected: any;
-    siteCollectionUrl:String;
+    siteCollectionUrl:string;
     index:number;
 }
 
@@ -148,6 +149,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [incidentTime, setIncidentTime] = useState(new Date());
     const [reportDate, setReportDate] = useState(new Date());
+    const [reporterName, setReporterName] = useState("");
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
+    const [sdName, setSdName] = useState("");
+    const [sdJobTitle, setSdJobTitle] = useState("");
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
 
@@ -292,14 +297,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         if (formData) {
 
             setIncidentTime(new Date(formData.IncidentTime));
+            setReportDate(new Date(formData.Created));
             if (formData.Author) {
                 setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
             }
             if (formData.SD) {
-                debugger;
                 setSDEmail([{ secondaryText: formData.SD.EMail, id: formData.SD.Id }]);
             }
-            setReportDate(new Date(formData.Created));
             
             /*if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
@@ -417,9 +421,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
                 unusalIncident: formData.UnusalIncident,
-                sdDate: formData.sdDate ? new Date(formData.sdDate) : null
+                sdDate: formData.SDDate ? new Date(formData.SDDate) : null
             })
-
+            
         
         }
     }
@@ -436,25 +440,41 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     useEffect(() => {
         if (reporter) {
-            debugger
-            setForm({ ...form, 
-                reporterName: reporter.displayName,
-                reporterJobTitle: reporter.jobTitle
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterName(reporter.displayName);
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                }
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
             });
+            
         }
     }, [reporter])
 
     useEffect(() => {
         if (sdInfo) {
-            debugger
-            setForm({ ...form, 
-                sdName: sdInfo.displayName,
-                sdJobTitle: sdInfo.jobTitle
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,sdInfo.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setSdName(sdInfo.displayName);
+                    setSdJobTitle(userInfosRes[0].hr_jobcode);
+                }
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
             });
         }
     }, [sdInfo])
 
-    console.log('sdInfo :', sdInfo);
+    console.log('form.sdDate :', form.sdDate);
+    
     return (
         <>
             <style media="print">
@@ -905,7 +925,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterName}
+                                        {reporterName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -913,7 +933,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.sdName}
+                                        {sdName}
                                         </div>
                                     </td>
                                 </tr>
@@ -923,7 +943,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterJobTitle}
+                                        {reporterJobTitle}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -931,7 +951,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.sdJobTitle}
+                                        {sdJobTitle}
                                         </div>
                                     </td>
                                 </tr>

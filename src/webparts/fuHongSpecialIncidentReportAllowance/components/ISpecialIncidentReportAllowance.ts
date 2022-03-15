@@ -58,6 +58,7 @@ export interface ISpecialIncidentReportAllowanceStates {
     abusive_negligent: boolean;
     abusive_other: boolean;
     abusiveDescription: string;
+    insuranceCaseNo:string;
 }
 
 export interface IErrorFields {
