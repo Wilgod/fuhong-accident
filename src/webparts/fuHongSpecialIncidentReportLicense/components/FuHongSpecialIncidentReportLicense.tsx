@@ -87,7 +87,6 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
   private initialState = async () => {
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const speicalIncidentReportWorkflow = await getSpeicalIncidentReportLicenseWorkflow();
-    debugger
     this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url });
   }
 

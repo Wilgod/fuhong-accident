@@ -51,48 +51,7 @@ interface IServiceUserAccidentFormProps {
 }
 
 interface IErrorFields {
-    accidentTime?: string;
-    accidentLocation?: string;
-    intellectualDisability?: string;
-    partientAcciedntScenario?: string;
-    scenarioOutsideActivityRemark?: string;
-    scenarioOtherRemark?: string;
-    injuredArea?: string;
-    injuredAreaOther?: string;
-    serviceUserUncomfort?: string;
-    uncomfortable?: string;
-    uncomfortableDescription?: string;
-    uncomfortableOtherRemark?: string;
-    behaviorSwitch?: string;
-    behavior?: string;
-    behaviorOtherRemark?: string;
-    photo?: string; // CCTV
-    photoChoice?: string;
-    cctv?: string;
-    envFactor?: string;
-    evnFactorOtherRemark?: string;
-    personalFactor?: string;
-    personalFactorOtherRemark?: string;
-    accidentDetail?: string;
-    treatmentAfterAccident?: string;
-    arrangement?: string;
-    medicalArrangementHospital?: string;
-    medicalArrangementTreatment?: string;
-    isStayInHospital?: string;
-    isStayInHospitalName?: string;
-    police?: string;
-    policeReportNumber?: string;
-    policeStation?: string;
-    contingencyMeasure?: string;
-    contingencyMeasureRemark?: string;
-    contactFamilyRelationship?: string;
-    contactFamilyName?: string;
-    afterTreatmentDescription?: string;
-    serviceUserRecordId?: string;
-    serviceUnit?: string;
-    serviceManager?: string;
-    serviceDirector?: string;
-    spt?: string;
+    
 }
 
 export { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps }

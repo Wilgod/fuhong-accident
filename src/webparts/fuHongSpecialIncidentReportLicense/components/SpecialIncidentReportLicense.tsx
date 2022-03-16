@@ -34,6 +34,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [ selectDepartment, setSelectDepartment ] = useState("");
@@ -43,8 +44,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         abuserDescription: "",
         abuser_police: undefined,
         abuser_policeCaseNo: "",
-        abuser_policeDate: new Date(),
-        affectedAge: 0,
+        abuser_policeDate: null,
+        affectedAge: null,
         affectedDetail: "",
         affectedFollowUp: "",
         affectedGender: "",
@@ -54,10 +55,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         conflict: "",
         conflictDescription: "",
         conflict_policeCaseNo: "",
-        conflict_policeDate: new Date(),
+        conflict_policeDate: null,
         found: undefined,
-        foundDate: new Date(),
-        notYetFoundDayCount: 0,
+        foundDate: null,
+        notYetFoundDayCount: null,
         medicalRecords: "",
         ra_body: false,
         ra_mental: false,
@@ -70,7 +71,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         guardian: undefined,
         guardianName: "",
         guardianRelation: "",
-        guardianDate: new Date(),
+        guardianDate: null,
         guardianReason: "",
         guardianStaffName: "",
         guardianStaffJobTitle:"",
@@ -81,20 +82,20 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         incidentTime:"",
         medicalIncident: "",
         mi_description: "",
-        missingPoliceDate: new Date(),
+        missingPoliceDate: null,
         missingPoliceReportNo: "",
         other: undefined,
         otherDescription: "",
         otherIncident: "",
         police: undefined,
-        policeDatetime: new Date(),
+        policeDatetime: null,
         policeInvestigate: undefined,
-        policeInvestigateDate: new Date(),
+        policeInvestigateDate: null,
         policeReportNumber: "",
-        referDate: new Date(),
+        referDate: null,
         referServiceUnit: "",
         referSocialWorker: undefined,
-        residentAge: 0,
+        residentAge: null,
         residentGender: "",
         residentMissing: "",
         residentMissingReason: "",
@@ -102,11 +103,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         residentRoomNo: "",
         responsibleName: "",
         reporterName:"",
-        reporterDate: new Date(),
+        reporterDate: null,
         reporterJobTitle:"",
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
-        unusalIncident: ""
+        unusalIncident: "",
+        submitDate:null
     });
 
 
@@ -205,7 +207,6 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const dataFactory = () => {
         let body = {};
         let error = {};
-
         body["ServiceUnit"] = serviceUnit
 
         //經辦人 (負責督察姓名)
@@ -237,48 +238,65 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
 
         //事故發生日期
-        body["IncidentTime"] = incidentTime.toISOString();
-
+        if (incidentTime) {
+            body["IncidentTime"] = incidentTime.toISOString();
+        } else {
+            error["IncidentTime"] = true;
+        }
         //(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡
         if (form.unusalIncident) {
             body["UnusalIncident"] = form.unusalIncident;
         } else {
-            error["UnusalIncident"] = true;
+            //error["UnusalIncident"] = true;
         }
 
         //在院舍內發生事故及送院後死亡
-        if (form.unusalIncideintGeneral) {
-            body["UnusalIncideintGeneral"] = form.unusalIncideintGeneral;
-        } else {
-            error["UnusalIncideintGeneral"] = true;
+        if (form.unusalIncident === "UNUSAL_INCIDENT_GENERAL") {
+            if (form.unusalIncideintGeneral) {
+                body["UnusalIncideintGeneral"] = form.unusalIncideintGeneral;
+            } else {
+                error["UnusalIncideintGeneral"] = true;
+            }
         }
+        
 
         //其他不尋常死亡／事故
-        if (form.unusalIncideintIncident) {
-            body["UnusalIncideintIncident"] = form.unusalIncideintIncident;
-        } else {
-            error["UnusalIncideintIncident"] = true;
+        if (form.unusalIncident === "UNUSAL_INCIDENT_OTHER") {
+            if (form.unusalIncideintIncident) {
+                body["UnusalIncideintIncident"] = form.unusalIncideintIncident;
+            } else {
+                error["UnusalIncideintIncident"] = true;
+            }
         }
+        
 
         //1a)  已報警求助
         body["Police"] = form.police;
         if (form.police === true) {
-            body["PoliceDatetime"] = form.policeDatetime.toISOString();
+            if (form.policeDatetime) {
+                body["PoliceDatetime"] = form.policeDatetime.toISOString();
+            } else {
+                error["PoliceDatetime"] = true;
+            }
             if (form.policeReportNumber) {
                 body["PoliceReportNumber"] = form.policeReportNumber;
             } else {
                 error["PoliceReportNumber"] = true;
             }
         } else if (form.police === undefined) {
-            error["Police"] = true;
+            //error["Police"] = true;
         }
 
         //(1b) 警方到院舍調查日期及時間
         body["PoliceInvestigate"] = form.policeInvestigate;
         if (form.policeInvestigate === true) {
-            body["PoliceInvestigateDate"] = form.policeInvestigateDate.toISOString();
+            if (form.policeInvestigateDate) {
+                body["PoliceInvestigateDate"] = form.policeInvestigateDate.toISOString();
+            } else {
+                error["PoliceInvestigateDate"] = true;
+            }
         } else if (form.policeInvestigate === undefined) {
-            error["PoliceInvestigate"] = true;
+            //error["PoliceInvestigate"] = true;
         }
 
 
@@ -292,28 +310,45 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     error["ResidentMissingReason"] = true;
                 }
             }
+            if (form.missingPoliceDate) {
+                body["MissingPoliceDate"] = form.missingPoliceDate.toISOString();
+            } else {
+                error["MissingPoliceDate"] = true;
+            }
+            if (form.missingPoliceReportNo) {
+                body["MissingPoliceReportNo"] = form.missingPoliceReportNo;
+            } else {
+                error["MissingPoliceReportNo"] = true;
+            }
+            
         } else {
-            error["ResidentMissing"] = true;
+            //error["ResidentMissing"] = true;
         }
-
-        body["MissingPoliceDate"] = form.missingPoliceDate.toISOString();
-        body["MissingPoliceReportNo"] = form.missingPoliceReportNo;
+        
 
         //(2a)
         body["Found"] = form.found;
         if (form.found === true) {
-            body["FoundDate"] = form.foundDate.toISOString();
+            if (form.foundDate) {
+                body["FoundDate"] = form.foundDate.toISOString();
+            } else {
+                error["FoundDate"] = true;
+            }
         } else if (form.found === false) {
-            body["NotYetFoundDayCount"] = form.notYetFoundDayCount;
+            if (form.notYetFoundDayCount) {
+                body["NotYetFoundDayCount"] = form.notYetFoundDayCount;
+            } else {
+                error["NotYetFoundDayCount"] = true;
+            }
         } else {
-            error["Found"] = true;
+            //error["Found"] = true;
         }
 
         //(2b) 失蹤住客病歷
         if (form.medicalRecords) {
             body["MedicalRecords"] = form.medicalRecords;
         } else {
-            error["MedicalRecords"] = true;
+            //error["MedicalRecords"] = true;
         }
 
         //(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱
@@ -339,33 +374,43 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 if (form.abuserDescription) {
                     body["AbuserDescription"] = form.abuserDescription;
                 } else {
-                    error["AbuserDescription"] = true
+                    error["AbuserDescription"] = true;
                 }
             }
         } else {
-            error["Abuser"] = true;
+            //error["Abuser"] = true;
         }
 
         // {/* (3b)*/}
         form["ReferSocialWorker"] = form.referSocialWorker;
         if (form.referSocialWorker) {
-            body["ReferDate"] = form.referDate.toISOString();
+            if (form.referDate) {
+                body["ReferDate"] = form.referDate.toISOString();
+            } else {
+                error["ReferDate"] = true;
+            }
             if (form.referServiceUnit) {
                 body["ReferServiceUnit"] = form.referServiceUnit;
             }
         } else if (form.referSocialWorker === undefined) {
-            error["ReferSocialWorker"] = true;
+            //error["ReferSocialWorker"] = true;
         }
 
         // {/* (3c)*/}
         body["Abuser_Police"] = form.abuser_police;
         if (form.abuser_police) {
-            body["Abuser_PoliceDate"] = form.abuser_policeDate.toISOString();
+            if (form.abuser_policeDate) {
+                body["Abuser_PoliceDate"] = form.abuser_policeDate.toISOString();
+            } else {
+                error["Abuser_PoliceDate"] = true;
+            }
             if (form.abuser_policeCaseNo) {
                 body["Abuser_PoliceCaseNo"] = form.abuser_policeCaseNo;
+            } else {
+                error["Abuser_PoliceCaseNo"] = true;
             }
         } else if (form.abuser_police === undefined) {
-            error["Abuser_Police"] = true;
+            //error["Abuser_Police"] = true;
         }
 
         //{/* (4) 院舍內有爭執事件以致需要報警求助 */}
@@ -378,11 +423,22 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     error["ConflictDescription"] = form.conflictDescription;
                 }
             }
+            if (form.conflict_policeDate) {
+                body["Conflict_PoliceDate"] = form.conflict_policeDate.toISOString();
+            } else {
+                error["Conflict_PoliceDate"] = true;
+            }
+            if (form.conflict_policeCaseNo) {
+                body["Conflict_PoliceCaseNo"] = form.conflict_policeCaseNo;
+            } else {
+                error["Conflict_PoliceCaseNo"] = true;
+            }
         } else {
-            error["Conflict"] = true;
+            //error["Conflict"] = true;
         }
-        body["Conflict_PoliceDate"] = form.conflict_policeDate;
-        body["Conflict_PoliceCaseNo"] = form.conflict_policeCaseNo;
+        
+        
+        
 
         // {/* (5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」） */}
         if (form.medicalIncident) {
@@ -395,7 +451,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 }
             }
         } else {
-            error["MedicalIncident"] = true;
+            //error["MedicalIncident"] = true;
         }
 
         //  {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
@@ -414,7 +470,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["OtherDescription"] = true;
             }
         } else if (form.other === undefined) {
-            error["Other"] = true;
+            //error["Other"] = true;
         }
 
         //住客及家屬情況
@@ -432,8 +488,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         body["GuardianName"] = form.guardianName;
         body["GuardianRelation"] = form.guardianRelation;
         body["GuardianReason"] = form.guardianReason;
-        body["GuarrdianDate"] = form.guardianDate.toISOString();
-
+        if (form.guardianDate) {
+            body["GuarrdianDate"] = form.guardianDate.toISOString();
+        }
 
         // //殘疾人士院舍特別事故報告 (附頁)
         body["AffectedName"] = form.affectedName;
@@ -449,121 +506,127 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory()
+        const [body, error] = dataFactory();
+        body['SubmitDate'] = new Date().toISOString()
         console.log(body);
         console.log(error);
-        if (formStatus === "SM_VOID") {
-            updateSpecialIncidentReportLicense(formData.Id, {
-                ...body,
-                "Status": "PENDING_SM_APPROVE"
-            }).then(async (res) => {
-                await uploadFile(formData.Id);
-
-                postLog({
-                    AccidentTime: incidentTime.toISOString(),
-                    Action: "提交",
-                    CaseNumber: formData.CaseNumber,
-                    FormType: "SIH",
-                    RecordId: formData.Id,
-                    ServiceUnit: serviceLocation,
-                    Report: "特別事故報告(牌照事務處)"
-                }).catch(console.error);
-
-                formSubmittedHandler();
-            }).catch(console.error);
+        if (Object.keys(error).length > 0) {
+            setError(error);
         } else {
-            caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
-                console.log(caseNumber)
-                const extraBody = {
-                    "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
-                    "Status": "PENDING_SM_APPROVE",
-                    "Stage": "1",
-                    "CaseNumber": caseNumber,
-                    "SDId": spSdInfo.Id,
-                    "SMId": spSmInfo.Id,
-                    "SDDate": new Date().toISOString(),
-                    "SMDate": new Date().toISOString(),
-                    "ServiceLocation": serviceLocation
-                }
-
-                if (CURRENT_USER.email === spSmInfo.Email) {
-                    extraBody["Status"] = "PENDING_SD_APPROVE";
-                    extraBody["SMDate"] = new Date().toISOString();
-                    extraBody["SMComment"] = smComment;
-                }
-
-                if (formStatus === "DRAFT") {
-                    updateSpecialIncidentReportLicense(formData.Id, {
-                        ...body,
-                        ...extraBody
-                    }).then(async (res) => {
-                        await uploadFile(formData.Id);
-                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, formData.Id, 1, speicalIncidentReportWorkflow);
-
-                            postLog({
-                                AccidentTime: incidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SIH",
-                                RecordId: formData.Id,
-                                ServiceUnit: serviceLocation,
-                                Report: "特別事故報告(牌照事務處)"
-                            }).catch(console.error);
-                        } else {
-
-                            postLog({
-                                AccidentTime: incidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SIH",
-                                RecordId: formData.Id,
-                                ServiceUnit: serviceLocation,
-                                Report: "特別事故報告(牌照事務處)"
-                            }).catch(console.error);
-                        }
-
-
-                        formSubmittedHandler();
+            if (formStatus === "SM_VOID") {
+                updateSpecialIncidentReportLicense(formData.Id, {
+                    ...body,
+                    "Status": "PENDING_SM_APPROVE"
+                }).then(async (res) => {
+                    await uploadFile(formData.Id);
+    
+                    postLog({
+                        AccidentTime: incidentTime.toISOString(),
+                        Action: "提交",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SIH",
+                        RecordId: formData.Id,
+                        ServiceUnit: serviceLocation,
+                        Report: "特別事故報告(牌照事務處)"
                     }).catch(console.error);
-                } else {
-                    createSpecialIncidentReportLicense({
-                        ...body,
-                        ...extraBody
-                    }).then(async (createSpecialIncidentReportLicenseRes) => {
-                        await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
-                        if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
-
-                            postLog({
-                                AccidentTime: incidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SIH",
-                                RecordId: createSpecialIncidentReportLicenseRes.data.Id,
-                                ServiceUnit: serviceLocation,
-                                Report: "特別事故報告(牌照事務處)"
-                            }).catch(console.error);
-
-                        } else {
-                            notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
-                            postLog({
-                                AccidentTime: incidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SIH",
-                                RecordId: createSpecialIncidentReportLicenseRes.data.Id,
-                                ServiceUnit: serviceLocation,
-                                Report: "特別事故報告(牌照事務處)"
-                            }).catch(console.error);
-                        }
-
-
-                        formSubmittedHandler();
-                    }).catch(console.error);
-                }
-            }).catch(console.error);
+    
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
+                    console.log(caseNumber)
+                    const extraBody = {
+                        "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
+                        "Status": "PENDING_SM_APPROVE",
+                        "Stage": "1",
+                        "CaseNumber": caseNumber,
+                        "SDId": spSdInfo.Id,
+                        "SMId": spSmInfo.Id,
+                        "SDDate": new Date().toISOString(),
+                        "SMDate": new Date().toISOString(),
+                        "ServiceLocation": serviceLocation
+                    }
+    
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["Status"] = "PENDING_SD_APPROVE";
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["SMComment"] = smComment;
+                    }
+    
+                    if (formStatus === "DRAFT") {
+                        updateSpecialIncidentReportLicense(formData.Id, {
+                            ...body,
+                            ...extraBody
+                        }).then(async (res) => {
+                            await uploadFile(formData.Id);
+                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                                notifySpecialIncidentLicense(context, formData.Id, 1, speicalIncidentReportWorkflow);
+    
+                                postLog({
+                                    AccidentTime: incidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SIH",
+                                    RecordId: formData.Id,
+                                    ServiceUnit: serviceLocation,
+                                    Report: "特別事故報告(牌照事務處)"
+                                }).catch(console.error);
+                            } else {
+    
+                                postLog({
+                                    AccidentTime: incidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SIH",
+                                    RecordId: formData.Id,
+                                    ServiceUnit: serviceLocation,
+                                    Report: "特別事故報告(牌照事務處)"
+                                }).catch(console.error);
+                            }
+    
+    
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else {
+                        createSpecialIncidentReportLicense({
+                            ...body,
+                            ...extraBody
+                        }).then(async (createSpecialIncidentReportLicenseRes) => {
+                            await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
+                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                                notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
+    
+                                postLog({
+                                    AccidentTime: incidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SIH",
+                                    RecordId: createSpecialIncidentReportLicenseRes.data.Id,
+                                    ServiceUnit: serviceLocation,
+                                    Report: "特別事故報告(牌照事務處)"
+                                }).catch(console.error);
+    
+                            } else {
+                                notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
+                                postLog({
+                                    AccidentTime: incidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SIH",
+                                    RecordId: createSpecialIncidentReportLicenseRes.data.Id,
+                                    ServiceUnit: serviceLocation,
+                                    Report: "特別事故報告(牌照事務處)"
+                                }).catch(console.error);
+                            }
+    
+    
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
+                }).catch(console.error);
+            }
         }
+        
     }
 
     const draftHandler = (event) => {
@@ -801,20 +864,19 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
             }
-
-            setReportDate(new Date(formData.Created));
+            if (formData.SubmitDate) {
+                setReportDate(new Date(formData.SubmitDate));
+            }
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
-                debugger
             }
-            debugger
             setForm({
                 ...form,
                 abuser: formData.Abuser,
                 abuserDescription: formData.AbuserDescription,
                 abuser_police: formData.Abuser_Police,
                 abuser_policeCaseNo: formData.Abuser_PoliceCaseNo,
-                abuser_policeDate: formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : new Date(),
+                abuser_policeDate: formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : null,
                 affectedAge: formData.AffectedAge,
                 affectedDetail: formData.AffectedDetail,
                 affectedFollowUp: formData.AffectedFollowUp,
@@ -825,13 +887,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 conflict: formData.Conflict,
                 conflictDescription: formData.ConflictDescription,
                 conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
-                conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : new Date(),
+                conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : null,
                 found: formData.Found,
-                foundDate: formData.FoundDate ? new Date(formData.FoundDate) : new Date(),
+                foundDate: formData.FoundDate ? new Date(formData.FoundDate) : null,
                 guardian: formData.Guardian,
                 guardianName: formData.GuardianName,
                 guardianRelation: formData.GuardianRelation,
-                guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : new Date(),
+                guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : null,
                 guardianReason: formData.GuardianReason,
                 insuranceCaseNo: formData.InsuranceCaseNo,
                 incidentTime:formData.IncidentTime,
@@ -841,16 +903,16 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 medicalIncident: formData.MedicalIncident,
                 medicalRecords: formData.MedicalRecords,
                 mi_description: formData.MI_Description,
-                missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : new Date(),
+                missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : null,
                 missingPoliceReportNo: formData.MissingPoliceReportNo,
                 notYetFoundDayCount: formData.NotYetFoundDayCount,
                 other: formData.Other,
                 otherDescription: formData.OtherDescription,
                 otherIncident: formData.OtherIncident,
                 police: formData.Police,
-                policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : new Date(),
+                policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null,
                 policeInvestigate: formData.PoliceInvestigate,
-                policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date(),
+                policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : null,
                 policeReportNumber: formData.PoliceReportNumber,
                 ra_abandoned: formData.RA_Abandoned,
                 ra_body: formData.RA_Body,
@@ -860,7 +922,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ra_other: formData.RA_Other,
                 ra_otherDescription: formData.RA_OtherDescription,
                 ra_sexualAssault: formData.RA_SexualAssault,
-                referDate: formData.ReferDate ? new Date(formData.ReferDate) : new Date(),
+                referDate: formData.ReferDate ? new Date(formData.ReferDate) : null,
                 referServiceUnit: formData.ReferServiceUnit,
                 referSocialWorker: formData.ReferSocialWorker,
                 residentAge: formData.ResidentAge,
@@ -873,7 +935,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 reporterDate:formData.Created,
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
-                unusalIncident: formData.UnusalIncident
+                unusalIncident: formData.UnusalIncident,
+                submitDate: formData.SubmitDate ? new Date(formData.SubmitDate) : null,
             })
 
             if (formData.Attachments) {
@@ -906,7 +969,6 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         if (formData) {
             loadData();
         } else {
-            debugger
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
     }, [formData]);
@@ -986,10 +1048,16 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     useEffect(() => {
         if (reporter) {
-            debugger
-            setForm({ ...form, 
-                reporterName: reporter.displayName,
-                reporterJobTitle: reporter.jobTitle
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                }
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
             });
         }
     }, [reporter])
@@ -1054,7 +1122,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* 經辦人 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>經辦人<span className="d-sm-inline d-md-block">(負責督察姓名)</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={form.responsibleName} name={"responsibleName"} onChange={inputFieldHandler}
+                            <input type="text" className={`form-control ${(error && error['ResponsibleName']) ? "is-invalid": ""}`} value={form.responsibleName} name={"responsibleName"} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
@@ -1063,7 +1131,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
                         <div className="col">
                             {departmentList.length == 1 &&
-                            <input type="text" className="form-control" value={form.homesName} name="homesName" onChange={inputFieldHandler}
+                            <input type="text" className={`form-control ${(error && error['HomesName']) ? "is-invalid": ""}`} value={form.homesName} name="homesName" onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
 
                             }
@@ -1086,14 +1154,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍主管<span className="d-sm-inline d-md-block">姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={form.homesManagerName} name="homesManagerName" onChange={inputFieldHandler}
+                            <input type="text" className={`form-control ${(error && error['HomesName']) ? "is-invalid": ""}`} value={form.homesManagerName} name="homesManagerName" onChange={inputFieldHandler}
                              disabled={true}   
                             />
                         </div>
                         {/* 聯絡電話 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>聯絡電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={form.homesManagerTel} name="homesManagerTel" onChange={inputFieldHandler}
+                            <input type="text" className={`form-control ${(error && error['HomesManagerTel']) ? "is-invalid": ""}`} value={form.homesManagerTel} name="homesManagerTel" onChange={inputFieldHandler}
                                 disabled={true}/>
                         </div>
                     </div>
@@ -1102,7 +1170,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生日期</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error && error['IncidentTime']) ? "is-invalid": ""}`}
                                 selected={incidentTime}
                                 onChange={setIncidentTime}
                                 showTimeSelect
@@ -1136,7 +1204,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         {/*(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡</label>
-                        <div className="col">
+                        <div className={`col`}>
 
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler}
@@ -1147,7 +1215,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 form.unusalIncident === "UNUSAL_INCIDENT_GENERAL" &&
                                 <div className="">
                                     <div>請註明事件:</div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.unusalIncideintGeneral} name="unusalIncideintGeneral" onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error && error['UnusalIncideintGeneral']) ? "is-invalid": ""}`} placeholder="請註明" value={form.unusalIncideintGeneral} name="unusalIncideintGeneral" onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
@@ -1165,7 +1233,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 form.unusalIncident === "UNUSAL_INCIDENT_OTHER" &&
                                 <div className="">
                                     <div>請註明事件:</div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.unusalIncideintIncident} name="unusalIncideintIncident" onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error && error['UnusalIncideintIncident']) ? "is-invalid": ""}`} placeholder="請註明" value={form.unusalIncideintIncident} name="unusalIncideintIncident" onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
@@ -1206,7 +1274,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         {/* 報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1a)</label>
-                        <div className="col">
+                        <div className={`col`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1217,12 +1285,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="mb-1">
                                         <label>報警日期</label>
-                                        <DatePicker className="form-control" selected={form.policeDatetime} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, policeDatetime: date })}
+                                        <DatePicker className={`form-control ${(error && error['PoliceDatetime']) ? "is-invalid": ""}`} selected={form.policeDatetime} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, policeDatetime: date })}
                                             readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                     <div>
                                         <label>報案編號</label>
-                                        <input className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler}
+                                        <input className={`form-control ${(error && error['PoliceReportNumber']) ? "is-invalid": ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
@@ -1238,9 +1306,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         {/* 警方到院舍調查日期及時間 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1b) 警方到院舍調查日期及時間</label>
-                        <div className="col">
+                        <div className={`col`}>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="policeInvestigate" id="police-investigate-true" onClick={() => setForm({ ...form, policeInvestigate: true })} checked={form.policeInvestigate === true}
+                                <input className={"form-check-input"} type="radio" name="policeInvestigate" id="police-investigate-true" onClick={() => setForm({ ...form, policeInvestigate: true })} checked={form.policeInvestigate === true}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-true">有</label>
                             </div>
@@ -1249,7 +1317,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="mb-1">
                                         <label>調查日期和時間</label>
-                                        <DatePicker className="form-control" selected={form.policeInvestigateDate} dateFormat="yyyy/MM/dd  h:mm aa" showTimeSelect timeIntervals={15} onChange={(date) => setForm({ ...form, policeInvestigateDate: date })}
+                                        <DatePicker className={`form-control ${(error && error['PoliceInvestigateDate']) ? "is-invalid": ""}`} selected={form.policeInvestigateDate} dateFormat="yyyy/MM/dd  h:mm aa" showTimeSelect timeIntervals={15} onChange={(date) => setForm({ ...form, policeInvestigateDate: date })}
                                             readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
@@ -1265,7 +1333,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         {/* (2) 住客失蹤以致需要報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2) 住客失蹤以致需要報警求助</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['ResidentMissing']) ? styles.divInvalid: ""}`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_INSIDE'} onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1278,7 +1346,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             {
                                 form.residentMissing === "RESIDENT_MISSING_OUTSIDE" &&
-                                <div className="px-3">
+                                <div className={`px-3 ${(error && error['ResidentMissingReason']) ? styles.divInvalid: ""}`}>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" name="residentMissingReason" id="resident-missing-reason-vacation" value="RESIDENT_MISSING_REASON_VACATION" checked={form.residentMissingReason === 'RESIDENT_MISSING_REASON_VACATION'} onChange={radioButtonHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
@@ -1299,12 +1367,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                             <div className="mb-1">
                                 <label>報警日期</label>
-                                <DatePicker className="form-control" selected={form.missingPoliceDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, missingPoliceDate: date })}
+                                <DatePicker className={`form-control ${(error && error['MissingPoliceDate']) ? "is-invalid": ""}`} selected={form.missingPoliceDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, missingPoliceDate: date })}
                                     readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             </div>
                             <div>
                                 <label>報警編號</label>
-                                <AutosizeTextarea className="form-control" value={form.missingPoliceReportNo} onChange={inputFieldHandler} name="missingPoliceReportNo"
+                                <AutosizeTextarea className={`form-control ${(error && error['MissingPoliceReportNo']) ? "is-invalid": ""}`} value={form.missingPoliceReportNo} onChange={inputFieldHandler} name="missingPoliceReportNo"
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             </div>
                         </div>
@@ -1323,12 +1391,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 form.found === true &&
                                 <div className="d-flex align-items-center">
                                     <label className="mr-3">尋回日期</label>
-                                    <DatePicker className="form-control" selected={form.foundDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, foundDate: date })}
+                                    <DatePicker className={`form-control ${(error && error['FoundDate']) ? "is-invalid": ""}`} selected={form.foundDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, foundDate: date })}
                                         readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="residentMissingFound" id="resident-missing-found-false" onClick={() => setForm({ ...form, found: false })} checked={form.found === false}
+                                <input className={`form-check-input`} type="radio" name="residentMissingFound" id="resident-missing-found-false" onClick={() => setForm({ ...form, found: false })} checked={form.found === false}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-false">仍未尋回</label>
                             </div>
@@ -1337,7 +1405,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <div className="d-flex align-items-center">
                                     由失蹤日計起至呈報日，已失蹤
                                     <div className="input-group mb-3">
-                                        <input type="number" className="form-control" min={0} value={form.notYetFoundDayCount} onChange={(event) => setForm({ ...form, notYetFoundDayCount: +event.target.value })}
+                                        <input type="number" className={`form-control ${(error && error['NotYetFoundDayCount']) ? "is-invalid": ""}`} min={0} value={form.notYetFoundDayCount} onChange={(event) => setForm({ ...form, notYetFoundDayCount: +event.target.value })}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                         <div className="input-group-append">
                                             <span className="input-group-text" id="basic-addon2">日</span>
@@ -1399,7 +1467,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             {
                                 form.ra_other &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" name="ra_otherDescription" value={form.ra_otherDescription} onChange={inputFieldHandler}
+                                <AutosizeTextarea className={`form-control ${(error && error['RA_OtherDescription']) ? "is-invalid": ""}`} placeholder="請註明" name="ra_otherDescription" value={form.ra_otherDescription} onChange={inputFieldHandler}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             }
                         </div>
@@ -1431,7 +1499,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             {
                                 form.abuser === "ABUSER_OTHER" &&
-                                <AutosizeTextarea className="form-control" placeholder="請註明" name="abuserDescription" value={form.abuserDescription} onChange={inputFieldHandler}
+                                <AutosizeTextarea className={`form-control ${(error && error['AbuserDescription']) ? "is-invalid": ""}`} placeholder="請註明" name="abuserDescription" value={form.abuserDescription} onChange={inputFieldHandler}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             }
                         </div>
@@ -1456,12 +1524,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="">
                                         <label>轉介日期</label>
-                                        <DatePicker className="form-control" selected={form.referDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, referDate: date })}
+                                        <DatePicker className={`form-control ${(error && error['ReferDate']) ? "is-invalid": ""}`} selected={form.referDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, referDate: date })}
                                             readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                     <div className="">
                                         <label>服務單位</label>
-                                        <input type="text" className="form-control" name="referServiceUnit" value={form.referServiceUnit} onChange={inputFieldHandler}
+                                        <input type="text" className={`form-control ${(error && error['ReferServiceUnit']) ? "is-invalid": ""}`} name="referServiceUnit" value={form.referServiceUnit} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
@@ -1488,12 +1556,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="mb-1">
                                         <label>報警日期</label>
-                                        <DatePicker className="form-control" selected={form.abuser_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, abuser_policeDate: date })}
+                                        <DatePicker className={`form-control ${(error && error['Abuser_PoliceDate']) ? "is-invalid": ""}`} selected={form.abuser_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, abuser_policeDate: date })}
                                             readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                     <div>
                                         <label>報案編號</label>
-                                        <input className="form-control" name="abuser_policeCaseNo" value={form.abuser_policeCaseNo} onChange={inputFieldHandler}
+                                        <input className={`form-control ${(error && error['Abuser_PoliceCaseNo']) ? "is-invalid": ""}`} name="abuser_policeCaseNo" value={form.abuser_policeCaseNo} onChange={inputFieldHandler}
                                             disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                     </div>
                                 </>
@@ -1543,18 +1611,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             {
                                 form.conflict === "DISPUTE_POLICE_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea placeholder="請註明" className="form-control" value={form.conflictDescription} onChange={inputFieldHandler} name="conflictDescription"
+                                    <AutosizeTextarea placeholder="請註明" className={`form-control  ${(error && error['ConflictDescription']) ? "is-invalid": ""}`} value={form.conflictDescription} onChange={inputFieldHandler} name="conflictDescription"
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
                             <div className="mb-1">
                                 <label>報警日期</label>
-                                <DatePicker className="form-control" selected={form.conflict_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, conflict_policeDate: date })}
+                                <DatePicker className={`form-control ${(error && error['Conflict_PoliceDate']) ? "is-invalid": ""}`} selected={form.conflict_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, conflict_policeDate: date })}
                                     readOnly={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             </div>
                             <div>
                                 <label>報案編號</label>
-                                <input className="form-control" name="conflict_policeCaseNo" value={form.conflict_policeCaseNo} onChange={inputFieldHandler}
+                                <input className={`form-control ${(error && error['Conflict_PoliceCaseNo']) ? "is-invalid": ""}`} name="conflict_policeCaseNo" value={form.conflict_policeCaseNo} onChange={inputFieldHandler}
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             </div>
                         </div>
@@ -1587,7 +1655,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             {
                                 form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea placeholder="請註明" className="form-control" name="mi_description" value={form.mi_description} onChange={inputFieldHandler}
+                                    <AutosizeTextarea placeholder="請註明" className={`form-control ${(error && error['MI_Description']) ? "is-invalid": ""}`} name="mi_description" value={form.mi_description} onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }
@@ -1649,7 +1717,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             </div>
                             {
                                 form.other &&
-                                <AutosizeTextarea placeholder="請註明" className="form-control" value={form.otherDescription} onChange={inputFieldHandler} name="otherDescription"
+                                <AutosizeTextarea placeholder="請註明" className={`form-control ${(error && error['OtherDescription']) ? "is-invalid": ""}`} value={form.otherDescription} onChange={inputFieldHandler} name="otherDescription"
                                     disabled={!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus)} />
                             }
                         </div>
@@ -1794,7 +1862,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>填報人職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
+                            <input type="text" className="form-control" value={reporter && (reporterJobTitle || "")} disabled={true} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1830,8 +1898,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error && error['IncidentTime']) ? "is-invalid": ""}`}
                                 selected={incidentTime}
+                                onChange={setIncidentTime}
                                 showTimeSelect
                                 timeFormat="p"
                                 timeIntervals={15}
@@ -1913,7 +1982,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {/* 職位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={reporter && (reporter.jobTitle || "")} disabled={true} />
+                            <input type="text" className="form-control" value={reporter && (reporterJobTitle || "")} disabled={true} />
                         </div>
                     </div>
                     <div className="form-row mb-2">

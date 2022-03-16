@@ -70,4 +70,8 @@ $label-color: hsl(0, 2%, 23%);
       content: "瀏覽" !important;
     }
   }
+
+  .divInvalid {
+    border:1px solid red;
+  }
 }

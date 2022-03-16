@@ -183,7 +183,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     //request body parser and validation
     const dataFactory = (status: string) => {
         const body = {};
-        const error: IErrorFields = {};
+        const error = {};
 
         // Service User info
         body["ServiceUserNameEN"] = serviceUserNameEN;
@@ -199,32 +199,30 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUser"] = serviceUserRecordId;
         } else {
-            // Implement Error handling
-            error.serviceUserRecordId = "Please Select";
+            error["ServiceUser"] = true;
         }
         //填寫人服務單位
         body["ServiceUnit"] = serviceUnit;
-        // if (serviceUnit) {
-        //     body["ServiceUnit"] = serviceUnit;
-        // } else {
-        //     // Implement error handling
-        //     error.serviceUnit = "Please Select"
-        // }
 
-        body["ServiceUserUnit"] = patientServiceUnit
+        if (patientServiceUnit) {
+            body["ServiceUserUnit"] = patientServiceUnit
+        } else {
+            error["ServiceUserUnit"] = true;
+        }
+        
 
         //意外發生日期和時間
         if (accidentTime) {
             body["AccidentTime"] = accidentTime.toISOString();
         } else {
-            error.accidentTime = "ACCIDENT_TIME_ERROR";
+            error["AccidentTime"] = true;
         }
 
         //意外發生地點
         if (form.accidentLocation) {
             body["AccidentLocation"] = form.accidentLocation;
         } else {
-            error.accidentLocation = "ACCIDENT_LOCATION_ERROR";
+            error["AccidentLocation"] = true;
         }
 
         //智力障礙程度
@@ -242,17 +240,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.scenarioOutsideActivityRemark) {
                     body["CircumstanceLocation"] = form.scenarioOutsideActivityRemark.trim();
                 } else {
-                    error.scenarioOutsideActivityRemark = "請填寫";
+                    error["CircumstanceLocation"] = true;
                 }
             if (form.patientAcciedntScenario === "SCENARIO_OTHER") {
                 if (form.scenarioOtherRemark) {
                     body["CircumstanceOtherRemark"] = form.scenarioOtherRemark.trim();
                 } else {
-                    error.scenarioOtherRemark = "請填寫"
+                    error["CircumstanceOtherRemark"] = true;
                 }
             }
         } else {
-            error.partientAcciedntScenario = "請選擇";
+            error["Circumstance"] = true;
         }
 
         //服務使用者受傷部位
@@ -263,11 +261,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.injuredArea) {
                     body["InjuredAreaOtherRemark"] = form.injuredAreaOther;
                 } else {
-                    error.injuredAreaOther = "請填寫";
+                    error["InjuredAreaOtherRemark"] = true;
                 }
             }
         } else {
-            error.injuredArea = "請選擇";
+            error["InjuredArea"] = true;
         }
 
         //服務使用者意外後有否身體不適/受傷
@@ -282,25 +280,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         if (form.uncomfortableOtherRemark) {
                             body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
                         } else {
-                            error.uncomfortableOtherRemark = "請填寫";
+                            error["UnwellAfterInjuredOther"] = true;
                         }
                     }
 
                     if (form.uncomfortableDescription) {
                         body["UnwellAfterInjuredDescription"] = form.uncomfortableDescription;
                     } else {
-                        error.uncomfortableDescription = "請填寫";
+                        error["UnwellAfterInjuredDescription"] = true;
                     }
                 } else {
-                    error.uncomfortable = "請選擇";
+                    error["UnwellAfterInjuredChoices"] = true;
                 }
             } else if (form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_FALSE") {
                 // do nothing
-            } else {
-                error.uncomfortable = "請選擇";
             }
         } else {
-            error.serviceUserUncomfort = "請選擇";
+            error["UnwellAfterInjured"] = true;
         }
 
         //服務使用者有否出現不安全的行為
@@ -314,17 +310,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     if (form.behavior.indexOf("BEHAVIOR_OTHER") > -1) {
                         if (form.behaviorOtherRemark) {
                             body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
-
                         } else {
-                            error.behaviorOtherRemark = "請填寫";
+                            error["UnsafeBehaviorsOther"] = true;
                         }
                     }
                 } else {
-                    error.behavior = "請選擇";
+                    error["UnsafeBehaviorsChoices"] = true;
                 }
             }
         } else {
-            error.behaviorSwitch = "請選擇"; // Havent choose the switch button
+            error["UnsafeBehaviors"] = true;
         }
 
         //相片及CCTV紀錄
@@ -336,7 +331,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             //     }
             // }
         } else {
-            error.photoChoice = "請選擇";
+            error["PhotoRecord"] = true;
         }
 
         if (form.cctv) {
@@ -345,7 +340,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
             }
         } else {
-            error.cctv = "請選擇";
+            error["CctvRecord"] = true;
         }
 
         // 環境因素
@@ -355,11 +350,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.enviromentalFactorOtherRemark) {
                     body["ObserveEnvironmentFactorOther"] = form.enviromentalFactorOtherRemark.trim();
                 } else {
-                    error.evnFactorOtherRemark = "請註明";
+                    error["ObserveEnvironmentFactorOther"] = true;
                 }
             }
         } else {
-            error.envFactor = "請選擇";
+            error["ObserveEnvironmentFactor"] = true;
         }
 
         //個人因素
@@ -369,25 +364,25 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.personalFactorOtherRemark) {
                     body["ObservePersonalFactorOther"] = form.personalFactorOtherRemark.trim();
                 } else {
-                    error.personalFactorOtherRemark = "請註明";
+                    error["ObservePersonalFactorOther"] = true;
                 }
             }
         } else {
-            error.personalFactor = "請選擇";
+            error["ObservePersonalFactor"] = true;
         }
 
         //事發過程
         if (form.accidentDetail) {
             body["AccidentDetail"] = form.accidentDetail.trim();
         } else {
-            error.accidentDetail = "請填寫";
+            error["AccidentDetail"] = true;
         }
 
         //服務單位即時治療/處理
         if (form.treatmentAfterAccident) {
             body["TreatmentAfterAccident"] = form.treatmentAfterAccident.trim();
         } else {
-            error.treatmentAfterAccident = "請填寫";
+            error["TreatmentAfterAccident"] = true;
         }
 
         //就診安排
@@ -397,23 +392,29 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (form.arrangement.indexOf("ARRANGEMENT_EMERGENCY_DEPARTMENT") > -1) {
                 if (form.medicalArrangementHospital) {
                     body["MedicalArrangementHospital"] = form.medicalArrangementHospital.trim();
-
-                    //到達時間
-                    body["MedicalArrangementDate"] = medicalArrangementDate.toISOString();
-
-                    // 提供予服務使用者的治療
-                    if (form.medicalArrangementTreatment) {
-                        body["MedicalArrangementTreatment"] = form.medicalArrangementTreatment.trim();
-                    } else {
-                        error.medicalArrangementTreatment = "請填寫";
-                    }
                 } else {
-                    error.medicalArrangementHospital = "請填寫";
+                    error["MedicalArrangementHospital"] = true;
+                }
+                
+
+                //到達時間
+                if (medicalArrangementDate) {
+                    body["MedicalArrangementDate"] = medicalArrangementDate.toISOString();
+                } else {
+                    error["MedicalArrangementDate"] = true;
+                }
+                
+
+                // 提供予服務使用者的治療
+                if (form.medicalArrangementTreatment) {
+                    body["MedicalArrangementTreatment"] = form.medicalArrangementTreatment.trim();
+                } else {
+                    error["MedicalArrangementTreatment"] = true;
                 }
             }
 
         } else {
-            error.arrangement = "請選擇";
+            error["MedicalArrangement"] = true;
         }
 
         //是否在醫院留醫
@@ -424,11 +425,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.stayInHospitalName) {
                     body["StayInHospitalName"] = form.stayInHospitalName;
                 } else {
-                    error.isStayInHospitalName = "請填寫";
+                    error["StayInHospitalName"] = true;
                 }
             }
         } else {
-            error.isStayInHospital = "請選擇";
+            error["StayInHospital"] = true;
         }
 
         //報警處理
@@ -436,24 +437,29 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["CalledPolice"] = form.police === "POLICE_TRUE";
             if (form.police === "POLICE_TRUE") {
                 //日期和時間
-                body["CalledPoliceDate"] = policeDate.toISOString();
+                if (policeDate) {
+                    body["CalledPoliceDate"] = policeDate.toISOString();
+                } else {
+                    error["CalledPoliceDate"] = true;
+                }
+                
 
                 //報案編號
                 if (form.policeReportNumber) {
                     body["CalledPoliceReportNumber"] = form.policeReportNumber.trim();
                 } else {
-                    error.policeReportNumber = "請填寫";
+                    error["CalledPoliceReportNumber"] = true;
                 }
 
                 //警署
                 if (form.policeStation) {
                     body["CalledPoliceStation"] = form.policeStation.trim();
                 } else {
-                    error.policeStation = "請填寫";
+                    error["CalledPoliceStation"] = true;
                 }
             }
         } else {
-            error.police = "請選擇";
+            error["CalledPolice"] = true;
         }
 
         //意外後中心即時應變措施 
@@ -463,28 +469,33 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 if (form.contingencyMeasureRemark) {
                     body["ContingencyMeasureRemark"] = form.contingencyMeasureRemark.trim();
                 } else {
-                    error.contingencyMeasureRemark = "請填寫";
+                    error["ContingencyMeasureRemark"] = true;
                 }
             }
         } else {
-            error.contingencyMeasure = "請選擇";
+            error["ContingencyMeasure"] = true;
         }
 
         //通知家屬日期和時間
-        body["ContactFamilyDate"] = contactFamilyDate.toISOString();
+        if (contactFamilyDate) {
+            body["ContactFamilyDate"] = contactFamilyDate.toISOString();
+        } else {
+            error["ContactFamilyDate"] = true;
+        }
+        
 
         //與服務使用者關係
         if (form.contactFamilyRelationship) {
             body["ContactFamilyRelationship"] = form.contactFamilyRelationship.trim();
         } else {
-            error.contactFamilyRelationship = "請填寫";
+            error["ContactFamilyRelationship"] = true;
         }
 
         //家屬姓名
         if (form.contactFamilyName) {
             body["ContactFamilyName"] = form.contactFamilyName.trim();
         } else {
-            error.contactFamilyName = "請填寫";
+            error["ContactFamilyName"] = true;
         }
         //負責通知家屬的職員姓名
         if (contactStaffPickerInfo && contactStaffPickerInfo.length > 0) {
@@ -496,12 +507,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.afterTreatmentDescription) {
             body["AfterTreatmentDescription"] = form.afterTreatmentDescription.trim();
         } else {
-            error.afterTreatmentDescription = "請填寫";
+            error["AfterTreatmentDescription"] = true;
         }
 
 
         // 高級服務經理/服務經理
-        body["SMId"] = spSmInfo.Id;
+        if (spSmInfo) {
+            body["SMId"] = spSmInfo.Id;
+        } else {
+            error["SMId"] = true;
+        }
+        
         // if (serviceManager) {
         //     body["SMId"] = spSmInfo.Id;
         // } else {
@@ -510,7 +526,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         // }
 
         // 服務總監
-        body["SDId"] = spSdInfo.Id;
+        debugger
+        if (spSmInfo) {
+            body["SDId"] = spSdInfo.Id;
+        } else {
+            error["SDId"] = true;
+        }
+        
         // if (serviceDirector) {
         //     body["SDId"] = spSmInfo.Id;
         // } else {
@@ -523,7 +545,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["SPTId"] = sPhysicalTherapy.Id;
         } else {
             //error implementation
-            error.spt = "請選擇";
+            error["SPTId"] = true;
         }
 
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
@@ -653,149 +675,153 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             let [body, error] = dataFactory("SUBMIT");
             console.log(error);
-
-            if (formStatus === "SM_VOID") {
-                updateServiceUserAccidentById(formData.Id, {
-                    ...body,
-                    "Status": "PENDING_SM_APPROVE"
-                }).then(async (updateServiceUserAccidentByIdRes) => {
-                    let att = [];
-                    if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
-                        att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
-                    }
-
-                    if (injuryFiles.length > 0) {
-                        att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
-                    }
-
-                    if (att.length > 0) {
-                        // Do seomething
-                        await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
-                            if (updateServiceUserAccidentAttachmentByIdRes) {
-                                // Do something
-                            }
-                        }).catch(console.error);
-                    }
-                    notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
-                    postLog({
-                        AccidentTime: formData.AccidentTime,
-                        Action: "提交至服務經理",
-                        CaseNumber: formData.CaseNumber,
-                        FormType: "SUI",
-                        Report: "服務使用者意外填報表(一)",
-                        ServiceUnit: formData.ServiceLocation,
-                        RecordId: formData.Id
-                    }).catch(console.error);
-                    formSubmittedHandler();
-                }).catch(console.error);
+            if (Object.keys(error).length > 0) {
+                setError(error);
             } else {
-                caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
-                    console.log(caseNumber)
-                    let extraBody = {
-                        "CaseNumber": caseNumber,
-                        "Title": "SUI",
-                        "ServiceLocation": serviceLocation,
+                if (formStatus === "SM_VOID") {
+                    updateServiceUserAccidentById(formData.Id, {
+                        ...body,
                         "Status": "PENDING_SM_APPROVE"
-                    };
-
-
-
-                    //SM Auto approve go to next step
-                    if (CURRENT_USER.email === spSmInfo.Email) {
-                        extraBody["SMApproved"] = true;
-                        extraBody["SMComment"] = smComment;
-                        extraBody["SMDate"] = new Date().toISOString();
-                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
-                        extraBody["Status"] = "PENDING_SPT_APPROVE"
-                    }
-
-                    if (formStatus === "DRAFT") {
-                        updateServiceUserAccidentById(formData.Id, {
-                            ...body,
-                            ...extraBody
-                        }).then(async (updateServiceUserAccidentByIdRes) => {
-                            let att = [];
-                            if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
-                                att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
-                            }
-
-                            if (injuryFiles.length > 0) {
-                                att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
-                            }
-
-                            if (att.length > 0) {
-                                // Do seomething
-                                await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
-                                    if (updateServiceUserAccidentAttachmentByIdRes) {
-                                        // Do something
-                                    }
-                                }).catch(console.error);
-                            }
-                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
-                            //}
-
-
-                            postLog({
-                                AccidentTime: accidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SUI",
-                                RecordId: formData.Id,
-                                Report: "服務使用者意外填報表(一)",
-                                ServiceUnit: serviceLocation
-                            })
-
-                            formSubmittedHandler();
+                    }).then(async (updateServiceUserAccidentByIdRes) => {
+                        let att = [];
+                        if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                            att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                        }
+    
+                        if (injuryFiles.length > 0) {
+                            att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                        }
+    
+                        if (att.length > 0) {
+                            // Do seomething
+                            await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                if (updateServiceUserAccidentAttachmentByIdRes) {
+                                    // Do something
+                                }
+                            }).catch(console.error);
+                        }
+                        notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
+                        postLog({
+                            AccidentTime: formData.AccidentTime,
+                            Action: "提交至服務經理",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "SUI",
+                            Report: "服務使用者意外填報表(一)",
+                            ServiceUnit: formData.ServiceLocation,
+                            RecordId: formData.Id
                         }).catch(console.error);
-                    } else {
-                        console.log("body : ",body);
-                        console.log("extraBody : ",extraBody);
-                        createServiceUserAccident({
-                            ...body,
-                            ...extraBody
-                        }).then(async (createServiceUserAccidentRes) => {
-
-                            if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
-
-                                // Attachement
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        console.log(caseNumber)
+                        let extraBody = {
+                            "CaseNumber": caseNumber,
+                            "Title": "SUI",
+                            "ServiceLocation": serviceLocation,
+                            "Status": "PENDING_SM_APPROVE"
+                        };
+    
+    
+    
+                        //SM Auto approve go to next step
+                        if (CURRENT_USER.email === spSmInfo.Email) {
+                            extraBody["SMApproved"] = true;
+                            extraBody["SMComment"] = smComment;
+                            extraBody["SMDate"] = new Date().toISOString();
+                            extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                            extraBody["Status"] = "PENDING_SPT_APPROVE"
+                        }
+    
+                        if (formStatus === "DRAFT") {
+                            updateServiceUserAccidentById(formData.Id, {
+                                ...body,
+                                ...extraBody
+                            }).then(async (updateServiceUserAccidentByIdRes) => {
                                 let att = [];
                                 if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                                     att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
                                 }
-
+    
                                 if (injuryFiles.length > 0) {
                                     att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
                                 }
-
+    
                                 if (att.length > 0) {
                                     // Do seomething
-                                    await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                    await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
                                         if (updateServiceUserAccidentAttachmentByIdRes) {
                                             // Do something
                                         }
                                     }).catch(console.error);
                                 }
-                            }
-                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
-                            //}
-
-                            postLog({
-                                AccidentTime: accidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SUI",
-                                RecordId: createServiceUserAccidentRes.data.Id,
-                                Report: "服務使用者意外填報表(一)",
-                                ServiceUnit: serviceLocation
+                                //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                    notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
+                                //}
+    
+    
+                                postLog({
+                                    AccidentTime: accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SUI",
+                                    RecordId: formData.Id,
+                                    Report: "服務使用者意外填報表(一)",
+                                    ServiceUnit: serviceLocation
+                                })
+    
+                                formSubmittedHandler();
                             }).catch(console.error);
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
+                        } else {
+                            console.log("body : ",body);
+                            console.log("extraBody : ",extraBody);
+                            createServiceUserAccident({
+                                ...body,
+                                ...extraBody
+                            }).then(async (createServiceUserAccidentRes) => {
+    
+                                if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+    
+                                    // Attachement
+                                    let att = [];
+                                    if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                                        att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                                    }
+    
+                                    if (injuryFiles.length > 0) {
+                                        att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                                    }
+    
+                                    if (att.length > 0) {
+                                        // Do seomething
+                                        await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                            if (updateServiceUserAccidentAttachmentByIdRes) {
+                                                // Do something
+                                            }
+                                        }).catch(console.error);
+                                    }
+                                }
+                                //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                    notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
+                                //}
+    
+                                postLog({
+                                    AccidentTime: accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SUI",
+                                    RecordId: createServiceUserAccidentRes.data.Id,
+                                    Report: "服務使用者意外填報表(一)",
+                                    ServiceUnit: serviceLocation
+                                }).catch(console.error);
+    
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        }
+                    }).catch(console.error);
+                }
             }
+            
         }
     }
     const cancelHandler = () => {
@@ -1025,7 +1051,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 treatmentAfterAccident: data.TreatmentAfterAccident,
                 patientAcciedntScenario: data.Circumstance,
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
-                scenarioOutsideActivityRemark: data.CircumstanceOtherRemark
+                scenarioOutsideActivityRemark: data.CircumstanceLocation
             });
 
             setSmComment(data.SMComment);
@@ -1238,7 +1264,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             </select> */}
                             {/* <input type="text" className="form-control" value={userInfo && userInfo.hr_location || ""} disabled /> */}
                             {/* <input type="text" className="form-control" value={serviceUnit || ""} disabled /> */}
-                            <select className="custom-select" value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                            <select className={`custom-select ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             >
                                 <option value={""} ></option>
@@ -1273,7 +1299,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
-                            <select className={`custom-select  ${error.serviceUserRecordId ? "is-invalid" : ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value)}
+                            <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value)}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                 <option>請選擇服務使用者</option>
                                 {
@@ -1372,7 +1398,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>意外發生日期和時間</label>
                         <div className="col-12 col-xl-4">
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`}
                                 selected={accidentTime}
                                 onChange={setAccidentTime}
                                 onChangeRaw={(event) => dateFieldRawHandler(event, setAccidentTime)}
@@ -1383,12 +1409,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 dateFormat="yyyy/MM/dd h:mm aa"
                                 readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
-                            {error.accidentTime && <div className="text-danger">{error.accidentTime}</div>}
                         </div>
                         {/* 意外發生地點*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生地點</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className={`form-control ${error.accidentLocation ? "is-invalid" : ""}`} name="accidentLocation" value={form.accidentLocation} onChange={textHandler}
+                            <input type="text" className={`form-control ${(error && error['AccidentLocation'] ) ? "is-invalid": ""}`} name="accidentLocation" value={form.accidentLocation} onChange={textHandler}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.accidentLocation && <div className="text-danger">{"請填寫"}</div>} */}
                         </div>
@@ -1507,7 +1532,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* 1.1 服務使用者意外時情況*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外時情況</label>
 
-                        <div className="col">
+                        <div className={`col ${(error && error['Circumstance'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientAcciedntScenario" id="scenario-sleep" value="SCENARIO_SLEEPING" onClick={radioButtonHandler} checked={form.patientAcciedntScenario === ("SCENARIO_SLEEPING")} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="scenario-sleep">睡覺</label>
@@ -1543,8 +1568,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 form.patientAcciedntScenario === "SCENARIO_OUTSIDE_ACTIVITY" &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOutsideActivityRemark" value={form.scenarioOutsideActivityRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.scenarioOutsideActivityRemark && <div className="text-danger">{error.scenarioOutsideActivityRemark}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['CircumstanceLocation'] ) ? "is-invalid": ""}`} placeholder={"請註明"} name="scenarioOutsideActivityRemark" value={form.scenarioOutsideActivityRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
                             <div className="form-check">
@@ -1554,18 +1578,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 form.patientAcciedntScenario === "SCENARIO_OTHER" &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder={"請註明"} name="scenarioOtherRemark" value={form.scenarioOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.scenarioOtherRemark && <div className="text-danger">{error.scenarioOtherRemark}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['CircumstanceOtherRemark'] ) ? "is-invalid": ""}`} placeholder={"請註明"} name="scenarioOtherRemark" value={form.scenarioOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
-                            {error.partientAcciedntScenario && <div className="text-danger">{error.partientAcciedntScenario}</div>}
                         </div>
 
                         {/* 1.2 服務使用者受傷部位*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0  `}>
                             服務使用者受傷部位<span className="d-sm-inline d-xl-block">(請上載相片 - 如有)</span>
                         </label>
-                        <div className="col">
+                        <div className={`col ${(error && error['InjuredArea'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-head" value="INJURY_HEAD" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_HEAD") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-head">頭部</label>
@@ -1590,12 +1612,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <input className="form-check-input" type="checkbox" name="injuredArea" id="injury-other" value="INJURY_OTHER" onClick={checkboxHandler} checked={form.injuredArea.indexOf("INJURY_OTHER") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="injury-other">其他 (請註明)</label>
                             </div>
-                            {error.injuredArea && <div className="text-danger">{error.injuredArea}</div>}
                             {
                                 form.injuredArea.indexOf("INJURY_OTHER") > -1 &&
                                 <div className="mb-2">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.injuredAreaOther} name="injuredAreaOther" onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.injuredAreaOther && <div className="text-danger">{error.injuredAreaOther}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['InjuredAreaOtherRemark'] ) ? "is-invalid": ""}`} placeholder="請註明" value={form.injuredAreaOther} name="injuredAreaOther" onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
                             {
@@ -1621,7 +1641,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-4">
                         {/* 1.3 服務使用者意外後有否身體不適/受傷*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者意外後有否身體不適/受傷 </label>
-                        <div className="col">
+                        <div className={`col ${(error && error['UnwellAfterInjured'] ) ? styles.divInvalid: ""}`}>
 
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-true" value="SERVICE_USER_UNCOMFORT_TRUE" onClick={radioButtonHandler} checked={form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
@@ -1631,10 +1651,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <input className="form-check-input" type="radio" name="serviceUserUncomfort" id="service-user-uncomfort-false" value="SERVICE_USER_UNCOMFORT_FALSE" onClick={radioButtonHandler} checked={form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_FALSE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-user-uncomfort-false">沒有</label>
                             </div>
-                            {error.serviceUserUncomfort && <div className="text-danger">{error.serviceUserUncomfort}</div>}
                             {
                                 form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_TRUE" &&
-                                <div>
+                                <div className={`${(error && error['UnwellAfterInjuredChoices'] ) ? styles.divInvalid: ""}`}>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-bleeding" value="UNCOMFORTABLE_BLEEDING" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_BLEEDING") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-bleeding">流血</label>
@@ -1659,20 +1678,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                         <input className="form-check-input" type="checkbox" name="uncomfortable" id="uncomfortable-other" value="UNCOMFORTABLE_OTHER" onClick={checkboxHandler} checked={form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="uncomfortable-other">其他 (請註明)</label>
                                     </div>
-                                    {error.uncomfortable && <div className="text-danger">{error.uncomfortable}</div>}
                                     {
                                         form.uncomfortable.indexOf("UNCOMFORTABLE_OTHER") > -1 &&
                                         <div className="">
-                                            <AutosizeTextarea className="form-control" placeholder="請註明" name="uncomfortableOtherRemark" value={form.uncomfortableOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                            {error.uncomfortableOtherRemark && <div>{error.uncomfortableOtherRemark}</div>}
+                                            <AutosizeTextarea className={`form-control ${(error && error['UnwellAfterInjuredOther'] ) ? "is-invalid": ""}`} placeholder="請註明" name="uncomfortableOtherRemark" value={form.uncomfortableOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         </div>
                                     }
                                     <div className="my-2">
                                         <label className={`form-check-label ${styles.buttonLabel}`} htmlFor="uncomfortable-injury">受傷情況</label>
                                     </div>
                                     <div className="">
-                                        <AutosizeTextarea className="form-control" name="uncomfortableDescription" value={form.uncomfortableDescription} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                        {error.uncomfortableDescription && <div>{error.uncomfortableDescription}</div>}
+                                        <AutosizeTextarea className={`form-control ${(error && error['UnwellAfterInjuredDescription'] ) ? "is-invalid": ""}`} name="uncomfortableDescription" value={form.uncomfortableDescription} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </div>
                             }
@@ -1680,7 +1696,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                         {/* 1.4 服務使用者有否出現不安全的行為*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者有否出現不安全的行為 </label>
-                        <div className="col">
+                        <div className={`col ${(error && error['UnsafeBehaviors'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-true" value="BEHAVIOR_SWITCH_TRUE" onClick={radioButtonHandler} checked={form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-true">有</label>
@@ -1689,10 +1705,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <input className="form-check-input" type="radio" name="behaviorSwitch" id="behavior-switch-false" value="BEHAVIOR_SWITCH_FALSE" onClick={radioButtonHandler} checked={form.behaviorSwitch === "BEHAVIOR_SWITCH_FALSE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-switch-false">沒有</label>
                             </div>
-                            {error.behaviorSwitch && <div className="text-danger">{error.behaviorSwitch}</div>}
                             {
                                 form.behaviorSwitch === "BEHAVIOR_SWITCH_TRUE" &&
-                                <div>
+                                <div className={`${(error && error['UnsafeBehaviorsChoices'] ) ? styles.divInvalid: ""}`}>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-others" value="BEHAVIOR_OTHERS" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_OTHERS") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-others">傷害他人的動作</label>
@@ -1713,12 +1728,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                         <input className="form-check-input" type="checkbox" name="behavior" id="behavior-other" value="BEHAVIOR_OTHER" onClick={checkboxHandler} checked={form.behavior.indexOf("BEHAVIOR_OTHER") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="behavior-other">其他 (請註明)</label>
                                     </div>
-                                    {error.behavior && <div className="text-danger">{error.behavior}</div>}
                                     {
                                         form.behavior.indexOf("BEHAVIOR_OTHER") > -1 &&
                                         <div className="">
-                                            <AutosizeTextarea className="form-control" placeholder="請註明" name="behaviorOtherRemark" value={form.behaviorOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                            {error.behaviorOtherRemark && <div className="text-danger">{error.behaviorOtherRemark}</div>}
+                                            <AutosizeTextarea className={`form-control ${(error && error['UnsafeBehaviorsOther'] ) ? "is-invalid": ""}`} placeholder="請註明" name="behaviorOtherRemark" value={form.behaviorOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         </div>
                                     }
                                 </div>
@@ -1733,7 +1746,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-4">
                         {/* 1.5 相片及CCTV紀錄*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>相片及CCTV紀錄</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['PhotoRecord'] ) ? styles.divInvalid: ""}`}>
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-4">
                                 <div className="form-check">
@@ -1759,10 +1772,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="photo-false">未能提供</label>
                                 </div>
                             </div>
-                            {error.photoChoice && <div className="text-danger">{error.photoChoice}</div>}
 
                             <div className={`${styles.buttonLabel} mt-3`} >CCTV紀錄</div>
-                            <div className="pl-4">
+                            <div className={`pl-4  ${(error && error['CctvRecord'] ) ? styles.divInvalid: ""}`}>
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={radioButtonHandler} checked={form.cctv === "CCTV_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
@@ -1780,7 +1792,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-false" value="CCTV_FALSE" onClick={radioButtonHandler} checked={form.cctv === "CCTV_FALSE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-false">未能提供</label>
                                 </div>
-                                {error.cctv && <div className="text-danger">{error.cctv}</div>}
                             </div>
                         </div>
                     </div>
@@ -1795,7 +1806,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-4">
                         {/*  (2.1(a))  環境因素 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>環境因素</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['ObserveEnvironmentFactor'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactor" id="ENV-SLIPPERY-GROUND" value="ENV_SLIPPERY_GROUND" onClick={checkboxHandler} checked={form.envFactor.indexOf("ENV_SLIPPERY_GROUND") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ENV-SLIPPERY-GROUND">地面濕滑</label>
@@ -1839,18 +1850,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 form.envFactor.indexOf("ENV_OTHER") > -1 &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" value={form.enviromentalFactorOtherRemark} name={"enviromentalFactorOtherRemark"} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.evnFactorOtherRemark && <div className="text-danger">{error.evnFactorOtherRemark}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['ObserveEnvironmentFactorOther'] ) ? "is-invalid": ""}`} placeholder="請註明" value={form.enviromentalFactorOtherRemark} name={"enviromentalFactorOtherRemark"} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
-                            {error.envFactor && <div className="text-danger">{error.envFactor}</div>}
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         {/* (2.1(b)) 個人因素 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>個人因素</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['ObservePersonalFactor'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactor" id="PERSONAL-EMOTIONAL-INSTABILITY" value="PERSONAL_EMOTIONAL_INSTABILITY" onClick={checkboxHandler} checked={form.personalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") > -1} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="PERSONAL-EMOTIONAL-INSTABILITY">情緒不穩</label>
@@ -1878,11 +1887,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 form.personalFactor.indexOf("PERSONAL_OTHER") > -1 &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.personalFactorOtherRemark && <div className="text-danger">{error.personalFactorOtherRemark}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['ObservePersonalFactorOther'] ) ? "is-invalid": ""}`} placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
-                            {error.personalFactor && <div className="text-danger">{error.personalFactor}</div>}
                         </div>
                     </div>
 
@@ -1891,7 +1898,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事發過程</label>
                         <div className="col">
                             <label htmlFor="procedure" className={styles.labelColor} style={{ fontWeight: 500, fontSize: 15 }}>請註明事發地點附近之員工當時執行的職務</label>
-                            <AutosizeTextarea className={`form-control ${error.accidentDetail ? "is-invalid" : ""}`} id="procedure" name="accidentDetail" value={form.accidentDetail} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['AccidentDetail'] ) ? "is-invalid": ""}`} id="procedure" name="accidentDetail" value={form.accidentDetail} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.accidentDetail && <div className="text-danger">{error.accidentDetail}</div>} */}
                         </div>
                     </div>
@@ -1907,7 +1914,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* 3.1 服務單位即時治療/處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位即時治療/處理</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${error.treatmentAfterAccident ? "is-invalid" : ""}`} id="procedure" name="treatmentAfterAccident" value={form.treatmentAfterAccident} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['TreatmentAfterAccident'] ) ? "is-invalid": ""}`} id="procedure" name="treatmentAfterAccident" value={form.treatmentAfterAccident} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.treatmentAfterAccident && <div className="text-danger">{error.treatmentAfterAccident}</div>} */}
                         </div>
                     </div>
@@ -1915,7 +1922,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-4">
                         {/* 3.2 就診安排*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['MedicalArrangement'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="arrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.arrangement === "ARRANGEMENT_DOCTOR_VISIT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
@@ -1933,13 +1940,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <>
                                     <div className="mt-2" style={{ fontSize: 15 }}>
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className="form-control" name="medicalArrangementHospital" value={form.medicalArrangementHospital} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                        {error.medicalArrangementHospital && <div className="text-danger">{error.medicalArrangementHospital}</div>}
+                                        <input type="text" className={`form-control ${(error && error['MedicalArrangementHospital'] ) ? "is-invalid": ""}`} name="medicalArrangementHospital" value={form.medicalArrangementHospital} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['MedicalArrangementDate'] ) ? "is-invalid": ""}`}
                                             selected={medicalArrangementDate}
                                             onChange={setMedicalArrangementDate}
                                             showTimeSelect
@@ -1951,19 +1957,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     </div>
                                     <div className="mt-1" style={{ fontSize: 15 }}>
                                         <label className="form-label">提供予服務使用者的治療</label>
-                                        <AutosizeTextarea className="form-control" name="medicalArrangementTreatment" value={form.medicalArrangementTreatment} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                        {error.medicalArrangementTreatment && <div className="text-danger">{error.medicalArrangementTreatment}</div>}
+                                        <AutosizeTextarea className={`form-control ${(error && error['MedicalArrangementTreatment'] ) ? "is-invalid": ""}`} name="medicalArrangementTreatment" value={form.medicalArrangementTreatment} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
-                            {error.arrangement && <div className="text-danger">{error.arrangement}</div>}
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         {/* 3.3 是否在醫院留醫 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否在醫院留醫</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['StayInHospital'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="isStayInHospital" id="is-stay-in-hospital-true" value="IS_STAY_IN_HOSPITAL_TRUE" onClick={radioButtonHandler} checked={form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="is-stay-in-hospital-true">是</label>
@@ -1980,18 +1984,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 form.isStayInHospital === "IS_STAY_IN_HOSPITAL_TRUE" &&
                                 <div className="mt-2">
                                     <label className="form-label">醫院名稱</label>
-                                    <input type="text" className="form-control" name="stayInHospitalName" value={form.stayInHospitalName} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.isStayInHospitalName && <div className="text-danger">{error.isStayInHospitalName}</div>}
+                                    <input type="text" className={`form-control ${(error && error['StayInHospitalName'] ) ? "is-invalid": ""}`} name="stayInHospitalName" value={form.stayInHospitalName} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
-                            {error.isStayInHospital && <div className="text-danger">{error.isStayInHospital}</div>}
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         {/* 3.4 報警處理 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['CalledPolice'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="POLICE_TRUE" onClick={radioButtonHandler} checked={form.police === "POLICE_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">需要</label>
@@ -2007,7 +2009,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                         <label className="form-label">日期和時間</label>
                                         {/* <input type="datetime-local" className="form-control" /> */}
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['CalledPoliceDate'] ) ? "is-invalid": ""}`}
                                             selected={policeDate}
                                             onChange={setPoliceDate}
                                             showTimeSelect
@@ -2019,24 +2021,21 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     </div>
                                     <div>
                                         <label className="form-label">報案編號</label>
-                                        <input type="text" className="form-control" name="policeReportNumber" value={form.policeReportNumber} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                        {error.policeReportNumber && <div className="text-danger">{error.policeReportNumber}</div>}
+                                        <input type="text" className={`form-control ${(error && error['CalledPoliceReportNumber'] ) ? "is-invalid": ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div>
                                         <label className="form-label">警署</label>
-                                        <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                        {error.policeStation && <div className="text-danger">{error.policeStation}</div>}
+                                        <input type="text" className={`form-control ${(error && error['CalledPoliceStation'] ) ? "is-invalid": ""}`} name="policeStation" value={form.policeStation} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
-                            {error.police && <div className="text-danger">{error.police}</div>}
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         {/* 3.5 意外後中心即時應變措施 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外後中心即時應變措施</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['ContingencyMeasure'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="contingencyMeasure" id="contingency-measure-true" value="CONTINGENCY_MEASURE_TRUE" onClick={radioButtonHandler} checked={form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="contingency-measure-true">有</label>
@@ -2048,11 +2047,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 form.contingencyMeasure === "CONTINGENCY_MEASURE_TRUE" &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" name="contingencyMeasureRemark" value={form.contingencyMeasureRemark} placeholder="請註明" onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                    {error.contingencyMeasureRemark && <div className="text-danger">{error.contingencyMeasureRemark}</div>}
+                                    <AutosizeTextarea className={`form-control ${(error && error['ContingencyMeasureRemark'] ) ? "is-invalid": ""}`} name="contingencyMeasureRemark" value={form.contingencyMeasureRemark} placeholder="請註明" onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
-                            {error.contingencyMeasure && <div className="text-danger">{error.contingencyMeasure}</div>}
                         </div>
                     </div>
                 </section>
@@ -2068,7 +2065,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>通知家屬日期和時間</label>
                         <div className="col-12 col-xl-4">
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error && error['ContactFamilyDate'] ) ? "is-invalid": ""}`}
                                 selected={contactFamilyDate}
                                 onChange={setContactFamilyDate}
                                 onChangeRaw={(event) => dateFieldRawHandler(event, setContactFamilyDate)}
@@ -2083,7 +2080,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* 與服務使用者關係 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} ${styles.textOverflowInline} pt-xl-0`}>與服務使用者關係</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className={`form-control ${error.contactFamilyRelationship ? "is-invalid" : ""}`} name="contactFamilyRelationship" value={form.contactFamilyRelationship} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ContactFamilyRelationship'] ) ? "is-invalid": ""}`} name="contactFamilyRelationship" value={form.contactFamilyRelationship} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.contactFamilyRelationship && <div className="text-danger">{error.contactFamilyRelationship}</div>} */}
                         </div>
                     </div>
@@ -2092,7 +2089,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* (4.2)  家屬姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬姓名</label>
                         <div className="col-12 col-xl-4">
-                            <input type="text" className={`form-control ${error.contactFamilyName ? "is-invalid" : ""}`} name="contactFamilyName" value={form.contactFamilyName} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ContactFamilyName'] ) ? "is-invalid": ""}`} name="contactFamilyName" value={form.contactFamilyName} onChange={textHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.contactFamilyName && <div className="text-danger">{error.contactFamilyName}</div>} */}
                         </div>
                     </div>
@@ -2129,7 +2126,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         {/* (4.4) 服務使用者經治後情況 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者經診治後情況</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${error.afterTreatmentDescription ? "is-invalid" : ""}`} name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler}
+                            <AutosizeTextarea className={`form-control ${(error && error['AfterTreatmentDescription'] ) ? "is-invalid": ""}`} name="afterTreatmentDescription" value={form.afterTreatmentDescription} onChange={textHandler}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                             {/* {error.afterTreatmentDescription && <div className="text-danger">{error.afterTreatmentDescription}</div>} */}
                         </div>
@@ -2191,7 +2188,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 高級服務經理/服務經理姓名 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-xl-block">服務經理姓名</span></label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['SMId'] ) ? styles.divInvalid: ""}`}>
                             {/* <PeoplePicker
                                 context={context}
                                 titleText=""
@@ -2260,7 +2257,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* SD */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監姓名</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['SDId'] ) ? styles.divInvalid: ""}`}>
                             {/* <PeoplePicker
                                 context={context}
                                 showtooltip={false}
@@ -2333,7 +2330,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 showHiddenInUI={false}
                                 defaultSelectedUsers={sPhysicalTherapy && [sPhysicalTherapy.mail]}
                             /> */}
-                            <select className={`custom-select  ${error.spt ? "is-invalid" : ""}`} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
+                            <select className={`custom-select  ${(error && error['SPTId'] ) ? "is-invalid": ""}`} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                     <option value={""} ></option>
                                 {

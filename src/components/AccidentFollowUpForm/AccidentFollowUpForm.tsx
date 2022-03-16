@@ -439,7 +439,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const sdSubmitHandler = (event) => {
         const [body] = dataFactory();
-        debugger
         if (form.accidentalFollowUpContinue) {
             if (confirm("確認繼續 ?") === false) return;
 
@@ -627,7 +626,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const formChangeHandler = (event) => {
         const value = +event.target.value;
-        debugger
         setSelectedAccidentFollowUpFormId(value);
         changeFormTwentyOneDataSelected(value);
     }
@@ -674,7 +672,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
-    console.log('accidentFollowUpFormList', accidentFollowUpFormList);
     return (
         <>
             {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}

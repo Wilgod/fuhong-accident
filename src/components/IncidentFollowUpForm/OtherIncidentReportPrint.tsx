@@ -8,6 +8,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 interface ISpecialIncidentReportAllowancePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -15,7 +16,7 @@ interface ISpecialIncidentReportAllowancePrint {
     formData: any;
     formTwentySixData:any;
     formTwentySixDataSelected: any;
-    siteCollectionUrl:String;
+    siteCollectionUrl:string;
     index:number;
 }
 
@@ -149,9 +150,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [incidentTime, setIncidentTime] = useState(new Date());
     const [reportDate, setReportDate] = useState(new Date());
+    const [reporterName, setReporterName] = useState("");
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
+    const [sdJobTitle, setSdJobTitle] = useState("");
+    const [sdName, setSdName] = useState("");
+    
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
-
+    
     let followUpActions = null;
     let formTwentySixDataPrint = null;
     if (formTwentySixData != null && formTwentySixData.length > 0) {
@@ -302,9 +308,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             setReportDate(new Date(formData.Created));
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
-                debugger
             }
-            debugger
             setForm({
                 ...form,
                 toDepartment:formData.ToDepartment,
@@ -443,24 +447,40 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     useEffect(() => {
         if (reporter) {
-            debugger
-            setForm({ ...form, 
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterName(reporter.displayName);
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                }
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
+            /*setForm({ ...form, 
                 reporterName: reporter.displayName,
                 reporterJobTitle: reporter.jobTitle
-            });
+            });*/
         }
     }, [reporter])
 
     useEffect(() => {
         if (sdInfo) {
-            debugger
-            setForm({ ...form, 
-                sdName: sdInfo.displayName,
-                sdJobTitle: sdInfo.jobTitle
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,sdInfo.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setSdJobTitle(userInfosRes[0].hr_jobcode);
+                    setSdName(sdInfo.displayName);
+                }
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
             });
         }
     }, [sdInfo])
     console.log('index :', index);
+
+    
     return (
         <>
             <style media="print">
@@ -477,7 +497,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         其他事故呈報表
                         </div>
                         <div className={`col-12 ${styles.header}`}>
-                        服務單位 <span style={{border:'1px solid'}}>{form.serviceLocation}</span>
+                        服務單位 <span>{form.serviceLocation}</span>
                         </div>
                     </div>
 
@@ -616,7 +636,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <div style={{paddingLeft:'150px'}}>(報案編號
+                                        <div style={{paddingLeft:'45px'}}>(報案編號:
                                             <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
                                             {form.policeReportNumber != null ? form.policeReportNumber: ''})
                                             </span>
@@ -773,7 +793,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterName}
+                                        {reporterName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -781,7 +801,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.sdName}
+                                        {sdName}
                                         </div>
                                     </td>
                                 </tr>
@@ -791,7 +811,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterJobTitle}
+                                        {reporterJobTitle}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -799,7 +819,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px', verticalAlign:'bottom'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.sdJobTitle}
+                                        {sdJobTitle}
                                         </div>
                                     </td>
                                 </tr>

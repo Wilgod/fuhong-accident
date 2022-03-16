@@ -150,7 +150,6 @@ export async function getSeniorPhysiotherapistByGraph(siteCollectionUrl) {
 export async function checkDepartmentList(siteCollectionUrl,userEmail) {
     let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
     let dept = [];
-    debugger
     if (user.length > 0) {
       let access = await getAccessRight();
       console.log('user hr_jobcode : ' +  user[0].hr_jobcode);

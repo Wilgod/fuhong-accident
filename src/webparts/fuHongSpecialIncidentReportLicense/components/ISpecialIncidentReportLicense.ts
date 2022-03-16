@@ -83,7 +83,7 @@ export interface ISpecialIncidentReportLicenseStates {
     affectedMedicalRecord: string;
     affectedDetail: string;
     affectedFollowUp: string;
-
+    submitDate:Date;
 }
 
 export interface IErrorFields {

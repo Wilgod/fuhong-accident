@@ -69,7 +69,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
-    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
+    const {departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [sptList] = useSPT(siteCollectionUrl);
     const [familyContactDate, setFamilyContactDate] = useState(null);
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
@@ -216,14 +216,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 if (form.serviceUserIdentityOther) {
                     body["ServiceUserIdentityOther"] = form.serviceUserIdentityOther;
                 } else {
-                    error["ServiceUserIdentity"] = true;
+                    error["ServiceUserIdentityOther"] = true;
                 }
             }
         } else {
             error["ServiceUserIdentity"] = true;
         }
-
-        body["AccidentTime"] = accidentTime.toISOString();
+        if (accidentTime) {
+            body["AccidentTime"] = accidentTime.toISOString();
+        } else {
+            error["AccidentTime"] = true;
+        }
+        
         if (form.accidentLocation) {
             body["AccidentLocation"] = form.accidentLocation;
         } else {
@@ -287,7 +291,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         // CCTV
         body["CctvRecord"]
         if (form.cctvRecord === true) {
-            body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
+            if (cctvRecordReceiveDate) {
+                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
+            } else {
+                error["CctvRecordReceiveDate"] = true;
+            }
+            
         } else if (form.cctvRecord === undefined) {
             error["CctvRecord"] = true;
         }
@@ -302,8 +311,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 } else {
                     error["MedicalArrangementHospital"] = true;
                 }
-                body["HospitalArriveTime"] = hospitalArriveTime.toISOString();
-                body["HospitalLeaveTime"] = hospitalLeaveTime.toISOString();
+                if (hospitalArriveTime) {
+                    body["HospitalArriveTime"] = hospitalArriveTime.toISOString();
+                } else {
+                    error["HospitalArriveTime"] = true;
+                }
+                if (hospitalLeaveTime) {
+                    body["HospitalLeaveTime"] = hospitalLeaveTime.toISOString();
+                } else {
+                    error["HospitalLeaveTime"] = true;
+                }
+                
             }
         } else {
             error["MedicalArrangement"] = true;
@@ -312,8 +330,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         //報警處理
         body["Police"] = form.police;
         if (form.police === true) {
-            body["PoliceDatetime"] = policeDatetime.toISOString();
-
+            if (policeDatetime) {
+                body["PoliceDatetime"] = policeDatetime.toISOString();
+            } else {
+                error["PoliceDatetime"] = true;
+            }
             if (form.policeStation) {
                 body["PoliceStation"] = form.policeStation;
             } else {
@@ -325,7 +346,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         //家屬聯絡
         body["FamilyContact"] = form.familyContact;
         if (form.familyContact === true) {
-            body["FamilyContactDate"] = familyContactDate.toISOString();
+            if (familyContactDate) {
+                body["FamilyContactDate"] = familyContactDate.toISOString();
+            } else {
+                error["FamilyContactDate"] = true;
+            }
             if (form.familyRelationship) {
                 body["FamilyRelationship"] = form.familyRelationship;
             } else {
@@ -367,169 +392,127 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         const [body, error] = dataFactory("SUBMIT");
         console.log(body);
         console.log(error);
-        if (currentUserRole === Role.ADMIN) {
-            updateOutsiderAccidentFormById(formId, {
-                "InsuranceCaseNo": form.insuranceCaseNo
-            }).then((res) => {
-                // Update form to stage 1-2
-                // Trigger notification workflow
-                console.log(res);
-
-                postLog({
-                    AccidentTime: accidentTime.toISOString(),
-                    Action: "更新",
-                    CaseNumber: formData.CaseNumber,
-                    FormType: "PUI",
-                    Report: "外界人士意外填報表(一)",
-                    ServiceUnit: serviceLocation,
-                    RecordId: formData.Id
-                }).catch(console.error);
-
-                formSubmittedHandler();
-            }).catch(console.error);
-        } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
-            updateOutsiderAccidentFormById(formId, {
-                "SDComment": sdComment,
-                "SDDate": new Date().toISOString(),
-            }).then((res) => {
-                // Update form to stage 1-2
-                // Trigger notification workflow
-                console.log(res);
-                notifyOutsiderAccidentSMSDComment(context, formData.Id, 1, workflow);
-                postLog({
-                    AccidentTime: accidentTime.toISOString(),
-                    Action: "評語",
-                    CaseNumber: formData.CaseNumber,
-                    FormType: "PUI",
-                    Report: "外界人士意外填報表(一)",
-                    ServiceUnit: serviceLocation,
-                    RecordId: formData.Id
-                }).catch(console.error);
-
-                formSubmittedHandler();
-                notifyOutsiderAccident(context, formData.Id, 1, workflow);
-            }).catch(console.error);
+        if (Object.keys(error).length > 0) {
+            setError(error);
         } else {
-
-            if (formStatus === "SM_VOID") {
-
-                updateOutsiderAccidentFormById(formData.Id, {
-                    ...body,
-                    "Status": "PENDING_SM_APPROVE"
-                }).then(async (updateOutsiderAccidentFormByIdRes) => {
-                    console.log(updateOutsiderAccidentFormByIdRes)
-                    // Photo upload implement
-                    let att = [];
-                    if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
-                        att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
-                    }
-
-                    if (att.length > 0) {
-                        await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
-                            if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                console.log(updateOutsidersAccidentFormAttachmentByIdRes);
-                            }
-                        }).catch(console.error);
-                    }
+            if (currentUserRole === Role.ADMIN) {
+                updateOutsiderAccidentFormById(formId, {
+                    "InsuranceCaseNo": form.insuranceCaseNo
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+    
                     postLog({
                         AccidentTime: accidentTime.toISOString(),
-                        Action: "提交",
+                        Action: "更新",
                         CaseNumber: formData.CaseNumber,
                         FormType: "PUI",
                         Report: "外界人士意外填報表(一)",
                         ServiceUnit: serviceLocation,
                         RecordId: formData.Id
                     }).catch(console.error);
-
-                    notifyOutsiderAccident(context, formData.Id, 1, workflow);
+    
                     formSubmittedHandler();
-                })
+                }).catch(console.error);
+            } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
+                updateOutsiderAccidentFormById(formId, {
+                    "SDComment": sdComment,
+                    "SDDate": new Date().toISOString(),
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+                    notifyOutsiderAccidentSMSDComment(context, formData.Id, 1, workflow);
+                    postLog({
+                        AccidentTime: accidentTime.toISOString(),
+                        Action: "評語",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "PUI",
+                        Report: "外界人士意外填報表(一)",
+                        ServiceUnit: serviceLocation,
+                        RecordId: formData.Id
+                    }).catch(console.error);
+    
+                    formSubmittedHandler();
+                    notifyOutsiderAccident(context, formData.Id, 1, workflow);
+                }).catch(console.error);
             } else {
-
-                // Draft update havent implement
-                caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
-                    console.log(caseNumber);
-                    let extraBody = {
-                        "CaseNumber": caseNumber,
-                        "Title": "PUI",
-                        "ServiceLocation": serviceLocation,
+    
+                if (formStatus === "SM_VOID") {
+    
+                    updateOutsiderAccidentFormById(formData.Id, {
+                        ...body,
                         "Status": "PENDING_SM_APPROVE"
-                    }
-
-                    if (CURRENT_USER.email === spSmInfo.Email) {
-                        extraBody["SMApproved"] = true;
-                        extraBody["SMComment"] = smComment;
-                        extraBody["SMDate"] = new Date().toISOString();
-                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
-                        extraBody["Status"] = "PENDING_SPT_APPROVE";
-                    }
-
-                    if (formStatus === "DRAFT") {
-                        updateOutsiderAccidentFormById(formData.Id, {
-                            ...body,
-                            ...extraBody,
-                        }).then(async (updateOutsiderAccidentFormByIdRes) => {
-                            console.log(updateOutsiderAccidentFormByIdRes)
-                            // Photo upload implement
-                            let att = [];
-                            if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
-                                att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
-                            }
-
-                            if (att.length > 0) {
-                                await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
-                                    if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                        console.log(updateOutsidersAccidentFormAttachmentByIdRes);
-                                    }
-                                }).catch(console.error);
-                            }
-                            if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
-                                
-                                postLog({
-                                    AccidentTime: accidentTime.toISOString(),
-                                    Action: "提交",
-                                    CaseNumber: caseNumber,
-                                    FormType: "PUI",
-                                    Report: "外界人士意外填報表(一)",
-                                    ServiceUnit: serviceLocation,
-                                    RecordId: formData.Id
-                                }).catch(console.error);
-                            } else {
-                                postLog({
-                                    AccidentTime: accidentTime.toISOString(),
-                                    Action: "提交",
-                                    CaseNumber: caseNumber,
-                                    FormType: "PUI",
-                                    Report: "外界人士意外填報表(一)",
-                                    ServiceUnit: serviceLocation,
-                                    RecordId: formData.Id
-                                }).catch(console.error);
-                            }
-
-                            notifyOutsiderAccident(context, formData.Id, 1,workflow);
-                            formSubmittedHandler();
-                        })
-                    } else {
-                        createOutsiderAccidentForm({
-                            ...body,
-                            ...extraBody
-                        }).then(async createOutsiderAccidentFormRes => {
-                            if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
-                                console.log(createOutsiderAccidentFormRes);
+                    }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                        console.log(updateOutsiderAccidentFormByIdRes)
+                        // Photo upload implement
+                        let att = [];
+                        if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                            att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                        }
+    
+                        if (att.length > 0) {
+                            await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                    console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                                }
+                            }).catch(console.error);
+                        }
+                        postLog({
+                            AccidentTime: accidentTime.toISOString(),
+                            Action: "提交",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "PUI",
+                            Report: "外界人士意外填報表(一)",
+                            ServiceUnit: serviceLocation,
+                            RecordId: formData.Id
+                        }).catch(console.error);
+    
+                        notifyOutsiderAccident(context, formData.Id, 1, workflow);
+                        formSubmittedHandler();
+                    })
+                } else {
+    
+                    // Draft update havent implement
+                    caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        console.log(caseNumber);
+                        let extraBody = {
+                            "CaseNumber": caseNumber,
+                            "Title": "PUI",
+                            "ServiceLocation": serviceLocation,
+                            "Status": "PENDING_SM_APPROVE"
+                        }
+    
+                        if (CURRENT_USER.email === spSmInfo.Email) {
+                            extraBody["SMApproved"] = true;
+                            extraBody["SMComment"] = smComment;
+                            extraBody["SMDate"] = new Date().toISOString();
+                            extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                            extraBody["Status"] = "PENDING_SPT_APPROVE";
+                        }
+    
+                        if (formStatus === "DRAFT") {
+                            updateOutsiderAccidentFormById(formData.Id, {
+                                ...body,
+                                ...extraBody,
+                            }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                                console.log(updateOutsiderAccidentFormByIdRes)
                                 // Photo upload implement
                                 let att = [];
                                 if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
                                     att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
                                 }
-
+    
                                 if (att.length > 0) {
-                                    await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                    await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                         if (updateOutsidersAccidentFormAttachmentByIdRes) {
-                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes);
                                         }
                                     }).catch(console.error);
                                 }
                                 if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+                                    
                                     postLog({
                                         AccidentTime: accidentTime.toISOString(),
                                         Action: "提交",
@@ -537,7 +520,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         FormType: "PUI",
                                         Report: "外界人士意外填報表(一)",
                                         ServiceUnit: serviceLocation,
-                                        RecordId: createOutsiderAccidentFormRes.data.Id
+                                        RecordId: formData.Id
                                     }).catch(console.error);
                                 } else {
                                     postLog({
@@ -547,18 +530,65 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         FormType: "PUI",
                                         Report: "外界人士意外填報表(一)",
                                         ServiceUnit: serviceLocation,
-                                        RecordId: createOutsiderAccidentFormRes.data.Id
+                                        RecordId: formData.Id
                                     }).catch(console.error);
                                 }
-
-                                notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1,workflow);
+    
+                                notifyOutsiderAccident(context, formData.Id, 1,workflow);
                                 formSubmittedHandler();
-                            }
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
+                            })
+                        } else {
+                            createOutsiderAccidentForm({
+                                ...body,
+                                ...extraBody
+                            }).then(async createOutsiderAccidentFormRes => {
+                                if (createOutsiderAccidentFormRes && createOutsiderAccidentFormRes.data && createOutsiderAccidentFormRes.data.Id) {
+                                    console.log(createOutsiderAccidentFormRes);
+                                    // Photo upload implement
+                                    let att = [];
+                                    if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                                        att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                                    }
+    
+                                    if (att.length > 0) {
+                                        await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                            if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                                console.log(updateOutsidersAccidentFormAttachmentByIdRes)
+                                            }
+                                        }).catch(console.error);
+                                    }
+                                    if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+                                        postLog({
+                                            AccidentTime: accidentTime.toISOString(),
+                                            Action: "提交",
+                                            CaseNumber: caseNumber,
+                                            FormType: "PUI",
+                                            Report: "外界人士意外填報表(一)",
+                                            ServiceUnit: serviceLocation,
+                                            RecordId: createOutsiderAccidentFormRes.data.Id
+                                        }).catch(console.error);
+                                    } else {
+                                        postLog({
+                                            AccidentTime: accidentTime.toISOString(),
+                                            Action: "提交",
+                                            CaseNumber: caseNumber,
+                                            FormType: "PUI",
+                                            Report: "外界人士意外填報表(一)",
+                                            ServiceUnit: serviceLocation,
+                                            RecordId: createOutsiderAccidentFormRes.data.Id
+                                        }).catch(console.error);
+                                    }
+    
+                                    notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1,workflow);
+                                    formSubmittedHandler();
+                                }
+                            }).catch(console.error);
+                        }
+                    }).catch(console.error);
+                }
             }
         }
+        
     }
 
 
@@ -796,7 +826,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             if (data.SPTDate) {
                 setSptDate(new Date(data.SPTDate));
             }
-            debugger
             setServiceUnit(data.ServiceUnit);
 
             setAccidentTime(new Date(data.AccidentTime));
@@ -831,7 +860,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }
 
             if (data.SD) {
-                debugger
                 /*setTimeout(() => {
                     setSDEmail(data.SD.EMail);
                 }, 2000);*/
@@ -954,7 +982,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     useEffect(() => {
         if (Array.isArray(sptList) && sptList.length > 0) {
-            //debugger
             setSPhysicalTherapyEmail(sptList[0].Email);
         }
     }, [sptList]);
@@ -968,7 +995,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }
         }).catch(console.error);*/
     }, [patientServiceUnit])
-    console.log('pendingSptApproveForSPT : ',pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail))
     return (
         <>
             {isPrintMode && <Header displayName="外界人士意外填報表(一)" />}
@@ -990,7 +1016,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 })}
                             </select> */}
                             {/*<input type="text" className="form-control" value={serviceUnit || ""} disabled />*/}
-                            <select className="custom-select" value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                            <select className={`custom-select ${(error && error['ServiceUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             >
                                 <option value={""} ></option>
@@ -1024,12 +1050,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (中文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ServiceUserNameTC'] ) ? "is-invalid": ""}`} name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (英文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ServiceUserNameEN'] ) ? "is-invalid": ""}`} name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                     </div>
 
@@ -1037,11 +1063,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="number" className={`form-control ${(error && error['ServiceUserAge'] ) ? "is-invalid": ""}`} name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
-                        <div className="col-12 col-md-4 d-flex align-items-center">
+                        <div className={`col-12 col-md-4 d-flex align-items-center ${(error && error['ServiceUserGender'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" id="gender-male" onClick={() => setForm({ ...form, serviceUserGender: "male" })} checked={form.serviceUserGender === "male"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
@@ -1057,7 +1083,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 身份*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份</label>
                         <div className="col-12 col-md-4">
-                            <select className="form-control" name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
+                            <select className={`form-control ${(error && error['ServiceUserIdentity'] ) ? "is-invalid": ""}`} name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                 <option value="">請選擇</option>
                                 <option value="visitor">訪客</option>
                                 <option value="family">家屬</option>
@@ -1068,7 +1094,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {
                                 form.serviceUserIdentity === "others" &&
                                 <div className="mt-2">
-                                    <input type="text" className="form-control" placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                    <input type="text" className={`form-control ${(error && error['ServiceUserIdentityOther'] ) ? "is-invalid": ""}`} placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
                         </div>
@@ -1076,7 +1102,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
-                                className="form-control"
+                                className={`form-control ${(error && error['AccidentTime'] ) ? "is-invalid": ""}`}
                                 selected={accidentTime}
                                 onChange={(date) => setAccidentTime(date)}
                                 showTimeSelect
@@ -1091,7 +1117,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                     <div className="form-row mb-2">
                         {/* 地點 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>地點</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0 ${(error && error['AccidentLocation'] ) ? "is-invalid": ""}`}>地點</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
@@ -1157,7 +1183,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 {
                                     form.envOther &&
                                     <div className="">
-                                        <AutosizeTextarea className="form-control" placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <AutosizeTextarea className={`form-control ${(error && error['EnvOtherDescription'] ) ? "is-invalid": ""}`} placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 }
                             </div>
@@ -1181,7 +1207,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(2.3)  意外事件有否證人證人目擊事故發生經過? */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外事件有否證人目擊事故發生經過?</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Witness'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" onClick={() => setForm({ ...form, witness: true })} checked={form.witness === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="witness-true">有</label>
@@ -1195,11 +1221,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div>
                                         <label className="form-label">證人姓名</label>
-                                        <input type="text" className="form-control" name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['WitnessName'] ) ? "is-invalid": ""}`} name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div>
                                         <label className="form-label">聯絡電話</label>
-                                        <input type="text" className="form-control" name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['WitnessPhone'] ) ? "is-invalid": ""}`} name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
@@ -1209,7 +1235,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(2.4)  相片及CCTV紀錄*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>相片及CCTV紀錄</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['PhotoRecord'] ) ? "is-invalid": ""}`}>
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
                                 <div className="form-check">
@@ -1237,7 +1263,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 </div>
                             </div>
                             <div className={`${styles.buttonLabel} mt-3`}>CCTV紀錄</div>
-                            <div className="pl-2">
+                            <div className={`pl-2 ${(error && error['CctvRecord'] ) ? "is-invalid": ""}`}>
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
@@ -1251,7 +1277,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
-                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                            <DatePicker className={`form-control ${(error && error['CctvRecordReceiveDate'] ) ? "is-invalid": ""}`} dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                         </div>
                                     </div>
                                 }
@@ -1269,7 +1295,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(3.1)  就診安排*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['MedicalArrangement'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_DOCTOR_VISIT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
@@ -1291,12 +1317,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div className="">
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className="form-control" value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['MedicalArrangementHospital'] ) ? "is-invalid": ""}`} value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div className="">
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['HospitalArriveTime'] ) ? "is-invalid": ""}`}
                                             selected={hospitalArriveTime}
                                             onChange={(date) => setHospitalArriveTime(date)}
                                             showTimeSelect
@@ -1309,7 +1335,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="">
                                         <label className="form-label">離開時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['HospitalLeaveTime'] ) ? "is-invalid": ""}`}
                                             selected={hospitalLeaveTime}
                                             onChange={(date) => setHospitalLeaveTime(date)}
                                             showTimeSelect
@@ -1328,7 +1354,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/* (3.2) 報警處理 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Police'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">有</label>
@@ -1343,7 +1369,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div>
                                         <label className="form-label">日期和時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['PoliceDatetime'] ) ? "is-invalid": ""}`}
                                             selected={policeDatetime}
                                             onChange={(date) => setPoliceDatetime(date)}
                                             showTimeSelect
@@ -1355,7 +1381,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     </div>
                                     <div>
                                         <label className="form-label">警署名稱</label>
-                                        <input type="text" className="form-control" name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['PoliceStation'] ) ? "is-invalid": ""}`} name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
@@ -1365,7 +1391,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/* (3.3) 家屬聯絡 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬聯絡</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['FamilyContact'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="familyContact" id="family-true" value="family-true" onClick={() => setForm({ ...form, familyContact: true })} checked={form.familyContact === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="family-true">有</label>
@@ -1380,7 +1406,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div>
                                         <label className="form-label">通知家屬日期及時間</label>
                                         <DatePicker
-                                            className="form-control"
+                                            className={`form-control ${(error && error['FamilyContactDate'] ) ? "is-invalid": ""}`}
                                             selected={familyContactDate}
                                             onChange={(date) => setFamilyContactDate(date)}
                                             showTimeSelect
@@ -1392,7 +1418,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     </div>
                                     <div>
                                         <label className="form-label">與傷者關係</label>
-                                        <input type="text" className="form-control" name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['FamilyRelationship'] ) ? "is-invalid": ""}`} name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }

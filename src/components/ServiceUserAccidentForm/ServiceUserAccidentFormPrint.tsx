@@ -37,7 +37,6 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
         }
     }
-    debugger
 return <>
     <div style={{color:'black'}}>
         {index == 0 &&

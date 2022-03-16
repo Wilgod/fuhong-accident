@@ -172,7 +172,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         body["ToDepartment"] = form.toDepartment;
 
         //事故發生日期和時間
-        debugger
         if (incidentTime) {
             body["IncidentTime"] = incidentTime.toISOString();
         } else {
@@ -262,7 +261,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
         //報警處理
         body["Police"] = form.police;
-        debugger
         if (form.police === true) {
             if (policeDatetime) {
                 body["PoliceDatetime"] = policeDatetime.toISOString();
@@ -360,7 +358,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             error['FollowUpPlan'] = true;
         }
 
-        body["SubmitDate"] = new Date();
+        
 
 
 
@@ -465,7 +463,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory()
+        const [body, error] = dataFactory();
+        body["SubmitDate"] = new Date().toISOString();
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {
@@ -810,7 +809,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
 
     useEffect(() => {
-        debugger
         if (reporter && reporter.mobilePhone) {
             setReporterPhone(reporter.mobilePhone || "");
             

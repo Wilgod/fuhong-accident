@@ -180,7 +180,6 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
         const data = await getOutsiderAccidentById(formId);
         //const author = await getUserAdByGraph(data.Author.EMail);
         //const investigator = data.InvestigatorId != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
-        debugger
         //data["Author"] =author;
         //data["InvestigatorAD"] =investigator;
         data["ServiceUserUnit"] = data["ServiceLocation"];
@@ -201,7 +200,6 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           formTwentyOneDataSelected = formTwentyOneData.Id
         }
         //this.setState({ outsiderAccidentFormData: data, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
-        debugger
         if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
           this.setState({ outsiderAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint });
         } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
@@ -222,7 +220,6 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   }
 
   public changeFormTwentyOneDataSelected(value) {
-    debugger
     this.setState({
       formTwentyOneDataSelected:value
     })

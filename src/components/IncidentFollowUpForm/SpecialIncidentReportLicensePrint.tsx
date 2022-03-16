@@ -8,6 +8,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 interface ISpecialIncidentReportLicensePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -15,7 +16,7 @@ interface ISpecialIncidentReportLicensePrint {
     formData: any;
     formTwentySixData:any;
     formTwentySixDataSelected: any;
-    siteCollectionUrl:String;
+    siteCollectionUrl:string;
     index:number;
 }
 
@@ -103,6 +104,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [incidentTime, setIncidentTime] = useState(new Date());
     const [reportDate, setReportDate] = useState(new Date());
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
 
@@ -232,9 +234,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             setReportDate(new Date(formData.Created));
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
-                debugger
             }
-            debugger
             setForm({
                 ...form,
                 abuser: formData.Abuser,
@@ -328,10 +328,16 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     useEffect(() => {
         if (reporter) {
-            debugger
-            setForm({ ...form, 
-                reporterName: reporter.displayName,
-                reporterJobTitle: reporter.jobTitle
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                }
+
+
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
             });
         }
     }, [reporter])
@@ -889,7 +895,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     性別
                                     </td>
                                     <td className={`${styles.underlineTable}`}  style={{width:'100px'}}>
-                                    {form.residentGender != null ? form.residentGender : ''}
+                                    {form.residentGender != null ? form.residentGender == 'male'?'男':'女' : ''}
                                     </td>
                                     <td>
                                     房及／或床號
@@ -908,19 +914,19 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     已通知住客監護人／保證人／家人／親屬
                                 </div>
                                 <div className={`col-12`}>
-                                    <table>
+                                    <table style={{width:'600px'}}>
                                         <tr>
-                                            <td>
+                                            <td style={{width:'100px'}}>
                                             姓名
                                             </td>
-                                            <td className={`${styles.underlineTable}`}>
-                                            {form.guardianName != null ? form.guardianName : ''})
+                                            <td className={`${styles.underlineTable}`} style={{width:'200px'}}>
+                                            {form.guardianName != null ? form.guardianName : ''}
                                             </td>
-                                            <td>
+                                            <td style={{width:'100px'}}>
                                             及關係
                                             </td>
-                                            <td className={`${styles.underlineTable}`}>
-                                            {form.guardianRelation != null ? form.guardianRelation : ''})
+                                            <td className={`${styles.underlineTable}`} style={{width:'200px'}}>
+                                            {form.guardianRelation != null ? form.guardianRelation : ''}
                                             </td>
                                         </tr>
                                     </table>
@@ -932,7 +938,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                             日期及時間
                                             </td>
                                             <td className={`${styles.underlineTable}`}>
-                                            {form.guardianDate != null ? new Date(form.guardianDate).getFullYear() + `-` +(`0`+(new Date(form.guardianDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDate).getDate()).slice(-2) : ''})
+                                            {form.guardianDate != null ? new Date(form.guardianDate).getFullYear() + `-` +(`0`+(new Date(form.guardianDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDate).getDate()).slice(-2) : ''}
                                             </td>
                                         </tr>
                                     </table>
@@ -980,12 +986,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         <div className={`col-12`}>
                             <table>
                                 <tr>
-                                    <td style={{width:'100px'}}>
-                                    填報人簽署 : 
+                                <td style={{width:'100px'}}>
+                                    填報人姓名 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-
+                                        {reporter && reporter.displayName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -993,19 +999,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterJobTitle}
+                                        {reporterJobTitle}
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={{width:'100px'}}>
-                                    填報人姓名 : 
-                                    </td>
-                                    <td style={{width:'300px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterName}
-                                        </div>
-                                    </td>
                                     <td style={{width:'100px'}}>
                                     填報日期 : 
                                     </td>
@@ -1014,6 +1012,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                         </div>
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </div>
@@ -1108,11 +1108,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td style={{width:'100px'}}>
-                                    填報人簽署 : 
+                                    填報人姓名 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-
+                                        {reporter && reporter.displayName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
@@ -1120,19 +1120,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterJobTitle}
+                                        {reporterJobTitle}
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={{width:'100px'}}>
-                                    填報人姓名 : 
-                                    </td>
-                                    <td style={{width:'300px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterName}
-                                        </div>
-                                    </td>
+                                    
                                     <td style={{width:'100px'}}>
                                     填報日期 : 
                                     </td>
@@ -1141,6 +1134,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                         </div>
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </div>

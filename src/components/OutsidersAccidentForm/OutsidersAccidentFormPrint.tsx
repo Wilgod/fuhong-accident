@@ -9,7 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './OutsidersAccidentFormPrint.module.scss';
 import { JSONParser } from '@pnp/pnpjs';
-
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 
 interface IServiceUserAccidentFormPrintProps {
     index: number;
@@ -22,7 +22,10 @@ interface IServiceUserAccidentFormPrintProps {
 }
 
 export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList}: IServiceUserAccidentFormPrintProps ) {
-    console.log('index :', index);
+    const [reporterJobTitle, setReporterJobTitle] = useState("");
+    const [reporterName, setReporterName] = useState("");
+    const [investigatorName, setInvestigatorName] = useState("");
+    const [investigatorJobTitle, setInvestigatorJobTitle] = useState("");
     let EstimatedPart2CompletionDate = null;
     if (formData.SubmitDate != null) {
         let SubmitDate = new Date(formData.SubmitDate);
@@ -37,7 +40,34 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
         }
     }
-    debugger
+    console.log('formData :',formData);
+
+    useEffect(() => {
+        if (formData) {
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Author.EMail).then((userInfosRes) => {
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                    setReporterName(formData.Author.Title);
+                }
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
+            debugger
+            if (formData.Investigator) {
+                getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Investigator.EMail).then((userInfosRes) => {
+                    if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                        setInvestigatorName(userInfosRes[0].hr_jobcode);
+                        setInvestigatorJobTitle(formData.Author.Title);
+                    }
+                }).catch((err) => {
+                    console.error('getUserInfoByEmailInUserInfoAD error')
+                    console.error(err)
+                });
+            }
+            
+        }
+    }, [formData])
 return <>
     <div style={{color:'black'}}>
         {index == 0 &&
@@ -74,12 +104,11 @@ return <>
                                 {formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}
                                 </td>
                                 <td style={{width:'200px'}}>&nbsp;&nbsp;性別:</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.ServiceUserGender == "Male" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Male" && <span>&#9744;</span>}
-                                    男&nbsp;&nbsp;
-                                    {formData.ServiceUserGender == "Female" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Female" && <span>&#9744;</span>}
-                                    女</td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                    {formData.ServiceUserGender == "male" && <span>男</span>}
+                                    {formData.ServiceUserGender == "female" && <span>女</span>}
+
+                                </td>
                             </tr>
                             <tr>
                                 <td style={{width:'200px'}}>身份： </td>
@@ -104,7 +133,7 @@ return <>
                             </tr>
                             <tr>
                                 <td style={{width:'200px'}}>意外發生日期及時間</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
                                 </td>
                                 <td style={{width:'200px'}}>&nbsp;&nbsp;地點</td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
@@ -135,31 +164,31 @@ return <>
                         </tr>
                         <tr>
                             <td style={{width:'250px'}}>
-                                {formData.EnvSlipperyGround == "ENV-SLIPPERY-GROUND"  && <span>&#9745;</span>}
-                                 {formData.EnvSlipperyGround != "ENV-SLIPPERY-GROUND" && <span>&#9744;</span>}
+                                {formData.EnvSlipperyGround  && <span>&#9745;</span>}
+                                 {!formData.EnvSlipperyGround && <span>&#9744;</span>}
                                 1.地面濕滑&nbsp;&nbsp;
                             </td>
                             <td style={{width:'250px'}}>
-                                {formData.EnvSlipperyGround == "ENV-UNEVEN-GROUND" && <span>&#9745;</span>}
-                                {formData.EnvSlipperyGround != "ENV-UNEVEN-GROUND" && <span>&#9744;</span>}
+                                {formData.EnvUnevenGround && <span>&#9745;</span>}
+                                {!formData.EnvUnevenGround && <span>&#9744;</span>}
                                 2.地面不平&nbsp;&nbsp;
                             </td>
                             <td style={{width:'150px'}}>
                                 請註明：
                             </td>
-                            <td style={{width:'350px'}}>
-                                {formData.OtherFactor != null ? formData.OtherFactor : '____________________'})
+                            <td style={{width:'350px',borderBottom:'1px solid'}}>
+                                {formData.OtherFactor != null ? formData.OtherFactor : ''}
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-OBSTACLE-ITEMS"  && <span>&#9745;</span>}
-                                 {formData.EnvSlipperyGround != "ENV-OBSTACLE-ITEMS" && <span>&#9744;</span>}
+                                {formData.EnvObstacleItems  && <span>&#9745;</span>}
+                                 {!formData.EnvObstacleItems && <span>&#9744;</span>}
                                 3.障礙物品&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-INSUFFICIENT-LIGHT" && <span>&#9745;</span>}
-                                {formData.EnvSlipperyGround != "ENV-INSUFFICIENT-LIGHT" && <span>&#9744;</span>}
+                                {formData.EnvInsufficientLight && <span>&#9745;</span>}
+                                {!formData.EnvInsufficientLight && <span>&#9744;</span>}
                                 4.光線不足&nbsp;&nbsp;
                             </td>
                             <td>
@@ -169,13 +198,13 @@ return <>
                         </tr>
                         <tr>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-NOT-ENOUGH-SPACE"  && <span>&#9745;</span>}
-                                 {formData.EnvSlipperyGround != "ENV-NOT-ENOUGH-SPACE" && <span>&#9744;</span>}
+                                {formData.EnvNotEnoughSpace  && <span>&#9745;</span>}
+                                {!formData.EnvNotEnoughSpace && <span>&#9744;</span>}
                                 5.空間不足&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-ACOUSTIC-STIMULATION" && <span>&#9745;</span>}
-                                {formData.EnvSlipperyGround != "ENV-ACOUSTIC-STIMULATION" && <span>&#9744;</span>}
+                                {formData.EnvAcousticStimulation && <span>&#9745;</span>}
+                                {!formData.EnvAcousticStimulation && <span>&#9744;</span>}
                                 6.聲響刺激&nbsp;&nbsp;
                             </td>
                             <td>
@@ -185,13 +214,13 @@ return <>
                         </tr>
                         <tr>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-COLLIDED-BY-OTHERS"  && <span>&#9745;</span>}
-                                 {formData.EnvSlipperyGround != "ENV-COLLIDED-BY-OTHERS" && <span>&#9744;</span>}
+                                {formData.EnvCollidedByOthers  && <span>&#9745;</span>}
+                                {!formData.EnvCollidedByOthers && <span>&#9744;</span>}
                                 7.被別人碰撞&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-HURT-BY-OTHERS" && <span>&#9745;</span>}
-                                {formData.EnvSlipperyGround != "ENV-HURT-BY-OTHERS" && <span>&#9744;</span>}
+                                {formData.EnvHurtByOthers  && <span>&#9745;</span>}
+                                {!formData.EnvHurtByOthers  && <span>&#9744;</span>}
                                 8.被別人傷害&nbsp;&nbsp;
                             </td>
                             <td>
@@ -201,8 +230,8 @@ return <>
                         </tr>
                         <tr>
                             <td colSpan={2}>
-                                {formData.EnvSlipperyGround == "ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT"  && <span>&#9745;</span>}
-                                 {formData.EnvSlipperyGround != "ENV-IMPROPER-USE-OF-ASSISTIVE-EQUIPMENT" && <span>&#9744;</span>}
+                                {formData.EnvImproperEquip  && <span>&#9745;</span>}
+                                {!formData.EnvImproperEquip && <span>&#9744;</span>}
                                 9.輔助器材使用不當 (如輪椅／便椅未上鎖)&nbsp;&nbsp;
                             </td>
                             <td>
@@ -212,12 +241,12 @@ return <>
                         </tr>
                         <tr>
                             <td>
-                                {formData.EnvSlipperyGround == "ENV-OTHER" && <span>&#9745;</span>}
-                                {formData.EnvSlipperyGround != "ENV-OTHER" && <span>&#9744;</span>}
+                                {formData.EnvOther && <span>&#9745;</span>}
+                                {!formData.EnvOther && <span>&#9744;</span>}
                                 10.其他&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid'}}>
-                                {formData.OtherFactor != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.OtherFactor}</span> : '____________________'}
+                                {formData.EnvOtherDescription != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.EnvOtherDescription}</span> : ''}
                             </td>
                             <td>
                             </td>
@@ -417,18 +446,18 @@ return <>
                 
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'800px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'200px'}}>
                                 填報人姓名及職級
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
-                                {formData.Author.displayName}&nbsp;&nbsp;{formData.Author.jobTitle}
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                {reporterName} &nbsp;&nbsp;{reporterJobTitle}
                                 </td>
-                                <td>
-                                日期
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td>
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>
                                 {new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.Created).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.Created).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
@@ -440,9 +469,9 @@ return <>
                                 {formData.SM != null && formData.SM.Title}
                                 </td>
                                 <td>
-                                日期
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td>
+                                <td style={{borderBottom:'1px solid'}}>
                                 {new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SMDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SMDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
@@ -456,24 +485,21 @@ return <>
                     <div className={`col-12`}>
                     交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.Investigator != null ? formData.Investigator.Title : '_________________'}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
-                    <div className={`col-12`} style={{fontWeight:'bold'}}>
-                    評語 ____________________________________________________
-                    </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'800px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'200px'}}>
                                 高級物理治療師姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'200px'}}>
                                 {formData.SPT.Title}
                                 </td>
-                                <td>
-                                日期
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td>
+                                <td style={{borderBottom:'1px solid',width:'200px'}}>
                                 {new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SPTDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SPTDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
@@ -504,9 +530,9 @@ return <>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
                         意外性質&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>&#9745;</span>
-                        服務使用者意外&nbsp;&nbsp;&nbsp;&nbsp;
                         <span>&#9744;</span>
+                        服務使用者意外&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>&#9745;</span>
                         外界人士意外
                     </div>
                 </div>
@@ -527,12 +553,8 @@ return <>
                                 <td style={{width:'50px'}}>年齡: </td>
                                 <td style={{width:'150px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
                                 <td style={{width:'50px'}}>性別:</td>
-                                <td style={{width:'200px'}}>{formData.ServiceUserGender == "Male" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Male" && <span>&#9744;</span>}
-                                    男&nbsp;&nbsp;
-                                    {formData.ServiceUserGender == "Female" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Female" && <span>&#9744;</span>}
-                                    女</td>
+                                <td style={{width:'200px'}}>{formData.ServiceUserGender == "male" && <span>男</span>}
+                                    {formData.ServiceUserGender == "Female" && <span>女</span>}</td>
                                 <td style={{width:'100px'}}>服務單位</td>
                                 <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}</td>
                             </tr>
@@ -739,10 +761,10 @@ return <>
                                 調查員姓名及職級
                                 </td>
                                 <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                {formData.InvestigatorAD.displayName},&nbsp;&nbsp;{formData.InvestigatorAD.jobTitle}
+                                {investigatorName},&nbsp;&nbsp;{investigatorJobTitle}
                                 </td>
                                 <td  style={{width:'200px'}}>
-                                日期
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
                                 <td style={{width:'200px', borderBottom:'1px solid'}}>
                                 {formTwentyData != null && new Date(formTwentyData.Created).getFullYear() + `-` +(`0`+(new Date(formTwentyData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.Created).getDate()).slice(-2)}
@@ -772,7 +794,7 @@ return <>
                                 {formTwentyData != null && formTwentyData.SPT.Title != null ? formTwentyData.SPT.Title : ''}
                                 </td>
                                 <td  style={{width:'200px'}}>
-                                日期
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
                                 <td style={{width:'200px', borderBottom:'1px solid'}}>
                                 {formTwentyData != null && formTwentyData.SPTDate != null ? new Date(formTwentyData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formTwentyData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.SPTDate).getDate()).slice(-2) : ''}
@@ -800,15 +822,15 @@ return <>
                     保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.InsuranceCaseNo}</span> : '____________'}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
-                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.CaseNumber}</span> : '____________'}
+                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.CaseNumber}</span> : '____________'}
                 </div>
             </div>
             <div className="form-row mb-3" style={{fontSize:'18px'}}>
                 <div className={`col-12`}>
                     意外性質&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span>&#9745;</span>
-                    服務使用者意外&nbsp;&nbsp;&nbsp;&nbsp;
                     <span>&#9744;</span>
+                    服務使用者意外&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>&#9745;</span>
                     外界人士意外
                 </div>
             </div>
@@ -869,7 +891,7 @@ return <>
                             {formTwentyOneData != null && formTwentyOneData[0].SM.Title}
                             </td>
                             <td  style={{width:'200px'}}>
-                            日期
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                             </td>
                             <td style={{width:'200px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SMDate != null && new Date(formTwentyOneData[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SMDate).getDate()).slice(-2)}
@@ -899,7 +921,7 @@ return <>
                             {formTwentyOneData != null && formTwentyOneData[0].SD.Title}
                             </td>
                             <td  style={{width:'200px'}}>
-                            日期
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
                             </td>
                             <td style={{width:'200px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SDDate != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
