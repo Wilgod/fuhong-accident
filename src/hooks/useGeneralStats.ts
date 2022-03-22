@@ -4,7 +4,8 @@ import { getNewServiceUserAccident, getNewOutsiderAccident, getNewOtherIncidentR
 
 export default function useGeneralStats(): [any[], Date, Date, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
     const [data, setData] = useState<any[]>([]);
-    const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 2)));
+    //const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 2)));
+    const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(),0,1));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
 

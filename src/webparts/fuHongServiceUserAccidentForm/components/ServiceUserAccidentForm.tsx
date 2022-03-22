@@ -526,7 +526,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         // }
 
         // 服務總監
-        debugger
         if (spSmInfo) {
             body["SDId"] = spSdInfo.Id;
         } else {

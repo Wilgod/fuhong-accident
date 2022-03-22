@@ -187,7 +187,7 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Service User Accident";
 
-        let filterQuery = `Status eq 'CLOSED'`;
+        let filterQuery = `Status ne 'DRAFT'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {

@@ -7,8 +7,8 @@ import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
 import useGeneralStats from '../../../hooks/useGeneralStats';
 import { getCurrentFinancialYear } from '../../../utils/CaseNumberParser';
-import { getDateFinancialYear, getFinicialYears } from '../../../utils/DateUtils';
-
+import { getDateFinancialYear } from '../../../utils/DateUtils';
+import arraySort from 'array-sort';
 interface IDataset {
     sui: number;
     pui: number;
@@ -20,10 +20,11 @@ interface IDataset {
 interface ISampleTwoDataset {
     month: string;
     dataset: IDataset
+    mmyyyy: number;
 }
 
 interface ISampleThreeDataset {
-    finicalYear: string;
+    financialYear: string;
     dataset: IMonth;
 }
 
@@ -33,7 +34,7 @@ interface ISampleFourDataset {
 }
 
 interface ISampleFiveDataset {
-    finicialYear: string;
+    financialYear: string;
     dataset: IDataset;
 }
 
@@ -102,6 +103,11 @@ const unitFilter = (formType: string, dataset: IDataset) => {
         default:
             return result;
     }
+}
+
+const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    return result;
 }
 
 const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
@@ -183,10 +189,34 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
 
     const diff = monthDiff(startDate, endDate);
     for (let i = diff; i > -1; i--) {
-        const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+        //new Date(endDate).setMonth(new Date(endDate).getMonth() - i)
+        let currentMonth = new Date(endDate).getMonth();
+        let currentYear = new Date(endDate).getFullYear();
+        let calMonth;
+        let calYear;
+        if (currentMonth - i < 0) {
+            if (i > 12) {
+                let moreYear = Math.floor(i/12);
+                let remainMonth = i % 12;
+                if (currentMonth - remainMonth < 0) {
+                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calYear = currentYear - (moreYear + 1);
+                } else {
+                    calMonth = currentMonth - remainMonth
+                    calYear = currentYear - moreYear
+                }
+            } else {
+                calMonth = 12 - (i - currentMonth);
+                calYear = currentYear - 1;
+            }
+        } else {
+            calMonth = currentMonth - i
+            calYear = currentYear;
+        }
+        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
-
+    
     data.forEach((item) => {
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
             const formType: string = item.CaseNumber.split("-")[0];
@@ -204,19 +234,169 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
         result.push(item);
     })
-
+    arraySort(result, 'mmyyyy');
     return result;
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const financialYearChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec,
+        jan,
+        feb,
+        mar
+        
+    ];
+    return data;
+}
+
+
+const normalChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        jan,
+        feb,
+        mar,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec
+    ];
+    return data;
+}
+
+const financialChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let sui =['SUI'];
+    let pui =['PUI'];
+    let sih =['SIH'];
+    let sid =['SID'];
+    let oin =['OIN'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        sui.push(item.dataset['sui']);
+        pui.push(item.dataset['pui']);
+        sih.push(item.dataset['sih']);
+        sid.push(item.dataset['sid']);
+        oin.push(item.dataset['oin']);
+    });
+    let data=[
+        dataResult,
+        sui,
+        pui,
+        sih,
+        sid,
+        oin
+    ];
+    return data;
+}
+
+const nyChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let sui =['SUI'];
+    let pui =['PUI'];
+    let sih =['SIH'];
+    let sid =['SID'];
+    let oin =['OIN'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        sui.push(item.dataset['sui']);
+        pui.push(item.dataset['pui']);
+        sih.push(item.dataset['sih']);
+        sid.push(item.dataset['sid']);
+        oin.push(item.dataset['oin']);
+    });
+    let data=[
+        dataResult,
+        sui,
+        pui,
+        sih,
+        sid,
+        oin
+    ];
+    return data;
+}
+
+
+const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
+        if((d.getTime() <= endDate.getTime() && d.getTime() >= startDate.getTime()))
         if (d) {
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
@@ -231,10 +411,26 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
     });
 
     m.forEach((value, key) => {
-        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -269,16 +465,32 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(year.toString(), newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFourDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result
 }
-const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
         if (d) {
+            //debugger
             const formType: string = item.CaseNumber.split("-")[0];
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
@@ -293,10 +505,27 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
     });
 
     m.forEach((value, key) => {
-        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(financialYear, initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFiveDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSixDataset[] => {
@@ -331,13 +560,29 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(year.toString(), initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result;
 }
 
 function General(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useGeneralStats();
     const [unitDataset, setUnitDataset] = useState<IDataset>(initialDataset);
     const multipleOptionsSelectParser = (event) => {
@@ -349,7 +594,22 @@ function General(siteCollectionUrl) {
         return result;
     }
 
-
+    const changeStaticsComponentByStartDate = (e) => {
+        setStartDate(e);
+        const oldGroupBy = groupBy
+        setGroupBy("");
+        setTimeout(() => {
+            setGroupBy(oldGroupBy);
+        },500);
+    }
+    const changeStaticsComponentByEndDate = (e) => {
+        setEndDate(e);
+        const oldGroupBy = groupBy
+        setGroupBy("");
+        setTimeout(() => {
+            setGroupBy(oldGroupBy);
+        },500);
+    }
     const byMonthTableComponent = () => {
         return (
             <table className="table" >
@@ -385,14 +645,32 @@ function General(siteCollectionUrl) {
         )
     }
 
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
+    }
+
     useEffect(() => {
         switch (groupBy) {
             case "NON":
                 setUnitDataset(sampleOneParser(data))
             case "BY_MONTH":
-            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_FINANCIAL":
             case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_FINANCIAL":
             case "BY_YEAR_CALENDAR":
             default:
                 console.log("default");
@@ -401,6 +679,8 @@ function General(siteCollectionUrl) {
 
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
+        
+        
         switch (groupBy) {
             case "NON":
                 return (
@@ -423,6 +703,9 @@ function General(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                let montResult = sampleTwoParser(data, startDate, endDate);
+                console.log("montResult : ",montResult);
+                debugger
                 return (
                     <>
                         <div className="row">
@@ -477,7 +760,22 @@ function General(siteCollectionUrl) {
                         </div>
                     </>
                 )
-            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_FINANCIAL":
+                let SUIResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate);
+                let SUIFYChart = financialYearChartParser(SUIResult);
+                
+                let PUIResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate);
+                let PUIFYChart = financialYearChartParser(PUIResult);
+
+                let SIHResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1), startDate, endDate);
+                let SIHFYChart = financialYearChartParser(SIHResult);
+
+                let SIDResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1), startDate, endDate);
+                let SIDFYChart = financialYearChartParser(SIDResult);
+
+                let OINResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1), startDate, endDate);
+                let OINFYChart = financialYearChartParser(OINResult);
+
                 return (
                     <>
                         <div className="row">
@@ -511,10 +809,10 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1)).map((item) => {
+                                        {SUIResult.map((item) => {
                                             return (
                                                 <tr>
-                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <th scope="row">{item.financialYear}</th>
                                                     <td>{item.dataset.apr}</td>
                                                     <td>{item.dataset.may}</td>
                                                     <td>{item.dataset.jun}</td>
@@ -534,7 +832,50 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SUIFYChart}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SUIFYChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
 
+                                />
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -566,10 +907,10 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1)).map((item) => {
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate).map((item) => {
                                             return (
                                                 <tr>
-                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <th scope="row">{item.financialYear}</th>
                                                     <td>{item.dataset.apr}</td>
                                                     <td>{item.dataset.may}</td>
                                                     <td>{item.dataset.jun}</td>
@@ -587,6 +928,49 @@ function General(siteCollectionUrl) {
                                         })}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={PUIFYChart}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={PUIFYChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                />
                             </div>
                         </div>
                         <div className="row">
@@ -620,10 +1004,10 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1)).map((item) => {
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1), startDate, endDate).map((item) => {
                                             return (
                                                 <tr>
-                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <th scope="row">{item.financialYear}</th>
                                                     <td>{item.dataset.apr}</td>
                                                     <td>{item.dataset.may}</td>
                                                     <td>{item.dataset.jun}</td>
@@ -643,7 +1027,49 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
-
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIHFYChart}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIHFYChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -675,10 +1101,10 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1)).map((item) => {
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1), startDate, endDate).map((item) => {
                                             return (
                                                 <tr>
-                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <th scope="row">{item.financialYear}</th>
                                                     <td>{item.dataset.apr}</td>
                                                     <td>{item.dataset.may}</td>
                                                     <td>{item.dataset.jun}</td>
@@ -698,7 +1124,49 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
-
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIDFYChart}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIDFYChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -730,10 +1198,10 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1)).map((item) => {
+                                        {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1), startDate, endDate).map((item) => {
                                             return (
                                                 <tr>
-                                                    <th scope="row">{item.finicalYear}</th>
+                                                    <th scope="row">{item.financialYear}</th>
                                                     <td>{item.dataset.apr}</td>
                                                     <td>{item.dataset.may}</td>
                                                     <td>{item.dataset.jun}</td>
@@ -753,15 +1221,72 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={OINFYChart}
+                                    options={{
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={OINFYChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '財政年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </>
 
                 )
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let c = sampleFourParser(data, startDate, endDate);
-                c.forEach((item, i) => {
+                let SUIBYMonthResult = sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate);
+                let SUINChart = normalChartParser(SUIBYMonthResult);
+
+                let PUIBYMonthResult = sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate);
+                let PUINChart = normalChartParser(PUIBYMonthResult);
+
+                let SIHBYMonthResult = sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1), startDate, endDate);
+                let SIHNChart = normalChartParser(SIHBYMonthResult);
+
+                let SIDBYMonthResult = sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1), startDate, endDate);
+                let SIDNChart = normalChartParser(SIDBYMonthResult);
+
+                let OINBYMonthResult = sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1), startDate, endDate);
+                let OINNChart = normalChartParser(OINBYMonthResult);
+
+                SUIBYMonthResult.forEach((item, i) => {
                     titleYear2 += item.year
-                    if (i !== c.length - 1) {
+                    if (i !== SUIBYMonthResult.length - 1) {
                         titleYear2 += ", "
                     }
                 })
@@ -774,7 +1299,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 新發生意外或事故`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -782,7 +1307,7 @@ function General(siteCollectionUrl) {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
+                                            <th scope="col">服務使用者意外</th>
                                             <th scope="col">Jan</th>
                                             <th scope="col">Feb</th>
                                             <th scope="col">Mar</th>
@@ -798,7 +1323,7 @@ function General(siteCollectionUrl) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {c.map((item) => {
+                                        {SUIBYMonthResult.map((item) => {
                                             return (
                                                 <tr>
                                                     <th scope="row">{item.year}</th>
@@ -821,9 +1346,450 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SUINChart}
+                                    options={{
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SUINChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (外界人士意外每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">外界人士意外</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={PUINChart}
+                                    options={{
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={PUINChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(牌照事務處)每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">特別事故(牌照事務處)</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1), startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIHNChart}
+                                    options={{
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIHNChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(津貼科)每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">特別事故(津貼科))</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1), startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIDNChart}
+                                    options={{
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={SIDNChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-1">
+                                <h6 style={{ fontWeight: 600 }}>
+                                    標題:
+                                </h6>
+                            </div>
+                            <div className="col-7">
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (其他事故每月總數)`}</h6>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">其他事故意外</th>
+                                            <th scope="col">Apr</th>
+                                            <th scope="col">May</th>
+                                            <th scope="col">Jun</th>
+                                            <th scope="col">Jul</th>
+                                            <th scope="col">Aug</th>
+                                            <th scope="col">Sep</th>
+                                            <th scope="col">Oct</th>
+                                            <th scope="col">Nov</th>
+                                            <th scope="col">Dec</th>
+                                            <th scope="col">Jan</th>
+                                            <th scope="col">Feb</th>
+                                            <th scope="col">Mar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sampleFourParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1), startDate, endDate).map((item) => {
+                                            return (
+                                                <tr>
+                                                    <th scope="row">{item.year}</th>
+                                                    <td>{item.dataset.apr}</td>
+                                                    <td>{item.dataset.may}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.jun}</td>
+                                                    <td>{item.dataset.aug}</td>
+                                                    <td>{item.dataset.sep}</td>
+                                                    <td>{item.dataset.oct}</td>
+                                                    <td>{item.dataset.nov}</td>
+                                                    <td>{item.dataset.dec}</td>
+                                                    <td>{item.dataset.jan}</td>
+                                                    <td>{item.dataset.feb}</td>
+                                                    <td>{item.dataset.mar}</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Line"
+                                    loader={<div>Loading Chart</div>}
+                                    data={OINNChart}
+                                    options={{
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                            <div className="col-6">
+                                <Chart
+                                    width={'600px'}
+                                    height={'400px'}
+                                    chartType="Bar"
+                                    loader={<div>Loading Chart</div>}
+                                    data={OINNChart}
+                                    options={{
+                                        // Material design options
+                                        chart: {
+                                            title: '日曆年度',
+                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </>
                 )
-            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_FINANCIAL":
+                let titleYear3 = "";
+                let SUIFINANCIALResult = sampleFiveParser(data, startDate, endDate);
+                let SUIFINANCIALChart = financialChartParser(SUIFINANCIALResult);
+                SUIFINANCIALResult.forEach((item, i) => {
+                    titleYear3 += item.financialYear;
+                    if (i !== SUIFINANCIALResult.length - 1) {
+                        titleYear3 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -832,7 +1798,7 @@ function General(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`年 - 新發生意外或事故總數`}</h6>
+                            <h6>{`${titleYear3}年 - 新發生意外或事故總數`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -849,10 +1815,10 @@ function General(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data).map((item) => {
+                                    {sampleFiveParser(data, startDate, endDate).map((item) => {
                                         return (
                                             <tr>
-                                                <th scope="row">{item.finicialYear}</th>
+                                                <th scope="row">{item.financialYear}</th>
                                                 <td>{item.dataset.sui}</td>
                                                 <td>{item.dataset.pui}</td>
                                                 <td>{item.dataset.sih}</td>
@@ -865,16 +1831,65 @@ function General(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={SUIFINANCIALChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故總數',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={SUIFINANCIALChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '新發生意外或事故總數',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_YEAR_CALENDAR":
-                let titleYear = "";
-                let d = sampleSixParser(data, startDate, endDate);
-                d.forEach((item, i) => {
-                    titleYear += item.year
-                    if (i !== d.length - 1) {
-                        titleYear += ", "
+                let titleYear4 = "";
+                let SUINYResult = sampleSixParser(data, startDate, endDate);
+                let SUINYChart = nyChartParser(SUINYResult);
+                debugger
+                console.log("SUINYResult : ", SUINYResult);
+                console.log("SUINYChart : ", SUINYChart);
+                SUINYResult.forEach((item, i) => {
+                    titleYear4 += item.year;
+                    if (i !== SUINYResult.length - 1) {
+                        titleYear4 += ", "
                     }
                 })
+                console.log("titleYear4 : ", titleYear4);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -883,7 +1898,7 @@ function General(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear}年 - 新發生意外或事故總數`}</h6>
+                            <h6>{`${titleYear4}年 - 新發生意外或事故總數`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -900,7 +1915,7 @@ function General(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {d.map((item) => {
+                                    {SUINYResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -914,6 +1929,50 @@ function General(siteCollectionUrl) {
                                     })}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={SUINYChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '新發生意外或事故總數',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-6">
+                            <Chart
+                                width={'600px'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={SUINYChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '新發生意外或事故總數',
+                                    },
+                                }}
+
+                            />
                         </div>
                     </div>
                 </>
@@ -981,6 +2040,10 @@ function General(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
+                let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                months -= startDate.getMonth();
+                months += endDate.getMonth();
+                let newWidth = (200 * months) + 200;
                 return (
 
                     <div className="row">
@@ -994,9 +2057,10 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12" style={{overflow:'auto'}}>
                             <Chart
-                                width={1000}
+                                width={newWidth}
+                                height={400}
                                 chartType="ColumnChart"
                                 loader={<div>Loading Chart</div>}
                                 data={
@@ -1009,609 +2073,11 @@ function General(siteCollectionUrl) {
                         </div>
                     </div>
                 )
-            case "BY_MONTH_FINICIAL":
-                // sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate)
-                return (
-                    <>
-                        {/* SUI */}
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        新發生意外或事故總數 (每月總數)
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'600px'}
-                                    height={'400px'}
-                                    chartType="Line"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        [
-                                            'Day',
-                                            'Guardians of the Galaxy',
-                                            'The Avengers',
-                                            'Transformers: Age of Extinction',
-                                        ],
-                                        [1, 37.8, 80.8, 41.8],
-                                        [2, 30.9, 69.5, 32.4],
-                                        [3, 25.4, 57, 25.7],
-                                        [4, 11.7, 18.8, 10.5],
-                                        [5, 11.9, 17.6, 10.4],
-                                        [6, 8.8, 13.6, 7.7],
-                                        [7, 7.6, 12.3, 9.6],
-                                        [8, 12.3, 29.2, 10.6],
-                                        [9, 16.9, 42.9, 14.8],
-                                        [10, 12.8, 30.9, 11.6],
-                                        [11, 5.3, 7.9, 4.7],
-                                        [12, 6.6, 8.4, 5.2],
-                                        [13, 4.8, 6.3, 3.6],
-                                        [14, 4.2, 6.2, 3.4],
-                                    ]}
-                                    options={{
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                        },
-                                    }}
-                                    rootProps={{ 'data-testid': '3' }}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'500px'}
-                                    height={'300px'}
-                                    chartType="Bar"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', 'Sales', 'Expenses', 'Profit'],
-                                        ['2014', 1000, 400, 200],
-                                        ['2015', 1170, 460, 250],
-                                        ['2016', 660, 1120, 300],
-                                        ['2017', 1030, 540, 350],
-                                    ]}
-                                    options={{
-                                        // Material design options
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                        },
-                                    }}
-                                    // For tests
-                                    rootProps={{ 'data-testid': '2' }}
-                                />
-                            </div>
-                        </div>
-                        {/* PUI */}
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        新發生意外或事故總數 (每月總數)
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'600px'}
-                                    height={'400px'}
-                                    chartType="Line"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        [
-                                            'Day',
-                                            'Guardians of the Galaxy',
-                                            'The Avengers',
-                                            'Transformers: Age of Extinction',
-                                        ],
-                                        [1, 37.8, 80.8, 41.8],
-                                        [2, 30.9, 69.5, 32.4],
-                                        [3, 25.4, 57, 25.7],
-                                        [4, 11.7, 18.8, 10.5],
-                                        [5, 11.9, 17.6, 10.4],
-                                        [6, 8.8, 13.6, 7.7],
-                                        [7, 7.6, 12.3, 9.6],
-                                        [8, 12.3, 29.2, 10.6],
-                                        [9, 16.9, 42.9, 14.8],
-                                        [10, 12.8, 30.9, 11.6],
-                                        [11, 5.3, 7.9, 4.7],
-                                        [12, 6.6, 8.4, 5.2],
-                                        [13, 4.8, 6.3, 3.6],
-                                        [14, 4.2, 6.2, 3.4],
-                                    ]}
-                                    options={{
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
-                                        },
-                                    }}
-                                    rootProps={{ 'data-testid': '3' }}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'500px'}
-                                    height={'300px'}
-                                    chartType="Bar"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', 'Sales', 'Expenses', 'Profit'],
-                                        ['2014', 1000, 400, 200],
-                                        ['2015', 1170, 460, 250],
-                                        ['2016', 660, 1120, 300],
-                                        ['2017', 1030, 540, 350],
-                                    ]}
-                                    options={{
-                                        // Material design options
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (外界人士意外每月總數)',
-                                        },
-                                    }}
-                                    // For tests
-                                    rootProps={{ 'data-testid': '2' }}
-                                />
-                            </div>
-                        </div>
-                        {/* SIH */}
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        新發生意外或事故總數 (每月總數)
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'600px'}
-                                    height={'400px'}
-                                    chartType="Line"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        [
-                                            'Day',
-                                            'Guardians of the Galaxy',
-                                            'The Avengers',
-                                            'Transformers: Age of Extinction',
-                                        ],
-                                        [1, 37.8, 80.8, 41.8],
-                                        [2, 30.9, 69.5, 32.4],
-                                        [3, 25.4, 57, 25.7],
-                                        [4, 11.7, 18.8, 10.5],
-                                        [5, 11.9, 17.6, 10.4],
-                                        [6, 8.8, 13.6, 7.7],
-                                        [7, 7.6, 12.3, 9.6],
-                                        [8, 12.3, 29.2, 10.6],
-                                        [9, 16.9, 42.9, 14.8],
-                                        [10, 12.8, 30.9, 11.6],
-                                        [11, 5.3, 7.9, 4.7],
-                                        [12, 6.6, 8.4, 5.2],
-                                        [13, 4.8, 6.3, 3.6],
-                                        [14, 4.2, 6.2, 3.4],
-                                    ]}
-                                    options={{
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
-                                        },
-                                    }}
-                                    rootProps={{ 'data-testid': '3' }}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'500px'}
-                                    height={'300px'}
-                                    chartType="Bar"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', 'Sales', 'Expenses', 'Profit'],
-                                        ['2014', 1000, 400, 200],
-                                        ['2015', 1170, 460, 250],
-                                        ['2016', 660, 1120, 300],
-                                        ['2017', 1030, 540, 350],
-                                    ]}
-                                    options={{
-                                        // Material design options
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (特別事故(牌照事務處)意外每月總數)',
-                                        },
-                                    }}
-                                    // For tests
-                                    rootProps={{ 'data-testid': '2' }}
-                                />
-                            </div>
-                        </div>
-                        {/* SID */}
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        新發生意外或事故總數 (每月總數)
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'600px'}
-                                    height={'400px'}
-                                    chartType="Line"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        [
-                                            'Day',
-                                            'Guardians of the Galaxy',
-                                            'The Avengers',
-                                            'Transformers: Age of Extinction',
-                                        ],
-                                        [1, 37.8, 80.8, 41.8],
-                                        [2, 30.9, 69.5, 32.4],
-                                        [3, 25.4, 57, 25.7],
-                                        [4, 11.7, 18.8, 10.5],
-                                        [5, 11.9, 17.6, 10.4],
-                                        [6, 8.8, 13.6, 7.7],
-                                        [7, 7.6, 12.3, 9.6],
-                                        [8, 12.3, 29.2, 10.6],
-                                        [9, 16.9, 42.9, 14.8],
-                                        [10, 12.8, 30.9, 11.6],
-                                        [11, 5.3, 7.9, 4.7],
-                                        [12, 6.6, 8.4, 5.2],
-                                        [13, 4.8, 6.3, 3.6],
-                                        [14, 4.2, 6.2, 3.4],
-                                    ]}
-                                    options={{
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
-                                        },
-                                    }}
-                                    rootProps={{ 'data-testid': '3' }}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'500px'}
-                                    height={'300px'}
-                                    chartType="Bar"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', 'Sales', 'Expenses', 'Profit'],
-                                        ['2014', 1000, 400, 200],
-                                        ['2015', 1170, 460, 250],
-                                        ['2016', 660, 1120, 300],
-                                        ['2017', 1030, 540, 350],
-                                    ]}
-                                    options={{
-                                        // Material design options
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (特別事故(津貼科)每月總數)',
-                                        },
-                                    }}
-                                    // For tests
-                                    rootProps={{ 'data-testid': '2' }}
-                                />
-                            </div>
-                        </div>
-                        {/* OIN */}
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        新發生意外或事故總數 (每月總數)
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'600px'}
-                                    height={'400px'}
-                                    chartType="Line"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        [
-                                            'Day',
-                                            'Guardians of the Galaxy',
-                                            'The Avengers',
-                                            'Transformers: Age of Extinction',
-                                        ],
-                                        [1, 37.8, 80.8, 41.8],
-                                        [2, 30.9, 69.5, 32.4],
-                                        [3, 25.4, 57, 25.7],
-                                        [4, 11.7, 18.8, 10.5],
-                                        [5, 11.9, 17.6, 10.4],
-                                        [6, 8.8, 13.6, 7.7],
-                                        [7, 7.6, 12.3, 9.6],
-                                        [8, 12.3, 29.2, 10.6],
-                                        [9, 16.9, 42.9, 14.8],
-                                        [10, 12.8, 30.9, 11.6],
-                                        [11, 5.3, 7.9, 4.7],
-                                        [12, 6.6, 8.4, 5.2],
-                                        [13, 4.8, 6.3, 3.6],
-                                        [14, 4.2, 6.2, 3.4],
-                                    ]}
-                                    options={{
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
-                                        },
-                                    }}
-                                    rootProps={{ 'data-testid': '3' }}
-                                />
-                            </div>
-                            <div className="col-6">
-                                <Chart
-                                    width={'500px'}
-                                    height={'300px'}
-                                    chartType="Bar"
-                                    loader={<div>Loading Chart</div>}
-                                    data={[
-                                        ['Year', 'Sales', 'Expenses', 'Profit'],
-                                        ['2014', 1000, 400, 200],
-                                        ['2015', 1170, 460, 250],
-                                        ['2016', 660, 1120, 300],
-                                        ['2017', 1030, 540, 350],
-                                    ]}
-                                    options={{
-                                        // Material design options
-                                        chart: {
-                                            title: '財政年度',
-                                            subtitle: '新發生意外或事故 (其他事故每月總數)',
-                                        },
-                                    }}
-                                    // For tests
-                                    rootProps={{ 'data-testid': '2' }}
-                                />
-                            </div>
-                        </div>
-                    </>
-                )
-            case "BY_MONTH_CALENDAR":
-                return <div className="row">
-                    <div className="col-12">
-                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                            <div className="">
-                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                            </div>
-                            <div className="">
-                                新發生意外或事故總數 (每月總數)
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'600px'}
-                            height={'400px'}
-                            chartType="Line"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                [
-                                    'Day',
-                                    'Guardians of the Galaxy',
-                                    'The Avengers',
-                                    'Transformers: Age of Extinction',
-                                ],
-                                [1, 37.8, 80.8, 41.8],
-                                [2, 30.9, 69.5, 32.4],
-                                [3, 25.4, 57, 25.7],
-                                [4, 11.7, 18.8, 10.5],
-                                [5, 11.9, 17.6, 10.4],
-                                [6, 8.8, 13.6, 7.7],
-                                [7, 7.6, 12.3, 9.6],
-                                [8, 12.3, 29.2, 10.6],
-                                [9, 16.9, 42.9, 14.8],
-                                [10, 12.8, 30.9, 11.6],
-                                [11, 5.3, 7.9, 4.7],
-                                [12, 6.6, 8.4, 5.2],
-                                [13, 4.8, 6.3, 3.6],
-                                [14, 4.2, 6.2, 3.4],
-                            ]}
-                            options={{
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            rootProps={{ 'data-testid': '3' }}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'500px'}
-                            height={'300px'}
-                            chartType="Bar"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                ['Year', 'Sales', 'Expenses', 'Profit'],
-                                ['2014', 1000, 400, 200],
-                                ['2015', 1170, 460, 250],
-                                ['2016', 660, 1120, 300],
-                                ['2017', 1030, 540, 350],
-                            ]}
-                            options={{
-                                // Material design options
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            // For tests
-                            rootProps={{ 'data-testid': '2' }}
-                        />
-                    </div>
-                </div>
-            case "BY_YEAR_FINICIAL":
-                return <div className="row">
-                    <div className="col-12">
-                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                            <div className="">
-                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                            </div>
-                            <div className="">
-                                新發生意外或事故總數 (每月總數)
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'600px'}
-                            height={'400px'}
-                            chartType="Line"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                [
-                                    'Day',
-                                    'Guardians of the Galaxy',
-                                    'The Avengers',
-                                    'Transformers: Age of Extinction',
-                                ],
-                                [1, 37.8, 80.8, 41.8],
-                                [2, 30.9, 69.5, 32.4],
-                                [3, 25.4, 57, 25.7],
-                                [4, 11.7, 18.8, 10.5],
-                                [5, 11.9, 17.6, 10.4],
-                                [6, 8.8, 13.6, 7.7],
-                                [7, 7.6, 12.3, 9.6],
-                                [8, 12.3, 29.2, 10.6],
-                                [9, 16.9, 42.9, 14.8],
-                                [10, 12.8, 30.9, 11.6],
-                                [11, 5.3, 7.9, 4.7],
-                                [12, 6.6, 8.4, 5.2],
-                                [13, 4.8, 6.3, 3.6],
-                                [14, 4.2, 6.2, 3.4],
-                            ]}
-                            options={{
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            rootProps={{ 'data-testid': '3' }}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'500px'}
-                            height={'300px'}
-                            chartType="Bar"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                ['Year', 'Sales', 'Expenses', 'Profit'],
-                                ['2014', 1000, 400, 200],
-                                ['2015', 1170, 460, 250],
-                                ['2016', 660, 1120, 300],
-                                ['2017', 1030, 540, 350],
-                            ]}
-                            options={{
-                                // Material design options
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            // For tests
-                            rootProps={{ 'data-testid': '2' }}
-                        />
-                    </div>
-                </div>
-            case "BY_YEAR_CALENDAR":
-                return <div className="row">
-                    <div className="col-12">
-                        <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                            <div className="">
-                                {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                            </div>
-                            <div className="">
-                                新發生意外或事故總數 (每月總數)
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'600px'}
-                            height={'400px'}
-                            chartType="Line"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                [
-                                    'Day',
-                                    'Guardians of the Galaxy',
-                                    'The Avengers',
-                                    'Transformers: Age of Extinction',
-                                ],
-                                [1, 37.8, 80.8, 41.8],
-                                [2, 30.9, 69.5, 32.4],
-                                [3, 25.4, 57, 25.7],
-                                [4, 11.7, 18.8, 10.5],
-                                [5, 11.9, 17.6, 10.4],
-                                [6, 8.8, 13.6, 7.7],
-                                [7, 7.6, 12.3, 9.6],
-                                [8, 12.3, 29.2, 10.6],
-                                [9, 16.9, 42.9, 14.8],
-                                [10, 12.8, 30.9, 11.6],
-                                [11, 5.3, 7.9, 4.7],
-                                [12, 6.6, 8.4, 5.2],
-                                [13, 4.8, 6.3, 3.6],
-                                [14, 4.2, 6.2, 3.4],
-                            ]}
-                            options={{
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            rootProps={{ 'data-testid': '3' }}
-                        />
-                    </div>
-                    <div className="col-6">
-                        <Chart
-                            width={'500px'}
-                            height={'300px'}
-                            chartType="Bar"
-                            loader={<div>Loading Chart</div>}
-                            data={[
-                                ['Year', 'Sales', 'Expenses', 'Profit'],
-                                ['2014', 1000, 400, 200],
-                                ['2015', 1170, 460, 250],
-                                ['2016', 660, 1120, 300],
-                                ['2017', 1030, 540, 350],
-                            ]}
-                            options={{
-                                // Material design options
-                                chart: {
-                                    title: '財政年度',
-                                    subtitle: '新發生意外或事故 (服務使用者意外每月總數)',
-                                },
-                            }}
-                            // For tests
-                            rootProps={{ 'data-testid': '2' }}
-                        />
-                    </div>
-                </div>
             default:
                 console.log("default");
         }
     }
-
+    
     return (
         <div>
             <div className="row mb-3">
@@ -1629,13 +2095,13 @@ function General(siteCollectionUrl) {
                             <div className="mr-3">
                                 由
                             </div>
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={startDate} onChange={setStartDate} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={startDate} onChange={(e) => changeStaticsComponentByStartDate(e)} />
                         </div>
                         <div className="d-flex">
                             <div className="mr-3">
                                 至
                             </div>
-                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={endDate} onChange={setEndDate} />
+                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={endDate} onChange={(e) => changeStaticsComponentByEndDate(e)} />
                         </div>
                     </div>
                 </div>
@@ -1646,15 +2112,12 @@ function General(siteCollectionUrl) {
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => {
-                        const value = event.target.value;
-                        setGroupBy(value);
-                    }}>
+                    <select multiple className="form-control" onChange={changeGroupHandler}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
-                        <option value="BY_MONTH_FINICIAL">按月 - 財政年度</option>
+                        <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>
                         <option value="BY_MONTH_CALENDAR">按月 - 日曆年度</option>
-                        <option value="BY_YEAR_FINICIAL">按年 - 財政年度</option>
+                        <option value="BY_YEAR_FINANCIAL">按年 - 財政年度</option>
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>

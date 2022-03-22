@@ -29,7 +29,7 @@ export const newFormIdParser = (id: number): string => {
 export const getCurrentFinancialYear = () => {
     const today = new Date();
     let result = "";
-    if ((today.getMonth() + 1) <= 3) { // New Finicial Year start on 1st April
+    if ((today.getMonth() + 1) <= 3) { // New Financial Year start on 1st April
         const start = today.getFullYear() - 1;
         const end = today.getFullYear();
         result = `${start}`.substring(2) + `${end}`.substring(2);
@@ -86,7 +86,7 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
             }
         }
 
-        // If there are no last case number / or new finicial year
+        // If there are no last case number / or new financial year
         return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(1)}`;
     } catch (err) {
         console.error(err);

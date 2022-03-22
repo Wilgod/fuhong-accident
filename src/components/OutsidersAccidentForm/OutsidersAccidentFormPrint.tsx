@@ -53,7 +53,6 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
                 console.error('getUserInfoByEmailInUserInfoAD error')
                 console.error(err)
             });
-            debugger
             if (formData.Investigator) {
                 getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Investigator.EMail).then((userInfosRes) => {
                     if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {

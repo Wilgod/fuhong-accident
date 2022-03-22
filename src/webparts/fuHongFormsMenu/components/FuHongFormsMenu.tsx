@@ -427,34 +427,34 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'LOG':
           return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'GENERAL':
-          return <General />
+          return <General siteCollectionUrl={this.siteCollectionUrl}/>
         case 'SUI_AGE':
-          return <ServiceUserAccidentAge />
+          return <ServiceUserAccidentAge siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_GENDER':
-          return <ServiceUserAccidentSex />
+          return <ServiceUserAccidentSex siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_INTELLIGENCE':
-          return <ServiceUserAccidentIntelligence />
+          return <ServiceUserAccidentIntelligence siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_ASD':
-          return <ServiceUserAccidentASD />
+          return <ServiceUserAccidentASD siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_NATURE':
-          return <ServiceUserAccidentNature />
+          return <ServiceUserAccidentNature siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_ENV':
-          return <ServiceUserAccidentEnv />
+          return <ServiceUserAccidentEnv siteCollectionUrl={this.siteCollectionUrl} />
         case 'SUI_PERSONAL':
-          return <ServiceUserAccidentPersonal />
+          return <ServiceUserAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
         case 'PUI_NATURE':
-          return <OutsiderAccidentNature />
+          return <OutsiderAccidentNature siteCollectionUrl={this.siteCollectionUrl} />
         case 'PUI_ENV':
-          return <OutsiderAccidentEnv />
+          return <OutsiderAccidentEnv siteCollectionUrl={this.siteCollectionUrl} />
         case 'PUI_PERSONAL':
-          return <OutsiderAccidentPersonal />
+          return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
         case 'SIH_CATEGORY':
-          return <AllowanceCategory />
+          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />
         // return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':
-          return <AllowanceCategory />
+          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />
         case 'SID_NATURE':
-          return <AllowanceNature />
+          return <AllowanceNature siteCollectionUrl={this.siteCollectionUrl} />
         case 'CS_SUI':
           return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'CS_PUI':

@@ -81,7 +81,7 @@ export async function getAllServiceUnit(siteCollectionUrl) {
         return units;
     } catch (err) {
         console.error(err);
-        throw new Error("getDepartmentByShortName error");
+        throw new Error("getAllServiceUnit error");
     }
 }
 

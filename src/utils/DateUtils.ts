@@ -21,7 +21,7 @@ export function addMonths(date: Date, numberOfMonth: number) {
     return new Date(new Date(date.getTime()).setMonth(new Date(date.getTime()).getMonth() + numberOfMonth));
 }
 
-export function getFinicialYears(startDate: Date, endDate: Date) {
+export function getfinancialYears(startDate: Date, endDate: Date) {
     let result: string[] = [];
     const startYear = startDate.getFullYear()
     const endYear = endDate.getFullYear();
@@ -40,7 +40,7 @@ export function getFinicialYears(startDate: Date, endDate: Date) {
 export const getDateFinancialYear = (date: Date) => {
     const today = new Date(date.toISOString());
     let result = "";
-    if ((today.getMonth() + 1) <= 3) { // New Finicial Year start on 1st April
+    if ((today.getMonth() + 1) <= 3) { // New Financial Year start on 1st April
         const start = today.getFullYear() - 1;
         const end = today.getFullYear();
         result = `${start}-${end}`

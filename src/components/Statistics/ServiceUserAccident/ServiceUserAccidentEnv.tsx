@@ -80,7 +80,7 @@ interface ISampleFourDataset {
 }
 
 interface ISampleFiveDataset {
-    finicialYear: string;
+    financialYear: string;
     dataset: IDataset;
 }
 
@@ -350,7 +350,7 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
     });
 
     m.forEach((value, key) => {
-        let item: ISampleFiveDataset = { finicialYear: key, dataset: value }
+        let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
 
@@ -509,7 +509,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </div>
                         </div>
                     </>)
-            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_FINANCIAL":
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -624,7 +624,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                         </div>
                     </div>
                 </>
-            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_FINANCIAL":
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -657,7 +657,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {sampleFiveParser(data).map((item) => {
                                         return (
                                             <tr>
-                                                <th scope="row">{item.finicialYear}</th>
+                                                <th scope="row">{item.financialYear}</th>
                                                 <td>{item.dataset.envSlipperyGround}</td>
                                                 <td>{item.dataset.envUnevenGround}</td>
                                                 <td>{item.dataset.envObstacleItems}</td>
@@ -871,9 +871,9 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
-            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_FINANCIAL":
             case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_FINANCIAL":
             case "BY_YEAR_CALENDAR":
             default:
                 return null;
@@ -885,9 +885,9 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
             case "NON":
                 setEnvFactorDataset(sampleOneParser(data));
             case "BY_MONTH":
-            case "BY_MONTH_FINICIAL":
+            case "BY_MONTH_FINANCIAL":
             case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINICIAL":
+            case "BY_YEAR_FINANCIAL":
             case "BY_YEAR_CALENDAR":
             default:
                 console.log("default");
@@ -935,9 +935,9 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     }}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
-                        <option value="BY_MONTH_FINICIAL">按月 - 財政年度</option>
+                        <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>
                         <option value="BY_MONTH_CALENDAR">按月 - 日曆年度</option>
-                        <option value="BY_YEAR_FINICIAL">按年 - 財政年度</option>
+                        <option value="BY_YEAR_FINANCIAL">按年 - 財政年度</option>
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
