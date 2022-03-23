@@ -333,7 +333,6 @@ const sampleTwoParser = (serviceUserAge: any[], startDate: Date, endDate: Date):
 
     const diff = monthDiff(startDate, endDate);
     for (let i = diff; i > -1; i--) {
-        //new Date(endDate).setMonth(new Date(endDate).getMonth() - i)
         let currentMonth = new Date(endDate).getMonth();
         let currentYear = new Date(endDate).getFullYear();
         let calMonth;
@@ -569,7 +568,6 @@ const sampleSixParser = (serviceUserAge: any[], startDate: Date, endDate: Date):
             result.push(item);
         })
     }
-    debugger
     arraySort(result, 'year');
     return result;
 }
@@ -2203,10 +2201,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '年齡統計(每月總數)',
+                                        subtitle: '年齡統計(每年總數)',
                                     },
                                 }}
-                                rootProps={{ 'data-testid': '3' }}
                             />
                         </div>
                         <div className="col-12">
@@ -2220,11 +2217,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '年齡統計(每月總數)',
+                                        subtitle: '年齡統計(每年總數)',
                                     },
                                 }}
-                                // For tests
-                                rootProps={{ 'data-testid': '2' }}
                             />
                         </div>
                     </div>
@@ -2247,7 +2242,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-11">
-                            <h6>{`${titleYear4} - 年齡統計(每月總數)`}</h6>
+                            <h6>{`${titleYear4} - 年齡統計(每年總數)`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2296,10 +2291,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '年齡統計(每月總數)',
+                                        subtitle: '年齡統計(每年總數)',
                                     },
                                 }}
-                                rootProps={{ 'data-testid': '3' }}
                             />
                         </div>
                         <div className="col-12">
@@ -2313,11 +2307,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '年齡統計(每月總數)',
+                                        subtitle: '年齡統計(每年總數)',
                                     },
                                 }}
-                                // For tests
-                                rootProps={{ 'data-testid': '2' }}
                             />
                         </div>
                     </div>

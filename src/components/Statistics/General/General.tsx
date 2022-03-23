@@ -1884,9 +1884,7 @@ function General(siteCollectionUrl) {
                 let titleYear4 = "";
                 let SUINYResult = sampleSixParser(data, startDate, endDate);
                 let SUINYChart = nyChartParser(SUINYResult);
-                debugger
-                console.log("SUINYResult : ", SUINYResult);
-                console.log("SUINYChart : ", SUINYChart);
+
                 SUINYResult.forEach((item, i) => {
                     titleYear4 += item.year;
                     if (i !== SUINYResult.length - 1) {

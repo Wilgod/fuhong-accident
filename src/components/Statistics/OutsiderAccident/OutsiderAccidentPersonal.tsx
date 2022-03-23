@@ -8,7 +8,7 @@ import useServiceLocation from '../../../hooks/useServiceLocation';
 import { useOutsiderStats } from '../../../hooks/useOutsiderStats';
 import { useOutsidersAccidentReportStats } from '../../../hooks/useOutsidersAccidentReportStats';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
-
+import arraySort from 'array-sort';
 interface IDataset {
     "personalFactorEmotional": number;
     "personalFactorImpatient": number;
@@ -60,7 +60,8 @@ interface IMonth {
 
 interface ISampleTwoDataset {
     month: string;
-    dataset: IDataset
+    dataset: IDataset;
+    mmyyyy: number;
 }
 
 interface ISampleThreeDataset {
@@ -81,6 +82,106 @@ interface ISampleFiveDataset {
 interface ISampleSixDataset {
     year: number;
     dataset: IDataset;
+}
+
+const financialYearChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec,
+        jan,
+        feb,
+        mar
+        
+    ];
+    return data;
+}
+
+const normalChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        jan,
+        feb,
+        mar,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec
+    ];
+    return data;
+}
+
+const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    return result;
 }
 
 const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
@@ -182,7 +283,30 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
 
     const diff = monthDiff(startDate, endDate);
     for (let i = diff; i > -1; i--) {
-        const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+        let currentMonth = new Date(endDate).getMonth();
+        let currentYear = new Date(endDate).getFullYear();
+        let calMonth;
+        let calYear;
+        if (currentMonth - i < 0) {
+            if (i > 12) {
+                let moreYear = Math.floor(i/12);
+                let remainMonth = i % 12;
+                if (currentMonth - remainMonth < 0) {
+                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calYear = currentYear - (moreYear + 1);
+                } else {
+                    calMonth = currentMonth - remainMonth
+                    calYear = currentYear - moreYear
+                }
+            } else {
+                calMonth = 12 - (i - currentMonth);
+                calYear = currentYear - 1;
+            }
+        } else {
+            calMonth = currentMonth - i
+            calYear = currentYear;
+        }
+        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
 
@@ -203,10 +327,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
         result.push(item);
     })
-
+    arraySort(result, 'mmyyyy');
     return result;
 }
 

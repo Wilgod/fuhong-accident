@@ -325,33 +325,59 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
 // Form 20 統計資料 
 export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
     try {
-        const LIST_NAME = "Accident Report Form";
+        const LIST_NAME = "Service User Accident";
 
-        let filterQuery = `Title eq 'SERVICE_USER'`;
-        // filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
-        filterQuery = `${filterQuery} and ReceivedDate ge '${searchCriteria.startDate.toISOString()}' and ReceivedDate le '${searchCriteria.endDate.toISOString()}'`;
+        let filterQuery = `Status ne 'DRAFT'`;
+        filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
-        // if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
-        //     let su = "";
-        //     searchCriteria.serviceUnits.forEach((item, index) => {
-        //         if (index === 0) {
-        //             su = `ServiceLocation eq '${item}'`;
-        //         } else {
-        //             su += `ServiceLocation eq '${item}'`;
-        //         }
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
 
-        //         if (index !== searchCriteria.serviceUnits.length - 1) {
-        //             su = `${su} or `;
-        //         }
-        //     })
-        //     filterQuery = `${filterQuery} and (${su})`;
-        // }
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther", "Created")
+            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor","AccidentReportFormId")
             .filter(filterQuery)
             .getAll();
-        console.log(items);
+
+
+
+        const LIST_NAME1 = "Accident Report Form";
+
+        let filterQuery1 = `Title eq 'SERVICE_USER'`;
+        // filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+        filterQuery1 = `${filterQuery1} and ReceivedDate ge '${searchCriteria.startDate.toISOString()}' and ReceivedDate le '${searchCriteria.endDate.toISOString()}'`;
+
+        const items1: any[] = await sp.web.lists.getByTitle(LIST_NAME1).items
+            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther", "Created", "Id")
+            .filter(filterQuery1)
+            .getAll();
+
+        for (let serviceUser of items) {
+            for (let accident of items1) {
+                if (serviceUser.AccidentReportFormId != null) {
+                    if (serviceUser.AccidentReportFormId == accident.Id) {
+                        serviceUser["AccidentNatureFall"] = accident.AccidentNatureFall;
+                        serviceUser["AccidentNatureChok"] = accident.AccidentNatureChok;
+                        serviceUser["AccidentNatureBehavior"] = accident.AccidentNatureBehavior;
+                        serviceUser["AccidentNatureEnvFactor"] = accident.AccidentNatureEnvFactor;
+                        serviceUser["AccidentNatureOther"] = accident.AccidentNatureOther;
+                    }
+                }
+                
+            }
+        }
         return items
     } catch (err) {
         console.error(err);

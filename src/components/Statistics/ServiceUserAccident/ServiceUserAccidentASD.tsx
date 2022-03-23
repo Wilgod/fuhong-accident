@@ -7,7 +7,7 @@ import useServiceLocation from '../../../hooks/useServiceLocation';
 import Chart from "react-google-charts";
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
-
+import arraySort from 'array-sort';
 interface IDataset {
     asdTrue: number;
     asdFalse: number;
@@ -48,10 +48,138 @@ interface IMonth {
     dec: number;
 }
 
+const financialYearChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec,
+        jan,
+        feb,
+        mar
+        
+    ];
+    return data;
+}
 
+const normalChartParser = (result) =>{
+    let dataResult = ['Month'];
+    let jan =['JAN'];
+    let feb =['FEB'];
+    let mar =['MAR'];
+    let apr =['APR'];
+    let may =['MAY'];
+    let jun =['JUN'];
+    let jul =['JUL'];
+    let aug =['AUG'];
+    let sep =['SEP'];
+    let oct =['OCT'];
+    let nov =['NOV'];
+    let dec =['DEC'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        jan.push(item.dataset['jan']);
+        feb.push(item.dataset['feb']);
+        mar.push(item.dataset['mar']);
+        apr.push(item.dataset['apr']);
+        may.push(item.dataset['may']);
+        jun.push(item.dataset['jun']);
+        jul.push(item.dataset['jul']);
+        aug.push(item.dataset['aug']);
+        sep.push(item.dataset['sep']);
+        oct.push(item.dataset['oct']);
+        nov.push(item.dataset['nov']);
+        dec.push(item.dataset['dec']);
+    });
+    let data=[
+        dataResult,
+        jan,
+        feb,
+        mar,
+        apr,
+        may,
+        jun,
+        jul,
+        aug,
+        sep,
+        oct,
+        nov,
+        dec
+    ];
+    return data;
+}
+
+const financialChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let asdT =['有'];
+    let asdF =['沒有'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        asdT.push(item.dataset['asdTrue']);
+        asdF.push(item.dataset['asdFalse']);
+    });
+    let data=[
+        dataResult,
+        asdT,
+        asdF
+    ];
+    return data;
+}
+
+const yearChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let asdT =['有'];
+    let asdF =['沒有'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        asdT.push(item.dataset['asdTrue']);
+        asdF.push(item.dataset['asdFalse']);
+    });
+    let data=[
+        dataResult,
+        asdT,
+        asdF
+    ];
+    return data;
+}
 interface ISampleTwoDataset {
     month: string;
-    dataset: IDataset
+    dataset: IDataset;
+    mmyyyy: number;
 }
 
 interface ISampleThreeDataset {
@@ -72,6 +200,11 @@ interface ISampleFiveDataset {
 interface ISampleSixDataset {
     year: number;
     dataset: IDataset;
+}
+
+const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
+    let result = { ...dataset };
+    return result;
 }
 
 const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
@@ -154,7 +287,30 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
 
     const diff = monthDiff(startDate, endDate);
     for (let i = diff; i > -1; i--) {
-        const d = moment(new Date(new Date(endDate.toISOString()).setMonth(new Date(endDate.toISOString()).getMonth() - i))).format("MM/yyyy");
+        let currentMonth = new Date(endDate).getMonth();
+        let currentYear = new Date(endDate).getFullYear();
+        let calMonth;
+        let calYear;
+        if (currentMonth - i < 0) {
+            if (i > 12) {
+                let moreYear = Math.floor(i/12);
+                let remainMonth = i % 12;
+                if (currentMonth - remainMonth < 0) {
+                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calYear = currentYear - (moreYear + 1);
+                } else {
+                    calMonth = currentMonth - remainMonth
+                    calYear = currentYear - moreYear
+                }
+            } else {
+                calMonth = 12 - (i - currentMonth);
+                calYear = currentYear - 1;
+            }
+        } else {
+            calMonth = currentMonth - i
+            calYear = currentYear;
+        }
+        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
 
@@ -175,14 +331,14 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
         result.push(item);
     })
-
+    arraySort(result, 'mmyyyy');
     return result;
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -205,7 +361,22 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -241,10 +412,26 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(year.toString(), newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFourDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result
 }
 
-const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[],startDate, endDate ): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
@@ -269,6 +456,23 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(financialYear, initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFiveDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -305,6 +509,22 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(year.toString(), initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    arraySort(result, 'year');
     return result;
 }
 
@@ -418,6 +638,11 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
+                let ASDTResult = sampleThreeParser(data.filter((item) => item.ASD), startDate, endDate);
+                let ASDTFYChart = financialYearChartParser(ASDTResult);
+
+                let ASDFResult = sampleThreeParser(data.filter((item) => !item.ASD), startDate, endDate);
+                let ASDFFYChart = financialYearChartParser(ASDFResult);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -426,7 +651,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            <h6>{`${title} - ASD統計`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -450,7 +675,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleThreeParser(data).map((item) => {
+                                    {ASDTResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -474,8 +699,163 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={ASDTFYChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={ASDTFYChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - ASD統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {ASDFResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={ASDFFYChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={ASDFFYChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_MONTH_CALENDAR":
+                let titleYear2 = "";
+                let asdTMCResult = sampleFourParser(data.filter((item) => item.ASD), startDate, endDate);
+                let asdTMCChart = normalChartParser(asdTMCResult);
+
+                let asdFMCResult = sampleFourParser(data.filter((item) => !item.ASD), startDate, endDate);
+                let asdFMCChart = normalChartParser(asdFMCResult);
+
+                asdTMCResult.forEach((item, i) => {
+                    titleYear2 += item.year
+                    if (i !== asdTMCResult.length - 1) {
+                        titleYear2 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -484,7 +864,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear2} - ASD統計`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -508,7 +888,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                    {asdTMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -531,8 +911,140 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={asdTMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={asdTMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '有 - ASD統計(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - ASD統計`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {asdFMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={asdFMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={asdFMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_YEAR_FINANCIAL":
+                let titleYear3 = "";
+                let asdFinancialResult = sampleFiveParser(data, startDate, endDate);
+                let asdFinancialChart = financialChartParser(asdFinancialResult);
+                asdFinancialResult.forEach((item, i) => {
+                    titleYear3 += item.financialYear;
+                    if (i !== asdFinancialResult.length - 1) {
+                        titleYear3 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -541,7 +1053,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear3} - ASD統計`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -555,7 +1067,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data).map((item) => {
+                                    {asdFinancialResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -568,8 +1080,50 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={asdFinancialChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: 'ASD統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={asdFinancialChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: 'ASD統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_YEAR_CALENDAR":
+                let titleYear4 = "";
+                let asdearResult = sampleSixParser(data, startDate, endDate);
+                let asdYearChart = yearChartParser(asdearResult);
+                asdearResult.forEach((item, i) => {
+                    titleYear4 += item.year;
+                    if (i !== asdearResult.length - 1) {
+                        titleYear4 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -578,7 +1132,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear4} - ASD統計`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -605,6 +1159,40 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={asdYearChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: 'ASD統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={asdYearChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: 'ASD統計(每年總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
                 </>
             default:
                 return null;
@@ -617,7 +1205,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -629,17 +1217,19 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["智力障礙程度", "數量"],
-                                            ["輕度", asdDataset.asdTrue],
-                                            ["中度", asdDataset.asdFalse],
+                                            ["是", asdDataset.asdTrue],
+                                            ["否", asdDataset.asdFalse],
                                         ]}
                                     />
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -650,12 +1240,14 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
                                             ["智力障礙程度", "數量"],
-                                            ["輕度", asdDataset.asdTrue],
-                                            ["中度", asdDataset.asdFalse],
+                                            ["是", asdDataset.asdTrue],
+                                            ["否", asdDataset.asdFalse],
                                         ]
                                     }
                                 />
@@ -664,13 +1256,51 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
-            case "BY_MONTH_FINANCIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINANCIAL":
-            case "BY_YEAR_CALENDAR":
+                let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                months -= startDate.getMonth();
+                months += endDate.getMonth();
+                let newWidth = (200 * months) + 200;
+                return (
+                    <div className="row">
+                        <div className="col-12" style={{overflow:'auto'}}>
+                            <Chart
+                                width={newWidth}
+                                height={400}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[['月份', '是', '否'],
+                                ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                    return [item.month, item.dataset.asdTrue, item.dataset.asdFalse]
+                                })]
+                            }
+
+                            />
+                        </div>
+                    </div>
+                    
+                )
+            
             default:
                 console.log("default");
         }
+    }
+
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
     }
 
     useEffect(() => {
@@ -723,10 +1353,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => {
-                        const value = event.target.value;
-                        setGroupBy(value);
-                    }}>
+                    <select multiple className="form-control" onChange={changeGroupHandler}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
                         <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>
