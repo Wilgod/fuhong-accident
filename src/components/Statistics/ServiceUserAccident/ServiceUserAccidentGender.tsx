@@ -53,7 +53,7 @@ interface ISampleTwoDataset {
 }
 
 interface ISampleThreeDataset {
-    finicalYear: string;
+    financialYear: string;
     dataset: IMonth;
 }
 
@@ -117,11 +117,14 @@ const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMon
 
 const sexFilter = (sex: string, dataset: IDataset) => {
     let result = dataset;
-    if (sex.toLocaleLowerCase() === "female") {
-        result.female += 1;
-    } else if (sex.toLocaleLowerCase() === "male") {
-        result.male += 1;
+    if (sex != null) {
+        if (sex.toLocaleLowerCase() === "female") {
+            result.female += 1;
+        } else if (sex.toLocaleLowerCase() === "male") {
+            result.male += 1;
+        }
     }
+    
     return result;
 }
 
@@ -179,7 +182,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     return result;
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -199,10 +202,26 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
     });
 
     m.forEach((value, key) => {
-        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
 
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -308,7 +327,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 function ServiceUserAccidentGender(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [genderDataset, setGenderDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
 
@@ -415,6 +434,9 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                     </>
                 )
             case "BY_MONTH_FINANCIAL":
+                let lessThanFifteenMFResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserAge < 15}), startDate, endDate);
+                let lessThanFifteenMFChart = financialYearChartParser(lessThanFifteenMFResult);
+
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -447,10 +469,10 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleThreeParser(data).map((item) => {
+                                    {sampleThreeParser(data, startDate, endDate).map((item) => {
                                         return (
                                             <tr>
-                                                <th scope="row">{item.finicalYear}</th>
+                                                <th scope="row">{item.financialYear}</th>
                                                 <td>{item.dataset.apr}</td>
                                                 <td>{item.dataset.may}</td>
                                                 <td>{item.dataset.jun}</td>
@@ -627,6 +649,8 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 </div>
                                 <div className="">
                                     <Chart
+                                        width={'100%'}
+                                        height={'400px'}
                                         chartType={"Bar"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
@@ -638,7 +662,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -648,6 +672,8 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                     </div>
                                 </div>
                                 <Chart
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType={"PieChart"}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={

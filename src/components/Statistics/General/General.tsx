@@ -696,7 +696,7 @@ function General(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-7">
+                            <div className="col-12">
                                 {byMonthTableComponent()}
                             </div>
                         </div>
@@ -704,8 +704,6 @@ function General(siteCollectionUrl) {
                 )
             case "BY_MONTH":
                 let montResult = sampleTwoParser(data, startDate, endDate);
-                console.log("montResult : ",montResult);
-                debugger
                 return (
                     <>
                         <div className="row">
@@ -843,9 +841,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -858,9 +856,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -876,6 +874,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -941,9 +940,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -956,9 +955,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -973,6 +972,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1038,9 +1038,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1053,9 +1053,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1070,6 +1070,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1135,9 +1136,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1150,9 +1151,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1167,6 +1168,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1232,9 +1234,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1247,9 +1249,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1357,9 +1359,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1372,9 +1374,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1389,7 +1391,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1455,9 +1457,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1470,9 +1472,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1541,6 +1543,7 @@ function General(siteCollectionUrl) {
                                 </table>
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1552,9 +1555,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1567,9 +1570,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1584,6 +1587,7 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1649,9 +1653,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1664,9 +1668,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1746,9 +1750,9 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'00%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1761,9 +1765,9 @@ function General(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1842,9 +1846,9 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
@@ -1857,9 +1861,9 @@ function General(siteCollectionUrl) {
                                 }}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
@@ -1942,9 +1946,9 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
@@ -1957,9 +1961,9 @@ function General(siteCollectionUrl) {
                                 }}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
@@ -1987,7 +1991,7 @@ function General(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1999,6 +2003,8 @@ function General(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["服務單位", "數量"],
@@ -2012,7 +2018,7 @@ function General(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2023,6 +2029,8 @@ function General(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [

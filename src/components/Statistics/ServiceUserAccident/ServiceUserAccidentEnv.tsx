@@ -70,7 +70,7 @@ interface ISampleTwoDataset {
 }
 
 interface ISampleThreeDataset {
-    finicalYear: string;
+    financialYear: string;
     dataset: IMonth;
 }
 
@@ -272,7 +272,7 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
     });
 
     m.forEach((value, key) => {
-        let item: ISampleThreeDataset = { finicalYear: key, dataset: value }
+        let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
 
@@ -410,7 +410,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 function ServiceUserAccidentEnv(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl);
+    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
     const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {
@@ -545,7 +545,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {sampleThreeParser(data).map((item) => {
                                         return (
                                             <tr>
-                                                <th scope="row">{item.finicalYear}</th>
+                                                <th scope="row">{item.financialYear}</th>
                                                 <td>{item.dataset.apr}</td>
                                                 <td>{item.dataset.may}</td>
                                                 <td>{item.dataset.jun}</td>

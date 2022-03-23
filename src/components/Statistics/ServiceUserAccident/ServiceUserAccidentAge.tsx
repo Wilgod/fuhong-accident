@@ -834,9 +834,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -849,9 +849,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -866,8 +866,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row"  style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -934,9 +934,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -950,9 +950,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -968,7 +968,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
+                        <hr/>
                         <div className="row" style={{marginTop:'50px'}}>
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1036,9 +1036,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1052,9 +1052,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1070,8 +1070,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1138,9 +1138,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1154,9 +1154,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1240,9 +1240,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1256,9 +1256,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1274,9 +1274,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
+                        <hr/>
 
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1343,9 +1343,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1359,9 +1359,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1377,8 +1377,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1445,9 +1445,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1461,9 +1461,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1567,9 +1567,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1582,10 +1582,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
-                                    height={'300px'}
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
                                     data={lessThanFifteenMCChart}
@@ -1600,8 +1600,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1656,9 +1656,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1671,10 +1671,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
-                                    height={'300px'}
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
                                     data={fifteenToTwentyMCChart}
@@ -1689,7 +1689,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
+                        <hr/>
                         <div className="row" style={{marginTop:'50px'}}>
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1745,9 +1745,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1760,10 +1760,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
-                                    height={'300px'}
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
                                     data={twentyOneToThirtyMCChart}
@@ -1778,8 +1778,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1834,9 +1834,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1849,9 +1849,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
+                                    width={'100%'}
                                     height={'300px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1867,8 +1867,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -1923,9 +1923,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -1938,9 +1938,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
+                                    width={'100%'}
                                     height={'300px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
@@ -1956,8 +1956,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -2012,9 +2012,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -2027,10 +2027,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
-                                    height={'300px'}
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
                                     data={fiftyOneToSixtyMCChart}
@@ -2045,8 +2045,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                         </div>
-
-                        <div className="row" style={{marginTop:'50px'}}>
+                        <hr/>
+                        <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
@@ -2101,9 +2101,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'600px'}
+                                    width={'100%'}
                                     height={'400px'}
                                     chartType="Line"
                                     loader={<div>Loading Chart</div>}
@@ -2116,10 +2116,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     }}
                                 />
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <Chart
-                                    width={'500px'}
-                                    height={'300px'}
+                                    width={'100%'}
+                                    height={'400px'}
                                     chartType="Bar"
                                     loader={<div>Loading Chart</div>}
                                     data={greaterThanSixtyMCChart}
@@ -2193,9 +2193,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                     </div>
 
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
@@ -2209,10 +2209,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 rootProps={{ 'data-testid': '3' }}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'500px'}
-                                height={'300px'}
+                                width={'100%'}
+                                height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
                                 data={ageFinancialChart}
@@ -2286,9 +2286,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                     </div>
 
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'600px'}
+                                width={'100%'}
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
@@ -2302,10 +2302,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 rootProps={{ 'data-testid': '3' }}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-12">
                             <Chart
-                                width={'500px'}
-                                height={'300px'}
+                                width={'100%'}
+                                height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
                                 data={ageYearChart}
@@ -2335,7 +2335,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2347,6 +2347,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["年齡", "年齡"],
@@ -2362,7 +2364,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2373,6 +2375,8 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
