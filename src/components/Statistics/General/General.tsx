@@ -692,7 +692,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -713,7 +713,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 新發生意外或事故 (每月總數)  - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -783,7 +783,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (服務使用者意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`} </h6>
                             </div>
                         </div>
@@ -882,7 +882,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -980,7 +980,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1078,7 +1078,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1176,7 +1176,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1301,7 +1301,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1399,7 +1399,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1496,7 +1496,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1595,7 +1595,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1692,7 +1692,7 @@ function General(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -1802,7 +1802,7 @@ function General(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear3}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1900,7 +1900,7 @@ function General(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear4}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>

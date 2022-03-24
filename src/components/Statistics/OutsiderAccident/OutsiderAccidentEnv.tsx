@@ -653,7 +653,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -772,7 +772,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -872,7 +872,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -973,7 +973,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1074,7 +1074,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1174,7 +1174,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1275,7 +1275,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1375,7 +1375,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1475,7 +1475,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1575,7 +1575,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1675,7 +1675,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1812,7 +1812,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1902,7 +1902,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1992,7 +1992,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2083,7 +2083,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2174,7 +2174,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2264,7 +2264,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2355,7 +2355,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2445,7 +2445,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2536,7 +2536,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2627,7 +2627,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 環境因素 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2727,7 +2727,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear3} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2837,7 +2837,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear4} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>

@@ -693,7 +693,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -713,7 +713,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -787,7 +787,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -887,7 +887,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -987,7 +987,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1087,7 +1087,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1187,7 +1187,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1287,7 +1287,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外成因-個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1414,7 +1414,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 情緒不穩 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1504,7 +1504,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 心急致傷 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1594,7 +1594,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 進食時哽塞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1684,7 +1684,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 步履不穩 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1774,7 +1774,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 抽搐 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1864,7 +1864,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 意外成因 - 個人因素 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1965,7 +1965,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear3} - 意外成因 - 個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -2063,7 +2063,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear4} - 意外成因 - 個人因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>

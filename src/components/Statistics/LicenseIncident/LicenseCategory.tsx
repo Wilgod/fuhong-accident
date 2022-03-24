@@ -572,7 +572,7 @@ function LicenseCategory(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [categoryDataset, setCategoryDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useLicenseStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useLicenseStats();
     console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -640,8 +640,8 @@ function LicenseCategory(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
-                                <h6>{`${title} - 特別事故類別統計`}</h6>
+                            <div className="col-12">
+                                <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -661,7 +661,7 @@ function LicenseCategory(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 特別事故類別統計`}</h6>
+                                <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -722,8 +722,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -778,7 +778,7 @@ function LicenseCategory(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 在院舍內發生事故及送院後死亡 總數(每月總數)
+                                    新發生意外或事故 - 在院舍內發生事故及送院後死亡 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -822,8 +822,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 特別事故類別統計 - 在院舍內自殺及送院後死亡`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 特別事故類別統計 - 在院舍內自殺及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -878,7 +878,7 @@ function LicenseCategory(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 在院舍內自殺及送院後死亡 總數(每月總數)
+                                    新發生意外或事故 - 在院舍內自殺及送院後死亡 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -922,8 +922,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 特別事故類別統計 - 其他不尋常死亡／事故`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 特別事故類別統計 - 其他不尋常死亡／事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -978,7 +978,7 @@ function LicenseCategory(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 其他不尋常死亡／事故 總數(每月總數)
+                                    新發生意外或事故 - 其他不尋常死亡／事故 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1022,8 +1022,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1078,7 +1078,7 @@ function LicenseCategory(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 接獲死因裁判法庭要求出庭的傳票 總數(每月總數)
+                                    新發生意外或事故 - 接獲死因裁判法庭要求出庭的傳票 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1143,8 +1143,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1233,8 +1233,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內自殺及送院後死亡`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內自殺及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1324,8 +1324,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他不尋常死亡／事故`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他不尋常死亡／事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1414,8 +1414,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1516,8 +1516,8 @@ function LicenseCategory(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${titleYear3} - 特別事故類別統計`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear3} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1533,7 +1533,7 @@ function LicenseCategory(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data, startDate, endDate).map((item) => {
+                                    {accidentEnvFinancialResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1609,7 +1609,7 @@ function LicenseCategory(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">

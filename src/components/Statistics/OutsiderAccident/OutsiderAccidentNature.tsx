@@ -610,7 +610,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -630,7 +630,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -699,7 +699,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外性質 跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -800,7 +800,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -901,7 +901,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1002,7 +1002,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1103,7 +1103,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1227,7 +1227,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1317,7 +1317,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1407,7 +1407,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1497,7 +1497,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1587,7 +1587,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1688,7 +1688,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear3} - 外界人士意外 - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1784,7 +1784,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear4} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>

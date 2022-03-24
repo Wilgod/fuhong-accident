@@ -586,7 +586,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -606,7 +606,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
@@ -657,7 +657,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -756,7 +756,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -870,7 +870,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -959,7 +959,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1059,7 +1059,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear3} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
@@ -1138,7 +1138,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
+                        <div className="col-12">
                             <h6>{`${titleYear4} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>

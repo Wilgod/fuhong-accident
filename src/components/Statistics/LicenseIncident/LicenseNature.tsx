@@ -6,33 +6,29 @@ import * as moment from 'moment';
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
+import { useLicenseStats } from '../../../hooks/useLicenseStats';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
-interface IDataset {
-    "envSlipperyGround": number;
-    "envUnevenGround": number;
-    "envObstacleItems": number;
-    "envInsufficientLight": number;
-    "envNotEnoughSpace": number;
-    "envAcousticStimulation": number;
-    "envCollidedByOthers": number;
-    "envHurtByOthers": number;
-    "envImproperUseOfAssistiveEquipment": number;
-    "envOther": number;
 
+//Age interval
+interface IDataset {
+    body: number;
+    mental: number;
+    negligent: number;
+    embezzleProperty:number;
+    abandoned:number;
+    sexualAssault:number;
+    other: number;
 }
 
 const initialDataset: IDataset = {
-    envAcousticStimulation: 0,
-    envCollidedByOthers: 0,
-    envHurtByOthers: 0,
-    envImproperUseOfAssistiveEquipment: 0,
-    envInsufficientLight: 0,
-    envNotEnoughSpace: 0,
-    envObstacleItems: 0,
-    envOther: 0,
-    envSlipperyGround: 0,
-    envUnevenGround: 0
+    body: 0,
+    mental: 0,
+    negligent: 0,
+    embezzleProperty: 0,
+    abandoned:0,
+    sexualAssault:0,
+    other: 0
 }
 
 const initialDatasetMonth: IMonth = {
@@ -185,87 +181,72 @@ const normalChartParser = (result) =>{
     return data;
 }
 
+
 const financialChartParser = (result) =>{
     let dataResult = ['Year'];
-    let envSlipperyGround =['地面濕滑'];
-    let envUnevenGround =['地面不平'];
-    let envObstacleItems =['障礙物品'];
-    let envInsufficientLight =['光線不足'];
-    let envNotEnoughSpace =['空間不足'];
-    let envAcousticStimulation =['聲響刺激'];
-    let envCollidedByOthers =['被別人碰撞'];
-    let envHurtByOthers =['被別人傷害'];
-    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
-    let envOther =['其他'];
+    let body =['身體虐待'];
+    let mental =['精神虐待'];
+    let negligent =['疏忽照顧'];
+    let embezzleProperty=['侵吞財產'];
+    let abandoned =['遺棄'];
+    let sexualAssault =['非禮／性侵犯'];
+    let other =['其他'];
     result.map((item) => {
         dataResult.push(item.financialYear);
-        envSlipperyGround.push(item.dataset['envSlipperyGround']);
-        envUnevenGround.push(item.dataset['envUnevenGround']);
-        envObstacleItems.push(item.dataset['envObstacleItems']);
-        envInsufficientLight.push(item.dataset['envInsufficientLight']);
-        envNotEnoughSpace.push(item.dataset['envNotEnoughSpace']);
-        envAcousticStimulation.push(item.dataset['envAcousticStimulation']);
-        envCollidedByOthers.push(item.dataset['envCollidedByOthers']);
-        envHurtByOthers.push(item.dataset['envHurtByOthers']);
-        envImproperUseOfAssistiveEquipment.push(item.dataset['envImproperUseOfAssistiveEquipment']);
-        envOther.push(item.dataset['envOther']);
+        body.push(item.dataset['body']);
+        mental.push(item.dataset['mental']);
+        negligent.push(item.dataset['negligent']);
+        embezzleProperty.push(item.dataset['embezzleProperty']);
+        abandoned.push(item.dataset['abandoned']);
+        sexualAssault.push(item.dataset['sexualAssault']);
+        other.push(item.dataset['other']);
     });
     let data=[
         dataResult,
-        envSlipperyGround,
-        envUnevenGround,
-        envObstacleItems,
-        envInsufficientLight,
-        envNotEnoughSpace,
-        envAcousticStimulation,
-        envCollidedByOthers,
-        envHurtByOthers,
-        envImproperUseOfAssistiveEquipment,
-        envOther
+        body,
+        mental,
+        negligent,
+        embezzleProperty,
+        abandoned,
+        sexualAssault,
+        other
     ];
     return data;
 }
 
 const yearChartParser = (result) =>{
     let dataResult = ['Year'];
-    let envSlipperyGround =['地面濕滑'];
-    let envUnevenGround =['地面不平'];
-    let envObstacleItems =['障礙物品'];
-    let envInsufficientLight =['光線不足'];
-    let envNotEnoughSpace =['空間不足'];
-    let envAcousticStimulation =['聲響刺激'];
-    let envCollidedByOthers =['被別人碰撞'];
-    let envHurtByOthers =['被別人傷害'];
-    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
-    let envOther =['其他'];
+    let body =['身體虐待'];
+    let mental =['精神虐待'];
+    let negligent =['疏忽照顧'];
+    let embezzleProperty=['侵吞財產'];
+    let abandoned =['遺棄'];
+    let sexualAssault =['非禮／性侵犯'];
+    let other =['其他'];
     result.map((item) => {
         dataResult.push(item.year.toString());
-        envSlipperyGround.push(item.dataset['envSlipperyGround']);
-        envUnevenGround.push(item.dataset['envUnevenGround']);
-        envObstacleItems.push(item.dataset['envObstacleItems']);
-        envInsufficientLight.push(item.dataset['envInsufficientLight']);
-        envNotEnoughSpace.push(item.dataset['envNotEnoughSpace']);
-        envAcousticStimulation.push(item.dataset['envAcousticStimulation']);
-        envCollidedByOthers.push(item.dataset['envCollidedByOthers']);
-        envHurtByOthers.push(item.dataset['envHurtByOthers']);
-        envImproperUseOfAssistiveEquipment.push(item.dataset['envImproperUseOfAssistiveEquipment']);
-        envOther.push(item.dataset['envOther']);
+        body.push(item.dataset['body']);
+        mental.push(item.dataset['mental']);
+        negligent.push(item.dataset['negligent']);
+        embezzleProperty.push(item.dataset['embezzleProperty']);
+        abandoned.push(item.dataset['abandoned']);
+        sexualAssault.push(item.dataset['sexualAssault']);
+        other.push(item.dataset['other']);
+       
     });
     let data=[
         dataResult,
-        envSlipperyGround,
-        envUnevenGround,
-        envObstacleItems,
-        envInsufficientLight,
-        envNotEnoughSpace,
-        envAcousticStimulation,
-        envCollidedByOthers,
-        envHurtByOthers,
-        envImproperUseOfAssistiveEquipment,
-        envOther
+        body,
+        mental,
+        negligent,
+        embezzleProperty,
+        abandoned,
+        sexualAssault,
+        other
     ];
     return data;
 }
+
 
 const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
     let result = { ...dataset };
@@ -327,59 +308,46 @@ const monthDiff = (d1: Date, d2: Date) => {
     }
 }
 
+const abuseNaturefilter = (item: any, dataset: IDataset): IDataset => {
+    let result = dataset;
 
-const envFactorFilter = (factor: string, dataset: IDataset): IDataset => {
-    let result = { ...dataset };
-    switch (factor) {
-        case "ENV_SLIPPERY_GROUND":
-            result.envSlipperyGround += 1;
-            return result;
-        case "ENV_UNEVEN_GROUND":
-            result.envUnevenGround += 1;
-            return result;
-        case "ENV_OBSTACLE_ITEMS":
-            result.envObstacleItems += 1;
-            return result;
-        case "ENV_INSUFFICIENT_LIGHT":
-            result.envInsufficientLight += 1;
-            return result;
-        case "ENV_NOT_ENOUGH_SPACE":
-            result.envNotEnoughSpace += 1;
-            return result;
-        case "ENV_ACOUSTIC_STIMULATION":
-            result.envAcousticStimulation += 1;
-            return result;
-        case "ENV_COLLIDED_BY_OTHERS":
-            result.envCollidedByOthers += 1;
-            return result;
-        case "ENV_HURT_BY_OTHERS":
-            result.envHurtByOthers += 1;
-            return result;
-        case "ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT":
-            result.envImproperUseOfAssistiveEquipment += 1;
-            return result;
-        case "ENV_OTHER":
-            result.envOther += 1;
-            return result;
-        default: return result;
+    if (item.RA_Body) {
+        result.body += 1;
     }
+
+    if (item.RA_Mental) {
+        result.mental += 1;
+    }
+
+    if (item.RA_Negligent) {
+        result.negligent += 1;
+    }
+
+    if (item.RA_EmbezzleProperty) {
+        result.embezzleProperty += 1;
+    }
+
+    if (item.RA_Abandoned) {
+        result.abandoned + 1
+    }
+
+    if (item.RA_SexualAssault) {
+        result.sexualAssault + 1
+    }
+
+    if (item.RA_Other) {
+        result.other + 1
+    }
+    return result;
 }
 
-const sampleOneParser = (envFactor: any[]): IDataset => {
+const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
-    envFactor.forEach((item) => {
-        if (item.ObserveEnvironmentFactor) {
-            let arr = JSON.parse(item.ObserveEnvironmentFactor);
-            if (Array.isArray(arr)) {
-                arr.forEach((factor) => {
-                    dataset = envFactorFilter(factor, dataset);
-                })
-            }
-        }
-    })
-    return dataset
+    serviceUserAge.forEach((item) => {
+        dataset = abuseNaturefilter(item, dataset);
+    });
+    return dataset;
 }
-
 
 const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTwoDataset[] => {
     try {
@@ -416,33 +384,18 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
             m.set(d, { ...initialDataset });
         }
-
         data.forEach((item) => {
-            if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
+            if ((item.AccidentTime || item.IncidentTime || item.Created) && item.CaseNumber) {
                 const formType: string = item.CaseNumber.split("-")[0];
                 const date = new Date(item.AccidentTime || item.IncidentTime || item.Created);
                 const formattedDate = moment(date).format("MM/yyyy");
                 if (m.has(formattedDate)) {
                     let oldDataset = m.get(formattedDate);
-                    if (item.ObserveEnvironmentFactor) {
-                        let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                        if (Array.isArray(arr)) {
-                            arr.forEach((factor) => {
-                                let newDataset = envFactorFilter(factor, oldDataset);
-                                m.set(formattedDate, newDataset);
-                            })
-                        }
-                    }
+                    let newDataset = abuseNaturefilter(item, oldDataset);
+                    m.set(formattedDate, newDataset);
                 } else {
-                    if (item.ObserveEnvironmentFactor) {
-                        let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                        if (Array.isArray(arr)) {
-                            arr.forEach((factor) => {
-                                let newDataset = envFactorFilter(factor, initialDataset);
-                                m.set(formattedDate, newDataset);
-                            })
-                        }
-                    }
+                    let newDataset = abuseNaturefilter(item, { ...initialDataset });
+                    m.set(formattedDate, newDataset);
                 }
             }
         });
@@ -458,7 +411,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     }
 }
 
-const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate, endDate): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -550,37 +503,24 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
     return result
 }
 
-const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[], startDate, endDate): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
     data.forEach((item) => {
-        const d = new Date(item.AccidentTime || item.IncidentTime);
+        const d = new Date(item.AccidentTime || item.IncidentTime || item.Created);
         if (d) {
 
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
 
                 let oldDataset = m.get(currentFinicailYear);
-                if (item.ObserveEnvironmentFactor) {
-                    let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                    if (Array.isArray(arr)) {
-                        arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, oldDataset);
-                            m.set(currentFinicailYear, newDataset);
-                        })
-                    }
-                }
+                let newDataset = abuseNaturefilter(item, oldDataset);
+                m.set(currentFinicailYear, newDataset);
+
             } else {
-                if (item.ObserveEnvironmentFactor) {
-                    let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                    if (Array.isArray(arr)) {
-                        arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, initialDataset);
-                            m.set(currentFinicailYear, newDataset);
-                        })
-                    }
-                }
+                let newDataset = abuseNaturefilter(item, { ...initialDataset });
+                m.set(currentFinicailYear, newDataset);
             }
         }
     });
@@ -604,6 +544,8 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -621,30 +563,17 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 
     data.forEach((item) => {
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
-            const year = new Date(item.AccidentTime || item.IncidentTime).getFullYear().toString();
-            const month = new Date(item.AccidentTime || item.IncidentTime).getMonth() + 1;
+            const year = new Date(item.AccidentTime || item.IncidentTime || item.Created).getFullYear().toString();
+            const month = new Date(item.AccidentTime || item.IncidentTime || item.Created).getMonth() + 1;
 
             if (m.has(year)) {
                 let oldDataset = m.get(year);
-                if (item.ObserveEnvironmentFactor) {
-                    let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                    if (Array.isArray(arr)) {
-                        arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, oldDataset);
-                            m.set(year, newDataset);
-                        })
-                    }
-                }
+                let newDataset = abuseNaturefilter(item, oldDataset);
+                m.set(year, newDataset);
+           
             } else {
-                if (item.ObserveEnvironmentFactor) {
-                    let arr = JSON.parse(item.ObserveEnvironmentFactor);
-                    if (Array.isArray(arr)) {
-                        arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, initialDataset);
-                            m.set(year, newDataset);
-                        })
-                    }
-                }
+                let newDataset = abuseNaturefilter(item, { ...initialDataset });
+                m.set(year, newDataset);
             }
         }
     })
@@ -672,11 +601,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function ServiceUserAccidentEnv(siteCollectionUrl) {
+function AllowanceNature(siteCollectionUrl) {
+
     const [groupBy, setGroupBy] = useState("NON");
-    const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
+    const [abuseNatureDataset, setAbuseNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useLicenseStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -687,8 +617,83 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
         return result;
     }
 
+    const byMonthTableComponent = () => {
+        return (
+            <table className="table" >
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th>總數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">身體虐待</th>
+                        <th>{abuseNatureDataset.body}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">精神虐待</th>
+                        <th>{abuseNatureDataset.mental}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">疏忽照顧</th>
+                        <th>{abuseNatureDataset.negligent}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">侵吞財產</th>
+                        <th>{abuseNatureDataset.embezzleProperty}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">遺棄</th>
+                        <th>{abuseNatureDataset.abandoned}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">非禮／性侵犯</th>
+                        <th>{abuseNatureDataset.sexualAssault}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">其他</th>
+                        <th>{abuseNatureDataset.other}</th>
+                    </tr>
+                </tbody>
+            </table >
+        )
+    }
+
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
+    }
+
+    useEffect(() => {
+        switch (groupBy) {
+            case "NON":
+                setAbuseNatureDataset(sampleOneParser(data));
+            case "BY_MONTH":
+            case "BY_MONTH_FINANCIAL":
+            case "BY_MONTH_CALENDAR":
+            case "BY_YEAR_FINANCIAL":
+            case "BY_YEAR_CALENDAR":
+            default:
+                console.log("default");
+        }
+    }, [groupBy, data])
+
     const statsTableSwitch = () => {
-        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
+        let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 特別事故統計 (津貼科)`
         switch (groupBy) {
             case "NON":
                 return (
@@ -700,7 +705,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 意外成因-環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                                <h6>{`${title} - 虐待性質 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -720,7 +725,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 意外成因-環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                                <h6>{`${title} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -729,16 +734,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">地面濕滑</th>
-                                            <th scope="col">地面不平</th>
-                                            <th scope="col">障礙物品</th>
-                                            <th scope="col">光線不足</th>
-                                            <th scope="col">空間不足</th>
-                                            <th scope="col">聲響刺激</th>
-                                            <th scope="col">被別人碰撞</th>
-                                            <th scope="col">被別人傷害</th>
-                                            <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                            <th scope="col">身體虐待</th>
+                                            <th scope="col">精神虐待</th>
+                                            <th scope="col">疏忽照顧</th>
+                                            <th scope="col">侵吞財產</th>
+                                            <th scope="col">遺棄</th>
+                                            <th scope="col">非禮／性侵犯</th>
                                             <th scope="col">其他</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -746,32 +749,27 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                             return (
                                                 <tr>
                                                     <th scope="row">{item.month}</th>
-                                                    <td>{item.dataset.envSlipperyGround}</td>
-                                                    <td>{item.dataset.envUnevenGround}</td>
-                                                    <td>{item.dataset.envObstacleItems}</td>
-                                                    <td>{item.dataset.envInsufficientLight}</td>
-                                                    <td>{item.dataset.envNotEnoughSpace}</td>
-                                                    <td>{item.dataset.envAcousticStimulation}</td>
-                                                    <td>{item.dataset.envCollidedByOthers}</td>
-                                                    <td>{item.dataset.envHurtByOthers}</td>
-                                                    <td>{item.dataset.envImproperUseOfAssistiveEquipment}</td>
-                                                    <td>{item.dataset.envOther}</td>
+                                                    <td>{item.dataset.body}</td>
+                                                    <td>{item.dataset.mental}</td>
+                                                    <td>{item.dataset.negligent}</td>
+                                                    <td>{item.dataset.embezzleProperty}</td>
+                                                    <td>{item.dataset.abandoned}</td>
+                                                    <td>{item.dataset.sexualAssault}</td>
+                                                    <td>{item.dataset.other}</td>
+
                                                 </tr>
                                             )
                                         })}
                                         {
                                             <tr style={{ color: "red" }}>
                                                 <th scope="row">總數</th>
-                                                <td>{envFactorDataset.envSlipperyGround}</td>
-                                                <td>{envFactorDataset.envUnevenGround}</td>
-                                                <td>{envFactorDataset.envObstacleItems}</td>
-                                                <td>{envFactorDataset.envInsufficientLight}</td>
-                                                <td>{envFactorDataset.envNotEnoughSpace}</td>
-                                                <td>{envFactorDataset.envAcousticStimulation}</td>
-                                                <td>{envFactorDataset.envCollidedByOthers}</td>
-                                                <td>{envFactorDataset.envHurtByOthers}</td>
-                                                <td>{envFactorDataset.envImproperUseOfAssistiveEquipment}</td>
-                                                <td>{envFactorDataset.envOther}</td>
+                                                <td>{abuseNatureDataset.body}</td>
+                                                <td>{abuseNatureDataset.mental}</td>
+                                                <td>{abuseNatureDataset.negligent}</td>
+                                                <td>{abuseNatureDataset.embezzleProperty}</td>
+                                                <td>{abuseNatureDataset.abandoned}</td>
+                                                <td>{abuseNatureDataset.sexualAssault}</td>
+                                                <td>{abuseNatureDataset.other}</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -780,35 +778,26 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
-                let envSlipperyGroundResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_SLIPPERY_GROUND') >= 0}), startDate, endDate);
-                let envSlipperyGroundMFChart = financialYearChartParser(envSlipperyGroundResult);
+                let bodyMFResult = sampleThreeParser(data.filter((item) => {return item.RA_Body}), startDate, endDate);
+                let bodyMFChart = financialYearChartParser(bodyMFResult);
+                
+                let mentalMFResult = sampleThreeParser(data.filter((item) => {return item.RA_Mental}), startDate, endDate);
+                let mentalMFChart = financialYearChartParser(mentalMFResult);
 
-                let envUnevenGroundResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_UNEVEN_GROUND') >= 0}), startDate, endDate);
-                let envUnevenGroundMFChart = financialYearChartParser(envUnevenGroundResult);
+                let negligentMFResult = sampleThreeParser(data.filter((item) => {return item.RA_Negligent}), startDate, endDate);
+                let negligentMFChart = financialYearChartParser(negligentMFResult);
 
-                let envObstacleItemsResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OBSTACLE_ITEMS') >= 0}), startDate, endDate);
-                let envObstacleItemsMFChart = financialYearChartParser(envObstacleItemsResult);
+                let embezzlePropertyMFResult = sampleThreeParser(data.filter((item) => {return item.RA_EmbezzleProperty}), startDate, endDate);
+                let embezzlePropertyMFChart = financialYearChartParser(embezzlePropertyMFResult);
 
-                let envInsufficientLightResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_INSUFFICIENT_LIGHT') >= 0}), startDate, endDate);
-                let envInsufficientLightMFChart = financialYearChartParser(envInsufficientLightResult);
+                let abandonedMFResult = sampleThreeParser(data.filter((item) => {return item.RA_Abandoned}), startDate, endDate);
+                let abandonedMFChart = financialYearChartParser(abandonedMFResult);
 
-                let envNotEnoughSpaceResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_NOT_ENOUGH_SPACE') >= 0}), startDate, endDate);
-                let envNotEnoughSpaceMFChart = financialYearChartParser(envNotEnoughSpaceResult);
+                let sexualAssaultMFResult = sampleThreeParser(data.filter((item) => {return item.RA_SexualAssault}), startDate, endDate);
+                let sexualAssaultMFChart = financialYearChartParser(sexualAssaultMFResult);
 
-                let envAcousticStimulationResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_ACOUSTIC_STIMULATION') >= 0}), startDate, endDate);
-                let envAcousticStimulationMFChart = financialYearChartParser(envAcousticStimulationResult);
-
-                let envCollidedByOthersResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_COLLIDED_BY_OTHERS') >= 0}), startDate, endDate);
-                let envCollidedByOthersMFChart = financialYearChartParser(envCollidedByOthersResult);
-
-                let envHurtByOthersResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_HURT_BY_OTHERS') >= 0}), startDate, endDate);
-                let envHurtByOthersMFChart = financialYearChartParser(envHurtByOthersResult);
-
-                let envImproperUseOfAssistiveEquipmentResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT') >= 0}), startDate, endDate);
-                let envImproperUseOfAssistiveEquipmentMFChart = financialYearChartParser(envImproperUseOfAssistiveEquipmentResult);
-
-                let envOtherResult = sampleThreeParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OTHER') >= 0}), startDate, endDate);
-                let envOtherMFChart = financialYearChartParser(envOtherResult);
+                let otherMFResult = sampleThreeParser(data.filter((item) => {return item.RA_Other}), startDate, endDate);
+                let otherMFChart = financialYearChartParser(otherMFResult);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -817,7 +806,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 身體虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -841,7 +830,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envSlipperyGroundResult.map((item) => {
+                                    {bodyMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -872,7 +861,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                虐待性質統計 - 身體虐待 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -882,11 +871,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envSlipperyGroundMFChart}
+                                data={bodyMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                        subtitle: '虐待性質統計 - 身體虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -897,12 +886,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envSlipperyGroundMFChart}
+                                data={bodyMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                        subtitle: '虐待性質統計 - 身體虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -917,7 +906,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 精神虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -941,7 +930,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envUnevenGroundResult.map((item) => {
+                                    {mentalMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -972,7 +961,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                虐待性質統計 - 精神虐待 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -982,11 +971,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envUnevenGroundMFChart}
+                                data={mentalMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                        subtitle: '虐待性質統計 - 精神虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -997,214 +986,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envUnevenGroundMFChart}
+                                data={mentalMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envObstacleItemsResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.financialYear}</th>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                            </tr>
-                                        )
-                                    })}
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <div className="">
-                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                </div>
-                                <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 障礙物品 總數(每月總數)
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envObstacleItemsMFChart}
-                                options={{
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envObstacleItemsMFChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envInsufficientLightResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.financialYear}</th>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                            </tr>
-                                        )
-                                    })}
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <div className="">
-                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                </div>
-                                <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 光線不足 總數(每月總數)
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envInsufficientLightMFChart}
-                                options={{
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envInsufficientLightMFChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
+                                        subtitle: '虐待性質統計 - 精神虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -1219,7 +1006,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 疏忽照顧 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1243,7 +1030,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envNotEnoughSpaceResult.map((item) => {
+                                    {negligentMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1274,7 +1061,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 空間不足 總數(每月總數)
+                                虐待性質統計 - 疏忽照顧 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1284,11 +1071,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envNotEnoughSpaceMFChart}
+                                data={negligentMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                        subtitle: '虐待性質統計 - 疏忽照顧(每月總數)',
                                     },
                                 }}
                             />
@@ -1299,113 +1086,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envNotEnoughSpaceMFChart}
+                                data={negligentMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envAcousticStimulationResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.financialYear}</th>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                            </tr>
-                                        )
-                                    })}
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <div className="">
-                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                </div>
-                                <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 聲響刺激 總數(每月總數)
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envAcousticStimulationMFChart}
-                                options={{
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envAcousticStimulationMFChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                        subtitle: '虐待性質統計 - 疏忽照顧(每月總數)',
                                     },
                                 }}
                             />
@@ -1420,7 +1106,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 侵吞財產 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1444,7 +1130,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envCollidedByOthersResult.map((item) => {
+                                    {embezzlePropertyMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1475,7 +1161,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 被別人碰撞 總數(每月總數)
+                                虐待性質統計 - 侵吞財產 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1485,11 +1171,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envCollidedByOthersMFChart}
+                                data={embezzlePropertyMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                        subtitle: '虐待性質統計 - 侵吞財產(每月總數)',
                                     },
                                 }}
                             />
@@ -1500,12 +1186,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envCollidedByOthersMFChart}
+                                data={embezzlePropertyMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                        subtitle: '虐待性質統計 - 侵吞財產(每月總數)',
                                     },
                                 }}
                             />
@@ -1520,7 +1206,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 遺棄 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1544,7 +1230,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envHurtByOthersResult.map((item) => {
+                                    {abandonedMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1575,7 +1261,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 被別人傷害 總數(每月總數)
+                                虐待性質統計 - 遺棄 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1585,11 +1271,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envHurtByOthersMFChart}
+                                data={abandonedMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                        subtitle: '虐待性質統計 - 遺棄(每月總數)',
                                     },
                                 }}
                             />
@@ -1600,12 +1286,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envHurtByOthersMFChart}
+                                data={abandonedMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                        subtitle: '虐待性質統計 - 其他(每月總數)',
                                     },
                                 }}
                             />
@@ -1620,7 +1306,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 非禮／性侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1644,7 +1330,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envImproperUseOfAssistiveEquipmentResult.map((item) => {
+                                    {sexualAssaultMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1675,7 +1361,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) 總數(每月總數)
+                                虐待性質統計 - 非禮／性侵犯 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1685,11 +1371,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envImproperUseOfAssistiveEquipmentMFChart}
+                                data={sexualAssaultMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '虐待性質統計 - 非禮／性侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -1700,12 +1386,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envImproperUseOfAssistiveEquipmentMFChart}
+                                data={sexualAssaultMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '虐待性質統計 - 非禮／性侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -1720,7 +1406,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1744,7 +1430,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envOtherResult.map((item) => {
+                                    {otherMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -1775,7 +1461,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 其他 總數(每月總數)
+                                虐待性質統計 - 其他 總數(每月總數)
                                 </div>
                             </div>
                         </div>
@@ -1785,11 +1471,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envOtherMFChart}
+                                data={otherMFChart}
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                        subtitle: '虐待性質統計 - 其他(每月總數)',
                                     },
                                 }}
                             />
@@ -1800,12 +1486,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envOtherMFChart}
+                                data={otherMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                        subtitle: '虐待性質統計 - 其他(每月總數)',
                                     },
                                 }}
                             />
@@ -1815,38 +1501,30 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                 </>
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let envSlipperyGroundMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_SLIPPERY_GROUND') >= 0}), startDate, endDate);
-                let envSlipperyGroundMCChart = normalChartParser(envSlipperyGroundMCResult);
+                let bodyMCResult = sampleFourParser(data.filter((item) => {return item.RA_Body}), startDate, endDate);
+                let bodyMCChart = normalChartParser(bodyMCResult);
+                
+                let mentalMCResult = sampleFourParser(data.filter((item) => {return item.RA_Mental}), startDate, endDate);
+                let mentalMCChart = normalChartParser(mentalMCResult);
 
-                let envUnevenGroundMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_UNEVEN_GROUND') >= 0}), startDate, endDate);
-                let envUnevenGroundMCChart = normalChartParser(envUnevenGroundMCResult);
+                let negligentMCResult = sampleFourParser(data.filter((item) => {return item.RA_Negligent}), startDate, endDate);
+                let negligentMCChart = normalChartParser(negligentMCResult);
 
-                let envObstacleItemsMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OBSTACLE_ITEMS') >= 0}), startDate, endDate);
-                let envObstacleItemsMCChart = normalChartParser(envObstacleItemsMCResult);
+                let embezzlePropertyMCResult = sampleFourParser(data.filter((item) => {return item.RA_EmbezzleProperty}), startDate, endDate);
+                let embezzlePropertyMCChart = normalChartParser(embezzlePropertyMCResult);
 
-                let envInsufficientLightMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_INSUFFICIENT_LIGHT') >= 0}), startDate, endDate);
-                let envInsufficientLightMCChart = normalChartParser(envInsufficientLightMCResult);
+                let abandonedMCResult = sampleFourParser(data.filter((item) => {return item.RA_Abandoned}), startDate, endDate);
+                let abandonedMCChart = normalChartParser(abandonedMCResult);
 
-                let envNotEnoughSpaceMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_NOT_ENOUGH_SPACE') >= 0}), startDate, endDate);
-                let envNotEnoughSpaceMCChart = normalChartParser(envNotEnoughSpaceMCResult);
+                let sexualAssaultMCResult = sampleFourParser(data.filter((item) => {return item.RA_SexualAssault}), startDate, endDate);
+                let sexualAssaultMCChart = normalChartParser(sexualAssaultMCResult);
 
-                let envAcousticStimulationMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_ACOUSTIC_STIMULATION') >= 0}), startDate, endDate);
-                let envAcousticStimulationMCChart = normalChartParser(envAcousticStimulationMCResult);
-
-                let envCollidedByOthersMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_COLLIDED_BY_OTHERS') >= 0}), startDate, endDate);
-                let envCollidedByOthersMCChart = normalChartParser(envCollidedByOthersMCResult);
-
-                let envHurtByOthersMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_HURT_BY_OTHERS') >= 0}), startDate, endDate);
-                let envHurtByOthersMCChart = normalChartParser(envHurtByOthersMCResult);
-
-                let envImproperUseOfAssistiveEquipmentMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT') >= 0}), startDate, endDate);
-                let envImproperUseOfAssistiveEquipmentMCChart = normalChartParser(envImproperUseOfAssistiveEquipmentMCResult);
-
-                let envOtherMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OTHER') >= 0}), startDate, endDate);
-                let envOtherMCChart = normalChartParser(envOtherMCResult);
-                envSlipperyGroundMCResult.forEach((item, i) => {
-                    titleYear2 += item.year
-                    if (i !== envSlipperyGroundMCResult.length - 1) {
+                let otherMCResult = sampleFourParser(data.filter((item) => {return item.RA_Other}), startDate, endDate);
+                let otherMCChart = normalChartParser(otherMCResult);
+                
+                bodyMCResult.forEach((item, i) => {
+                    titleYear2 += item.year;
+                    if (i !== bodyMCResult.length - 1) {
                         titleYear2 += ", "
                     }
                 })
@@ -1858,7 +1536,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 身體虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1882,7 +1560,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envSlipperyGroundMCResult.map((item) => {
+                                    {bodyMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -1912,11 +1590,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envSlipperyGroundMCChart}
+                                data={bodyMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 身體虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -1927,12 +1605,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envSlipperyGroundMCChart}
+                                data={bodyMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 身體虐待(每月總數)',
                                     },
                                 }}
 
@@ -1948,7 +1626,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 精神虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1972,7 +1650,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envUnevenGroundMCResult.map((item) => {
+                                    {mentalMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2002,11 +1680,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envUnevenGroundMCChart}
+                                data={mentalMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 精神虐待(每月總數)',
                                     },
                                 }}
                             />
@@ -2017,12 +1695,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envUnevenGroundMCChart}
+                                data={mentalMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 精神虐待(每月總數)',
                                     },
                                 }}
 
@@ -2038,7 +1716,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 疏忽照顧 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2062,7 +1740,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envObstacleItemsMCResult.map((item) => {
+                                    {negligentMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2092,11 +1770,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envObstacleItemsMCChart}
+                                data={negligentMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 疏忽照顧(每月總數)',
                                     },
                                 }}
                             />
@@ -2107,194 +1785,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envObstacleItemsMCChart}
+                                data={negligentMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
-                                    },
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envInsufficientLightMCResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.year}</th>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envInsufficientLightMCChart}
-                                options={{
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envInsufficientLightMCChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
-                                    },
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envNotEnoughSpaceMCResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.year}</th>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envNotEnoughSpaceMCChart}
-                                options={{
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envNotEnoughSpaceMCChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 疏忽照顧(每月總數)',
                                     },
                                 }}
 
@@ -2310,7 +1806,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 侵吞財產 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2334,7 +1830,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envAcousticStimulationMCResult.map((item) => {
+                                    {embezzlePropertyMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2364,11 +1860,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envAcousticStimulationMCChart}
+                                data={embezzlePropertyMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 侵吞財產(每月總數)',
                                     },
                                 }}
                             />
@@ -2379,12 +1875,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envAcousticStimulationMCChart}
+                                data={embezzlePropertyMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 侵吞財產(每月總數)',
                                     },
                                 }}
 
@@ -2401,7 +1897,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 遺棄 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2425,7 +1921,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envCollidedByOthersMCResult.map((item) => {
+                                    {abandonedMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2455,11 +1951,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envCollidedByOthersMCChart}
+                                data={abandonedMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 遺棄(每月總數)',
                                     },
                                 }}
                             />
@@ -2470,102 +1966,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envCollidedByOthersMCChart}
+                                data={abandonedMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
-                                    },
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                    <hr/>
-
-                    <div className="row">
-                        <div className="col-1">
-                            <h6 style={{ fontWeight: 600 }}>
-                                標題:
-                            </h6>
-                        </div>
-                        <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Jan</th>
-                                        <th scope="col">Feb</th>
-                                        <th scope="col">Mar</th>
-                                        <th scope="col">Apr</th>
-                                        <th scope="col">May</th>
-                                        <th scope="col">Jun</th>
-                                        <th scope="col">Jul</th>
-                                        <th scope="col">Aug</th>
-                                        <th scope="col">Sep</th>
-                                        <th scope="col">Oct</th>
-                                        <th scope="col">Nov</th>
-                                        <th scope="col">Dec</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {envHurtByOthersMCResult.map((item) => {
-                                        return (
-                                            <tr>
-                                                <th scope="row">{item.year}</th>
-                                                <td>{item.dataset.jan}</td>
-                                                <td>{item.dataset.feb}</td>
-                                                <td>{item.dataset.mar}</td>
-                                                <td>{item.dataset.apr}</td>
-                                                <td>{item.dataset.may}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.jun}</td>
-                                                <td>{item.dataset.aug}</td>
-                                                <td>{item.dataset.sep}</td>
-                                                <td>{item.dataset.oct}</td>
-                                                <td>{item.dataset.nov}</td>
-                                                <td>{item.dataset.dec}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Line"
-                                loader={<div>Loading Chart</div>}
-                                data={envHurtByOthersMCChart}
-                                options={{
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
-                                    },
-                                }}
-                            />
-                        </div>
-                        <div className="col-12">
-                            <Chart
-                                width={'100%'}
-                                height={'400px'}
-                                chartType="Bar"
-                                loader={<div>Loading Chart</div>}
-                                data={envHurtByOthersMCChart}
-                                options={{
-                                    // Material design options
-                                    chart: {
-                                        title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 遺棄(每月總數)',
                                     },
                                 }}
 
@@ -2582,7 +1988,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 非禮／性侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2606,7 +2012,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envImproperUseOfAssistiveEquipmentMCResult.map((item) => {
+                                    {sexualAssaultMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2636,11 +2042,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envImproperUseOfAssistiveEquipmentMCChart}
+                                data={sexualAssaultMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 非禮／性侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -2651,12 +2057,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envImproperUseOfAssistiveEquipmentMCChart}
+                                data={sexualAssaultMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 非禮／性侵犯(每月總數)',
                                     },
                                 }}
 
@@ -2665,7 +2071,6 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     </div>
                     <hr/>
 
-
                     <div className="row">
                         <div className="col-1">
                             <h6 style={{ fontWeight: 600 }}>
@@ -2673,7 +2078,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 虐待性質統計 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2697,7 +2102,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {envOtherMCResult.map((item) => {
+                                    {otherMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -2727,11 +2132,11 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Line"
                                 loader={<div>Loading Chart</div>}
-                                data={envOtherMCChart}
+                                data={otherMCChart}
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 其他(每月總數)',
                                     },
                                 }}
                             />
@@ -2742,12 +2147,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={envOtherMCChart}
+                                data={otherMCChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                        subtitle: ' - 虐待性質統計 - 其他(每月總數)',
                                     },
                                 }}
 
@@ -2774,7 +2179,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear3} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear3} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2783,15 +2188,12 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">地面濕滑</th>
-                                        <th scope="col">地面不平</th>
-                                        <th scope="col">障礙物品</th>
-                                        <th scope="col">光線不足</th>
-                                        <th scope="col">空間不足</th>
-                                        <th scope="col">聲響刺激</th>
-                                        <th scope="col">被別人碰撞</th>
-                                        <th scope="col">被別人傷害</th>
-                                        <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                        <th scope="col">身體虐待</th>
+                                        <th scope="col">精神虐待</th>
+                                        <th scope="col">疏忽照顧</th>
+                                        <th scope="col">侵吞財產</th>
+                                        <th scope="col">遺棄</th>
+                                        <th scope="col">非禮／性侵犯</th>
                                         <th scope="col">其他</th>
                                     </tr>
                                 </thead>
@@ -2800,32 +2202,26 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
-                                                <td>{item.dataset.envSlipperyGround}</td>
-                                                <td>{item.dataset.envUnevenGround}</td>
-                                                <td>{item.dataset.envObstacleItems}</td>
-                                                <td>{item.dataset.envInsufficientLight}</td>
-                                                <td>{item.dataset.envNotEnoughSpace}</td>
-                                                <td>{item.dataset.envAcousticStimulation}</td>
-                                                <td>{item.dataset.envCollidedByOthers}</td>
-                                                <td>{item.dataset.envHurtByOthers}</td>
-                                                <td>{item.dataset.envImproperUseOfAssistiveEquipment}</td>
-                                                <td>{item.dataset.envOther}</td>
+                                                <td>{item.dataset.body}</td>
+                                                <td>{item.dataset.mental}</td>
+                                                <td>{item.dataset.negligent}</td>
+                                                <td>{item.dataset.embezzleProperty}</td>
+                                                <td>{item.dataset.abandoned}</td>
+                                                <td>{item.dataset.abandoned}</td>
+                                                <td>{item.dataset.other}</td>
                                             </tr>
                                         )
                                     })}
                                     {
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
-                                            <td>{envFactorDataset.envSlipperyGround}</td>
-                                            <td>{envFactorDataset.envUnevenGround}</td>
-                                            <td>{envFactorDataset.envObstacleItems}</td>
-                                            <td>{envFactorDataset.envInsufficientLight}</td>
-                                            <td>{envFactorDataset.envNotEnoughSpace}</td> 
-                                            <td>{envFactorDataset.envAcousticStimulation}</td>
-                                            <td>{envFactorDataset.envCollidedByOthers}</td>
-                                            <td>{envFactorDataset.envHurtByOthers}</td>
-                                            <td>{envFactorDataset.envImproperUseOfAssistiveEquipment}</td>
-                                            <td>{envFactorDataset.envOther}</td>
+                                            <td>{abuseNatureDataset.body}</td>
+                                            <td>{abuseNatureDataset.mental}</td>
+                                            <td>{abuseNatureDataset.negligent}</td>
+                                            <td>{abuseNatureDataset.embezzleProperty}</td>
+                                            <td>{abuseNatureDataset.abandoned}</td>
+                                            <td>{abuseNatureDataset.abandoned}</td>
+                                            <td>{abuseNatureDataset.other}</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -2843,7 +2239,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素統計(每年總數)',
+                                        subtitle: '虐待性質統計(每年總數)',
                                     },
                                 }}
                             />
@@ -2859,13 +2255,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素統計(每年總數)',
+                                        subtitle: '虐待性質統計(每年總數)',
                                     },
                                 }}
                             />
                         </div>
                     </div>
                 </>
+
             case "BY_YEAR_CALENDAR":
                 let titleYear4 = "";
                 let accidentYearResult = sampleSixParser(data, startDate, endDate);
@@ -2884,7 +2281,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear4} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear4} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2893,33 +2290,28 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">地面濕滑</th>
-                                        <th scope="col">地面不平</th>
-                                        <th scope="col">障礙物品</th>
-                                        <th scope="col">光線不足</th>
-                                        <th scope="col">空間不足</th>
-                                        <th scope="col">聲響刺激</th>
-                                        <th scope="col">被別人碰撞</th>
-                                        <th scope="col">被別人傷害</th>
-                                        <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                        <th scope="col">身體虐待</th>
+                                        <th scope="col">精神虐待</th>
+                                        <th scope="col">疏忽照顧</th>
+                                        <th scope="col">侵吞財產</th>
+                                        <th scope="col">遺棄</th>
+                                        <th scope="col">非禮／性侵犯</th>
                                         <th scope="col">其他</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleSixParser(data, startDate, endDate).map((item) => {
+                                    {accidentYearResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
-                                                <td>{item.dataset.envSlipperyGround}</td>
-                                                <td>{item.dataset.envUnevenGround}</td>
-                                                <td>{item.dataset.envObstacleItems}</td>
-                                                <td>{item.dataset.envInsufficientLight}</td>
-                                                <td>{item.dataset.envNotEnoughSpace}</td>
-                                                <td>{item.dataset.envAcousticStimulation}</td>
-                                                <td>{item.dataset.envCollidedByOthers}</td>
-                                                <td>{item.dataset.envHurtByOthers}</td>
-                                                <td>{item.dataset.envImproperUseOfAssistiveEquipment}</td>
-                                                <td>{item.dataset.envOther}</td>
+                                                <td>{item.dataset.body}</td>
+                                                <td>{item.dataset.mental}</td>
+                                                <td>{item.dataset.negligent}</td>
+                                                <td>{item.dataset.embezzleProperty}</td>
+                                                <td>{item.dataset.abandoned}</td>
+                                                <td>{item.dataset.sexualAssault}</td>
+                                                <td>{item.dataset.other}</td>
                                             </tr>
                                         )
                                     })}
@@ -2938,7 +2330,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外性質 - 環境因素 統計(每年總數)',
+                                        subtitle: '虐待性質統計(每年總數)',
                                     },
                                 }}
                             />
@@ -2954,7 +2346,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外性質 - 環境因素 統計(每年總數)',
+                                        subtitle: '虐待性質統計(每年總數)',
                                     },
                                 }}
 
@@ -2965,61 +2357,6 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
             default:
                 return null;
         }
-    }
-
-    const byMonthTableComponent = () => {
-        return (
-            <table className="table" >
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th>總數</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">地面濕滑</th>
-                        <th>{envFactorDataset.envSlipperyGround}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">地面不平</th>
-                        <th>{envFactorDataset.envUnevenGround}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">障礙物品</th>
-                        <th>{envFactorDataset.envObstacleItems}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">光線不足</th>
-                        <th>{envFactorDataset.envInsufficientLight}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">空間不足</th>
-                        <th>{envFactorDataset.envNotEnoughSpace}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">聲響刺激</th>
-                        <th>{envFactorDataset.envAcousticStimulation}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">被別人碰撞</th>
-                        <th>{envFactorDataset.envCollidedByOthers}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">被別人傷害</th>
-                        <th>{envFactorDataset.envHurtByOthers}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
-                        <th>{envFactorDataset.envImproperUseOfAssistiveEquipment}</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">其他</th>
-                        <th>{envFactorDataset.envOther}</th>
-                    </tr>
-                </tbody>
-            </table >
-        )
     }
 
     const chartSwitch = () => {
@@ -3036,7 +2373,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        服務使用者意外 - 意外成因-環境因素統計
+                                        特別事故統計 (津貼科) - 虐待性質
                                     </div>
                                 </div>
                                 <div className="">
@@ -3046,17 +2383,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
-                                            ["環境因素", "數量"],
-                                            ["地面濕滑", envFactorDataset.envSlipperyGround],
-                                            ["地面不平", envFactorDataset.envUnevenGround],
-                                            ["障礙物品", envFactorDataset.envNotEnoughSpace],
-                                            ["光線不足", envFactorDataset.envInsufficientLight],
-                                            ["空間不足", envFactorDataset.envNotEnoughSpace],
-                                            ["聲響刺激", envFactorDataset.envAcousticStimulation],
-                                            ["被別人碰撞", envFactorDataset.envCollidedByOthers],
-                                            ["被別人傷害", envFactorDataset.envHurtByOthers],
-                                            ["輔助器材使用不當 (如輪椅／便椅未上鎖)", envFactorDataset.envImproperUseOfAssistiveEquipment],
-                                            ["其他", envFactorDataset.envOther],
+                                            ["虐待性質", "數量"],
+                                            ["身體虐待", abuseNatureDataset.body],
+                                            ["精神虐待", abuseNatureDataset.mental],
+                                            ["疏忽照顧", abuseNatureDataset.negligent],
+                                            ["侵吞財產", abuseNatureDataset.embezzleProperty],
+                                            ["遺棄", abuseNatureDataset.abandoned],
+                                            ["非禮／性侵犯", abuseNatureDataset.sexualAssault],
+                                            ["其他", abuseNatureDataset.other]
                                         ]}
                                     />
 
@@ -3068,7 +2402,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                        服務使用者意外 - 意外成因-環境因素統計
+                                        特別事故統計 (津貼科) - 虐待性質
                                     </div>
                                 </div>
                                 <Chart
@@ -3078,17 +2412,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
-                                            ["環境因素", "數量"],
-                                            ["地面濕滑", envFactorDataset.envSlipperyGround],
-                                            ["地面不平", envFactorDataset.envUnevenGround],
-                                            ["障礙物品", envFactorDataset.envNotEnoughSpace],
-                                            ["光線不足", envFactorDataset.envInsufficientLight],
-                                            ["空間不足", envFactorDataset.envNotEnoughSpace],
-                                            ["聲響刺激", envFactorDataset.envAcousticStimulation],
-                                            ["被別人碰撞", envFactorDataset.envCollidedByOthers],
-                                            ["被別人傷害", envFactorDataset.envHurtByOthers],
-                                            ["輔助器材使用不當 (如輪椅／便椅未上鎖)", envFactorDataset.envImproperUseOfAssistiveEquipment],
-                                            ["其他", envFactorDataset.envOther],
+                                            ["虐待性質", "數量"],
+                                            ["身體虐待", abuseNatureDataset.body],
+                                            ["精神虐待", abuseNatureDataset.mental],
+                                            ["疏忽照顧", abuseNatureDataset.negligent],
+                                            ["侵吞財產", abuseNatureDataset.embezzleProperty],
+                                            ["遺棄", abuseNatureDataset.abandoned],
+                                            ["非禮／性侵犯", abuseNatureDataset.sexualAssault],
+                                            ["其他", abuseNatureDataset.other]
                                         ]
                                     }
                                 />
@@ -3102,77 +2433,35 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                 months += endDate.getMonth();
                 let newWidth = (200 * months) + 200;
                 return (
-
                     <div className="row">
-                        <div className="col-12">
-                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <div className="">
-                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                </div>
-                                <div className="">
-                                    新發生意外或事故總數 (每月總數)
-                                </div>
-                            </div>
-                        </div>
                         <div className="col-12" style={{overflow:'auto'}}>
                             <Chart
                                 width={newWidth}
                                 height={400}
-                                chartType="ColumnChart"
+                                chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={
-                                    [['月份', '地面濕滑', '地面不平', '障礙物品', '光線不足', '空間不足', '聲響刺激', '被別人碰撞', '被別人傷害', '輔助器材使用不當 (如輪椅／便椅未上鎖)', '其他'],
-                                    ...sampleTwoParser(data, startDate, endDate).map((item) => {
-                                        return [item.month, item.dataset.envSlipperyGround, item.dataset.envUnevenGround, item.dataset.envNotEnoughSpace, item.dataset.envInsufficientLight, item.dataset.envNotEnoughSpace
-                                            , item.dataset.envAcousticStimulation, item.dataset.envCollidedByOthers, item.dataset.envHurtByOthers, item.dataset.envImproperUseOfAssistiveEquipment, item.dataset.envOther]
-                                    })]
-                                }
+                                data={[['月份', '身體虐待', '精神虐待', '疏忽照顧', '侵吞財產', '遺棄', '非禮／性侵犯', '其他'],
+                                ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                    return [item.month, item.dataset.body, item.dataset.mental, item.dataset.negligent, item.dataset.embezzleProperty, item.dataset.abandoned, item.dataset.sexualAssault, item.dataset.other]
+                                })]
+                            }
+
                             />
                         </div>
                     </div>
+                    
                 )
+            
             default:
                 return null;
         }
     }
 
-    const changeGroupHandler = (event) => {
-        const value = event.target.value;
-        if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
-        } else if (value == 'BY_MONTH_CALENDAR') {
-            setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
-        } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
-        } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
-        }
-        setGroupBy(value);
-    }
-
-    useEffect(() => {
-        switch (groupBy) {
-            case "NON":
-                setEnvFactorDataset(sampleOneParser(data));
-            case "BY_MONTH":
-            case "BY_MONTH_FINANCIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINANCIAL":
-            case "BY_YEAR_CALENDAR":
-            default:
-                console.log("default");
-        }
-    }, [groupBy, data])
-
     return (
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 服務使用者意外統計 &gt; 意外成因 - 環境因素</h6>
+                    <h6 style={{ fontWeight: 600 }}>統計資料 &gt; 特別事故統計 (津貼科) &gt; 虐待性質</h6>
                 </div>
             </div>
 
@@ -3217,7 +2506,6 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
-
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
@@ -3239,13 +2527,13 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     統計資料
                 </div>
                 {statsTableSwitch()}
+                {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
                 {chartSwitch()}
             </div>
-        </div>
+        </div >
     )
 }
 
-export default ServiceUserAccidentEnv
-
+export default AllowanceNature

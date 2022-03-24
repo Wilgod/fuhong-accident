@@ -177,6 +177,61 @@ const normalChartParser = (result) =>{
     return data;
 }
 
+
+const financialChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let body =['身體虐待'];
+    let sexual =['性侵犯'];
+    let mental =['精神虐待'];
+    let negligent =['疏忽照顧'];
+    let other =['其他'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        body.push(item.dataset['body']);
+        sexual.push(item.dataset['sexual']);
+        mental.push(item.dataset['mental']);
+        negligent.push(item.dataset['negligent']);
+        other.push(item.dataset['other']);
+    });
+    let data=[
+        dataResult,
+        body,
+        sexual,
+        mental,
+        negligent,
+        other
+    ];
+    return data;
+}
+
+const yearChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let body =['身體虐待'];
+    let sexual =['性侵犯'];
+    let mental =['精神虐待'];
+    let negligent =['疏忽照顧'];
+    let other =['其他'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        body.push(item.dataset['body']);
+        sexual.push(item.dataset['sexual']);
+        mental.push(item.dataset['mental']);
+        negligent.push(item.dataset['negligent']);
+        other.push(item.dataset['other']);
+       
+    });
+    let data=[
+        dataResult,
+        body,
+        sexual,
+        mental,
+        negligent,
+        other
+    ];
+    return data;
+}
+
+
 const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
     let result = { ...dataset };
     return result;
@@ -333,7 +388,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     }
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate, endDate): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -356,7 +411,22 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -391,11 +461,26 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(year.toString(), newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFourDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result
 }
 
-const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[], startDate, endDate): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
@@ -421,7 +506,23 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
         let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(financialYear, initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFiveDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -458,7 +559,22 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(year.toString(), initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    arraySort(result, 'year');
     return result;
 }
 
@@ -467,7 +583,7 @@ function AllowanceNature(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [abuseNatureDataset, setAbuseNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -513,6 +629,24 @@ function AllowanceNature(siteCollectionUrl) {
         )
     }
 
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
+    }
+
     useEffect(() => {
         switch (groupBy) {
             case "NON":
@@ -539,12 +673,12 @@ function AllowanceNature(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
-                                <h6>{`${title} - 虐待性質`}</h6>
+                            <div className="col-12">
+                                <h6>{`${title} - 虐待性質 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-7">
+                            <div className="col-12">
                                 {byMonthTableComponent()}
                             </div>
                         </div>
@@ -559,8 +693,8 @@ function AllowanceNature(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            <div className="col-12">
+                                <h6>{`${title} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -607,6 +741,20 @@ function AllowanceNature(siteCollectionUrl) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
+                let abusiveBodyMFResult = sampleThreeParser(data.filter((item) => {return item.Abusive_Body}), startDate, endDate);
+                let abusiveBodyMFChart = financialYearChartParser(abusiveBodyMFResult);
+                
+                let abusiveSexualMFResult = sampleThreeParser(data.filter((item) => {return item.Abusive_Sexual}), startDate, endDate);
+                let abusiveSexualMFChart = financialYearChartParser(abusiveSexualMFResult);
+
+                let abusiveMentalMFResult = sampleThreeParser(data.filter((item) => {return item.Abusive_Mental}), startDate, endDate);
+                let abusiveMentalMFChart = financialYearChartParser(abusiveMentalMFResult);
+
+                let abusiveNegligentMFResult = sampleThreeParser(data.filter((item) => {return item.Abusive_Negligent}), startDate, endDate);
+                let abusiveNegligentMFChart = financialYearChartParser(abusiveNegligentMFResult);
+
+                let abusiveOtherMFResult = sampleThreeParser(data.filter((item) => {return item.Abusive_Other}), startDate, endDate);
+                let abusiveOtherMFChart = financialYearChartParser(abusiveOtherMFResult);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -614,8 +762,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 身體虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -639,7 +787,7 @@ function AllowanceNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleThreeParser(data).map((item) => {
+                                    {abusiveBodyMFResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -663,8 +811,473 @@ function AllowanceNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                虐待性質統計 - 身體虐待 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveBodyMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 身體虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveBodyMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 身體虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 性侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveSexualMFResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                虐待性質統計 - 性侵犯 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveSexualMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 性侵犯(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveSexualMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 性侵犯(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 精神虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveMentalMFResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                虐待性質統計 - 精神虐待 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveMentalMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 精神虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveMentalMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 精神虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 疏忽照顧 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveNegligentMFResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                虐待性質統計 - 疏忽照顧 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveNegligentMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 疏忽照顧(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveNegligentMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 疏忽照顧(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveOtherMFResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                虐待性質統計 - 其他 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveOtherMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveOtherMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
                 </>
             case "BY_MONTH_CALENDAR":
+                let titleYear2 = "";
+                let abusiveBodyMCResult = sampleFourParser(data.filter((item) => {return item.Abusive_Body}), startDate, endDate);
+                let abusiveBodyMCChart = normalChartParser(abusiveBodyMCResult);
+                
+                let abusiveSexualMCResult = sampleFourParser(data.filter((item) => {return item.Abusive_Sexual}), startDate, endDate);
+                let abusiveSexualMCChart = normalChartParser(abusiveSexualMCResult);
+
+                let abusiveMentalMCResult = sampleFourParser(data.filter((item) => {return item.Abusive_Mental}), startDate, endDate);
+                let abusiveMentalMCChart = normalChartParser(abusiveMentalMCResult);
+
+                let abusiveNegligentMCResult = sampleFourParser(data.filter((item) => {return item.Abusive_Negligent}), startDate, endDate);
+                let abusiveNegligentMCChart = normalChartParser(abusiveNegligentMCResult);
+
+                let abusiveOtherMCResult = sampleFourParser(data.filter((item) => {return item.Abusive_Other}), startDate, endDate);
+                let abusiveOtherMCChart = normalChartParser(abusiveOtherMCResult);
+                abusiveBodyMCResult.forEach((item, i) => {
+                    titleYear2 += item.year
+                    if (i !== abusiveBodyMCResult.length - 1) {
+                        titleYear2 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -672,8 +1285,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 身體虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -697,7 +1310,7 @@ function AllowanceNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                    {abusiveBodyMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -720,8 +1333,413 @@ function AllowanceNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveBodyMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 身體虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveBodyMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 身體虐待(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 性侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveSexualMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveSexualMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 性侵犯(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveSexualMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 性侵犯(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 精神虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveMentalMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveMentalMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 精神虐待(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveMentalMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 精神虐待(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 疏忽照顧 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveNegligentMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveNegligentMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 疏忽照顧(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveNegligentMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 疏忽照顧(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${title} - 虐待性質統計 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {abusiveOtherMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveOtherMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={abusiveOtherMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 虐待性質統計 - 其他(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
                 </>
             case "BY_YEAR_FINANCIAL":
+                let titleYear3 = "";
+                let accidentEnvFinancialResult = sampleFiveParser(data, startDate, endDate);
+                let accidentEnvFinancialChart = financialChartParser(accidentEnvFinancialResult);
+                accidentEnvFinancialResult.forEach((item, i) => {
+                    titleYear3 += item.financialYear;
+                    if (i !== accidentEnvFinancialResult.length - 1) {
+                        titleYear3 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -729,8 +1747,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear3} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -747,7 +1765,7 @@ function AllowanceNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data).map((item) => {
+                                    {accidentEnvFinancialResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -773,9 +1791,51 @@ function AllowanceNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentEnvFinancialChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentEnvFinancialChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '虐待性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
 
             case "BY_YEAR_CALENDAR":
+                let titleYear4 = "";
+                let accidentYearResult = sampleSixParser(data, startDate, endDate);
+                let accidentYearChart = yearChartParser(accidentYearResult);
+                accidentYearResult.forEach((item, i) => {
+                    titleYear4 += item.year;
+                    if (i !== accidentYearResult.length - 1) {
+                        titleYear4 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -783,8 +1843,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 標題:
                             </h6>
                         </div>
-                        <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                        <div className="col-12">
+                            <h6>{`${titleYear4} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -802,7 +1862,7 @@ function AllowanceNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleSixParser(data, startDate, endDate).map((item) => {
+                                    {accidentYearResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -816,6 +1876,40 @@ function AllowanceNature(siteCollectionUrl) {
                                     })}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '虐待性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '虐待性質統計(每年總數)',
+                                    },
+                                }}
+
+                            />
                         </div>
                     </div>
                 </>
@@ -832,7 +1926,7 @@ function AllowanceNature(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -844,6 +1938,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["虐待性質", "數量"],
@@ -857,7 +1953,7 @@ function AllowanceNature(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -868,6 +1964,8 @@ function AllowanceNature(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
@@ -885,10 +1983,30 @@ function AllowanceNature(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
-            case "BY_MONTH_FINANCIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINANCIAL":
-            case "BY_YEAR_CALENDAR":
+                let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                months -= startDate.getMonth();
+                months += endDate.getMonth();
+                let newWidth = (200 * months) + 200;
+                return (
+                    <div className="row">
+                        <div className="col-12" style={{overflow:'auto'}}>
+                            <Chart
+                                width={newWidth}
+                                height={400}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[['月份', '身體虐待', '性侵犯', '精神虐待', '疏忽照顧', '其他'],
+                                ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                    return [item.month, item.dataset.body, item.dataset.sexual, item.dataset.mental, item.dataset.negligent, item.dataset.other]
+                                })]
+                            }
+
+                            />
+                        </div>
+                    </div>
+                    
+                )
+            
             default:
                 return null;
         }
@@ -929,10 +2047,7 @@ function AllowanceNature(siteCollectionUrl) {
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => {
-                        const value = event.target.value;
-                        setGroupBy(value);
-                    }}>
+                    <select multiple className="form-control" onChange={changeGroupHandler}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
                         <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>

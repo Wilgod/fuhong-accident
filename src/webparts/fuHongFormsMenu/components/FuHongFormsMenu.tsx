@@ -27,6 +27,7 @@ import General from '../../../components/Statistics/General/General';
 import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentEnv';
 import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
 import LicenseCategory from '../../../components/Statistics/LicenseIncident/LicenseCategory';
+import LicenseNature from '../../../components/Statistics/LicenseIncident/LicenseNature';
 import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/AllowanceCategory';
 import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
 import ServiceUserAccidentNature from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentNature';
@@ -316,6 +317,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   特別事故類別
                 </div>
               </li>
+              <li>
+                <div onClick={(event) => this.screenNavHandler(event, "SIH_NATURE")}>
+                虐待性質
+                </div>
+              </li>
             </ul>
           </li>
           <li>
@@ -451,7 +457,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
         case 'SIH_CATEGORY':
           return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl} />
-        // return <div>SIH_CATEGORY</div>
+        case 'SIH_NATURE':
+          return <LicenseNature siteCollectionUrl={this.siteCollectionUrl} />
         case 'SID_CATEGORY':
           return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />
         case 'SID_NATURE':

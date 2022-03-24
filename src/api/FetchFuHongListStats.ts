@@ -276,7 +276,7 @@ export async function getLicenseStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime","UnusalIncident")
+            .select("CaseNumber", "IncidentTime","UnusalIncident", "RA_Body", "RA_Mental", "RA_Negligent", "RA_EmbezzleProperty", "RA_Abandoned", "RA_SexualAssault", "RA_Other")
             .filter(filterQuery)
             .getAll();
         return items
