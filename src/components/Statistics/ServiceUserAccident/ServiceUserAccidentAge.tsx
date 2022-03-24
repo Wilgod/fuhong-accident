@@ -577,7 +577,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [ageDataset, setAgeDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [serviceUserAge, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+    const [serviceUserAge, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -672,7 +672,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${title} - 年齡統計`}</h6>
+                                <h6>{`${title} - 年齡統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -692,7 +692,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${title} - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -772,7 +772,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`<15歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`<15歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -872,7 +872,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`15-20歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`15-20歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -974,7 +974,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`21-30歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`21-30歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1076,7 +1076,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`31-40歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`31-40歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1178,7 +1178,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`41-50歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`41-50歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1281,7 +1281,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`51-60歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`51-60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1383,7 +1383,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`>60歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`>60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1517,7 +1517,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 <15歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 <15歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1606,7 +1606,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 15-20歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 15-20歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1695,7 +1695,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 21-30歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 21-30歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1784,7 +1784,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 31-40歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 31-40歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1873,7 +1873,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 41-50歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 41-50歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1962,7 +1962,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 51-60歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 51-60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -2051,7 +2051,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-11">
-                                <h6>{`${titleYear2}年 >60歲 - 年齡統計(每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 >60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -2152,7 +2152,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-11">
-                            <h6>{`${title} - 年齡統計(每月總數)`}</h6>
+                            <h6>{`${title} - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2242,7 +2242,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-11">
-                            <h6>{`${titleYear4} - 年齡統計(每年總數)`}</h6>
+                            <h6>{`${titleYear4} - 年齡統計(每年總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2489,9 +2489,6 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                 {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div >

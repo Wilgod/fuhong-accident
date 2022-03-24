@@ -385,8 +385,6 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             result.push(item);
         })
         arraySort(result, 'mmyyyy');
-        console.log('result',result);
-        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -588,7 +586,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [natureDataset, setNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useAccidentReportStats();
+    const [data, startDate, endDate,serviceUnits, setStartDate, setEndDate, setServiceUnits] = useAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -679,7 +677,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 意外性質統計`}</h6>
+                                <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -699,7 +697,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                                <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -768,7 +766,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 意外性質統計`}</h6>
+                            <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -869,7 +867,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 意外性質統計`}</h6>
+                            <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -970,7 +968,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 意外性質統計`}</h6>
+                            <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1071,7 +1069,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 意外性質統計`}</h6>
+                            <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1172,7 +1170,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 意外性質統計`}</h6>
+                            <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1296,7 +1294,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 意外性質跌倒 統計`}</h6>
+                            <h6>{`${titleYear2} - 意外性質跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1386,7 +1384,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 意外性質 哽塞 統計`}</h6>
+                            <h6>{`${titleYear2} - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1476,7 +1474,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 意外性質 服務使用者行為問題 統計`}</h6>
+                            <h6>{`${titleYear2} - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1566,7 +1564,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 意外性質 環境因素 統計`}</h6>
+                            <h6>{`${titleYear2} - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1656,7 +1654,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 意外性質 其他 統計`}</h6>
+                            <h6>{`${titleYear2} - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1757,7 +1755,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear3} - 意外性質統計`}</h6>
+                            <h6>{`${titleYear3} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1843,7 +1841,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear4} - 意外性質統計`}</h6>
+                            <h6>{`${titleYear4} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1936,6 +1934,8 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["意外性質", "數量"],
@@ -1960,6 +1960,8 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
@@ -2079,9 +2081,6 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                 {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div >

@@ -539,7 +539,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [genderDataset, setGenderDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+    const [data, startDate, endDate,serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
 
     const multipleOptionsSelectParser = (event) => {
@@ -587,7 +587,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 性別統計`}</h6>
+                                <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -607,7 +607,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 性別統計`}</h6>
+                                <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -658,7 +658,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -757,7 +757,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -871,7 +871,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 性別統計`}</h6>
+                            <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -960,7 +960,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2} - 性別統計`}</h6>
+                            <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1060,7 +1060,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear3} - 性別統計`}</h6>
+                            <h6>{`${titleYear3} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1139,7 +1139,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear4} - 性別統計`}</h6>
+                            <h6>{`${titleYear4} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1399,9 +1399,6 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                 {statsTableSwitch()}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div>

@@ -583,7 +583,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 function General(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useGeneralStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useGeneralStats();
     const [unitDataset, setUnitDataset] = useState<IDataset>(initialDataset);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -683,6 +683,7 @@ function General(siteCollectionUrl) {
         
         switch (groupBy) {
             case "NON":
+                console.log('serviceUnits',serviceUnits)
                 return (
                     <React.Fragment>
                         <div className="row">
@@ -692,7 +693,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 新發生意外或事故總數`}</h6>
+                                <h6>{`${title} - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -713,7 +714,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 新發生意外或事故 (每月總數)`}</h6>
+                                <h6>{`${title} - 新發生意外或事故 (每月總數)  - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -783,7 +784,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 財政年度新發生意外或事故 (服務使用者意外每月總數)`}</h6>
+                                <h6>{`${title} - 財政年度新發生意外或事故 (服務使用者意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`} </h6>
                             </div>
                         </div>
                         <div className="row">
@@ -882,7 +883,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 財政年度新發生意外或事故 (外界人士意外每月總數)`}</h6>
+                                <h6>{`${title} - 財政年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -980,7 +981,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(牌照事務處)每月總數)`}</h6>
+                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1078,7 +1079,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數)`}</h6>
+                                <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1176,7 +1177,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數)`}</h6>
+                                <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1301,7 +1302,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1399,7 +1400,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (外界人士意外每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1496,7 +1497,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(牌照事務處)每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1595,7 +1596,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(津貼科)每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1692,7 +1693,7 @@ function General(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (其他事故每月總數)`}</h6>
+                                <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -1802,7 +1803,7 @@ function General(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear3}年 - 新發生意外或事故總數`}</h6>
+                            <h6>{`${titleYear3}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1900,7 +1901,7 @@ function General(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear4}年 - 新發生意外或事故總數`}</h6>
+                            <h6>{`${titleYear4}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2156,9 +2157,6 @@ function General(siteCollectionUrl) {
                 {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div>

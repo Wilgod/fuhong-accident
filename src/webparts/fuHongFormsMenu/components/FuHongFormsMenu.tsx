@@ -26,6 +26,7 @@ import LogScreen from '../../../components/LogScreen/LogScreen';
 import General from '../../../components/Statistics/General/General';
 import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentEnv';
 import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
+import LicenseCategory from '../../../components/Statistics/LicenseIncident/LicenseCategory';
 import AllowanceCategory from '../../../components/Statistics/AllowanceIncident/AllowanceCategory';
 import AllowanceNature from '../../../components/Statistics/AllowanceIncident/AllowanceNature';
 import ServiceUserAccidentNature from '../../../components/Statistics/ServiceUserAccident/ServiceUserAccidentNature';
@@ -449,7 +450,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'PUI_PERSONAL':
           return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
         case 'SIH_CATEGORY':
-          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />
+          return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl} />
         // return <div>SIH_CATEGORY</div>
         case 'SID_CATEGORY':
           return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />

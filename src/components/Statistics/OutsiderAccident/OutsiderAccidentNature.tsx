@@ -175,12 +175,65 @@ const normalChartParser = (result) =>{
     return data;
 }
 
+const financialChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let accidentNatureFall =['跌倒'];
+    let accidentNatureChok =['哽塞'];
+    let accidentNatureBehavior =['服務使用者行為問題'];
+    let accidentNatureEnvFactor =['環境因素'];
+    let accidentNatureOther =['其他'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        accidentNatureFall.push(item.dataset['accidentNatureFall']);
+        accidentNatureChok.push(item.dataset['accidentNatureChok']);
+        accidentNatureBehavior.push(item.dataset['accidentNatureBehavior']);
+        accidentNatureEnvFactor.push(item.dataset['accidentNatureEnvFactor']);
+        accidentNatureOther.push(item.dataset['accidentNatureOther']);
+    });
+    let data=[
+        dataResult,
+        accidentNatureFall,
+        accidentNatureChok,
+        accidentNatureBehavior,
+        accidentNatureEnvFactor,
+        accidentNatureOther
+    ];
+    return data;
+}
+
+const yearChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let accidentNatureFall =['跌倒'];
+    let accidentNatureChok =['哽塞'];
+    let accidentNatureBehavior =['服務使用者行為問題'];
+    let accidentNatureEnvFactor =['環境因素'];
+    let accidentNatureOther =['其他'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        accidentNatureFall.push(item.dataset['accidentNatureFall']);
+        accidentNatureChok.push(item.dataset['accidentNatureChok']);
+        accidentNatureBehavior.push(item.dataset['accidentNatureBehavior']);
+        accidentNatureEnvFactor.push(item.dataset['accidentNatureEnvFactor']);
+        accidentNatureOther.push(item.dataset['accidentNatureOther']);
+    });
+    let data=[
+        dataResult,
+        accidentNatureFall,
+        accidentNatureChok,
+        accidentNatureBehavior,
+        accidentNatureEnvFactor,
+        accidentNatureOther
+    ];
+    return data;
+}
+
 const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
     let result = { ...dataset };
     return result;
 }
 
 const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
+    debugger
     let result = { ...dataset };
     switch (month) {
         case 1:
@@ -307,7 +360,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     }
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[],startDate,endDate): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -330,7 +383,22 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -365,11 +433,26 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(year.toString(), newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFourDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result
 }
 
-const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[],startDate,endDate): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
@@ -395,7 +478,21 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
         let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(financialYear, initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFiveDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
     return result;
 }
 
@@ -439,11 +536,27 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(year.toString(), initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    arraySort(result, 'year');
     return result;
 }
 
 const natureFilter = (item: any, dataset: IDataset): IDataset => {
+    debugger
     let result = dataset;
     if (item.AccidentNatureFall === true) {
         result.accidentNatureFall += 1;
@@ -474,7 +587,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [natureDataset, setNatureDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -498,11 +611,11 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 外界人士意外 - 意外性質統計`}</h6>
+                                <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-7">
+                            <div className="col-12">
                                 {byMonthTableComponent()}
                             </div>
                         </div>
@@ -518,7 +631,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                                <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -565,6 +678,20 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
+                let accidentNatureFallResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureFall}), startDate, endDate);
+                let accidentNatureFallMFChart = financialYearChartParser(accidentNatureFallResult);
+
+                let accidentNatureChokResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureChok}), startDate, endDate);
+                let accidentNatureChokMFChart = financialYearChartParser(accidentNatureChokResult);
+
+                let accidentNatureBehaviorResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureBehavior}), startDate, endDate);
+                let accidentNatureBehaviorMFChart = financialYearChartParser(accidentNatureBehaviorResult);
+
+                let accidentNatureEnvFactorResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureEnvFactor}), startDate, endDate);
+                let accidentNatureEnvFactorMFChart = financialYearChartParser(accidentNatureEnvFactorResult);
+
+                let accidentNatureOtherResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureOther}), startDate, endDate);
+                let accidentNatureOtherMFChart = financialYearChartParser(accidentNatureOtherResult);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -573,7 +700,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            <h6>{`${title} - 意外性質 跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -597,7 +724,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleThreeParser(data).map((item) => {
+                                    {accidentNatureFallResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -621,8 +748,478 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故 意外性質 跌倒 總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureFallMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '跌倒 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureFallMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '跌倒 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+                    
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureChokResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故 意外性質 哽塞 總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureChokMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '哽塞 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureChokMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '哽塞 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureBehaviorResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故 意外性質 服務使用者行為問題 總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureBehaviorMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '服務使用者行為問題 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureBehaviorMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '服務使用者行為問題 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureEnvFactorResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故 意外性質 環境因素 總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureEnvFactorMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '環境因素 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureEnvFactorMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '環境因素 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureOtherResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故 意外性質 其他 總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureOtherMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '其他 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureOtherMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '其他 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_MONTH_CALENDAR":
+                let titleYear2 = "";
+                let accidentNatureFallMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureFall}), startDate, endDate);
+                let accidentNatureFallMCChart = normalChartParser(accidentNatureFallMCResult);
+
+                let accidentNatureChokMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureChok}), startDate, endDate);
+                let accidentNatureChokMCChart = normalChartParser(accidentNatureChokMCResult);
+
+                let accidentNatureBehaviorMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureBehavior}), startDate, endDate);
+                let accidentNatureBehaviorMCChart = normalChartParser(accidentNatureBehaviorMCResult);
+
+                let accidentNatureEnvFactorMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureEnvFactor}), startDate, endDate);
+                let accidentNatureEnvFactorMCChart = normalChartParser(accidentNatureEnvFactorMCResult);
+
+                let accidentNatureOtherMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureOther}), startDate, endDate);
+                let accidentNatureOtherMCChart = normalChartParser(accidentNatureOtherMCResult);
+
+                accidentNatureFallMCResult.forEach((item, i) => {
+                    titleYear2 += item.year
+                    if (i !== accidentNatureFallMCResult.length - 1) {
+                        titleYear2 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -631,7 +1228,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear2} - 外界人士意外 - 意外性質跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -655,7 +1252,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                    {accidentNatureFallMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -678,8 +1275,412 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureFallMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '跌倒 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureFallMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '跌倒 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 外界人士意外 - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureChokMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureChokMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '哽塞 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureChokMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '哽塞 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 外界人士意外 - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureChokMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureBehaviorMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '服務使用者行為問題 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureBehaviorMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '服務使用者行為問題 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 外界人士意外 - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureEnvFactorMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureEnvFactorMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '環境因素 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureEnvFactorMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '環境因素 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 外界人士意外 - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentNatureOtherMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureOtherMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質 其他 (外界人士意外每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentNatureOtherMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質 其他 (外界人士意外每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
                 </>
             case "BY_YEAR_FINANCIAL":
+                let titleYear3 = "";
+                let accidentFinancialResult = sampleFiveParser(data, startDate, endDate);
+                let accidentFinancialChart = financialChartParser(accidentFinancialResult);
+                accidentFinancialResult.forEach((item, i) => {
+                    titleYear3 += item.financialYear;
+                    if (i !== accidentFinancialResult.length - 1) {
+                        titleYear3 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -688,7 +1689,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear3} - 外界人士意外 - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -705,7 +1706,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data).map((item) => {
+                                    {accidentFinancialResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -731,9 +1732,51 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentFinancialChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentFinancialChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
 
             case "BY_YEAR_CALENDAR":
+                let titleYear4 = "";
+                let accidentYearResult = sampleSixParser(data, startDate, endDate);
+                let accidentYearChart = yearChartParser(accidentYearResult);
+                accidentYearResult.forEach((item, i) => {
+                    titleYear4 += item.year;
+                    if (i !== accidentYearResult.length - 1) {
+                        titleYear4 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -742,7 +1785,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear4} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -760,7 +1803,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleSixParser(data, startDate, endDate).map((item) => {
+                                    {accidentYearResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -775,6 +1818,40 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                     })}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質統計(每年總數)',
+                                    },
+                                }}
+
+                            />
                         </div>
                     </div>
                 </>
@@ -826,7 +1903,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -838,6 +1915,8 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["意外性質", "數量"],
@@ -851,7 +1930,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -879,13 +1958,51 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
-            case "BY_MONTH_FINANCIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINANCIAL":
-            case "BY_YEAR_CALENDAR":
+                let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                months -= startDate.getMonth();
+                months += endDate.getMonth();
+                let newWidth = (200 * months) + 200;
+                return (
+                    <div className="row">
+                        <div className="col-12" style={{overflow:'auto'}}>
+                            <Chart
+                                width={newWidth}
+                                height={400}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={[['月份', '跌倒', '哽塞', '服務使用者行為問題', '環境因素', '其他'],
+                                ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                    debugger
+                                    return [item.month, item.dataset.accidentNatureFall, item.dataset.accidentNatureChok, item.dataset.accidentNatureBehavior, item.dataset.accidentNatureEnvFactor, item.dataset.accidentNatureOther]
+                                })]
+                            }
+
+                            />
+                        </div>
+                    </div>
+                    
+                )
             default:
                 return null;
         }
+    }
+
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
     }
 
     useEffect(() => {
@@ -937,10 +2054,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => {
-                        const value = event.target.value;
-                        setGroupBy(value);
-                    }}>
+                    <select multiple className="form-control" onChange={changeGroupHandler}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
                         <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>
@@ -978,9 +2092,6 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                 {statsTableSwitch()}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div>

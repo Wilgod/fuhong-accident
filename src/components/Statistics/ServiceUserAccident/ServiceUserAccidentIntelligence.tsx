@@ -578,8 +578,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [intelligenceDataset, setIntelligenceDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
-
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -638,7 +637,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度`}</h6>
+                                <h6>{`${title} - 智力障礙程度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -658,7 +657,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                                <h6>{`${title} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -726,7 +725,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`輕度 - 智力障礙程度統計`}</h6>
+                            <h6>{`輕度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -827,7 +826,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`中度 - 智力障礙程度統計`}</h6>
+                            <h6>{`中度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -927,7 +926,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`嚴重 - 智力障礙程度統計`}</h6>
+                            <h6>{`嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1027,7 +1026,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`極度嚴重 - 智力障礙程度統計`}</h6>
+                            <h6>{`極度嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1127,7 +1126,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`不知 - 智力障礙程度統計`}</h6>
+                            <h6>{`不知 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1250,7 +1249,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2}年 輕度 - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear2}年 輕度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1349,7 +1348,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2}年 中度 - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear2}年 中度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1448,7 +1447,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2}年 嚴重 - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear2}年 嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1547,7 +1546,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2}年 極度嚴重 - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear2}年 極度嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1646,7 +1645,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear2}年 不知 - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear2}年 不知 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1755,7 +1754,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear3} - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear3} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -1841,7 +1840,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${titleYear4} - 智力障礙程度統計`}</h6>
+                            <h6>{`${titleYear4} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -2109,9 +2108,6 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                 {statsTableSwitch()}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div>

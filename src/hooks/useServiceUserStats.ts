@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 
 // Stats
-export function useServiceUserStats(): [any[], Date, Date, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
+export function useServiceUserStats(): [any[], Date, Date,string[], Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
     const [data, setData] = useState<any[]>([]);
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 2)));
     const [endDate, setEndDate] = useState(new Date());
@@ -19,5 +19,5 @@ export function useServiceUserStats(): [any[], Date, Date, Dispatch<SetStateActi
         }).catch(console.error)
     }, [startDate, endDate, serviceUnits]);
 
-    return [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits]
+    return [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits]
 }

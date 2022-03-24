@@ -249,24 +249,25 @@ const monthDiff = (d1: Date, d2: Date) => {
 
 
 const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
+    debugger
     let result = dataset;
-    if (item.EnvFactorSlipperyGround === true) {
+    if (item.EnvSlipperyGround === true) {
         result.envSlipperyGround += 1;
     }
 
-    if (item.EnvFactorUnevenGround === true) {
+    if (item.EnvUnevenGround === true) {
         result.envUnevenGround += 1;
     }
 
-    if (item.EnvFactorObstacleItems === true) {
+    if (item.EnvObstacleItems === true) {
         result.envObstacleItems += 1;
     }
 
-    if (item.EnvFactorInsufficientLight === true) {
+    if (item.EnvInsufficientLight === true) {
         result.envInsufficientLight += 1;
     }
 
-    if (item.EnvFactorNotEnoughSpace === true) {
+    if (item.EnvNotEnoughSpace === true) {
         result.envNotEnoughSpace += 1;
     }
 
@@ -274,23 +275,105 @@ const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
         result.envAcousticStimulation += 1;
     }
 
-    if (item.EnvFactorCollision === true) {
+    if (item.EnvCollision === true) {
         result.envCollidedByOthers += 1;
     }
 
-    if (item.EnvFactorHurtByOthers === true) {
+    if (item.EnvHurtByOthers === true) {
         result.envHurtByOthers += 1;
     }
 
-    if (item.EnvFactorAssistiveEquipment === true) {
+    if (item.EnvAssistiveEquipment === true) {
         result.envImproperEquip += 1;
     }
 
-    if (item.EnvFactorOther === true) {
+    if (item.EnvOther === true) {
         result.envOther += 1;
     }
 
     return result;
+}
+
+const financialChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let envSlipperyGround =['地面濕滑'];
+    let envUnevenGround =['地面不平'];
+    let envObstacleItems =['障礙物品'];
+    let envInsufficientLight =['光線不足'];
+    let envNotEnoughSpace =['空間不足'];
+    let envAcousticStimulation =['聲響刺激'];
+    let envCollidedByOthers =['被別人碰撞'];
+    let envHurtByOthers =['被別人傷害'];
+    let envImproperEquip =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
+    let envOther =['其他'];
+    result.map((item) => {
+        dataResult.push(item.financialYear);
+        envSlipperyGround.push(item.dataset['envSlipperyGround']);
+        envUnevenGround.push(item.dataset['envUnevenGround']);
+        envObstacleItems.push(item.dataset['envObstacleItems']);
+        envInsufficientLight.push(item.dataset['envInsufficientLight']);
+        envNotEnoughSpace.push(item.dataset['envNotEnoughSpace']);
+        envAcousticStimulation.push(item.dataset['envAcousticStimulation']);
+        envCollidedByOthers.push(item.dataset['envCollidedByOthers']);
+        envHurtByOthers.push(item.dataset['envHurtByOthers']);
+        envImproperEquip.push(item.dataset['envImproperEquip']);
+        envOther.push(item.dataset['envOther']);
+    });
+    let data=[
+        dataResult,
+        envSlipperyGround,
+        envUnevenGround,
+        envObstacleItems,
+        envInsufficientLight,
+        envNotEnoughSpace,
+        envAcousticStimulation,
+        envCollidedByOthers,
+        envHurtByOthers,
+        envImproperEquip,
+        envOther
+    ];
+    return data;
+}
+
+const yearChartParser = (result) =>{
+    let dataResult = ['Year'];
+    let envSlipperyGround =['地面濕滑'];
+    let envUnevenGround =['地面不平'];
+    let envObstacleItems =['障礙物品'];
+    let envInsufficientLight =['光線不足'];
+    let envNotEnoughSpace =['空間不足'];
+    let envAcousticStimulation =['聲響刺激'];
+    let envCollidedByOthers =['被別人碰撞'];
+    let envHurtByOthers =['被別人傷害'];
+    let envImproperEquip =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
+    let envOther =['其他'];
+    result.map((item) => {
+        dataResult.push(item.year.toString());
+        envSlipperyGround.push(item.dataset['envSlipperyGround']);
+        envUnevenGround.push(item.dataset['envUnevenGround']);
+        envObstacleItems.push(item.dataset['envObstacleItems']);
+        envInsufficientLight.push(item.dataset['envInsufficientLight']);
+        envNotEnoughSpace.push(item.dataset['envNotEnoughSpace']);
+        envAcousticStimulation.push(item.dataset['envAcousticStimulation']);
+        envCollidedByOthers.push(item.dataset['envCollidedByOthers']);
+        envHurtByOthers.push(item.dataset['envHurtByOthers']);
+        envImproperEquip.push(item.dataset['envImproperUseOfAssistiveEquipment']);
+        envOther.push(item.dataset['envOther']);
+    });
+    let data=[
+        dataResult,
+        envSlipperyGround,
+        envUnevenGround,
+        envObstacleItems,
+        envInsufficientLight,
+        envNotEnoughSpace,
+        envAcousticStimulation,
+        envCollidedByOthers,
+        envHurtByOthers,
+        envImproperEquip,
+        envOther
+    ];
+    return data;
 }
 
 const sampleOneParser = (envFactor: any[]): IDataset => {
@@ -358,7 +441,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     return result;
 }
 
-const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -381,7 +464,22 @@ const sampleThreeParser = (data: any[]): ISampleThreeDataset[] => {
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(financialYear, newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleThreeDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -416,11 +514,26 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IMonth>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            let newDataset = monthZero();
+            m1.set(year.toString(), newDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFourDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    
+    arraySort(result, 'year');
     return result
 }
 
-const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
@@ -444,7 +557,21 @@ const sampleFiveParser = (data: any[]): ISampleFiveDataset[] => {
         let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const financialYear =  getDateFinancialYear(d);
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(financialYear, initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleFiveDataset = { financialYear: key, dataset: value }
+            result.push(item);
+        })
+    }
     return result;
 }
 
@@ -480,7 +607,22 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
+    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
+        const year =  d.getFullYear()
+        let m1 = new Map<string, IDataset>();
+        const filterResult = result.filter(item => {return item.year == year});
+        if (filterResult.length == 0) {
+            //let newDataset = unitFilter(formType, { ...initialDataset });
+            m1.set(year.toString(), initialDataset);
+        }
+        m1.forEach((value, key) => {
+            let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
+            result.push(item);
+        })
+    }
+    arraySort(result, 'year');
     return result;
 }
 
@@ -488,7 +630,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
     const [groupBy, setGroupBy] = useState("NON");
     const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -512,11 +654,11 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-7">
-                                <h6>{`${title} - 意外成因-環境因素統計`}</h6>
+                                <h6>{`${title} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-7">
+                            <div className="col-12">
                                 {byMonthTableComponent()}
                             </div>
                         </div>
@@ -531,8 +673,8 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     標題:
                                 </h6>
                             </div>
-                            <div className="col-7">
-                                <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            <div className="col-12">
+                                <h6>{`${title} - 意外成因-環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -592,6 +734,37 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
+                let a = data.filter((item) => { debugger;return item.EnvSlipperyGround});
+                let envSlipperyGroundResult = sampleThreeParser(data.filter((item) => { return item.EnvSlipperyGround}), startDate, endDate);
+                let envSlipperyGroundMFChart = financialYearChartParser(envSlipperyGroundResult);
+
+                let envUnevenGroundResult = sampleThreeParser(data.filter((item) => {return item.EnvUnevenGround}), startDate, endDate);
+                let envUnevenGroundMFChart = financialYearChartParser(envUnevenGroundResult);
+
+                let envObstacleItemsResult = sampleThreeParser(data.filter((item) => {return item.EnvObstacleItems}), startDate, endDate);
+                let envObstacleItemsMFChart = financialYearChartParser(envObstacleItemsResult);
+
+                let envInsufficientLightResult = sampleThreeParser(data.filter((item) => {return item.EnvInsufficientLight}), startDate, endDate);
+                let envInsufficientLightMFChart = financialYearChartParser(envInsufficientLightResult);
+
+                let envNotEnoughSpaceResult = sampleThreeParser(data.filter((item) => {return item.EnvNotEnoughSpace}), startDate, endDate);
+                let envNotEnoughSpaceMFChart = financialYearChartParser(envNotEnoughSpaceResult);
+
+                let envAcousticStimulationResult = sampleThreeParser(data.filter((item) => {return item.EnvAcousticStimulation}), startDate, endDate);
+                let envAcousticStimulationMFChart = financialYearChartParser(envAcousticStimulationResult);
+
+                let envCollidedByOthersResult = sampleThreeParser(data.filter((item) => {return item.EnvCollidedByOthers}), startDate, endDate);
+                let envCollidedByOthersMFChart = financialYearChartParser(envCollidedByOthersResult);
+
+                let envHurtByOthersResult = sampleThreeParser(data.filter((item) => {return item.EnvHurtByOthers}), startDate, endDate);
+                let envHurtByOthersMFChart = financialYearChartParser(envHurtByOthersResult);
+
+                let envImproperUseOfAssistiveEquipmentResult = sampleThreeParser(data.filter((item) => {return item.EnvImproperEquip}), startDate, endDate);
+                let envImproperUseOfAssistiveEquipmentMFChart = financialYearChartParser(envImproperUseOfAssistiveEquipmentResult);
+
+                let envOtherResult = sampleThreeParser(data.filter((item) => {return item.EnvOther}), startDate, endDate);
+                let envOtherMFChart = financialYearChartParser(envOtherResult);
+                debugger
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -600,7 +773,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 智力障礙程度統計`}</h6>
+                            <h6>{`${title} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -624,7 +797,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleThreeParser(data).map((item) => {
+                                    {envSlipperyGroundResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
@@ -648,8 +821,990 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envSlipperyGroundMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envSlipperyGroundMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envUnevenGroundResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envUnevenGroundMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envUnevenGroundMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envObstacleItemsResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 障礙物品 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envObstacleItemsMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envObstacleItemsMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envInsufficientLightResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 光線不足 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envInsufficientLightMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envInsufficientLightMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envNotEnoughSpaceResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 空間不足 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envNotEnoughSpaceMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envNotEnoughSpaceMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envAcousticStimulationResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 聲響刺激 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envAcousticStimulationMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envAcousticStimulationMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envCollidedByOthersResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 被別人碰撞 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envCollidedByOthersMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envCollidedByOthersMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envHurtByOthersResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 被別人傷害 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envHurtByOthersMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envHurtByOthersMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envImproperUseOfAssistiveEquipmentResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envImproperUseOfAssistiveEquipmentMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envImproperUseOfAssistiveEquipmentMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${title} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envOtherResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.financialYear}</th>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                            </tr>
+                                        )
+                                    })}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故 意外成因 - 環境因素 - 其他 總數(每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envOtherMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envOtherMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_MONTH_CALENDAR":
+                let titleYear2 = "";
+                let envSlipperyGroundMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_SLIPPERY_GROUND') >= 0}), startDate, endDate);
+                let envSlipperyGroundMCChart = normalChartParser(envSlipperyGroundMCResult);
+
+                let envUnevenGroundMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_UNEVEN_GROUND') >= 0}), startDate, endDate);
+                let envUnevenGroundMCChart = normalChartParser(envUnevenGroundMCResult);
+
+                let envObstacleItemsMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OBSTACLE_ITEMS') >= 0}), startDate, endDate);
+                let envObstacleItemsMCChart = normalChartParser(envObstacleItemsMCResult);
+
+                let envInsufficientLightMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_INSUFFICIENT_LIGHT') >= 0}), startDate, endDate);
+                let envInsufficientLightMCChart = normalChartParser(envInsufficientLightMCResult);
+
+                let envNotEnoughSpaceMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_NOT_ENOUGH_SPACE') >= 0}), startDate, endDate);
+                let envNotEnoughSpaceMCChart = normalChartParser(envNotEnoughSpaceMCResult);
+
+                let envAcousticStimulationMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_ACOUSTIC_STIMULATION') >= 0}), startDate, endDate);
+                let envAcousticStimulationMCChart = normalChartParser(envAcousticStimulationMCResult);
+
+                let envCollidedByOthersMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_COLLIDED_BY_OTHERS') >= 0}), startDate, endDate);
+                let envCollidedByOthersMCChart = normalChartParser(envCollidedByOthersMCResult);
+
+                let envHurtByOthersMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_HURT_BY_OTHERS') >= 0}), startDate, endDate);
+                let envHurtByOthersMCChart = normalChartParser(envHurtByOthersMCResult);
+
+                let envImproperUseOfAssistiveEquipmentMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT') >= 0}), startDate, endDate);
+                let envImproperUseOfAssistiveEquipmentMCChart = normalChartParser(envImproperUseOfAssistiveEquipmentMCResult);
+
+                let envOtherMCResult = sampleFourParser(data.filter((item) => {return item.ObserveEnvironmentFactor != null && item.ObserveEnvironmentFactor.indexOf('ENV_OTHER') >= 0}), startDate, endDate);
+                let envOtherMCChart = normalChartParser(envOtherMCResult);
+                envSlipperyGroundMCResult.forEach((item, i) => {
+                    titleYear2 += item.year
+                    if (i !== envSlipperyGroundMCResult.length - 1) {
+                        titleYear2 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -658,7 +1813,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面濕滑 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -682,7 +1837,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFourParser(data, startDate, endDate).map((item) => {
+                                    {envSlipperyGroundMCResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
@@ -705,8 +1860,866 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envSlipperyGroundMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envSlipperyGroundMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面濕滑(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 地面不平 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envUnevenGroundMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envUnevenGroundMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envUnevenGroundMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 地面不平(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 障礙物品 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envObstacleItemsMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envObstacleItemsMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envObstacleItemsMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 障礙物品(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 光線不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envInsufficientLightMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envInsufficientLightMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envInsufficientLightMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 光線不足(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 空間不足 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envNotEnoughSpaceMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envNotEnoughSpaceMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envNotEnoughSpaceMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 空間不足(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 聲響刺激 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envAcousticStimulationMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envAcousticStimulationMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envAcousticStimulationMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 聲響刺激(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人碰撞 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envCollidedByOthersMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envCollidedByOthersMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envCollidedByOthersMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人碰撞(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 被別人傷害 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envHurtByOthersMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envHurtByOthersMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envHurtByOthersMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 被別人傷害(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envImproperUseOfAssistiveEquipmentMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envImproperUseOfAssistiveEquipmentMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envImproperUseOfAssistiveEquipmentMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    <hr/>
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-7">
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 其他 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {envOtherMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={envOtherMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={envOtherMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外成因 - 環境因素 - 其他(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_YEAR_FINANCIAL":
+                let titleYear3 = "";
+                let accidentEnvFinancialResult = sampleFiveParser(data, startDate, endDate);
+                let accidentEnvFinancialChart = financialChartParser(accidentEnvFinancialResult);
+                accidentEnvFinancialResult.forEach((item, i) => {
+                    titleYear3 += item.financialYear;
+                    if (i !== accidentEnvFinancialResult.length - 1) {
+                        titleYear3 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -715,7 +2728,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear3} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -737,13 +2750,13 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sampleFiveParser(data).map((item) => {
+                                    {accidentEnvFinancialResult.map((item) => {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
                                                 <td>{item.dataset.envSlipperyGround}</td>
                                                 <td>{item.dataset.envUnevenGround}</td>
-                                                <td>{item.dataset.envNotEnoughSpace}</td>
+                                                <td>{item.dataset.envObstacleItems}</td>
                                                 <td>{item.dataset.envInsufficientLight}</td>
                                                 <td>{item.dataset.envNotEnoughSpace}</td>
                                                 <td>{item.dataset.envAcousticStimulation}</td>
@@ -754,12 +2767,69 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
+                                    {
+                                        <tr style={{ color: "red" }}>
+                                            <th scope="row">總數</th>
+                                            <td>{envFactorDataset.envSlipperyGround}</td>
+                                            <td>{envFactorDataset.envUnevenGround}</td>
+                                            <td>{envFactorDataset.envObstacleItems}</td>
+                                            <td>{envFactorDataset.envInsufficientLight}</td>
+                                            <td>{envFactorDataset.envNotEnoughSpace}</td> 
+                                            <td>{envFactorDataset.envAcousticStimulation}</td>
+                                            <td>{envFactorDataset.envCollidedByOthers}</td>
+                                            <td>{envFactorDataset.envHurtByOthers}</td>
+                                            <td>{envFactorDataset.envImproperEquip}</td>
+                                            <td>{envFactorDataset.envOther}</td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentEnvFinancialChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentEnvFinancialChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '意外成因 - 環境因素統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
                 </>
             case "BY_YEAR_CALENDAR":
+                let titleYear4 = "";
+                let accidentYearResult = sampleSixParser(data, startDate, endDate);
+                let accidentYearChart = yearChartParser(accidentYearResult);
+                accidentYearResult.forEach((item, i) => {
+                    titleYear4 += item.year;
+                    if (i !== accidentYearResult.length - 1) {
+                        titleYear4 += ", "
+                    }
+                })
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -768,7 +2838,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-7">
-                            <h6>{`${title} - 性別統計`}</h6>
+                            <h6>{`${titleYear4} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                     </div>
                     <div className="row">
@@ -796,7 +2866,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                                 <th scope="row">{item.year}</th>
                                                 <td>{item.dataset.envSlipperyGround}</td>
                                                 <td>{item.dataset.envUnevenGround}</td>
-                                                <td>{item.dataset.envNotEnoughSpace}</td>
+                                                <td>{item.dataset.envObstacleItems}</td>
                                                 <td>{item.dataset.envInsufficientLight}</td>
                                                 <td>{item.dataset.envNotEnoughSpace}</td>
                                                 <td>{item.dataset.envAcousticStimulation}</td>
@@ -809,6 +2879,40 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     })}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質 - 環境因素 統計(每年總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentYearChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: '意外性質 - 環境因素 統計(每年總數)',
+                                    },
+                                }}
+
+                            />
                         </div>
                     </div>
                 </>
@@ -880,7 +2984,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -892,6 +2996,8 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 <div className="">
                                     <Chart
                                         chartType={"Bar"}
+                                        width={'100%'}
+                                        height={'400px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["環境因素", "數量"],
@@ -910,7 +3016,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
 
                                 </div>
                             </div>
-                            <div className="col-6">
+                            <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -921,6 +3027,8 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                 </div>
                                 <Chart
                                     chartType={"PieChart"}
+                                    width={'100%'}
+                                    height={'400px'}
                                     loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                     data={
                                         [
@@ -943,13 +3051,61 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                     </React.Fragment>
                 )
             case "BY_MONTH":
-            case "BY_MONTH_FINANCIAL":
-            case "BY_MONTH_CALENDAR":
-            case "BY_YEAR_FINANCIAL":
-            case "BY_YEAR_CALENDAR":
+                let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+                months -= startDate.getMonth();
+                months += endDate.getMonth();
+                let newWidth = (200 * months) + 200;
+                return (
+
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12" style={{overflow:'auto'}}>
+                            <Chart
+                                width={newWidth}
+                                height={400}
+                                chartType="ColumnChart"
+                                loader={<div>Loading Chart</div>}
+                                data={
+                                    [['月份', '地面濕滑', '地面不平', '障礙物品', '光線不足', '空間不足', '聲響刺激', '被別人碰撞', '被別人傷害', '輔助器材使用不當 (如輪椅／便椅未上鎖)', '其他'],
+                                    ...sampleTwoParser(data, startDate, endDate).map((item) => {
+                                        return [item.month, item.dataset.envSlipperyGround, item.dataset.envUnevenGround, item.dataset.envNotEnoughSpace, item.dataset.envInsufficientLight, item.dataset.envNotEnoughSpace
+                                            , item.dataset.envAcousticStimulation, item.dataset.envCollidedByOthers, item.dataset.envHurtByOthers, item.dataset.envImproperEquip, item.dataset.envOther]
+                                    })]
+                                }
+                            />
+                        </div>
+                    </div>
+                )
             default:
                 return null;
         }
+    }
+
+    const changeGroupHandler = (event) => {
+        const value = event.target.value;
+        if (value == 'BY_MONTH_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_MONTH_CALENDAR') {
+            setStartDate(new Date(new Date().getFullYear(), 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(),2,31));
+        } else if (value == 'BY_YEAR_FINANCIAL') {
+            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(),11,31));
+        }
+        setGroupBy(value);
     }
 
     useEffect(() => {
@@ -1001,10 +3157,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
                     </div> */}
-                    <select multiple className="form-control" onChange={(event) => {
-                        const value = event.target.value;
-                        setGroupBy(value);
-                    }}>
+                    <select multiple className="form-control" onChange={changeGroupHandler}>
                         <option value="NON">不需要</option>
                         <option value="BY_MONTH">按月</option>
                         <option value="BY_MONTH_FINANCIAL">按月 - 財政年度</option>
@@ -1042,9 +3195,6 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                 {statsTableSwitch()}
             </div>
             <div className="">
-                <div className="" style={{ fontWeight: 600 }}>
-                    統計圖表
-                </div>
                 {chartSwitch()}
             </div>
         </div>

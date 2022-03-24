@@ -221,7 +221,7 @@ export async function getOutsiderStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Outsider Accident Form";
 
-        let filterQuery = `Status eq 'CLOSED'`;
+        let filterQuery = `Status ne 'DRAFT'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -256,7 +256,7 @@ export async function getLicenseStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report License";
 
-        let filterQuery = `Status eq 'CLOSED'`;
+        let filterQuery = `Status ne 'DRAFT'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -276,7 +276,7 @@ export async function getLicenseStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime","UnusalIncident")
             .filter(filterQuery)
             .getAll();
         return items
@@ -291,7 +291,7 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
 
-        let filterQuery = `Status eq 'CLOSED'`;
+        let filterQuery = `Status ne 'DRAFT'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -388,35 +388,79 @@ export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
 // Form 20 統計資料 for 外界人士意外
 export async function getAccidentReportStatsForOutsiders(searchCriteria: ISearchCriteria) {
     try {
-        const LIST_NAME = "Accident Report Form";
+        const LIST_NAME = "Outsider Accident Form";
 
-        let filterQuery = `Title eq 'OUTSIDERS'`;
-        // filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
-        filterQuery = `${filterQuery} and ReceivedDate ge '${searchCriteria.startDate.toISOString()}' and ReceivedDate le '${searchCriteria.endDate.toISOString()}'`;
+        let filterQuery = `Status ne 'DRAFT'`;
+        filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
-        // if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
-        //     let su = "";
-        //     searchCriteria.serviceUnits.forEach((item, index) => {
-        //         if (index === 0) {
-        //             su = `ServiceLocation eq '${item}'`;
-        //         } else {
-        //             su += `ServiceLocation eq '${item}'`;
-        //         }
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
 
-        //         if (index !== searchCriteria.serviceUnits.length - 1) {
-        //             su = `${su} or `;
-        //         }
-        //     })
-        //     filterQuery = `${filterQuery} and (${su})`;
-        // }
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther",
-                "EnvFactorSlipperyGround", "EnvFactorUnevenGround", "EnvFactorObstacleItems", "EnvFactorInsufficientLight", "EnvFactorNotEnoughSpace", "EnvFactorNoise", "EnvFactorCollision", "EnvFactorHurtByOthers", "EnvFactorAssistiveEquipment", "EnvFactorOther",
-                "PersonalFactorEmotional", "PersonalFactorImpatient", "PersonalFactorChok", "PersonalFactorUnsteadyWalk", "PersonalFactorTwitch", "PersonalFactorOther", "Created")
+            .select("CaseNumber", "AccidentTime", "EnvSlipperyGround", "EnvUnevenGround", "EnvObstacleItems", "EnvInsufficientLight", "EnvNotEnoughSpace", "EnvAcousticStimulation", "EnvCollidedByOthers", "EnvHurtByOthers", "EnvImproperEquip", "EnvOther", "AccidentReportFormId")
             .filter(filterQuery)
             .getAll();
-        console.log(items);
+
+
+        //const filterItem = items.filter(item => {return item.AccidentReportFormId != null});
+        const LIST_NAME1 = "Accident Report Form";
+
+        let filterQuery1 = `Title eq 'OUTSIDERS'`;
+        // filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
+        filterQuery1 = `${filterQuery1} and ReceivedDate ge '${searchCriteria.startDate.toISOString()}' and ReceivedDate le '${searchCriteria.endDate.toISOString()}'`;
+
+        const items1: any[] = await sp.web.lists.getByTitle(LIST_NAME1).items
+            .select("CaseNumber", "AccidentNatureFall", "AccidentNatureChok", "AccidentNatureBehavior", "AccidentNatureEnvFactor", "AccidentNatureOther",
+            "EnvFactorSlipperyGround", "EnvFactorUnevenGround", "EnvFactorObstacleItems", "EnvFactorInsufficientLight", "EnvFactorNotEnoughSpace", "EnvFactorNoise", "EnvFactorCollision", "EnvFactorHurtByOthers", "EnvFactorAssistiveEquipment", "EnvFactorOther",
+            "PersonalFactorEmotional", "PersonalFactorImpatient", "PersonalFactorChok", "PersonalFactorUnsteadyWalk", "PersonalFactorTwitch", "PersonalFactorOther", "Created", "Id")
+            .filter(filterQuery1)
+            .getAll();
+
+        for (let outsiderUser of items) {
+            for (let accident of items1) {
+                if (outsiderUser.AccidentReportFormId != null) {
+                    if (outsiderUser.AccidentReportFormId == accident.Id) {
+                        outsiderUser["AccidentNatureFall"] = accident.AccidentNatureFall;
+                        outsiderUser["AccidentNatureChok"] = accident.AccidentNatureChok;
+                        outsiderUser["AccidentNatureBehavior"] = accident.AccidentNatureBehavior;
+                        outsiderUser["AccidentNatureEnvFactor"] = accident.AccidentNatureEnvFactor;
+                        outsiderUser["AccidentNatureOther"] = accident.AccidentNatureOther;
+
+                        outsiderUser["EnvFactorSlipperyGround"] = accident.EnvFactorSlipperyGround;
+                        outsiderUser["EnvFactorUnevenGround"] = accident.EnvFactorUnevenGround;
+                        outsiderUser["EnvFactorObstacleItems"] = accident.EnvFactorObstacleItems;
+                        outsiderUser["EnvFactorInsufficientLight"] = accident.EnvFactorInsufficientLight;
+                        outsiderUser["EnvFactorNotEnoughSpace"] = accident.EnvFactorNotEnoughSpace;
+                        outsiderUser["EnvFactorNoise"] = accident.EnvFactorNoise;
+                        outsiderUser["EnvFactorCollision"] = accident.EnvFactorCollision;
+                        outsiderUser["EnvFactorHurtByOthers"] = accident.EnvFactorHurtByOthers;
+                        outsiderUser["EnvFactorAssistiveEquipment"] = accident.EnvFactorAssistiveEquipment;
+                        outsiderUser["EnvFactorOther"] = accident.EnvFactorOther;
+
+                        outsiderUser["PersonalFactorEmotional"] = accident.PersonalFactorEmotional;
+                        outsiderUser["PersonalFactorImpatient"] = accident.PersonalFactorImpatient;
+                        outsiderUser["PersonalFactorChok"] = accident.PersonalFactorChok;
+                        outsiderUser["PersonalFactorUnsteadyWalk"] = accident.PersonalFactorUnsteadyWalk;
+                        outsiderUser["PersonalFactorTwitch"] = accident.PersonalFactorTwitch;
+                        outsiderUser["PersonalFactorOther"] = accident.PersonalFactorOther;
+                    }
+                }
+                
+            }
+        }
         return items
     } catch (err) {
         console.error(err);
