@@ -441,7 +441,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                    setReporterName(reporter.displayName);
+                    debugger
+                    setReporterName(userInfosRes[0].Name);
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
                 }
 
@@ -554,7 +555,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>負責職員姓名 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.reporterName}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{reporterName}</td>
                                 </tr>
                                 <tr>
                                     <td>聯絡電話 : </td>

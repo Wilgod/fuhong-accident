@@ -65,11 +65,11 @@ return <>
                             <tr>
                                 <td>年齡: {formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
                                 <td>性別:
-                                    {formData.ServiceUserGender == "Male" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Male" && <span>&#9744;</span>}
+                                    {formData.ServiceUserGender == "male" && <span>&#9745;</span>}
+                                    {formData.ServiceUserGender != "male" && <span>&#9744;</span>}
                                     男&nbsp;&nbsp;
-                                    {formData.ServiceUserGender == "Female" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Female" && <span>&#9744;</span>}
+                                    {formData.ServiceUserGender == "female" && <span>&#9745;</span>}
+                                    {formData.ServiceUserGender != "female" && <span>&#9744;</span>}
                                     女
                                 </td>
                                 <td>服務使用者檔案號碼</td>
@@ -733,11 +733,11 @@ return <>
                                 <td style={{width:'50px'}}>年齡: </td>
                                 <td style={{width:'150px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
                                 <td style={{width:'50px'}}>性別:</td>
-                                <td style={{width:'200px'}}>{formData.ServiceUserGender == "Male" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Male" && <span>&#9744;</span>}
+                                <td style={{width:'200px'}}>{formData.ServiceUserGender == "male" && <span>&#9745;</span>}
+                                    {formData.ServiceUserGender != "male" && <span>&#9744;</span>}
                                     男&nbsp;&nbsp;
-                                    {formData.ServiceUserGender == "Female" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "Female" && <span>&#9744;</span>}
+                                    {formData.ServiceUserGender == "female" && <span>&#9745;</span>}
+                                    {formData.ServiceUserGender != "female" && <span>&#9744;</span>}
                                     女</td>
                                 <td style={{width:'100px'}}>服務單位</td>
                                 <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}</td>

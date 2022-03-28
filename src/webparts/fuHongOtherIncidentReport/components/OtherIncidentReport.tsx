@@ -170,14 +170,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         //(a) 服務使用者 (一)
         if (form.serviceUserGenderOne) {
             body["ServiceUserGenderOne"] = form.serviceUserGenderOne
-        } else {
-            error["ServiceUserGenderOne"] = true;
         }
 
         if (form.serviceUserAgeOne) {
             body["ServiceUserAgeOne"] = form.serviceUserAgeOne;
-        } else {
-            error["ServiceUserAgeOne"] = true;
         }
 
         //(b) 服務使用者 (二，如有)
@@ -191,14 +187,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         //(a) 職員 ( 一 )*
         if (form.staffGenderOne) {
             body["StaffGenderOne"] = form.staffGenderOne;
-        } else {
-            error["StaffGenderOne"] = true;
         }
 
         if (form.staffPositionOne) {
             body["StaffPositionOne"] = form.staffPositionOne;
-        } else {
-            error["StaffPositionOne"] = true;
         }
 
         //(b) 職員 ( 二，如有 )
@@ -225,8 +217,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         } else if (form.police === false) {
             if (form.policeDescription) {
                 body["PoliceDescription"] = form.policeDescription;
-            } else {
-                error["PoliceDescription"] = true;
             }
         } else if (form.police === undefined) {
             error["Police"] = true;
@@ -282,8 +272,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         } else if (form.carePlan === false) {
             if (form.carePlanNoDescription) {
                 body["CarePlanNoDescription"] = form.carePlanNoDescription;
-            } else {
-                error["CarePlanNoDescription"] = true;
             }
         } else if (form.carePlan === undefined) {
             error["CarePlan"] = true;
@@ -928,7 +916,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className={`form-row mb-2`}>
                         <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 服務使用者 (一)<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
-                        <div className={`col-12 col-md-4 d-flex align-items-center ${(error && error['ServiceUserGenderOne']) ? styles.divInvalid: ""}`}>
+                        <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderMale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "male" })} checked={form.serviceUserGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderMale1">男</label>
@@ -940,7 +928,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className={`form-control ${(error && error['ServiceUserAgeOne']) ? "is-invalid": ""}`} min={0} value={form.serviceUserAgeOne} onChange={(event) => setForm({ ...form, serviceUserAgeOne: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                            <input type="number" className={`form-control`} min={0} value={form.serviceUserAgeOne} onChange={(event) => setForm({ ...form, serviceUserAgeOne: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -990,7 +978,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="form-row row mb-2">
                         <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 職員 ( 一 )<sup style={{ color: "red" }}>*</sup></div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
-                        <div className={`col-12 col-md-4 d-flex align-items-center ${(error && error['StaffGenderOne']) ? styles.divInvalid: ""}`}>
+                        <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderMale1" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, staffGenderOne: "male" })} checked={form.staffGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderMale1">男</label>
@@ -1002,7 +990,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control ${(error && error['StaffPositionOne']) ? "is-invalid": ""}`} name="staffPositionOne" value={form.staffPositionOne} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                            <input type="text" className={`form-control`} name="staffPositionOne" value={form.staffPositionOne} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                         </div>
                     </div>
                     <div className="form-row row mb-2">
@@ -1084,7 +1072,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             }
                             {
                                 form.police === false &&
-                                <AutosizeTextarea className={`form-control ${(error && error['PoliceDescription']) ? "is-invalid": ""}`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                                <AutosizeTextarea className={`form-control`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                             }
                         </div>
                     </div>
@@ -1174,7 +1162,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             {
                                 form.carePlan === false &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control ${(error && error['CarePlanNoDescription']) ? "is-invalid": ""}`} placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
+                                    <AutosizeTextarea className={`form-control`} placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(currentUserRole, formStatus, formStage) && !pendingSdApprove(currentUserRole, formStatus, formStage)} />
                                 </div>
                             }
                         </div>

@@ -645,10 +645,10 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                     </>
                 )
             case "BY_MONTH_FINANCIAL":
-                let maleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'Male'}), startDate, endDate);
+                let maleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'male'}), startDate, endDate);
                 let maleMFChart = financialYearChartParser(maleResult);
 
-                let femaleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'Female'}), startDate, endDate);
+                let femaleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'female'}), startDate, endDate);
                 let femaleMFChart = financialYearChartParser(femaleResult);
                 return <>
                     <div className="row">
@@ -851,10 +851,10 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                 </>
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let maleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'Male'}), startDate, endDate);
+                let maleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'male'}), startDate, endDate);
                 let maleMCChart = normalChartParser(maleMCResult);
 
-                let femaleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'Female'}), startDate, endDate);
+                let femaleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'female'}), startDate, endDate);
                 let femaleMCChart = normalChartParser(femaleMCResult);
 
                 maleMCResult.forEach((item, i) => {

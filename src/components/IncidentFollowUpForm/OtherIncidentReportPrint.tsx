@@ -9,7 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
-interface ISpecialIncidentReportAllowancePrint {
+interface IOtherIncidentReportPrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
     currentUserRole: Role;
@@ -20,7 +20,7 @@ interface ISpecialIncidentReportAllowancePrint {
     index:number;
 }
 
-interface ISpecialIncidentReportAllowanceStates {
+interface IOtherIncidentReportPrintStates {
     toDepartment:string;
     responsibleName: string;
     insuranceCaseNo: string;
@@ -139,7 +139,7 @@ interface ISpecialIncidentReportAllowanceStates {
 
 }
 
-export default function SpecialIncidentReportLicensePrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl}: ISpecialIncidentReportAllowancePrint) {
+export default function OtherIncidentReportPrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl}: IOtherIncidentReportPrint) {
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -160,14 +160,16 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     
     let followUpActions = null;
     let formTwentySixDataPrint = null;
+    debugger
     if (formTwentySixData != null && formTwentySixData.length > 0) {
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
+        debugger
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
         }
     }
 
-    const [form, setForm] = useState<ISpecialIncidentReportAllowanceStates>({
+    const [form, setForm] = useState<IOtherIncidentReportPrintStates>({
         toDepartment:"",
         abuser: "",
         abuserDescription: "",
@@ -309,6 +311,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
             }
+            debugger
             setForm({
                 ...form,
                 toDepartment:formData.ToDepartment,
@@ -420,7 +423,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
                 unusalIncident: formData.UnusalIncident,
-                sdDate: formData.sdDate ? new Date(formData.sdDate) : null
+                sdDate: formData.SDDate ? new Date(formData.SDDate) : null
             })
 
         
@@ -450,7 +453,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                    setReporterName(reporter.displayName);
+                    setReporterName(userInfosRes[0].Name);
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
                 }
             }).catch((err) => {
@@ -770,13 +773,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td colSpan={2}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.immediateFollowUp != null ? form.immediateFollowUp: ''}</td>
+                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.immediateFollowUp != null ? form.immediateFollowUp: <span>&nbsp;&nbsp;</span>}</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={2}>(g)	跟進計劃</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.followUpPlan != null ? form.followUpPlan: ''}</td>
+                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.followUpPlan != null ? form.followUpPlan:  <span>&nbsp;&nbsp;</span>}</td>
                                 </tr>
                             </table>
                         </div>
@@ -874,7 +877,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td>單位名稱</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgSUName}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.serviceLocation}</td>
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
@@ -966,7 +969,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     日期
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>

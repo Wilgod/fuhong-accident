@@ -1350,18 +1350,18 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <div className="col-12 col-xl-4 pt-xl-0">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male"
-                                    // checked={serviceUser && serviceUser.Gender === "Male"}
-                                    checked={serviceUserGender === "Male"}
-                                    onClick={() => setServiceUserGender("Male")}
+                                    // checked={serviceUser && serviceUser.Gender === "male"}
+                                    checked={serviceUserGender === "male"}
+                                    onClick={() => setServiceUserGender("male")}
                                     disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientGender" id="gender-female" value="female"
-                                    //  checked={serviceUser && serviceUser.Gender === "Female"} 
-                                    checked={serviceUserGender === "Female"}
-                                    onClick={() => setServiceUserGender("Female")}
+                                    //  checked={serviceUser && serviceUser.Gender === "female"} 
+                                    checked={serviceUserGender === "female"}
+                                    onClick={() => setServiceUserGender("female")}
                                     disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>

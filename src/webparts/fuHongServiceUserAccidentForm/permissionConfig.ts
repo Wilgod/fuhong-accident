@@ -48,8 +48,8 @@ export const pendingSptApproveForSD = (context:any, currentUserRole: Role, statu
 }
 // ------------------------------------------
 // Stage 2 / PENDING_INVESTIGATE
-export const pendingInvestigate = (context:any, currentUserRole: Role, status: string, stage: string): boolean => {
-    if (stage === "2" && status === "PENDING_INVESTIGATE" && currentUserRole === Role.INVESTIGATOR) {
+export const pendingInvestigate = (context:any, investigator: any, status: string, stage: string): boolean => {
+    if (stage === "2" && status === "PENDING_INVESTIGATE" && investigator.mail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
@@ -66,7 +66,7 @@ export const stageTwoPendingSptApprove = (context:any, currentUserRole: Role, st
 
 //Stage 2 /PENDING_SPT_APPROVE
 export const stageTwoPendingSptApproveForSM = (context:any, currentUserRole: Role, status: string, stage: string,sptDate:Date, formTwentyData:any): boolean => {
-    if ((stage === "2" && status === "PENDING_SPT_APPROVE" && currentUserRole === Role.SERVICE_MANAGER && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail) || (stage === "3" && status === "PENDING_SM_FILL_IN" && currentUserRole === Role.SERVICE_MANAGER && (sptDate == null || (sptDate != null && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail)) {
+    if ((stage === "2" && status === "PENDING_SPT_APPROVE" && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail) || (stage === "3" && status === "PENDING_SM_FILL_IN" && (sptDate == null || (sptDate != null && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail)) {
         return true;
     }
     return false;
@@ -74,7 +74,7 @@ export const stageTwoPendingSptApproveForSM = (context:any, currentUserRole: Rol
 
 //Stage 3 / PENDING_SM_FILL_IN
 export const stageThreePendingSmFillIn = (context:any, currentUserRole: Role, status: string, stage: string, formTwentyOneData:any): boolean => {
-    if (stage === "3" && status === "PENDING_SM_FILL_IN" && currentUserRole === Role.SERVICE_MANAGER && formTwentyOneData.SM.EMail == context.pageContext.legacyPageContext.userEmail) {
+    if (stage === "3" && status === "PENDING_SM_FILL_IN" && formTwentyOneData.SM.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
@@ -83,7 +83,7 @@ export const stageThreePendingSmFillIn = (context:any, currentUserRole: Role, st
 
 //Stage 3 / PENDING_SD_APPROVE
 export const stageThreePendingSdApprove = (context:any, currentUserRole: Role, status: string, stage: string, formTwentyOneData:any): boolean => {
-    if (stage === "3" && status === "PENDING_SD_APPROVE" && currentUserRole === Role.SERVICE_DIRECTOR && formTwentyOneData.SD.EMail == context.pageContext.legacyPageContext.userEmail) {
+    if (stage === "3" && status === "PENDING_SD_APPROVE" && formTwentyOneData.SD.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
@@ -94,7 +94,7 @@ export const stageThreePendingSdApproveForSpt = (context:any, currentUserRole: R
     
     if (accidentFollowUpFormList.length > 0 && selectedAccidentFollowUpFormId != null) {
         const data= accidentFollowUpFormList.filter((item) => item.ID === selectedAccidentFollowUpFormId);
-        if (stage === "3" && data[0].SMDate !=null && currentUserRole === Role.SENIOR_PHYSIOTHERAPIST && formTwentyOneData.SPT.EMail == context.pageContext.legacyPageContext.userEmail && (data[0].SDDate == null || new Date(new Date(data[0].SDDate).setDate(new Date(data[0].SDDate).getDate() + 7)) > new Date())) {
+        if (stage === "3" && data[0].SMDate !=null && formTwentyOneData.SPT.EMail == context.pageContext.legacyPageContext.userEmail && (data[0].SDDate == null || new Date(new Date(data[0].SDDate).setDate(new Date(data[0].SDDate).getDate() + 7)) > new Date())) {
             return true;
         }
     }

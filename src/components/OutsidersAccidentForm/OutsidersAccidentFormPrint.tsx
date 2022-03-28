@@ -47,7 +47,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Author.EMail).then((userInfosRes) => {
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
-                    setReporterName(formData.Author.Title);
+                    setReporterName(userInfosRes[0].Name);
                 }
             }).catch((err) => {
                 console.error('getUserInfoByEmailInUserInfoAD error')
@@ -553,7 +553,7 @@ return <>
                                 <td style={{width:'150px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
                                 <td style={{width:'50px'}}>性別:</td>
                                 <td style={{width:'200px'}}>{formData.ServiceUserGender == "male" && <span>男</span>}
-                                    {formData.ServiceUserGender == "Female" && <span>女</span>}</td>
+                                    {formData.ServiceUserGender == "female" && <span>女</span>}</td>
                                 <td style={{width:'100px'}}>服務單位</td>
                                 <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}</td>
                             </tr>
