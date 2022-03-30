@@ -596,7 +596,7 @@ function AllowanceCategory(siteCollectionUrl) {
 
     const byMonthTableComponent = () => {
         return (
-            <table className="table" >
+            <table className="table" id="table1">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -647,6 +647,26 @@ function AllowanceCategory(siteCollectionUrl) {
         setGroupBy(value);
     }
 
+    function copyTable(id) {
+        var urlField = document.querySelector(id);
+        let range, sel;
+        range = document.createRange();
+        sel = window.getSelection();
+        // unselect any element in the page
+        sel.removeAllRanges();
+
+        try {
+            range.selectNodeContents(urlField);
+            sel.addRange(range);
+        } catch (e) {
+            range.selectNode(urlField);
+            sel.addRange(range);
+        }
+
+        document.execCommand('copy');
+        sel.removeAllRanges();
+    }
+
     useEffect(() => {
         switch (groupBy) {
             case "NON":
@@ -676,6 +696,9 @@ function AllowanceCategory(siteCollectionUrl) {
                             <div className="col-12">
                                 <h6>{`${title} - 特別事故類別 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
+                            <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
+                            </div>
                         </div>
                         <div className="row">
                             <div className="col-12">
@@ -696,10 +719,13 @@ function AllowanceCategory(siteCollectionUrl) {
                             <div className="col-12">
                                 <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
+                            <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
+                            </div>
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <table className="table">
+                                <table className="table" id="table2">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -765,10 +791,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table3">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -865,10 +894,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 特別事故類別統計 - 服務使用者失踪而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table4">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -965,10 +997,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table5">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1065,10 +1100,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 特別事故類別統計 - 爭執以致有人身體受傷而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table6">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1165,10 +1203,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table7">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1288,10 +1329,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table8">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1378,10 +1422,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者失踪而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table9">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1469,10 +1516,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table10">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1559,10 +1609,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 特別事故類別統計 - 爭執以致有人身體受傷而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table11">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1649,10 +1702,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table12">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1750,10 +1806,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear3} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table13">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1845,10 +1904,13 @@ function AllowanceCategory(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear4} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table14')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table14">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>

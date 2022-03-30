@@ -553,7 +553,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
 
     const byMonthTableComponent = () => {
         return (
-            <table className="table" >
+            <table className="table" id="table1">
                 <thead>
                     <tr>
                         <th scope="col"></th>
@@ -589,6 +589,9 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
+                            <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
+                            </div>
                         </div>
                         <div className="row">
                             <div className="col-12">
@@ -609,10 +612,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                             <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
+                            <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
+                            </div>
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <table className="table">
+                                <table className="table" id="table2">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -660,10 +666,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table3">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -759,10 +768,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table4">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -873,10 +885,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table5">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -962,10 +977,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table6">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1062,10 +1080,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear3} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table7">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1141,10 +1162,13 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                         <div className="col-12">
                             <h6>{`${titleYear4} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
+                            </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <table className="table">
+                            <table className="table" id="table8">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -1309,6 +1333,26 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
             setEndDate(new Date(new Date().getFullYear(),11,31));
         }
         setGroupBy(value);
+    }
+
+    function copyTable(id) {
+        var urlField = document.querySelector(id);
+        let range, sel;
+        range = document.createRange();
+        sel = window.getSelection();
+        // unselect any element in the page
+        sel.removeAllRanges();
+
+        try {
+            range.selectNodeContents(urlField);
+            sel.addRange(range);
+        } catch (e) {
+            range.selectNode(urlField);
+            sel.addRange(range);
+        }
+
+        document.execCommand('copy');
+        sel.removeAllRanges();
     }
 
     useEffect(() => {
