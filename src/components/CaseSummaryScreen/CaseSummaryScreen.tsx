@@ -128,7 +128,7 @@ function CaseSummaryScreen({ context,siteCollectionUrl }: ICaseSummaryScreenProp
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${data.length} 筆記錄`}]
                 </div>
-                {/* <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} /> */}
+                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )

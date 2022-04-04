@@ -261,6 +261,22 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
     }
 }
 
+export async function getServiceUserAccidentWithoutDarft() {
+    try {
+        const LIST_NAME = "Service User Accident";
+        let filterQuery = `Status ne 'DRAFT'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccident failed");
+    }
+}
+
+
 export async function getAllServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
