@@ -64,6 +64,7 @@ interface IFuHongFormsMenuStates {
   searchKeyword: string;
   tempKeyword: string;
   permissionList:any[];
+  adminPermission:any[];
   loading:boolean;
 }
 
@@ -104,6 +105,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       searchKeyword: "",
       tempKeyword: "",
       permissionList:[],
+      adminPermission:[],
       loading:true
     }
   }
@@ -120,10 +122,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get()
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
 
-    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false });
+    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false, adminPermission:adminPermission });
   }
 
   private formToggleHandler = (event) => {

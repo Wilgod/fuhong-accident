@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import useFetchAllForms from '../../hooks/useFetchAllForms';
 import { IUser } from '../../interface/IUser';
-export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermission }: IMainTableComponentProps) {
+export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword }: IMainTableComponentProps) {
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
