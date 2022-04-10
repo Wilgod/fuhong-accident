@@ -15,7 +15,7 @@ export async function getNewServiceUserAccident(searchCriteria: ISearchCriteria)
     try {
         const LIST_NAME = "Service User Accident";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -49,7 +49,7 @@ export async function getNewOutsiderAccident(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Outsider Accident Form";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -82,7 +82,7 @@ export async function getNewOutsiderAccident(searchCriteria: ISearchCriteria) {
 export async function getNewSpecialIncidentReportLicense(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report License";
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -116,7 +116,7 @@ export async function getNewSpecialIncidentReportLicense(searchCriteria: ISearch
 export async function getNewSpecialIncidentReportAllowance(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -150,7 +150,7 @@ export async function getNewSpecialIncidentReportAllowance(searchCriteria: ISear
 export async function getNewOtherIncidentReport(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Other Incident Report";
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -187,7 +187,7 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Service User Accident";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -221,7 +221,7 @@ export async function getOutsiderStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Outsider Accident Form";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -256,7 +256,7 @@ export async function getLicenseStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report License";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -291,7 +291,7 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -327,7 +327,7 @@ export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Service User Accident";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
@@ -390,7 +390,7 @@ export async function getAccidentReportStatsForOutsiders(searchCriteria: ISearch
     try {
         const LIST_NAME = "Outsider Accident Form";
 
-        let filterQuery = `Status ne 'DRAFT'`;
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and AccidentTime ge '${searchCriteria.startDate.toISOString()}' and AccidentTime le '${searchCriteria.endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {

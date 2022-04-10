@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getOtherIncidentReport, getOutsiderAccident, getServiceUserAccident, getSpecialIncidentReportAllowance, getSpecialIncidentReportLicense } from "../api/FetchFuHongList";
+import { getAllIncidentFollowUpFormWithClosed, getAllAccidentFollowUpForm, getAllAccidentReportForm, getAllOtherIncidentReportWithClosed, getAllOutsiderAccidentWithClosed, getAllServiceUserAccidentWithClosed, getAllSpecialIncidentReportAllowanceWithClosed, getAllSpecialIncidentReportLicenseWithClosed } from "../api/FetchFuHongList";
 
 export interface ISearchCriteria {
     startDate: Date;
@@ -9,47 +9,186 @@ export interface ISearchCriteria {
     formTypes: string[];
     formStatus: string;
     expired: boolean;
+    adminPermissionBoolean:boolean;
 }
 
-export default function useFetchAllForms(spId: number, searchCriteria: ISearchCriteria) {
+export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria) {
     const [result, setResult] = useState([]);
    
     const initial = async () => {
         let result = [];
-        // let searchFormTypesAll = true;
+        let accidentReportForm = [];
+        let accidentFollowUpForm = [];
+        let serviceUserAccidentData = [];
+        let outsiderAccidentData = [];
+        let incidentFollowUpForm = [];
+        let specialIncidentReportLicense = [];
+        let specialIncidentReportAllowance = [];
+        let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
 
-
+        if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1 || searchCriteria.formTypes.indexOf("PUI") > -1) {
+            accidentReportForm = await getAllAccidentReportForm();
+            accidentFollowUpForm = await getAllAccidentFollowUpForm();
+        }
+        if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1 || searchCriteria.formTypes.indexOf("SID") > -1 || searchCriteria.formTypes.indexOf("OIN") > -1) {
+            incidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
+        }
+        
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
-            const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
+            //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
+            serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
+            for (let item of serviceUserAccidentData) {
+                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                item['ReportForm'] = [];
+                item['FollowUpForm'] = [];
+                if (item.AccidentReportFormId != null) {
+                    let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
+                    if (reportForm.length > 0) {
+                        item['ReportForm'].push(reportForm[0]);
+                    }
+                }
+                if (item.AccidentFollowUpFormId != null) {
+                    for (let followup of item.AccidentFollowUpFormId) {
+                        let followupForm = accidentFollowUpForm.filter(o => {return o.Id == followup});
+                        if (followupForm.length > 0) {
+                            item['FollowUpForm'].push(followupForm[0]);
+                        }
+                        
+                    }
+                }
+            }
             result = result.concat(serviceUserAccidentData);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("PUI") > -1) {
-            const outsiderAccidentData = await getOutsiderAccident(spId, searchCriteria);
+            outsiderAccidentData = await getAllOutsiderAccidentWithClosed();
+            for (let item of outsiderAccidentData) {
+                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                item['ReportForm'] = [];
+                item['FollowUpForm'] = [];
+                if (item.AccidentReportFormId != null) {
+                    let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
+                    if (reportForm.length > 0) {
+                        item['ReportForm'].push(reportForm[0]);
+                    }
+                }
+                if (item.AccidentFollowUpFormId != null) {
+                    
+                    for (let followup of item.AccidentFollowUpFormId) {
+                        let followupForm = accidentFollowUpForm.filter(o => {return o.Id == followup});
+                        if (followupForm.length > 0) {
+                            item['FollowUpForm'].push(followupForm[0]);
+                        }
+                        
+                    }
+                }
+            }
             result = result.concat(outsiderAccidentData);
         }
+        
+
+
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1) {
-            const specialIncidentReportLicense = await getSpecialIncidentReportLicense(spId, searchCriteria);
+            specialIncidentReportLicense = await getAllSpecialIncidentReportLicenseWithClosed();
+            for (let item of specialIncidentReportLicense) {
+                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                item['IncidentFollowUpForms'] = [];
+                if (item.FollowUpFormsId != null) {
+                    for (let followup of item.FollowUpFormsId) {
+                        let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
+                        if (followupForm.length > 0) {
+                            item['IncidentFollowUpForms'].push(followupForm[0]);
+                        }
+                        
+                    }
+                }
+            }
             result = result.concat(specialIncidentReportLicense);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SID") > -1) {
-            const specialIncidentReportAllowance = await getSpecialIncidentReportAllowance(spId, searchCriteria);
+            specialIncidentReportAllowance = await getAllSpecialIncidentReportAllowanceWithClosed();
+            for (let item of specialIncidentReportAllowance) {
+                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                item['IncidentFollowUpForms'] = [];
+                if (item.FollowUpFormsId != null) {
+                    for (let followup of item.FollowUpFormsId) {
+                        let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
+                        if (followupForm.length > 0) {
+                            item['IncidentFollowUpForms'].push(followupForm[0]);
+                        }
+                        
+                    }
+                }
+            }
             result = result.concat(specialIncidentReportAllowance);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("OIN") > -1) {
-            const otherIncidentData = await getOtherIncidentReport(spId, searchCriteria);
+            otherIncidentData = await getAllOtherIncidentReportWithClosed();
+            for (let item of otherIncidentData) {
+                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                item['IncidentFollowUpForms'] = [];
+                if (item.FollowUpFormsId != null) {
+                    for (let followup of item.FollowUpFormsId) {
+                        let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
+                        if (followupForm.length > 0) {
+                            item['IncidentFollowUpForms'].push(followupForm[0]);
+                        }
+                        
+                    }
+                }
+            }
             result = result.concat(otherIncidentData);
         }
 
-        result = result.sort((a, b) => {
+        let filterResult = result.filter(item => {
+            const d = new Date(item.AccidentTime || item.IncidentTime);
+            return (d.getTime() <= searchCriteria.endDate.getTime() && d.getTime() >= searchCriteria.startDate.getTime())
+        })
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
+            filterResult = filterResult.filter(item => {
+                return searchCriteria.serviceUnits.indexOf(item.ServiceLocation) >= 0
+            })
+        }
+        if (searchCriteria.formStatus != 'ALL') {
+            filterResult = filterResult.filter(item => {
+                if (searchCriteria.formStatus == 'Stage 1 - PENDING SM') {
+                    return item.Stage == "1" && item.Status == "PENDING_SM_APPROVE"
+                } else if (searchCriteria.formStatus == 'Stage 1 - PENDING SPT') {
+                    return item.Stage == "1" && item.Status == "PENDING_SPT_APPROVE"
+                } else if (searchCriteria.formStatus == 'Stage 2 - PENDING INVESTIGATOR') {
+                    return item.Stage == "2" && item.Status == "PENDING_INVESTIGATE"
+                } else if (searchCriteria.formStatus == 'Stage 2 - PENDING SPT') {
+                    return item.Stage == "2" && item.Status == "PENDING_SPT_APPROVE"
+                } else if (searchCriteria.formStatus == 'Stage 2 - PENDING SM') {
+                    return item.Stage == "2" && item.Status == "PENDING_SM_FILL_IN"
+                } else if (searchCriteria.formStatus == 'Stage 2 - PENDING SD') {
+                    return item.Stage == "2" && item.Status == "PENDING_SD_APPROVE"
+                } else if (searchCriteria.formStatus == 'Stage 3 - PENDING SM') {
+                    return item.Stage == "3" && item.Status == "PENDING_SM_FILL_IN"
+                } else if (searchCriteria.formStatus == 'Stage 3 - PENDING SD') {
+                    return item.Stage == "3" && item.Status == "PENDING_SD_APPROVE"
+                } else if (searchCriteria.formStatus == 'CLOSED'){
+                    return item.Status == "CLOSED"
+                }
+                
+            })
+        }
+        filterResult = filterResult.sort((a, b) => {
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
         });
         
-        setResult(result);
+        
+        setResult(filterResult);
     }
 
     useEffect(() => {

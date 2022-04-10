@@ -7,7 +7,7 @@ export function locationFilterParser(serviceUnit: any[]) {
     if (Array.isArray(serviceUnit)) {
         serviceUnit.forEach((item) => {
             if (item.location) {
-                s.add(item.location);
+                s.add({"location" : item.location, locationTC: item.su_name_tc});
             }
         })
     }
@@ -15,8 +15,8 @@ export function locationFilterParser(serviceUnit: any[]) {
     s.forEach((item) => {
         result.push(item);
     })
-
-    return result.sort((a, b) => a.localeCompare(b));
+    return result
+    //return result.sort((a, b) => a.localeCompare(b));
 }
 
 export default function useServiceLocation(siteCollectionUrl) {

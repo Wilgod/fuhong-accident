@@ -2147,7 +2147,6 @@ function General(siteCollectionUrl) {
                 console.log("default");
         }
     }
-    
     return (
         <div>
             <div className="row mb-3">
@@ -2203,7 +2202,7 @@ function General(siteCollectionUrl) {
                     }}>
                         <option value="ALL">--- 所有 ---</option>
                         {
-                            serivceLocation.map((item) => <option value={item}>{item}</option>)
+                            serivceLocation.map((item) => <option value={item.location}>{item.locationTC}</option>)
                         }
                     </select>
                 </div>

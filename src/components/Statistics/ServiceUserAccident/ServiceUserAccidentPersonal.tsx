@@ -2402,7 +2402,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                     }}>
                         <option value="ALL">--- 所有 ---</option>
                         {
-                            serivceLocation.map((item) => <option value={item}>{item}</option>)
+                            serivceLocation.map((item) => <option value={item.location}>{item.locationTC}</option>)
                         }
                     </select>
                 </div>

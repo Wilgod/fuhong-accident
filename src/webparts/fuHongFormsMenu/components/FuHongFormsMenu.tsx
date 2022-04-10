@@ -65,7 +65,9 @@ interface IFuHongFormsMenuStates {
   tempKeyword: string;
   permissionList:any[];
   adminPermission:any[];
+  adminPermissionBoolean:boolean;
   loading:boolean;
+  mainTableDisplay:boolean;
 }
 
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
@@ -106,7 +108,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       tempKeyword: "",
       permissionList:[],
       adminPermission:[],
-      loading:true
+      adminPermissionBoolean:false,
+      loading:true,
+      mainTableDisplay:false
     }
   }
 
@@ -122,11 +126,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
-    const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get()
+    const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get();
+    let adminPermissionOwner = adminPermission.filter(item => {item.Admin.EMail == this.CURRENT_USER.email})
+    let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
-
-    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false, adminPermission:adminPermission });
+    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false, adminPermission:adminPermission, adminPermissionBoolean: adminPermissionBoolean });
   }
 
   private formToggleHandler = (event) => {
@@ -154,6 +159,15 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     this.setState({ screenNav: nav });
   }
 
+  private searchResult() {
+    if (this.state.mainTableDisplay) {
+      this.setState({mainTableDisplay: false}, () => {
+        this.setState({mainTableDisplay: true});
+      })
+    } else {
+      this.setState({mainTableDisplay: true});
+    } 
+  }
   private multipleOptionsSelectParser = (event) => {
     let result = [];
     const selectedOptions = event.target.selectedOptions;
@@ -511,13 +525,13 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                         <div className="mr-3">
                           由
                         </div>
-                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateStart} onChange={(date) => this.setState({ searchDateStart: date })} />
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateStart} onChange={(date) => this.setState({ mainTableDisplay:false,searchDateStart: date })} />
                       </div>
                       <div className="d-flex">
                         <div className="mr-3">
                           至
                         </div>
-                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateEnd} onChange={(date) => this.setState({ searchDateEnd: date })} />
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateEnd} onChange={(date) => this.setState({ mainTableDisplay:false, searchDateEnd: date })} />
                       </div>
                     </div>
                   </div>
@@ -530,11 +544,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                       const selectedOptions = this.multipleOptionsSelectParser(event);
-                      this.setState({ searchServiceUnit: selectedOptions });
+                      this.setState({  mainTableDisplay:false,searchServiceUnit: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
                       {this.state.serviceUnitList.map((item) => {
-                        return <option value={item}>{item}</option>
+                        return <option value={item.location}>{item.locationTC}</option>
                       })}
                     </select>
                   </div>
@@ -544,7 +558,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
                       const selectedOptions = this.multipleOptionsSelectParser(event);
-                      this.setState({ searchFormType: selectedOptions });
+                      this.setState({  mainTableDisplay:false,searchFormType: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
                       <option value="SUI">服務使用者意外</option>
@@ -559,11 +573,21 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       顯示狀態
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
-                      this.setState({ searchFormStatus: event.target.value });
+                      this.setState({  mainTableDisplay:false, searchFormStatus: event.target.value });
                     }}>
-                      <option value="PROCESSING">跟進中個案</option>
+                      <option value="ALL">All</option>
+                      <option value="Stage 1 - PENDING SM">Stage 1 - PENDING SM</option>
+                      <option value="Stage 1 - PENDING SPT">Stage 1 - PENDING SPT</option>
+                      <option value="Stage 2 - PENDING INVESTIGATOR">Stage 2 - PENDING INVESTIGATOR</option>
+                      <option value="Stage 2 - PENDING SPT">Stage 2 - PENDING SPT</option>
+                      <option value="Stage 2 - PENDING SM">Stage 2 - PENDING SM</option>
+                      <option value="Stage 2 - PENDING SD">Stage 2 - PENDING SD</option>
+                      <option value="Stage 3 - PENDING SM">Stage 3 - PENDING SM</option>
+                      <option value="Stage 3 - PENDING SD">Stage 3 - PENDING SD</option>
+                      <option value="CLOSED">CLOSED</option>
+                      {/*<option value="PROCESSING">跟進中個案</option>
                       <option value="CLOSED">已結束個案</option>
-                      <option value="ALL">所有狀態</option>
+                      <option value="ALL">所有狀態</option>*/}
                     </select>
                   </div>
                   <div className="col" >
@@ -571,7 +595,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       過期未交報告
                     </div>
                     <div className="form-check">
-                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({ searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
+                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({  mainTableDisplay:false, searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
                     </div>
                   </div>
                 </div>
@@ -585,23 +609,28 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" value={this.state.tempKeyword} onChange={(event) => this.setState({ tempKeyword: event.target.value })} />
                   </div>
                   <div className="col">
-                    <button type="button" className="btn btn-primary" onClick={() => this.setState({ searchKeyword: this.state.tempKeyword })}>搜尋</button>
+                    <button type="button" className="btn btn-primary" onClick={() => this.searchResult()}>搜尋</button>
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <MainTableComponent
-                  context={this.props.context}
-                  searchExpired={this.state.searchExpired}
-                  dateRange={{
-                    start: this.state.searchDateStart,
-                    end: this.state.searchDateEnd
-                  }}
-                  searchFormStatus={this.state.searchFormStatus}
-                  searchFormType={this.state.searchFormType}
-                  searchServiceUnit={this.state.searchServiceUnit}
-                  searchKeyword={this.state.searchKeyword}
+                {this.state.mainTableDisplay &&
+                  <MainTableComponent
+                    context={this.props.context}
+                    searchExpired={this.state.searchExpired}
+                    dateRange={{
+                      start: this.state.searchDateStart,
+                      end: this.state.searchDateEnd
+                    }}
+                    searchFormStatus={this.state.searchFormStatus}
+                    searchFormType={this.state.searchFormType}
+                    searchServiceUnit={this.state.searchServiceUnit}
+                    searchKeyword={this.state.searchKeyword}
+                    adminPermissionBoolean={this.state.adminPermissionBoolean}
+                    serviceUnitList={this.state.serviceUnitList}
                 />
+                }
+                
               </div>
             </div>
           )

@@ -69,7 +69,7 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item}>{item}</option>
+                                return <option value={item.location}>{item.locationTC}</option>
                             })
                         }
                     </select>

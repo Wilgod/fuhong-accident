@@ -10,4 +10,6 @@ export interface IMainTableComponentProps {
     searchFormStatus: string;
     searchExpired: boolean;
     searchKeyword: string;
+    adminPermissionBoolean:boolean;
+    serviceUnitList:any;
 }

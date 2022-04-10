@@ -30,7 +30,6 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [status, setStatus] = useState('');
     const [keyword, setKeyword] = useState('');
-    
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions1 = event.target.selectedOptions;
@@ -41,13 +40,19 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
     }
     let lineBreakColumnIndex = "";
     useEffect(() => {
-        getAllData();
-    }, []);
+        if (Array.isArray(serviceLocation) && serviceLocation.length > 0) {
+            getAllData();
+        }
+        
+    }, [serviceLocation]);
     
     async function getAllData() {
+        debugger
         let allServiceUserAccident = await getAllServiceUserAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
         for (let sa of allServiceUserAccident) {
+            let unit = serviceLocation.filter(o => {return o.location == sa.ServiceLocation});
+            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
             console.log('All CaseNumber', sa['CaseNumber'])
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             sa['AccidentReportForm'] = getARF;
@@ -399,7 +404,7 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item}>{item}</option>
+                                return <option value={item.location}>{item.locationTC}</option>
                             })
                         }
                     </select>
@@ -452,7 +457,7 @@ const column = [
         hidden: true
     },
     {
-        dataField: 'ServiceLocation',
+        dataField: 'ServiceLocationTC',
         text: '服務單位',
         sort: true,
         headerStyle: {width: '100px'}

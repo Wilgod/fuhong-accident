@@ -522,6 +522,25 @@ export async function getAllOutsiderAccident() {
     }
 }
 
+export async function getAllOutsiderAccidentWithClosed() {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        let filterQuery = `Status ne 'DRAFT'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
+            .expand("SM", "SD", "SPT", "Author", "Investigator")
+            .getAll();
+
+        return items;
+
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getOutsiderAccidentBySPId failed");
+    }
+}
+
 export async function getOutsiderAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
@@ -619,6 +638,25 @@ export async function getAllOtherIncidentReport() {
     try {
         const LIST_NAME = "Other Incident Report";
         let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
+            .expand("SM", "SD", "Author")
+            .getAll();
+
+        return items;
+
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllOtherIncidentReport failed");
+    }
+}
+
+export async function getAllOtherIncidentReportWithClosed() {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        let filterQuery = `Status ne 'DRAFT'`;
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
@@ -743,6 +781,26 @@ export async function getAllSpecialIncidentReportLicense() {
     }
 }
 
+export async function getAllSpecialIncidentReportLicenseWithClosed() {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        let filterQuery = `Status ne 'DRAFT'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
+            .expand("SM", "SD", "Author")
+            .getAll();
+
+        return items;
+
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllSpecialIncidentReportLicense failed");
+    }
+}
+
+
 export async function getSpecialIncidentReportLicenseBySPId(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report License";
@@ -853,6 +911,25 @@ export async function getAllSpecialIncidentReportAllowance() {
     }
 }
 
+export async function getAllSpecialIncidentReportAllowanceWithClosed() {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        let filterQuery = `Status ne 'DRAFT'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
+            .expand("SM", "SD", "Author")
+            .getAll();
+
+        return items;
+
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllSpecialIncidentReportAllowance failed");
+    }
+}
+
 export async function getSpecialIncidentReportAllowanceBySPId(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
@@ -916,6 +993,25 @@ export async function getAllIncidentFollowUpForm() {
     try {
         const LIST_NAME = "Incident Follow Up Form";
         let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(filterQuery)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
+            .expand("SM", "SD", "Author")
+            .getAll();
+
+        return items;
+
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllSpecialIncidentReportAllowance failed");
+    }
+}
+
+export async function getAllIncidentFollowUpFormWithClosed() {
+    try {
+        const LIST_NAME = "Incident Follow Up Form";
+        let filterQuery = `Status ne 'DRAFT'`;
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
