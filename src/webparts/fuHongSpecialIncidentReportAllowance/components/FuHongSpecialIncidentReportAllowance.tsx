@@ -21,11 +21,11 @@ import { getQueryParameterNumber, getQueryParameterString } from '../../../utils
 import { getAdmin, getSpecialIncidentReportAllowanceById, getSpeicalIncidentReportAllowanceWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
 import {checkDepartmentList } from '../../../api/FetchUser';
 if (document.getElementById('workbenchPageContent') != null) {
-  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+  document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
 
 if (document.querySelector('.CanvasZone') != null) {
-  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = 'none';
 }
 
 const getCanvasZone = () => {

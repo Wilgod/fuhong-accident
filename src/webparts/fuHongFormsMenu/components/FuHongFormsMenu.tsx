@@ -41,11 +41,11 @@ import Admin from '../../../components/AdminPage/Admin';
 import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 import { isArray } from '@pnp/pnpjs';
 if (document.getElementById('workbenchPageContent') != null) {
-  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+  document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
 
 if (document.querySelector('.CanvasZone') != null) {
-  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = 'none';
 }
 
 interface IFuHongFormsMenuStates {
@@ -208,7 +208,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     服務使用者意外
                   </div>
                 </li>
-                {/*<li>
+                <li>
                   <div className="" onClick={(event) => this.screenNavHandler(event, "CS_PUI")}>
                     外界人士意外
                   </div>
@@ -227,7 +227,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   <div className="" onClick={(event) => this.screenNavHandler(event, "CS_OIN")}>
                     其他事故
                   </div>
-                </li>*/}
+                </li>
               </ul>
             }
           </div>
@@ -575,8 +575,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     <select multiple className="form-control" onChange={(event) => {
                       this.setState({  mainTableDisplay:false, searchFormStatus: event.target.value });
                     }}>
-                      <option value="ALL">All</option>
-                      <option value="Stage 1 - PENDING SM">Stage 1 - PENDING SM</option>
+                      <option value="ALL">所有狀態</option>
+                      <option value="Apply">遞交檔案</option>
+                      <option value="Confirm">確認檔案</option>
+                      {/*<option value="Stage 1 - PENDING SM">Stage 1 - PENDING SM</option>
                       <option value="Stage 1 - PENDING SPT">Stage 1 - PENDING SPT</option>
                       <option value="Stage 2 - PENDING INVESTIGATOR">Stage 2 - PENDING INVESTIGATOR</option>
                       <option value="Stage 2 - PENDING SPT">Stage 2 - PENDING SPT</option>
@@ -584,7 +586,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       <option value="Stage 2 - PENDING SD">Stage 2 - PENDING SD</option>
                       <option value="Stage 3 - PENDING SM">Stage 3 - PENDING SM</option>
                       <option value="Stage 3 - PENDING SD">Stage 3 - PENDING SD</option>
-                      <option value="CLOSED">CLOSED</option>
+                  <option value="CLOSED">CLOSED</option>*/}
                       {/*<option value="PROCESSING">跟進中個案</option>
                       <option value="CLOSED">已結束個案</option>
                       <option value="ALL">所有狀態</option>*/}

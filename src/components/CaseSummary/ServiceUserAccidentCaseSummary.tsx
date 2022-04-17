@@ -22,8 +22,8 @@ interface IServiceUserAccidentCaseSummary {
 
 
 function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceUserAccidentCaseSummary) {
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
+    const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const [displayData, setDisplayData] = useState([]);
@@ -97,13 +97,20 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
         }
 
         if (status != '' && status != 'ALL') {
+            if (status == 'Apply') {
+                filterData = filterData.filter(item => {return item.Stage == '1'});
+            } else if (status == 'Confirm') {
+                filterData = filterData.filter(item => {return item.Stage == '2' || item.Stage == '3'});
+            }
+        }
+        /*if (status != '' && status != 'ALL') {
             if (status == 'CLOSED') {
                 filterData = filterData.filter(item => {return item.Status == 'CLOSED'});
             } else if (status == 'PROCESSING') {
                 filterData = filterData.filter(item => {return item.Status != 'CLOSED'});
             }
             
-        }
+        }*/
         filterData = filterData.filter(item => {
             console.log('item.ServiceUserNameCN : ',item.ServiceUserNameCN);
             return ((item.ServiceUserNameCN != null &&item.ServiceUserNameCN.indexOf(keyword) >= 0) || 
@@ -416,9 +423,12 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
                     <select className="form-control" onChange={(event) => {
                         setStatus(event.target.selectedOptions[0].value);
                     }}>
-                        <option value="PROCESSING">跟進中個案</option>
-                        <option value="CLOSED">已結束個案</option>
                         <option value="ALL">所有狀態</option>
+                        <option value="Apply">遞交檔案</option>
+                        <option value="Confirm">確認檔案</option>
+                        {/*<option value="PROCESSING">跟進中個案</option>
+                        <option value="CLOSED">已結束個案</option>*/}
+                        
                     </select>
                 </div>
             </div>
@@ -442,7 +452,10 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${displayData.length} 筆記錄`}]
                 </div>
+                <div className="summaryDashboard">
                 <BootstrapTable boot keyField='id' data={displayData || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
+                </div>
+                
             </div>
         </div>
     )
@@ -473,7 +486,8 @@ const column = [
         dataField: 'ServiceUserGender',
         text: '性別',
         sort: true,
-        headerStyle: {width: '80px'}
+        headerStyle: {width: '80px'},
+        formatter: genderFormatter.bind(this)
     },
     {
         dataField: 'ServiceUserAge',
@@ -505,7 +519,7 @@ const column = [
         dataField: 'AccidentNature',
         text: '意外性質',
         sort: true,
-        headerStyle: {width: '100px'},
+        headerStyle: {width: '300px'},
         formatter: accidentNatureFormatter.bind(this)
     },
     /*{
@@ -526,21 +540,21 @@ const column = [
         dataField: 'AccidentDetail',
         text: '意外詳情',
         sort: true,
-        headerStyle: {width: '100px'},
+        headerStyle: {width: '300px'},
         formatter: accidentDetailFormatter.bind(this)
     },
     {
         dataField: 'AccidentCauseFactor',
         text: '成因',
         sort: true,
-        headerStyle: {width: '180px'},
+        headerStyle: {width: '300px'},
         formatter: accidentCauseFactorFormatter.bind(this)
     },
     {
         dataField: 'Suggestion',
         text: '跟進工作及報告建議',
         sort: true,
-        headerStyle: {width: '200px'},
+        headerStyle: {width: '300px'},
         formatter: suggestionFactorFormatter.bind(this)
     }
 ]
@@ -579,6 +593,15 @@ function asdFormatter(cell,rowIndex){
     return div;
 }
 
+function genderFormatter(cell, rowIndex) {
+    let div = [];
+    if (cell == 'male') {
+        div.push(<div>男</div>);
+    } else if (cell == 'female') {
+        div.push(<div>女</div>);
+    }
+    return div;
+}
 function accidentNatureFormatter(cell,rowIndex){
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
@@ -598,6 +621,7 @@ function accidentNatureFormatter(cell,rowIndex){
             div.push(<div>{rowIndex.AccidentReportForm[0].AccidentNatureOtherRemark}</div>);
         }
     }
+    return div;
 }
 function envirnmentFactorFormatter(cell,rowIndex){
     let div = [];

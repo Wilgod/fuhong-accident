@@ -29,11 +29,11 @@ import { notifyOutsiderAccident, notifyOutsiderAccidentSMSDComment, notifyOutsid
 import { postLog } from '../../../api/LogHelper';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
 if (document.getElementById('workbenchPageContent') != null) {
-    document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+    document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
 
 if (document.querySelector('.CanvasZone') != null) {
-    (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+    (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = 'none';
 }
 interface IOutsidersAccidentFormProps {
     context: WebPartContext;

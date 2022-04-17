@@ -19,11 +19,11 @@ import { getAdmin, getOtherIncidentReportById, getOtherIncidentReportWorkflow, g
 import {checkDepartmentList } from '../../../api/FetchUser';
 import OtherIncidentReportPrint from "../../../components/IncidentFollowUpForm/OtherIncidentReportPrint";
 if (document.getElementById('workbenchPageContent') != null) {
-  document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
+  document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
 
 if (document.querySelector('.CanvasZone') != null) {
-  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
+  (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = 'none';
 }
 
 const getCanvasZone = () => {

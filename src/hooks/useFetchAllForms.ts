@@ -161,7 +161,12 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         }
         if (searchCriteria.formStatus != 'ALL') {
             filterResult = filterResult.filter(item => {
-                if (searchCriteria.formStatus == 'Stage 1 - PENDING SM') {
+                if (searchCriteria.formStatus == 'Apply') {
+                    return item.Stage == "1"
+                } else if (searchCriteria.formStatus == 'Confirm') {
+                    return item.Stage == "2" || item.Stage == "3"
+                }
+                /*if (searchCriteria.formStatus == 'Stage 1 - PENDING SM') {
                     return item.Stage == "1" && item.Status == "PENDING_SM_APPROVE"
                 } else if (searchCriteria.formStatus == 'Stage 1 - PENDING SPT') {
                     return item.Stage == "1" && item.Status == "PENDING_SPT_APPROVE"
@@ -179,7 +184,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     return item.Stage == "3" && item.Status == "PENDING_SD_APPROVE"
                 } else if (searchCriteria.formStatus == 'CLOSED'){
                     return item.Status == "CLOSED"
-                }
+                }*/
                 
             })
         }
