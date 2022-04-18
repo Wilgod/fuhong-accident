@@ -914,7 +914,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         </div>
                     </div>
                     <div className={`form-row mb-2`}>
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 服務使用者 (一)<sup style={{ color: "red" }}>*</sup></div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 服務使用者 (一)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">
@@ -976,7 +976,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         </div>
                     </div>
                     <div className="form-row row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 職員 ( 一 )<sup style={{ color: "red" }}>*</sup></div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel}`}>(a) 職員 ( 一 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">

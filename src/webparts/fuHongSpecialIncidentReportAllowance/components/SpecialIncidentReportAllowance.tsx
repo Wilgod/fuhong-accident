@@ -1189,7 +1189,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className={`form-row mb-2`}>
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 服務使用者 (一)<sup style={{ color: "red" }}>*</sup></div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 服務使用者 (一)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className={`col-12 col-md-4`}>
                             <div className="form-check form-check-inline">
@@ -1260,7 +1260,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className={`form-row mb-2`}>
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 職員 ( 一 )<sup style={{ color: "red" }}>*</sup></div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 職員 ( 一 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">

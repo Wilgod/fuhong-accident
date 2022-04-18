@@ -164,7 +164,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     if (formTwentySixData != null && formTwentySixData.length > 0) {
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
         debugger
-        if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
+        if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
         }
     }
@@ -917,11 +917,11 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            {formTwentySixDataPrint != null && formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9745;</span>}
-                            {formTwentySixDataPrint != null && !formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9744;</span>}
+                            {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9745;</span>}
+                            {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && !formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9744;</span>}
                             事故跟進繼續 &nbsp;&nbsp;
-                            {formTwentySixDataPrint != null && !formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9745;</span>}
-                            {formTwentySixDataPrint != null && formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9744;</span>}
+                            {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && !formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9745;</span>}
+                            {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].IncidentFollowUpContinue && <span>&#9744;</span>}
                             事故跟進結束
                         </div>
                     </div>
@@ -933,13 +933,13 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                     高級服務經理/服務經理姓名
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SM.Title}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SM.Title}
                                     </td>
                                     <td  style={{width:'200px'}}>
                                     日期
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
@@ -951,7 +951,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             <table>
                                 <tr>
                                     <td style={{borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
                                     </td>
                                 </tr>
                             </table>
@@ -963,13 +963,13 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                     服務總監姓名
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SD.Title}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SD.Title}
                                     </td>
                                     <td  style={{width:'200px'}}>
                                     日期
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
