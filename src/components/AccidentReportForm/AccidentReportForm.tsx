@@ -422,8 +422,13 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
 
         //調查員
+        console.log('parentFormData.Investigator', parentFormData.Investigator);
+        console.log('investigator1', investigator);
         if (parentFormData.Investigator) {
+            console.log('setInvestigator');
             setInvestigator([{ secondaryText: parentFormData.Investigator.EMail, id: parentFormData.Investigator.Id }]);
+
+            console.log('investigator2', investigator);
         }
 
         if (parentFormData.AccidentTime) {
@@ -785,7 +790,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             <AutosizeTextarea className="form-control" name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
-
 
                     <div className="form-row mb-2">
                         {/* 調查員姓名*/}

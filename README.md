@@ -1,5 +1,18 @@
 # fu-hong-accident
 
+Replace node_modules\xlsx-style\dist\cpexcel.js by 
+node_modules\xlsx\dist\cpexcel.js
+
+Then go to node_modules\xlsx-style\package.json
+
+Add the code
+
+"browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  }
+
 ## Summary
 
 Short summary on functionality and used technologies.
