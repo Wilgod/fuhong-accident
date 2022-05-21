@@ -477,6 +477,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         //通知家屬日期和時間
+        debugger
         if (contactFamilyDate) {
             body["ContactFamilyDate"] = contactFamilyDate.toISOString();
         } else {
@@ -1081,7 +1082,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setContactStaff([{ secondaryText: data.ContactFamilyStaff.EMail, id: data.ContactFamilyStaff.Id }]);
             }
 
-
+            if (data.ContactFamilyDate) {
+                setContactFamilyDate(new Date(data.ContactFamilyDate));
+            }
             //Created By whom
             if (data.Author) {
                 setReporter([{ secondaryText: data.Author.mail, id: data.AuthorId }]);

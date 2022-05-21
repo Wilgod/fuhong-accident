@@ -8,7 +8,8 @@ import Chart from "react-google-charts";
 import useServiceLocation from '../../../hooks/useServiceLocation';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
-
+import html2canvas from 'html2canvas';
+import downloadjs from 'downloadjs';
 //Age interval
 interface IDataset {
     lessThanFifteen: number;
@@ -185,14 +186,16 @@ const financialChartParser = (result) =>{
     let dataResult = ['Year'];
     let lessThanFifteen =['<15歲'];
     let fifteenToTwenty =['15-20歲'];
-    let thirtyOneToforty =['21-30歲'];
-    let fortyOneTofifty =['31-40歲'];
-    let fiftyOneToSixty =['41-50歲'];
+    let twentyOneToThirty =['21-30歲'];
+    let thirtyOneToforty =['31-40歲'];
+    let fortyOneTofifty =['41-50歲'];
+    let fiftyOneToSixty =['51-60歲'];
     let greaterThanSixty =['>60歲'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         lessThanFifteen.push(item.dataset['lessThanFifteen']);
         fifteenToTwenty.push(item.dataset['fifteenToTwenty']);
+        twentyOneToThirty.push(item.dataset['twentyOneToThirty']);
         thirtyOneToforty.push(item.dataset['thirtyOneToforty']);
         fortyOneTofifty.push(item.dataset['fortyOneTofifty']);
         fiftyOneToSixty.push(item.dataset['fiftyOneToSixty']);
@@ -202,6 +205,7 @@ const financialChartParser = (result) =>{
         dataResult,
         lessThanFifteen,
         fifteenToTwenty,
+        twentyOneToThirty,
         thirtyOneToforty,
         fortyOneTofifty,
         fiftyOneToSixty,
@@ -214,14 +218,16 @@ const yearChartParser = (result) =>{
     let dataResult = ['Year'];
     let lessThanFifteen =['<15歲'];
     let fifteenToTwenty =['15-20歲'];
-    let thirtyOneToforty =['21-30歲'];
-    let fortyOneTofifty =['31-40歲'];
-    let fiftyOneToSixty =['41-50歲'];
+    let twentyOneToThirty =['21-30歲'];
+    let thirtyOneToforty =['31-40歲'];
+    let fortyOneTofifty =['41-50歲'];
+    let fiftyOneToSixty =['51-60歲'];
     let greaterThanSixty =['>60歲'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         lessThanFifteen.push(item.dataset['lessThanFifteen']);
         fifteenToTwenty.push(item.dataset['fifteenToTwenty']);
+        twentyOneToThirty.push(item.dataset['twentyOneToThirty']);
         thirtyOneToforty.push(item.dataset['thirtyOneToforty']);
         fortyOneTofifty.push(item.dataset['fortyOneTofifty']);
         fiftyOneToSixty.push(item.dataset['fiftyOneToSixty']);
@@ -231,6 +237,7 @@ const yearChartParser = (result) =>{
         dataResult,
         lessThanFifteen,
         fifteenToTwenty,
+        twentyOneToThirty,
         thirtyOneToforty,
         fortyOneTofifty,
         fiftyOneToSixty,
@@ -619,6 +626,10 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         <th>{ageDataset.fortyOneTofifty}</th>
                     </tr>
                     <tr>
+                        <th scope="row">51-60歲</th>
+                        <th>{ageDataset.fiftyOneToSixty}</th>
+                    </tr>
+                    <tr>
                         <th scope="row">&gt;60歲</th>
                         <th>{ageDataset.greaterThanSixty}</th>
                     </tr>
@@ -679,6 +690,13 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
         }
     }, [groupBy, serviceUserAge])
 
+    const downloadScreenshot = async(className) => {
+        
+        let chart = (document.querySelector("."+className) as HTMLElement);
+        const canvas = await html2canvas(chart);
+        const dataURL = canvas.toDataURL('image/png');
+        downloadjs(dataURL, 'download.png', 'image/png');
+    }
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")} 服務使用者意外`
         switch (groupBy) {
@@ -732,6 +750,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                             <th scope="col">21-30歲</th>
                                             <th scope="col">31-40歲</th>
                                             <th scope="col">41-50歲</th>
+                                            <th scope="col">51-60歲</th>
                                             <th scope="col">&gt;60歲</th>
                                         </tr>
                                     </thead>
@@ -746,6 +765,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                                         <th>{item.dataset.twentyOneToThirty}</th>
                                                         <th>{item.dataset.thirtyOneToforty}</th>
                                                         <th>{item.dataset.fortyOneTofifty}</th>
+                                                        <th>{item.dataset.fiftyOneToSixty}</th>
                                                         <th>{item.dataset.greaterThanSixty}</th>
                                                     </tr>
                                                 )
@@ -759,6 +779,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                                 <th>{ageDataset.twentyOneToThirty}</th>
                                                 <th>{ageDataset.thirtyOneToforty}</th>
                                                 <th>{ageDataset.fortyOneTofifty}</th>
+                                                <th>{ageDataset.fiftyOneToSixty}</th>
                                                 <th>{ageDataset.greaterThanSixty}</th>
                                             </tr>
                                         }
@@ -852,6 +873,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -861,7 +883,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -877,6 +899,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -955,6 +980,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -964,7 +990,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -981,6 +1007,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1060,6 +1089,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1069,7 +1099,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1086,6 +1116,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1165,6 +1198,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1174,7 +1208,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1191,6 +1225,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1270,6 +1307,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1279,7 +1317,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1296,6 +1334,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1376,6 +1417,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart6")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1385,7 +1427,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart6">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1402,6 +1444,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart6")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart6">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1481,6 +1526,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart7")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1490,7 +1536,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart7">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1507,6 +1553,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart7")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart7">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1616,6 +1665,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1631,6 +1691,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1708,6 +1771,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1723,6 +1797,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1800,6 +1877,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart3">
                                 <Chart
                                     width={'100'}
                                     height={'400px'}
@@ -1815,6 +1903,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1892,6 +1983,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1907,6 +2009,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'300px'}
@@ -1984,6 +2089,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1999,6 +2115,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'300px'}
@@ -2076,6 +2195,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart6")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart6">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -2091,6 +2221,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart6")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart6">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -2168,6 +2301,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart7")}>下載圖表</button>
+                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <div className="">
+                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                    </div>
+                                    <div className="">
+                                        新發生意外或事故總數 (每月總數)
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12 byMonthCalendarLineChart7">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -2183,6 +2327,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart7")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart7">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -2237,6 +2384,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                         <th scope="col">21-30歲</th>
                                         <th scope="col">31-40歲</th>
                                         <th scope="col">41-50歲</th>
+                                        <th scope="col">51-60歲</th>
                                         <th scope="col">&gt;60歲</th>
                                     </tr>
                                 </thead>
@@ -2251,6 +2399,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                                     <th>{item.dataset.twentyOneToThirty}</th>
                                                     <th>{item.dataset.thirtyOneToforty}</th>
                                                     <th>{item.dataset.fortyOneTofifty}</th>
+                                                    <th>{item.dataset.fiftyOneToSixty}</th>
                                                     <th>{item.dataset.greaterThanSixty}</th>
                                                 </tr>
                                             )
@@ -2263,6 +2412,17 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12 byYearFinancialLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2278,6 +2438,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearFinancialBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2330,6 +2493,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                         <th scope="col">21-30歲</th>
                                         <th scope="col">31-40歲</th>
                                         <th scope="col">41-50歲</th>
+                                        <th scope="col">51-60歲</th>
                                         <th scope="col">&gt;60歲</th>
                                     </tr>
                                 </thead>
@@ -2344,6 +2508,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                                     <th>{item.dataset.twentyOneToThirty}</th>
                                                     <th>{item.dataset.thirtyOneToforty}</th>
                                                     <th>{item.dataset.fortyOneTofifty}</th>
+                                                    <th>{item.dataset.fiftyOneToSixty}</th>
                                                     <th>{item.dataset.greaterThanSixty}</th>
                                                 </tr>
                                             )
@@ -2356,6 +2521,18 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
 
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2371,6 +2548,9 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearCalendarBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2402,6 +2582,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2410,7 +2591,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                         服務使用者意外 - 年齡統計
                                     </div>
                                 </div>
-                                <div className="">
+                                <div className="nonBarChart">
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
@@ -2431,6 +2612,7 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                 </div>
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2439,24 +2621,26 @@ function ServiceUserAccidentAge(siteCollectionUrl) {
                                         服務使用者意外 - 年齡統計
                                     </div>
                                 </div>
-                                <Chart
-                                    chartType={"PieChart"}
-                                    width={'100%'}
-                                    height={'400px'}
-                                    loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
-                                    data={
-                                        [
-                                            ["年齡", '年齡'],
-                                            ["<15歲", ageDataset.lessThanFifteen],
-                                            ["15-20歲", ageDataset.fifteenToTwenty],
-                                            ["21-30歲", ageDataset.twentyOneToThirty],
-                                            ["31-40歲", ageDataset.thirtyOneToforty],
-                                            ["41-50歲", ageDataset.fortyOneTofifty],
-                                            ["51-60歲", ageDataset.fiftyOneToSixty],
-                                            [">60歲", ageDataset.greaterThanSixty],
-                                        ]
-                                    }
-                                />
+                                <div className="nonPieChart">
+                                    <Chart
+                                        chartType={"PieChart"}
+                                        width={'100%'}
+                                        height={'400px'}
+                                        loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        data={
+                                            [
+                                                ["年齡", '年齡'],
+                                                ["<15歲", ageDataset.lessThanFifteen],
+                                                ["15-20歲", ageDataset.fifteenToTwenty],
+                                                ["21-30歲", ageDataset.twentyOneToThirty],
+                                                ["31-40歲", ageDataset.thirtyOneToforty],
+                                                ["41-50歲", ageDataset.fortyOneTofifty],
+                                                ["51-60歲", ageDataset.fiftyOneToSixty],
+                                                [">60歲", ageDataset.greaterThanSixty],
+                                            ]
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </React.Fragment>

@@ -8,6 +8,8 @@ import Chart from "react-google-charts";
 import { useServiceUserStats } from '../../../hooks/useServiceUserStats';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
+import html2canvas from 'html2canvas';
+import downloadjs from 'downloadjs';
 interface IDataset {
     mild: number;
     moderate: number;
@@ -784,6 +786,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -793,7 +796,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthFinancialLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -809,6 +812,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -888,6 +894,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -897,7 +904,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthFinancialLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -913,6 +920,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -991,6 +1001,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1000,7 +1011,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthFinancialLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1016,6 +1027,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1094,6 +1108,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1103,7 +1118,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthFinancialLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1119,6 +1134,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1197,6 +1215,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1206,7 +1225,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthFinancialLineChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1222,6 +1241,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1322,6 +1344,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1331,7 +1354,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthCalendarLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1347,6 +1370,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1424,6 +1450,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1433,7 +1460,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthCalendarLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1449,6 +1476,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1526,6 +1556,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1535,7 +1566,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthCalendarLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1551,6 +1582,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1628,6 +1662,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>   
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1637,7 +1672,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthCalendarLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1653,6 +1688,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1730,6 +1768,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1739,7 +1778,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byMonthCalendarLineChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1755,6 +1794,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1829,6 +1871,17 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
 
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12 byYearFinancialLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1844,6 +1897,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearFinancialBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1917,6 +1973,18 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                新發生意外或事故總數
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1932,6 +2000,9 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearCalendarBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1961,6 +2032,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button> 
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1969,7 +2041,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                         新發生意外或事故總數
                                     </div>
                                 </div>
-                                <div className="">
+                                <div className="nonBarChart">
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
@@ -1988,6 +2060,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </div>
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1996,22 +2069,24 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                         新發生意外或事故總數
                                     </div>
                                 </div>
-                                <Chart
-                                    chartType={"PieChart"}
-                                    width={'100%'}
-                                    height={'400px'}
-                                    loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
-                                    data={
-                                        [
-                                            ["智力障礙程度", "數量"],
-                                            ["輕度", intelligenceDataset.mild],
-                                            ["中度", intelligenceDataset.moderate],
-                                            ["嚴重", intelligenceDataset.severe],
-                                            ["極度嚴重", intelligenceDataset.extremeSevere],
-                                            ["不知", intelligenceDataset.unknown]
-                                        ]
-                                    }
-                                />
+                                <div className="nonPieChart">
+                                    <Chart
+                                        chartType={"PieChart"}
+                                        width={'100%'}
+                                        height={'400px'}
+                                        loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        data={
+                                            [
+                                                ["智力障礙程度", "數量"],
+                                                ["輕度", intelligenceDataset.mild],
+                                                ["中度", intelligenceDataset.moderate],
+                                                ["嚴重", intelligenceDataset.severe],
+                                                ["極度嚴重", intelligenceDataset.extremeSevere],
+                                                ["不知", intelligenceDataset.unknown]
+                                            ]
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </React.Fragment>
@@ -2023,7 +2098,18 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                 let newWidth = (200 * months) + 200;
                 return (
                     <div className="row">
-                        <div className="col-12" style={{overflow:'auto'}}>
+                        <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                    新發生意外或事故總數 (每月總數)
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <Chart
                                 width={newWidth}
                                 height={400}
@@ -2097,6 +2183,14 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
         }
     }, [groupBy, data])
 
+    const downloadScreenshot = async(className) => {
+        
+        let chart = (document.querySelector("."+className) as HTMLElement);
+        const canvas = await html2canvas(chart);
+        const dataURL = canvas.toDataURL('image/png');
+        downloadjs(dataURL, 'download.png', 'image/png');
+    }
+    
     return (
         <div>
             <div className="row mb-3">

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from "react";
 import { useState, useEffect } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,6 +10,10 @@ import { getCurrentFinancialYear } from '../../../utils/CaseNumberParser';
 import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
 import * as copy from 'copy-to-clipboard';
+
+import html2canvas from 'html2canvas';
+import downloadjs from 'downloadjs';
+
 interface IDataset {
     sui: number;
     pui: number;
@@ -587,6 +591,7 @@ function General(siteCollectionUrl) {
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
     const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useGeneralStats();
     const [unitDataset, setUnitDataset] = useState<IDataset>(initialDataset);
+    const ref = React.useRef();
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -698,6 +703,17 @@ function General(siteCollectionUrl) {
         }
     }, [groupBy, data])
 
+
+    const downloadScreenshot = async(className) => {
+        
+        let chart = (document.querySelector("."+className) as HTMLElement);
+        const canvas = await html2canvas(chart);
+        const dataURL = canvas.toDataURL('image/png');
+        downloadjs(dataURL, 'download.png', 'image/png');
+    }
+
+
+      
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
         
@@ -863,6 +879,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -872,7 +889,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -888,6 +905,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -965,6 +985,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -974,7 +995,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -990,6 +1011,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1066,6 +1090,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1075,7 +1100,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1091,6 +1116,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1167,6 +1195,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1176,7 +1205,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1192,6 +1221,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1268,6 +1300,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1277,7 +1310,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthFinancialLineChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1293,6 +1326,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthFinancialBarChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1396,6 +1432,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1405,7 +1442,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthCalendarLineChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1421,6 +1458,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart1">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1497,6 +1537,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1506,7 +1547,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthCalendarLineChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1522,6 +1563,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart2">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1598,6 +1642,7 @@ function General(siteCollectionUrl) {
                         <hr/>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1607,7 +1652,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthCalendarLineChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1623,6 +1668,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart3">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1700,6 +1748,7 @@ function General(siteCollectionUrl) {
                         <div className="row">
                             <div className="col-12">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                    <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
@@ -1708,7 +1757,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthCalendarLineChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1724,6 +1773,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart4">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1799,6 +1851,7 @@ function General(siteCollectionUrl) {
                         </div>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1808,7 +1861,7 @@ function General(siteCollectionUrl) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12">
+                            <div className="col-12 byMonthCalendarLineChart5">
                                 <Chart
                                     width={'00%'}
                                     height={'400px'}
@@ -1824,6 +1877,9 @@ function General(siteCollectionUrl) {
                                 />
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                            </div>
+                            <div className="col-12 byMonthCalendarBarChart5">
                                 <Chart
                                     width={'100%'}
                                     height={'400px'}
@@ -1898,6 +1954,7 @@ function General(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1907,7 +1964,7 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byYearFinancialLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1923,6 +1980,9 @@ function General(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearFinancialBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1999,6 +2059,7 @@ function General(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2008,7 +2069,7 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2024,6 +2085,9 @@ function General(siteCollectionUrl) {
                             />
                         </div>
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearCalendarBarChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2037,7 +2101,6 @@ function General(siteCollectionUrl) {
                                         subtitle: '新發生意外或事故總數',
                                     },
                                 }}
-
                             />
                         </div>
                     </div>
@@ -2054,6 +2117,7 @@ function General(siteCollectionUrl) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2062,7 +2126,7 @@ function General(siteCollectionUrl) {
                                         新發生意外或事故總數
                                     </div>
                                 </div>
-                                <div className="">
+                                <div className="nonBarChart">
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
@@ -2081,6 +2145,7 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                             <div className="col-12">
+                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                     <div className="">
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2089,22 +2154,24 @@ function General(siteCollectionUrl) {
                                         新發生意外或事故總數
                                     </div>
                                 </div>
-                                <Chart
-                                    chartType={"PieChart"}
-                                    width={'100%'}
-                                    height={'400px'}
-                                    loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
-                                    data={
-                                        [
-                                            ["服務單位", '數量'],
-                                            ["服務使用者意外", unitDataset.sui],
-                                            ["外界人士意外", unitDataset.pui],
-                                            ["特別事故(牌照事務處)", unitDataset.sih],
-                                            ["特別事故(津貼科)", unitDataset.sid],
-                                            ["其他事故", unitDataset.oin]
-                                        ]
-                                    }
-                                />
+                                <div className="nonPieChart">
+                                    <Chart
+                                        chartType={"PieChart"}
+                                        width={'100%'}
+                                        height={'400px'}
+                                        loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        data={
+                                            [
+                                                ["服務單位", '數量'],
+                                                ["服務使用者意外", unitDataset.sui],
+                                                ["外界人士意外", unitDataset.pui],
+                                                ["特別事故(牌照事務處)", unitDataset.sih],
+                                                ["特別事故(津貼科)", unitDataset.sid],
+                                                ["其他事故", unitDataset.oin]
+                                            ]
+                                        }
+                                    />
+                                </div>
                             </div>
                         </div>
                     </React.Fragment>
@@ -2118,6 +2185,7 @@ function General(siteCollectionUrl) {
 
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2127,7 +2195,7 @@ function General(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-12" style={{overflow:'auto'}}>
+                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <Chart
                                 width={newWidth}
                                 height={400}
@@ -2218,7 +2286,7 @@ function General(siteCollectionUrl) {
                 {statsTableSwitch()}
                 {/* <BootstrapTable boot keyField='id' data={[]} columns={columns()} pagination={paginationFactory()} bootstrap4={true} /> */}
             </div>
-            <div className="">
+            <div className="" >
                 {chartSwitch()}
             </div>
         </div>

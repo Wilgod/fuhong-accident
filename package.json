@@ -29,8 +29,10 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^3.6.2",
     "copy-to-clipboard": "^3.3.1",
+    "downloadjs": "^1.4.7",
     "file-saver": "^2.0.5",
     "html-docx-js-typescript": "^0.1.5",
+    "html2canvas": "^1.4.1",
     "moment": "^2.29.1",
     "office-ui-fabric-react": "6.214.0",
     "react": "16.8.5",
@@ -47,6 +49,7 @@
     "react-textarea-autosize": "^8.3.3",
     "save-as": "^0.1.8",
     "styled-components": "^5.3.0",
+    "use-react-screenshot": "^3.0.0",
     "xlsx": "^0.14.2",
     "xlsx-style": "^0.8.13"
   },
