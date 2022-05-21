@@ -14,17 +14,31 @@ import downloadjs from 'downloadjs';
 
 //Age interval
 interface IDataset {
-    accidentCategoryIncidentGeneral: number;
-    accidentCategorySuicude: number;
-    accidentCategoryOther: number;
-    accidentCategoryCourt: number;
+    //accidentCategoryIncidentGeneral: number;
+    //accidentCategorySuicude: number;
+    //accidentCategoryOther: number;
+    //accidentCategoryCourt: number;
+    unusalIncident: number;
+    residentMissing: number;
+    residentAbuse:number;
+    conflict:number;
+    medicalIncident:number;
+    otherIncident:number;
+    other:number;
 }
 
 const initialDataset: IDataset = {
-    accidentCategoryIncidentGeneral: 0,
-    accidentCategorySuicude: 0,
-    accidentCategoryOther: 0,
-    accidentCategoryCourt: 0
+    //accidentCategoryIncidentGeneral: 0,
+    //accidentCategorySuicude: 0,
+    //accidentCategoryOther: 0,
+    //accidentCategoryCourt: 0
+    unusalIncident: 0,
+    residentMissing: 0,
+    residentAbuse:0,
+    conflict:0,
+    medicalIncident:0,
+    otherIncident:0,
+    other:0,
 }
 
 const initialDatasetMonth: IMonth = {
@@ -179,48 +193,66 @@ const normalChartParser = (result) =>{
 
 const financialChartParser = (result) =>{
     let dataResult = ['Year'];
-    let accidentCategoryIncidentGeneral =['在院舍內發生事故及送院後死亡'];
-    let accidentCategorySuicude =['在院舍內自殺及送院後死亡'];
-    let accidentCategoryOther =['其他不尋常死亡／事故'];
-    let accidentCategoryCourt =['接獲死因裁判法庭要求出庭的傳票'];
+    let unusalIncident =['嚴重受傷/死亡'];
+    let residentMissing =['失蹤'];
+    let residentAbuse =['虐待／被侵犯私隱'];
+    let conflict =['爭執事件'];
+    let medicalIncident =['嚴重醫療／藥物事故'];
+    let otherIncident =['其他重大特別事故'];
+    let other =['其他'];
     result.map((item) => {
         dataResult.push(item.financialYear);
-        accidentCategoryIncidentGeneral.push(item.dataset['accidentCategoryIncidentGeneral']);
-        accidentCategorySuicude.push(item.dataset['accidentCategorySuicude']);
-        accidentCategoryOther.push(item.dataset['accidentCategoryOther']);
-        accidentCategoryCourt.push(item.dataset['accidentCategoryCourt']);
+        unusalIncident.push(item.dataset['unusalIncident']);
+        residentMissing.push(item.dataset['residentMissing']);
+        residentAbuse.push(item.dataset['residentAbuse']);
+        conflict.push(item.dataset['conflict']);
+        medicalIncident.push(item.dataset['medicalIncident']);
+        otherIncident.push(item.dataset['otherIncident']);
+        other.push(item.dataset['other']);
     });
     let data=[
         dataResult,
-        accidentCategoryIncidentGeneral,
-        accidentCategorySuicude,
-        accidentCategoryOther,
-        accidentCategoryCourt
+        unusalIncident,
+        residentMissing,
+        residentAbuse,
+        conflict,
+        medicalIncident,
+        otherIncident,
+        other
     ];
     return data;
 }
 
 const yearChartParser = (result) =>{
     let dataResult = ['Year'];
-    let accidentCategoryIncidentGeneral =['在院舍內發生事故及送院後死亡'];
-    let accidentCategorySuicude =['在院舍內自殺及送院後死亡'];
-    let accidentCategoryOther =['其他不尋常死亡／事故'];
-    let accidentCategoryCourt =['接獲死因裁判法庭要求出庭的傳票'];
+    let unusalIncident =['嚴重受傷/死亡'];
+    let residentMissing =['失蹤'];
+    let residentAbuse =['虐待／被侵犯私隱'];
+    let conflict =['爭執事件'];
+    let medicalIncident =['嚴重醫療／藥物事故'];
+    let otherIncident =['其他重大特別事故'];
+    let other =['其他'];
 
     result.map((item) => {
         dataResult.push(item.year.toString());
-        accidentCategoryIncidentGeneral.push(item.dataset['accidentCategoryIncidentGeneral']);
-        accidentCategorySuicude.push(item.dataset['accidentCategorySuicude']);
-        accidentCategoryOther.push(item.dataset['accidentCategoryOther']);
-        accidentCategoryCourt.push(item.dataset['accidentCategoryCourt']);
+        unusalIncident.push(item.dataset['unusalIncident']);
+        residentMissing.push(item.dataset['residentMissing']);
+        residentAbuse.push(item.dataset['residentAbuse']);
+        conflict.push(item.dataset['conflict']);
+        medicalIncident.push(item.dataset['medicalIncident']);
+        otherIncident.push(item.dataset['otherIncident']);
+        other.push(item.dataset['other']);
        
     });
     let data=[
         dataResult,
-        accidentCategoryIncidentGeneral,
-        accidentCategorySuicude,
-        accidentCategoryOther,
-        accidentCategoryCourt
+        unusalIncident,
+        residentMissing,
+        residentAbuse,
+        conflict,
+        medicalIncident,
+        otherIncident,
+        other
     ];
     return data;
 }
@@ -285,33 +317,50 @@ const monthDiff = (d1: Date, d2: Date) => {
         console.error(err);
     }
 }
-
-const categoryFilter = (type: string, dataset: IDataset): IDataset => {
+const categoryFilter = (unusalIncident: string,residentMissing:string, ra:boolean, conflict:string, medicalIncident:string, otherIncident:string, other:string, dataset: IDataset): IDataset => {
     let result = dataset;
-    debugger
-    switch (type) {
-        case "UNUSAL_INCIDENT_GENERAL":
-            result.accidentCategoryIncidentGeneral += 1;
-            return result;
-        case "UNUSAL_INCIDENT_SUICIDE":
-            result.accidentCategorySuicude += 1;
-            return result;
-        case "UNUSAL_INCIDENT_OTHER":
-            result.accidentCategoryOther += 1;
-            return result;
-        case "UNUSAL_INCIDENT_COURT":
-            result.accidentCategoryCourt += 1;
-            return result;
-        default: return result;
+    console.log('residentMissing:',residentMissing)
+    if (residentMissing == 'RESIDENT_MISSING_INSIDE') {
+        debugger
     }
+    if (unusalIncident == "UNUSAL_INCIDENT_GENERAL" || unusalIncident == "UNUSAL_INCIDENT_SUICIDE" || unusalIncident == "UNUSAL_INCIDENT_OTHER" || unusalIncident == "UNUSAL_INCIDENT_COURT") {
+        result.unusalIncident += 1;
+    }
+    if (residentMissing == "RESIDENT_MISSING_INSIDE" || residentMissing == "RESIDENT_MISSING_OUTSIDE" || residentMissing == "RESIDENT_MISSING_REASON_VACATION" || residentMissing == "RESIDENT_MISSING_REASON_VOLUNTARILY" ||
+        residentMissing == "RESIDENT_MISSING_REASON_HOME_OUT") {
+        result.residentMissing += 1;
+    }
+    if (ra) {
+        result.residentAbuse += 1;
+    }
+    if (conflict == "DISPUTE_POLICE_TENANT_AND_TENANT" || conflict == "DISPUTE_POLICE_TENANT_AND_STAFF" || conflict == "DISPUTE_POLICE_TENANT_AND_GUEST" ||
+        conflict == "DISPUTE_POLICE_STAFF_AND_STAFF" || conflict == "DISPUTE_POLICE_STAFF_AND_GUEST" || conflict == "DISPUTE_POLICE_GUEST_AND_GUEST" ||
+        conflict == "DISPUTE_POLICE_OTHER") {
+        result.conflict += 1;
+    }
+    if (medicalIncident == "SERIOUS_MEDICAL_INCIDENT_MISTAKE" || medicalIncident == "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" || medicalIncident == "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" ||
+        medicalIncident == "SERIOUS_MEDICAL_INCIDENT_OTHER") {
+        result.medicalIncident += 1;
+    }
+    if (otherIncident == "OTHER_INCIDENT_POWER_SUPPLY" || otherIncident == "OTHER_INCIDENT_BUILDING" || otherIncident == "OTHER_INCIDENT_FIRE" ||
+        otherIncident == "OTHER_INCIDENT_WATER_SUPPLY" || otherIncident == "OTHER_INCIDENT_OTHER") {
+        result.otherIncident += 1;
+    }
+    if (other) {
+        result.other += 1;
+    }
+    return result;
 }
 
 const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
+    debugger
     serviceUserAge.forEach((item) => {
-        if (item.UnusalIncident) {
-            dataset = categoryFilter(item.UnusalIncident, dataset);
+        let ra = false;
+        if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {
+            ra = true;
         }
+        dataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, dataset);
     });
     return dataset;
 }
@@ -357,12 +406,16 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
                 const formType: string = item.CaseNumber.split("-")[0];
                 const date = new Date(item.AccidentTime || item.IncidentTime || item.Created);
                 const formattedDate = moment(date).format("MM/yyyy");
+                let ra = false;
+                if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {
+                    ra = true;
+                }
                 if (m.has(formattedDate)) {
                     let oldDataset = m.get(formattedDate);
-                    let newDataset = categoryFilter(item.UnusalIncident, oldDataset);
+                    let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, oldDataset);
                     m.set(formattedDate, newDataset);
                 } else {
-                    let newDataset = categoryFilter(item.UnusalIncident, { ...initialDataset });
+                    let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, { ...initialDataset });
                     m.set(formattedDate, newDataset);
                 }
             }
@@ -478,16 +531,19 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime || item.Created);
         if (d) {
-
+            let ra = false;
+            if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {
+                ra = true;
+            }
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {
 
                 let oldDataset = m.get(currentFinicailYear);
-                let newDataset = categoryFilter(item.UnusalIncident, oldDataset);
+                let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, oldDataset);
                 m.set(currentFinicailYear, newDataset);
 
             } else {
-                let newDataset = categoryFilter(item.UnusalIncident, { ...initialDataset });
+                let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, { ...initialDataset });
                 m.set(currentFinicailYear, newDataset);
             }
         }
@@ -531,13 +587,16 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
             const year = new Date(item.AccidentTime || item.IncidentTime || item.Created).getFullYear().toString();
             const month = new Date(item.AccidentTime || item.IncidentTime || item.Created).getMonth() + 1;
-
+            let ra = false;
+            if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {
+                ra = true;
+            }
             if (m.has(year)) {
                 let oldDataset = m.get(year);
-                let newDataset = categoryFilter(item.UnusalIncident, oldDataset);
+                let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, oldDataset);
                 m.set(year, newDataset);
             } else {
-                let newDataset = categoryFilter(item.UnusalIncident, { ...initialDataset });
+                let newDataset = categoryFilter(item.UnusalIncident,item.ResidentMissing,ra,item.Conflict, item.MedicalIncident,item.OtherIncident,item.Other, { ...initialDataset });
                 m.set(year, newDataset);
             }
         }
@@ -596,20 +655,32 @@ function LicenseCategory(siteCollectionUrl) {
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">在院舍內發生事故及送院後死亡</th>
-                        <th>{categoryDataset.accidentCategoryIncidentGeneral}</th>
+                        <th scope="row">嚴重受傷/死亡</th>
+                        <th>{categoryDataset.unusalIncident}</th>
                     </tr>
                     <tr>
-                        <th scope="row">在院舍內自殺及送院後死亡</th>
-                        <th>{categoryDataset.accidentCategorySuicude}</th>
+                        <th scope="row">失蹤</th>
+                        <th>{categoryDataset.residentMissing}</th>
                     </tr>
                     <tr>
-                        <th scope="row">其他不尋常死亡／事故</th>
-                        <th>{categoryDataset.accidentCategoryOther}</th>
+                        <th scope="row">虐待／被侵犯私隱</th>
+                        <th>{categoryDataset.residentAbuse}</th>
                     </tr>
                     <tr>
-                        <th scope="row">接獲死因裁判法庭要求出庭的傳票</th>
-                        <th>{categoryDataset.accidentCategoryCourt}</th>
+                        <th scope="row">爭執事件</th>
+                        <th>{categoryDataset.conflict}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">嚴重醫療／藥物事故</th>
+                        <th>{categoryDataset.medicalIncident}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">其他重大特別事故</th>
+                        <th>{categoryDataset.otherIncident}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">其他</th>
+                        <th>{categoryDataset.other}</th>
                     </tr>
                 </tbody>
             </table >
@@ -706,10 +777,13 @@ function LicenseCategory(siteCollectionUrl) {
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">在院舍內發生事故及送院後死亡</th>
-                                            <th scope="col">在院舍內自殺及送院後死亡</th>
-                                            <th scope="col">其他不尋常死亡／事故</th>
-                                            <th scope="col">接獲死因裁判法庭要求出庭的傳票</th>
+                                            <th scope="col">嚴重受傷/死亡</th>
+                                            <th scope="col">失蹤</th>
+                                            <th scope="col">虐待／被侵犯私隱</th>
+                                            <th scope="col">爭執事件</th>
+                                            <th scope="col">嚴重醫療／藥物事故</th>
+                                            <th scope="col">其他重大特別事故</th>
+                                            <th scope="col">其他</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -717,21 +791,26 @@ function LicenseCategory(siteCollectionUrl) {
                                             return (
                                                 <tr>
                                                     <th scope="row">{item.month}</th>
-                                                    <td>{item.dataset.accidentCategoryIncidentGeneral}</td>
-                                                    <td>{item.dataset.accidentCategorySuicude}</td>
-                                                    <td>{item.dataset.accidentCategoryOther}</td>
-                                                    <td>{item.dataset.accidentCategoryCourt}</td>
-
+                                                    <td>{item.dataset.unusalIncident}</td>
+                                                    <td>{item.dataset.residentMissing}</td>
+                                                    <td>{item.dataset.residentAbuse}</td>
+                                                    <td>{item.dataset.conflict}</td>
+                                                    <td>{item.dataset.medicalIncident}</td>
+                                                    <td>{item.dataset.otherIncident}</td>
+                                                    <td>{item.dataset.other}</td>
                                                 </tr>
                                             )
                                         })}
                                         {
                                             <tr style={{ color: "red" }}>
                                                 <th scope="row">總數</th>
-                                                <td>{categoryDataset.accidentCategoryIncidentGeneral}</td>
-                                                <td>{categoryDataset.accidentCategorySuicude}</td>
-                                                <td>{categoryDataset.accidentCategoryOther}</td>
-                                                <td>{categoryDataset.accidentCategoryCourt}</td>
+                                                <td>{categoryDataset.unusalIncident}</td>
+                                                <td>{categoryDataset.residentMissing}</td>
+                                                <td>{categoryDataset.residentAbuse}</td>
+                                                <td>{categoryDataset.conflict}</td>
+                                                <td>{categoryDataset.medicalIncident}</td>
+                                                <td>{categoryDataset.otherIncident}</td>
+                                                <td>{categoryDataset.other}</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -1661,10 +1740,13 @@ function LicenseCategory(siteCollectionUrl) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">在院舍內發生事故及送院後死亡</th>
-                                        <th scope="col">在院舍內自殺及送院後死亡</th>
-                                        <th scope="col">其他不尋常死亡／事故</th>
-                                        <th scope="col">接獲死因裁判法庭要求出庭的傳票</th>
+                                        <th scope="col">嚴重受傷/死亡</th>
+                                        <th scope="col">失蹤</th>
+                                        <th scope="col">虐待／被侵犯私隱</th>
+                                        <th scope="col">爭執事件</th>
+                                        <th scope="col">嚴重醫療／藥物事故</th>
+                                        <th scope="col">其他重大特別事故</th>
+                                        <th scope="col">其他</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1672,20 +1754,26 @@ function LicenseCategory(siteCollectionUrl) {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.financialYear}</th>
-                                                <td>{item.dataset.accidentCategoryIncidentGeneral}</td>
-                                                <td>{item.dataset.accidentCategorySuicude}</td>
-                                                <td>{item.dataset.accidentCategoryOther}</td>
-                                                <td>{item.dataset.accidentCategoryCourt}</td>
+                                                <td>{item.dataset.unusalIncident}</td>
+                                                <td>{item.dataset.residentMissing}</td>
+                                                <td>{item.dataset.residentAbuse}</td>
+                                                <td>{item.dataset.conflict}</td>
+                                                <td>{item.dataset.medicalIncident}</td>
+                                                <td>{item.dataset.otherIncident}</td>
+                                                <td>{item.dataset.other}</td>
                                             </tr>
                                         )
                                     })}
                                     {
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
-                                            <td>{categoryDataset.accidentCategoryIncidentGeneral}</td>
-                                            <td>{categoryDataset.accidentCategorySuicude}</td>
-                                            <td>{categoryDataset.accidentCategoryOther}</td>
-                                            <td>{categoryDataset.accidentCategoryCourt}</td>
+                                            <td>{categoryDataset.unusalIncident}</td>
+                                            <td>{categoryDataset.residentMissing}</td>
+                                            <td>{categoryDataset.residentAbuse}</td>
+                                            <td>{categoryDataset.conflict}</td>
+                                            <td>{categoryDataset.medicalIncident}</td>
+                                            <td>{categoryDataset.otherIncident}</td>
+                                            <td>{categoryDataset.other}</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -1770,10 +1858,13 @@ function LicenseCategory(siteCollectionUrl) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">在院舍內發生事故及送院後死亡</th>
-                                        <th scope="col">在院舍內自殺及送院後死亡</th>
-                                        <th scope="col">其他不尋常死亡／事故</th>
-                                        <th scope="col">接獲死因裁判法庭要求出庭的傳票</th>
+                                        <th scope="col">嚴重受傷/死亡</th>
+                                        <th scope="col">失蹤</th>
+                                        <th scope="col">虐待／被侵犯私隱</th>
+                                        <th scope="col">爭執事件</th>
+                                        <th scope="col">嚴重醫療／藥物事故</th>
+                                        <th scope="col">其他重大特別事故</th>
+                                        <th scope="col">其他</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1781,10 +1872,13 @@ function LicenseCategory(siteCollectionUrl) {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
-                                                <td>{item.dataset.accidentCategoryIncidentGeneral}</td>
-                                                <td>{item.dataset.accidentCategorySuicude}</td>
-                                                <td>{item.dataset.accidentCategoryOther}</td>
-                                                <td>{item.dataset.accidentCategoryCourt}</td>
+                                                <td>{item.dataset.unusalIncident}</td>
+                                                <td>{item.dataset.residentMissing}</td>
+                                                <td>{item.dataset.residentAbuse}</td>
+                                                <td>{item.dataset.conflict}</td>
+                                                <td>{item.dataset.medicalIncident}</td>
+                                                <td>{item.dataset.otherIncident}</td>
+                                                <td>{item.dataset.other}</td>
                                             </tr>
                                         )
                                     })}
@@ -1872,10 +1966,13 @@ function LicenseCategory(siteCollectionUrl) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["事故類別", "數量"],
-                                            ["在院舍內發生事故及送院後死亡", categoryDataset.accidentCategoryIncidentGeneral],
-                                            ["在院舍內自殺及送院後死亡", categoryDataset.accidentCategorySuicude],
-                                            ["其他不尋常死亡／事故", categoryDataset.accidentCategoryOther],
-                                            ["接獲死因裁判法庭要求出庭的傳票", categoryDataset.accidentCategoryCourt]
+                                            ["嚴重受傷/死亡", categoryDataset.unusalIncident],
+                                            ["失蹤", categoryDataset.residentMissing],
+                                            ["虐待／被侵犯私隱", categoryDataset.residentAbuse],
+                                            ["爭執事件", categoryDataset.conflict],
+                                            ["嚴重醫療／藥物事故", categoryDataset.medicalIncident],
+                                            ["其他重大特別事故", categoryDataset.otherIncident],
+                                            ["其他", categoryDataset.other]
                                         ]}
                                     />
 
@@ -1899,10 +1996,13 @@ function LicenseCategory(siteCollectionUrl) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["事故類別", "數量"],
-                                            ["在院舍內發生事故及送院後死亡", categoryDataset.accidentCategoryIncidentGeneral],
-                                            ["在院舍內自殺及送院後死亡", categoryDataset.accidentCategorySuicude],
-                                            ["其他不尋常死亡／事故", categoryDataset.accidentCategoryOther],
-                                            ["接獲死因裁判法庭要求出庭的傳票", categoryDataset.accidentCategoryCourt]
+                                            ["嚴重受傷/死亡", categoryDataset.unusalIncident],
+                                            ["失蹤", categoryDataset.residentMissing],
+                                            ["虐待／被侵犯私隱", categoryDataset.residentAbuse],
+                                            ["爭執事件", categoryDataset.conflict],
+                                            ["嚴重醫療／藥物事故", categoryDataset.medicalIncident],
+                                            ["其他重大特別事故", categoryDataset.otherIncident],
+                                            ["其他", categoryDataset.other]
                                         ]}
                                     />
                                 </div>
@@ -1936,9 +2036,9 @@ function LicenseCategory(siteCollectionUrl) {
                                 chartType="ColumnChart"
                                 loader={<div>Loading Chart</div>}
                                 data={
-                                    [['月份', '在院舍內發生事故及送院後死亡', '在院舍內自殺及送院後死亡', '其他不尋常死亡／事故', '接獲死因裁判法庭要求出庭的傳票'],
+                                    [['月份', '嚴重受傷/死亡', '失蹤', '虐待／被侵犯私隱', '爭執事件', '嚴重醫療／藥物事故', '其他重大特別事故', '其他',],
                                     ...sampleTwoParser(data, startDate, endDate).map((item) => {
-                                        return [item.month, item.dataset.accidentCategoryIncidentGeneral, item.dataset.accidentCategorySuicude, item.dataset.accidentCategoryOther, item.dataset.accidentCategoryCourt]
+                                        return [item.month, item.dataset.unusalIncident, item.dataset.residentMissing, item.dataset.residentAbuse, item.dataset.conflict, item.dataset.medicalIncident, item.dataset.otherIncident, item.dataset.other]
                                     })]
                                 }
                             />
