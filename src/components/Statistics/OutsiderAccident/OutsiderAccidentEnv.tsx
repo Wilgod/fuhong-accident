@@ -251,7 +251,6 @@ const monthDiff = (d1: Date, d2: Date) => {
 
 
 const envFactorFilter = (item: any, dataset: IDataset): IDataset => {
-    debugger
     let result = dataset;
     if (item.EnvSlipperyGround === true) {
         result.envSlipperyGround += 1;
@@ -3292,7 +3291,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                             ["聲響刺激", envFactorDataset.envAcousticStimulation],
                                             ["被別人碰撞", envFactorDataset.envCollidedByOthers],
                                             ["被別人傷害", envFactorDataset.envHurtByOthers],
-                                            ["輔助器材使用不當 (如輪椅／便椅未上鎖)", envFactorDataset.envImproperEquip],
+                                            ["輔助器材使用不當", envFactorDataset.envImproperEquip],
                                             ["其他", envFactorDataset.envOther],
                                         ]}
                                     />

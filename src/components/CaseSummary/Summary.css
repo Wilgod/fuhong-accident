@@ -1,7 +1,6 @@
-.summary .react-bootstrap-table {
+.react-bootstrap-table {
     overflow: scroll;
     display: block;
     table-layout: auto;
     width:100%
 }
-

@@ -2063,6 +2063,7 @@ function AllowanceCategory(siteCollectionUrl) {
                                 </div>
                             </div>
                         </div>
+                        
                         <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
@@ -2137,6 +2138,12 @@ function AllowanceCategory(siteCollectionUrl) {
                                             ["爭執以致有人身體受傷而需要報警求助", categoryDataset.accidentCategoryConflict],
                                             ["其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注", categoryDataset.accidentCategoryOther],
                                         ]}
+                                        options={{
+                                            chart: {
+                                                title: '日曆年度',
+                                                subtitle: '特別事故類別統計(每年總數)',
+                                            },
+                                        }}
                                     />
 
                                 </div>
