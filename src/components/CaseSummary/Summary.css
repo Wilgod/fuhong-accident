@@ -4,3 +4,9 @@
     table-layout: auto;
     width:100%
 }
+
+
+table thead th {
+    background: #6c757d;
+    color:white;
+}

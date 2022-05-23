@@ -47,11 +47,13 @@ const columns = (context) => {
         {
             dataField: 'CaseNumber',
             text: '檔案編號',
-            sort: true
+            sort: true,
+            headerStyle: {width:'150px'}
         },
         {
             dataField: 'AccidentTime',
             text: '發生日期',
+            headerStyle: {width:'100px'},
             formatter: (value, data) => {
                 let date = value;
                 if (data.AccidentTime) {
@@ -88,12 +90,14 @@ const columns = (context) => {
         {
             dataField: 'ServiceLocationTC',
             text: '服務單位',
-            sort: true
+            sort: true,
+            headerStyle: {width:'150px'}
         },
         {
             dataField: 'CaseNumber',
             text: '意外/事故',
             sort: true,
+            headerStyle: {width:'130px'},
             formatter: (value, data) => {
                 if (value) {
                     const [caseType] = value.split("-");
@@ -102,13 +106,15 @@ const columns = (context) => {
             }
         },
         {
-            dataField: 'Status',
+            dataField: 'StatusTC',
             text: '狀態',
+            headerStyle: {width:'180px'},
             sort: true
         },
         {
             dataField: 'Modified',
             text: '最後更新報告',
+            headerStyle: {width:'130px'},
             formatter: (value, data) => {
                 return <div> {moment(new Date(value)).format("YYYY-MM-DD")}</div>
             },
@@ -127,6 +133,7 @@ const columns = (context) => {
         {
             dataField: 'NextDeadline',
             text: '下個報告到期日',
+            headerStyle: {width:'140px'},
             formatter: (value, data) => {
                 if (data && (data.Status === "CLOSED" || data.Status === "DRAFT")) {
                     return <div>沒有</div>
@@ -157,6 +164,7 @@ const columns = (context) => {
         {
             dataField: 'Id',
             text: '[按鈕]',
+            headerStyle: {width:'100px'},
             formatter: (value, data) => {
                 let formLink = "";
                 if (data && data.CaseNumber) {

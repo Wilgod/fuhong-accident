@@ -608,7 +608,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                 </div>
                 <div className="row">
                   <div className="col-10">
-                    <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" value={this.state.tempKeyword} onChange={(event) => this.setState({ tempKeyword: event.target.value })} />
+                    <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" value={this.state.searchKeyword} onChange={(event) => this.setState({ searchKeyword: event.target.value })} />
                   </div>
                   <div className="col">
                     <button type="button" className="btn btn-primary" onClick={() => this.searchResult()}>搜尋</button>

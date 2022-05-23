@@ -34,15 +34,28 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1 || searchCriteria.formTypes.indexOf("SID") > -1 || searchCriteria.formTypes.indexOf("OIN") > -1) {
             incidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         }
-        
+        debugger
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
-            for (let item of serviceUserAccidentData) {
+            let filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return item.ServiceUserNameCN == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
+                item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
                 item['ReportForm'] = [];
                 item['FollowUpForm'] = [];
+                if (item['Status'] === "PENDING_SM_FILL_IN") {
+                    item['StatusTC'] = '尚待服務經理填表';
+                } else if (item['Status'] === "PENDING_SM_APPROVE") {
+                    item['StatusTC'] = '尚待服務經理批核';
+                } else if (item['Status'] === "PENDING_SD_APPROVE") {
+                    item['StatusTC'] = '尚待服務總監批核';
+                } else if (item['Status'] === "PENDING_SPT_APPROVE") {
+                    item['StatusTC'] = '尚待高級物理治療師批核';
+                } else if (item['Status'] === "PENDING_INVESTIGATE") {
+                    item['StatusTC'] = '尚待調查喝員填表';
+                }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
                     if (reportForm.length > 0) {
@@ -59,16 +72,30 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     }
                 }
             }
-            result = result.concat(serviceUserAccidentData);
+            result = result.concat(filterServiceUserAccidentData);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("PUI") > -1) {
             outsiderAccidentData = await getAllOutsiderAccidentWithClosed();
-            for (let item of outsiderAccidentData) {
+            let filterOutsiderAccidentData = outsiderAccidentData.filter(item=> {return item.ServiceUserNameTC == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
+                item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            
+            for (let item of filterOutsiderAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
                 item['ReportForm'] = [];
                 item['FollowUpForm'] = [];
+                if (item['Status'] === "PENDING_SM_FILL_IN") {
+                    item['StatusTC'] = '尚待服務經理填表';
+                } else if (item['Status'] === "PENDING_SM_APPROVE") {
+                    item['StatusTC'] = '尚待服務經理批核';
+                } else if (item['Status'] === "PENDING_SD_APPROVE") {
+                    item['StatusTC'] = '尚待服務總監批核';
+                } else if (item['Status'] === "PENDING_SPT_APPROVE") {
+                    item['StatusTC'] = '尚待高級物理治療師批核';
+                } else if (item['Status'] === "PENDING_INVESTIGATE") {
+                    item['StatusTC'] = '尚待調查喝員填表';
+                }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
                     if (reportForm.length > 0) {
@@ -86,7 +113,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     }
                 }
             }
-            result = result.concat(outsiderAccidentData);
+            result = result.concat(filterOutsiderAccidentData);
         }
         
 
@@ -94,10 +121,24 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1) {
             specialIncidentReportLicense = await getAllSpecialIncidentReportLicenseWithClosed();
-            for (let item of specialIncidentReportLicense) {
+            let filterSpecialIncidentReportLicense = specialIncidentReportLicense.filter(item=> {return item.ResponsibleName == searchCriteria.keyword || item.HomesManagerName == searchCriteria.keyword  || 
+                item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            
+            for (let item of filterSpecialIncidentReportLicense) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
                 item['IncidentFollowUpForms'] = [];
+                if (item['Status'] === "PENDING_SM_FILL_IN") {
+                    item['StatusTC'] = '尚待服務經理填表';
+                } else if (item['Status'] === "PENDING_SM_APPROVE") {
+                    item['StatusTC'] = '尚待服務經理批核';
+                } else if (item['Status'] === "PENDING_SD_APPROVE") {
+                    item['StatusTC'] = '尚待服務總監批核';
+                } else if (item['Status'] === "PENDING_SPT_APPROVE") {
+                    item['StatusTC'] = '尚待高級物理治療師批核';
+                } else if (item['Status'] === "PENDING_INVESTIGATE") {
+                    item['StatusTC'] = '尚待調查喝員填表';
+                }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
                         let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
@@ -108,15 +149,29 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     }
                 }
             }
-            result = result.concat(specialIncidentReportLicense);
+            result = result.concat(filterSpecialIncidentReportLicense);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SID") > -1) {
             specialIncidentReportAllowance = await getAllSpecialIncidentReportAllowanceWithClosed();
-            for (let item of specialIncidentReportAllowance) {
+            let filterSpecialIncidentReporAllowance = specialIncidentReportAllowance.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
+                item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            
+            for (let item of filterSpecialIncidentReporAllowance) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
                 item['IncidentFollowUpForms'] = [];
+                if (item['Status'] === "PENDING_SM_FILL_IN") {
+                    item['StatusTC'] = '尚待服務經理填表';
+                } else if (item['Status'] === "PENDING_SM_APPROVE") {
+                    item['StatusTC'] = '尚待服務經理批核';
+                } else if (item['Status'] === "PENDING_SD_APPROVE") {
+                    item['StatusTC'] = '尚待服務總監批核';
+                } else if (item['Status'] === "PENDING_SPT_APPROVE") {
+                    item['StatusTC'] = '尚待高級物理治療師批核';
+                } else if (item['Status'] === "PENDING_INVESTIGATE") {
+                    item['StatusTC'] = '尚待調查喝員填表';
+                }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
                         let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
@@ -127,15 +182,29 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     }
                 }
             }
-            result = result.concat(specialIncidentReportAllowance);
+            result = result.concat(filterSpecialIncidentReporAllowance);
         }
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("OIN") > -1) {
             otherIncidentData = await getAllOtherIncidentReportWithClosed();
-            for (let item of otherIncidentData) {
+            let filterOtherIncidentData = otherIncidentData.filter(item=> {return item.InsuranceCaseNo == searchCriteria.keyword || item.IncidentDescription == searchCriteria.keyword  || 
+                item.PoliceReportNumber == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword})
+            
+            for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
                 item['IncidentFollowUpForms'] = [];
+                if (item['Status'] === "PENDING_SM_FILL_IN") {
+                    item['StatusTC'] = '尚待服務經理填表';
+                } else if (item['Status'] === "PENDING_SM_APPROVE") {
+                    item['StatusTC'] = '尚待服務經理批核';
+                } else if (item['Status'] === "PENDING_SD_APPROVE") {
+                    item['StatusTC'] = '尚待服務總監批核';
+                } else if (item['Status'] === "PENDING_SPT_APPROVE") {
+                    item['StatusTC'] = '尚待高級物理治療師批核';
+                } else if (item['Status'] === "PENDING_INVESTIGATE") {
+                    item['StatusTC'] = '尚待調查喝員填表';
+                }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
                         let followupForm = incidentFollowUpForm.filter(o => {return o.Id == followup});
@@ -146,7 +215,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     }
                 }
             }
-            result = result.concat(otherIncidentData);
+            result = result.concat(filterOtherIncidentData);
         }
 
         let filterResult = result.filter(item => {
