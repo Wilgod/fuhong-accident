@@ -179,7 +179,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
-  private print() {
+  private print = () => {
     this.setState({
       isPrintMode:true
     })
@@ -212,19 +212,19 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                   <SpecialIncidentReportLicensePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl}/>
                   :
                   <div className={styles.eform}>
-                    <div className="row" style={{ float:'right'}}>
+                    {/*<div className="row" style={{ float:'right'}}>
                       <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
-                    </div>
+                    </div>*/}
                     <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                       <TabList>
                         <Tab onClick={()=>this.tab(0)}>特別事故報告(牌照事務處)</Tab>
                         <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
                       </TabList>
                       <TabPanel>
-                        <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList} speicalIncidentReportWorkflow={this.state.speicalIncidentReportWorkflow}/>
+                        <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList} speicalIncidentReportWorkflow={this.state.speicalIncidentReportWorkflow} print={this.print}/>
                       </TabPanel>
                       <TabPanel>
-                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
+                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} print={this.print}/>
                       </TabPanel>
                     </Tabs>
                   </div>

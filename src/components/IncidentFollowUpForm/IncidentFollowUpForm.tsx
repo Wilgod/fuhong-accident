@@ -27,7 +27,8 @@ interface IIncidentFollowUpFormProps {
     siteCollectionUrl:String;
     formTwentySixData:any;
     workflow:string;
-    changeFormTwentySixDataSelected:any
+    changeFormTwentySixDataSelected:any;
+    print:any;
 }
 
 interface IIncidentFollowUpFormStates {
@@ -49,7 +50,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,formTwentySixData, workflow, changeFormTwentySixDataSelected }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,formTwentySixData, workflow, changeFormTwentySixDataSelected, print }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,
@@ -920,7 +921,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 <section className="mb-5">
                     <div className="form-row">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -992,6 +993,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             </>
                         }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
             </div >

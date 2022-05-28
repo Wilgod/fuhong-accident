@@ -47,7 +47,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else if (sa.Status === "PENDING_SPT_APPROVE") {
                 sa['StatusTC'] = '尚待高級物理治療師批核';
             } else if (sa.Status === "PENDING_INVESTIGATE") {
-                sa['StatusTC'] = '尚待調查喝員填表';
+                sa['StatusTC'] = '尚待調查員填表';
             }
             if (sa.Status === "DRAFT") {
                 if (sa.AuthorId === spId) {
@@ -100,7 +100,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else if (oa.Status === "PENDING_SPT_APPROVE") {
                 oa['StatusTC'] = '尚待高級物理治療師批核';
             } else if (oa.Status === "PENDING_INVESTIGATE") {
-                oa['StatusTC'] = '尚待調查喝員填表';
+                oa['StatusTC'] = '尚待調查員填表';
             }
             if (oa['Stage'] == '1') {
                 oa['Form'] = '外界人士意外填報表(一)';
@@ -134,7 +134,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else if (oid.Status === "PENDING_SPT_APPROVE") {
                 oid['StatusTC'] = '尚待高級物理治療師批核';
             } else if (oid.Status === "PENDING_INVESTIGATE") {
-                oid['StatusTC'] = '尚待調查喝員填表';
+                oid['StatusTC'] = '尚待調查員填表';
             }
             oid['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             
@@ -153,7 +153,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else if (sirl.Status === "PENDING_SPT_APPROVE") {
                 sirl['StatusTC'] = '尚待高級物理治療師批核';
             } else if (sirl.Status === "PENDING_INVESTIGATE") {
-                sirl['StatusTC'] = '尚待調查喝員填表';
+                sirl['StatusTC'] = '尚待調查員填表';
             }
             
         }
@@ -170,7 +170,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else if (sira.Status === "PENDING_SPT_APPROVE") {
                 sira['StatusTC'] = '尚待高級物理治療師批核';
             } else if (sira.Status === "PENDING_INVESTIGATE") {
-                sira['StatusTC'] = '尚待調查喝員填表';
+                sira['StatusTC'] = '尚待調查員填表';
             }
             
         }

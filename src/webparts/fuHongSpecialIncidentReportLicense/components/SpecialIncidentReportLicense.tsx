@@ -25,7 +25,7 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import { generate } from '../../../api/SpecialIncidentReportLicensePrint';
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow}: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print}: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -2007,7 +2007,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
 
@@ -2058,7 +2058,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2131,6 +2131,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         }
 
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
             </div>

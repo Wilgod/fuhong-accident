@@ -226,7 +226,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
-  private print() {
+  private print = () => {
     this.setState({
       isPrintMode:true
     })
@@ -266,11 +266,11 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                   <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
                   :
                   <div className={styles.eform}>
-                    {this.state.serviceUserAccidentFormData != null &&
+                    {/*this.state.serviceUserAccidentFormData != null &&
                       <div className="row" style={{float:'right'}}>
                         <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
                       </div>
-                    }
+                    */}
                       <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                         <TabList>
                           <Tab onClick={()=>this.tab(0)}>服務使用者意外填報表(一)</Tab>
@@ -278,13 +278,13 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                           <Tab onClick={()=>this.tab(2)}>意外跟進/結束表(三)</Tab>
                         </TabList>
                         <TabPanel>
-                          <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow}/>
+                          <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} print={this.print}/>
                         </TabPanel>
                         <TabPanel>
-                          <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.serviceUserAccidentWorkflow}/>
+                          <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.serviceUserAccidentWorkflow} print={this.print}/>
                         </TabPanel>
                         <TabPanel>
-                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  workflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
+                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  workflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected} print={this.print}/>
                         </TabPanel>
                       </Tabs>
               </div>

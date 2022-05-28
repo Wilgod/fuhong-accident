@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, print }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(null); // 高級服務經理
     const [sdDate, setSdDate] = useState(null); // 服務總監
     const [sptDate, setSptDate] = useState(null); // 高級物理治療師
@@ -880,7 +880,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 <section className="mb-3">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -934,7 +934,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 <section className="mb-3">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
 
@@ -1017,6 +1017,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             </>
                         }
                         <button className="btn btn-secondary" onClick={(event => cancelHandler(event))}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
             </div>

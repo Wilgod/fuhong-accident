@@ -11,6 +11,7 @@ import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
+import "./LicenseIncident.css";
 //Age interval
 interface IDataset {
     body: number;

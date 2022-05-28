@@ -231,7 +231,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     })
   }
 
-  private print() {
+  public print = () => {
     this.setState({
       isPrintMode:true
     })
@@ -254,11 +254,11 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               :
               !this.state.loading ?
               <div className={styles.eform}>
-                  {this.state.outsiderAccidentFormData != null &&
+                  {/*this.state.outsiderAccidentFormData != null &&
                     <div className="row" style={{float:'right'}}>
                       <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
                     </div>
-                  }
+                  */}
                 <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                   <TabList>
                     <Tab onClick={()=>this.tab(0)}>外界人士意外填報表(一)</Tab>
@@ -266,13 +266,13 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                     <Tab onClick={()=>this.tab(2)}>意外跟進/結束表(三)</Tab>
                   </TabList>
                   <TabPanel>
-                    <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow}/>
+                    <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow} print={this.print}/>
                   </TabPanel>
                   <TabPanel>
-                    <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.outsiderAccidentWorkflow}/>
+                    <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.outsiderAccidentWorkflow} print={this.print}/>
                   </TabPanel>
                   <TabPanel>
-                    <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} workflow={this.state.outsiderAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected}/>
+                    <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} workflow={this.state.outsiderAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected} print={this.print}/>
                   </TabPanel>
                 </Tabs>
               </div>

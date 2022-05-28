@@ -46,7 +46,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -2184,7 +2184,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2253,7 +2253,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2313,7 +2313,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
 
@@ -2413,6 +2413,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                             }
                             <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
+                            <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                         </div>
                     </section>
                 }

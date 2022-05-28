@@ -11,6 +11,7 @@ export interface IAccidentFollowUpRepotFormProps {
     isPrintMode: boolean;
     formTwentyData:any;
     workflow:string;
+    print:any;
 }
 
 export interface IAccidentFollowUpRepotFormStates {

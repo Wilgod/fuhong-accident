@@ -22,7 +22,7 @@ import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl,workflow }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl,workflow, print }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -1260,7 +1260,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 <section className="mb-4">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
                     <div className="form-row row mb-2">
@@ -1309,7 +1309,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 <section className="mb-4">
                     <div className="row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="row mb-0 mb-md-2">
@@ -1398,6 +1398,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
             </div >

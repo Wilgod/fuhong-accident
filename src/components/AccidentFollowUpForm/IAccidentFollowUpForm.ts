@@ -14,6 +14,7 @@ export interface IAccidentFollowUpFormProps {
     formTwentyOneData:any;
     workflow:string;
     changeFormTwentyOneDataSelected:any;
+    print:any;
 }
 
 export interface IAccidentFollowUpFormStates {

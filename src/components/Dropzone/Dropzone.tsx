@@ -37,6 +37,7 @@ const Container = styled.div`
 export default function StyledDropzone(props) {
     
     const [files, setFiles] = useState([]);
+    const [errorMsg, setErrorMsg] = useState("");
     const {
         getRootProps,
         getInputProps,
@@ -47,7 +48,20 @@ export default function StyledDropzone(props) {
     } = useDropzone({ accept: 'image/*' });
 
     const uploadedFilesHandler = () => {
-        setFiles(value => [...value, ...acceptedFiles]);
+        debugger
+        for (let item of acceptedFiles) {
+            if (item.size / 1024 ** 2 > 3) {
+                setErrorMsg("每張相片不多於 3 MB");
+                return
+            }
+        }
+        if (files.length + acceptedFiles.length > 5) {
+            setErrorMsg("不能上載照片多於5張照片");
+        } else {
+            setFiles(value => [...value, ...acceptedFiles]);
+            setErrorMsg("");
+        }
+        
     }
 
     const removeHandler = (index) => {
@@ -102,6 +116,9 @@ export default function StyledDropzone(props) {
                     <ul>{FilesComponent}</ul>
                 </aside>
             }
+            <div style={{color:'red'}}>
+                {errorMsg}
+            </div>
             {/* {
                 Array.isArray(props.uploadedFiles) && props.uploadedFiles.length > 0 &&
                 <aside >

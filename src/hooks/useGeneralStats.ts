@@ -10,15 +10,12 @@ export default function useGeneralStats(): [any[], Date, Date,string[], Dispatch
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
 
     const initialState = async () => {
-        debugger
         const searchCriteria: ISearchCriteria = { startDate, endDate, serviceUnits };
         const serviceUserAccident = await getNewServiceUserAccident(searchCriteria);
         const outsiderAccident = await getNewOutsiderAccident(searchCriteria);
         const otherIncident = await getNewOtherIncidentReport(searchCriteria);
         const allowance = await getNewSpecialIncidentReportAllowance(searchCriteria);
         const license = await getNewSpecialIncidentReportLicense(searchCriteria);
-
-        debugger
         let result = [...serviceUserAccident, ...outsiderAccident, ...otherIncident, ...allowance, ...license].sort((a, b) => {
             let aTime = new Date(a.AccidentTime || a.IncidentTime).getTime();
             let bTime = new Date(b.AccidentTime || b.IncidentTime).getTime();

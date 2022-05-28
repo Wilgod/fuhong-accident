@@ -621,10 +621,10 @@ return <>
                                 {formData.Author.displayName}&nbsp;&nbsp;{formData.Author.jobTitle}
                                 </td>
                                 <td>
-                                簽署及日期
+                                日期
                                 </td>
-                                <td>
-                                ______________________________
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formData.Created != null && new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
                             <tr>
@@ -635,10 +635,11 @@ return <>
                                 {formData.SM != null && formData.SM.Title}
                                 </td>
                                 <td>
-                                簽署及日期
+                                日期
                                 </td>
-                                <td>
-                                ______________________________
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formData.SMDate != null && new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2)}
+                                
                                 </td>
                             </tr>
                         </table>
@@ -676,10 +677,11 @@ return <>
                                 {formData.SPT.Title}
                                 </td>
                                 <td>
-                                簽署及日期
+                                日期
                                 </td>
-                                <td>
-                                ______________________________
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formData.SPTDate != null && new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2)}
+                                
                                 </td>
                             </tr>
                             

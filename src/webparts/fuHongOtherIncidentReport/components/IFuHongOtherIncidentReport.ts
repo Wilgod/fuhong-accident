@@ -11,6 +11,7 @@ export interface IOtherIncidentReportProps {
     isPrintMode: boolean;
     siteCollectionUrl:string;
     workflow:string;
+    print:any;
 }
 
 export interface IOtherIncidentReportStates {

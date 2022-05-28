@@ -193,7 +193,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     })
   }
   
-  private print() {
+  private print = () => {
     this.setState({
       isPrintMode:true
     })
@@ -212,19 +212,19 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
                   <OtherIncidentReportPrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl}/>
                   :
                   <div className={styles.eform}>
-                    <div className="row" style={{ float:'right'}}>
+                    {/*<div className="row" style={{ float:'right'}}>
                       <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
-                    </div>
+                      </div>*/}
                       <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                         <TabList>
                           <Tab onClick={()=>this.tab(0)}>其他事故呈報表</Tab>
                           <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
                         </TabList>
                         <TabPanel>
-                          <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow}/>
+                          <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow} print={this.print}/>
                         </TabPanel>
                         <TabPanel>
-                          <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected}/>
+                          <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} print={this.print}/>
                         </TabPanel>
                       </Tabs>
                   </div>

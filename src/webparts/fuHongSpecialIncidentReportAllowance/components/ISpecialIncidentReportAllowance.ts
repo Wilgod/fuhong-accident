@@ -11,6 +11,7 @@ export interface ISpecialIncidentReportAllowanceProps {
     siteCollectionUrl:string;
     departmentList:any;
     speicalIncidentReportWorkflow:string;
+    print:any;
 }
 
 export interface IAccidentCategoryAbuseDetails {

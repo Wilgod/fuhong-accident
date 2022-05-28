@@ -54,7 +54,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 } else if (item['Status'] === "PENDING_SPT_APPROVE") {
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
-                    item['StatusTC'] = '尚待調查喝員填表';
+                    item['StatusTC'] = '尚待調查員填表';
                 }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
@@ -94,7 +94,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 } else if (item['Status'] === "PENDING_SPT_APPROVE") {
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
-                    item['StatusTC'] = '尚待調查喝員填表';
+                    item['StatusTC'] = '尚待調查員填表';
                 }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
@@ -137,7 +137,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 } else if (item['Status'] === "PENDING_SPT_APPROVE") {
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
-                    item['StatusTC'] = '尚待調查喝員填表';
+                    item['StatusTC'] = '尚待調查員填表';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
@@ -170,7 +170,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 } else if (item['Status'] === "PENDING_SPT_APPROVE") {
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
-                    item['StatusTC'] = '尚待調查喝員填表';
+                    item['StatusTC'] = '尚待調查員填表';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
@@ -203,7 +203,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 } else if (item['Status'] === "PENDING_SPT_APPROVE") {
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
-                    item['StatusTC'] = '尚待調查喝員填表';
+                    item['StatusTC'] = '尚待調查員填表';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {

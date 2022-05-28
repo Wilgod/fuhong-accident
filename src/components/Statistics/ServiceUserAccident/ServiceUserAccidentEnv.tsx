@@ -10,6 +10,7 @@ import { getDateFinancialYear } from '../../../utils/DateUtils';
 import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
+import "./ServiceUserAccident.css";
 interface IDataset {
     "envSlipperyGround": number;
     "envUnevenGround": number;
@@ -879,16 +880,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                服務使用者意外 - 意外成因 地面濕滑 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -907,6 +908,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                             </div>
                         <div className="col-12 byMonthFinancialBarChart1">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 地面濕滑 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -986,16 +995,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 地面濕滑 總數(每月總數)
+                                服務使用者意外 - 意外成因 地面不平 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1014,6 +1023,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart2">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 地面不平 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1094,16 +1111,17 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
+                            
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 障礙物品 總數(每月總數)
+                                服務使用者意外 - 意外成因 障礙物品 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1122,6 +1140,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart3">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 障礙物品 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1202,16 +1228,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 光線不足 總數(每月總數)
+                                服務使用者意外 - 意外成因 光線不足 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1230,6 +1256,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart4">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 光線不足 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1309,16 +1343,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 空間不足 總數(每月總數)
+                                服務使用者意外 - 意外成因 空間不足 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1337,6 +1371,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart5">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 空間不足 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1417,16 +1459,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart6")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart6">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 聲響刺激 總數(每月總數)
+                                服務使用者意外 - 意外成因 聲響刺激 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart6">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1445,6 +1487,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart6")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart6">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 聲響刺激 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1524,16 +1574,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart7")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart7">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 被別人碰撞 總數(每月總數)
+                                服務使用者意外 - 意外成因 被別人碰撞 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart7">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1552,6 +1602,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart7")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart7">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 被別人碰撞 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1631,16 +1689,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart8")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart8">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 被別人傷害 總數(每月總數)
+                                服務使用者意外 - 意外成因 被別人碰被別人傷害撞 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart8">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1659,6 +1717,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart8")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart8">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 被別人碰被別人傷害撞 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1738,16 +1804,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart9")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart9">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) 總數(每月總數)
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (如輪椅／便椅未上鎖) (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart9">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1766,6 +1832,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart9")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart9">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (如輪椅／便椅未上鎖) (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1845,16 +1919,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart10")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart10">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 意外成因 - 環境因素 - 其他 總數(每月總數)
+                                服務使用者意外 - 意外成因 其他 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart10">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1873,6 +1947,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart10")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart10">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 其他 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1989,16 +2071,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 地面濕滑 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2017,6 +2099,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart1">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 地面濕滑 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2096,16 +2186,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 地面不平 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2124,6 +2214,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart2">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 地面不平 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2203,16 +2301,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 障礙物品 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2231,6 +2329,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart3">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 障礙物品 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2310,17 +2416,17 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>   
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 光線不足 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2339,6 +2445,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart4">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 光線不足 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2419,16 +2533,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 空間不足 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart5">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2447,6 +2561,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart5">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 空間不足 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2526,16 +2648,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart6")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart6">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 聲響刺激 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart6">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2554,6 +2676,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart6")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart6">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 聲響刺激 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2634,16 +2764,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart7")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart7">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 被別人碰撞 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart7">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2662,6 +2792,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart7")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart7">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 被別人碰撞 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2741,16 +2879,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart8")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart8">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 被別人傷害 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart8">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2769,6 +2907,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart8")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart8">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 被別人傷害 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2849,16 +2995,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart9")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart9">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart9">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2877,6 +3023,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart9")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart9">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2957,16 +3111,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart10")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart10">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因 其他 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart10">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -2985,6 +3139,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart10")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart10">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 其他 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -3086,16 +3248,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數
+                                服務使用者意外 - 意外成因 (每年總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byYearFinancialLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -3114,6 +3276,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 (每年總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -3198,16 +3368,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數
+                                服務使用者意外 - 意外成因 (每年總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -3226,6 +3396,14 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                服務使用者意外 - 意外成因 (每年總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -3314,15 +3492,15 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                         <div className="row">
                             <div className="col-12">
                                 <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        服務使用者意外 - 意外成因-環境因素統計
-                                    </div>
-                                </div>
                                 <div className="nonBarChart">
+                                    <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                        <div className="">
+                                            {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                        </div>
+                                        <div className="">
+                                            服務使用者意外 - 意外成因-環境因素統計
+                                        </div>
+                                    </div>
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
@@ -3347,15 +3525,15 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </div>
                             <div className="col-12">
                                 <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        服務使用者意外 - 意外成因-環境因素統計
-                                    </div>
-                                </div>
                                 <div className="nonPieChart">
+                                    <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                        <div className="">
+                                            {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                        </div>
+                                        <div className="">
+                                            服務使用者意外 - 意外成因-環境因素統計
+                                        </div>
+                                    </div>
                                     <Chart
                                         chartType={"PieChart"}
                                         width={'100%'}
@@ -3392,16 +3570,16 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                服務使用者意外 - 意外成因-環境因素統計 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <Chart
                                 width={newWidth}
                                 height={400}

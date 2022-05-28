@@ -106,7 +106,7 @@ const columns = (context) => {
                 } else {
                     date = data.IncidentTime;
                 }
-                return <div>{moment(new Date(date)).format("YYYY-MM-DD")}</div>
+                return <div>{moment(new Date(date)).format("YYYY/MM/DD")}</div>
             },
             sort: true,
             sortFunc: (a, b, order, dataField, rowA, rowB) => {

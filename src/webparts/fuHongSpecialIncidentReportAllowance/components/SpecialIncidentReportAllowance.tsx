@@ -25,7 +25,7 @@ import { postLog } from '../../../api/LogHelper';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, departmentList, speicalIncidentReportWorkflow }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print }: ISpecialIncidentReportAllowanceProps) {
     const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [reporterJobTitle, setReporterJobTitle] = useState("");
@@ -1578,7 +1578,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 <section className="mb-4">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1627,7 +1627,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 <section className="mb-5">
                     <div className="row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由服務總監填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由服務總監填寫]</span>
                         </div>
                     </div>
                     <div className="row mb-0 mb-md-2">
@@ -1715,6 +1715,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         }
 
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
                 {

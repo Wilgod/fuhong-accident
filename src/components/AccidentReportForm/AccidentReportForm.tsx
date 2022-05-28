@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow, print }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -436,6 +436,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
 
         // Get Accident report form
+        debugger
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
                 //收到「意外填報表」日期
@@ -450,7 +451,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 if (formTwentyData.SPT && formTwentyData.SPT.EMail) {
                     setSPhysicalTherapyEmail(formTwentyData.SPT.EMail)
                 }
-
+                debugger
                 if (formTwentyData.SM && formTwentyData.SM.EMail) {
                     setServiceManagerEmail(formTwentyData.SM.EMail);
                 }
@@ -822,7 +823,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級服務經理/服務經理填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級服務經理/服務經理填寫]</span>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -871,7 +872,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <section className="mb-5">
                     <div className="form-row mb-2">
                         <div className="col-12 font-weight-bold mb-2">
-                            <span className={styles.fieldTitle}>[此欄由高級物理治療師填寫]</span>
+                            <span className={`${styles.fieldTitle} ${styles.fillIn}`}>[此欄由高級物理治療師填寫]</span>
                         </div>
                     </div>
 
@@ -938,6 +939,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
+                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
                     </div>
                 </section>
             </div >
