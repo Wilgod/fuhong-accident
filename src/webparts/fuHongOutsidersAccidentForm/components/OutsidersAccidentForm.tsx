@@ -1247,16 +1247,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     form.photoRecord &&
                                     <>
                                         <StyledDropzone selectedFiles={setSelectedPhotoRecordFiles} />
-                                        {
-                                            uploadedPhotoRecordFiles.length > 0 &&
-                                            <aside>
-                                                <h6>已上存檔案</h6>
-                                                <ul>
-                                                    {UploadedFilesComponent(uploadedPhotoRecordFiles)}
-                                                </ul>
-                                            </aside>
-                                        }
                                     </>
+                                }
+                                {
+                                    uploadedPhotoRecordFiles.length > 0 &&
+                                    <aside>
+                                        <h6>已上存檔案</h6>
+                                        <ul>
+                                            {UploadedFilesComponent(uploadedPhotoRecordFiles)}
+                                        </ul>
+                                    </aside>
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photoRecord" id="photo-false" value="PHOTO_FALSE" onClick={() => setForm({ ...form, photoRecord: false })} checked={form.photoRecord === false} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />

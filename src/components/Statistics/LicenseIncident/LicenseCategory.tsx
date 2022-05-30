@@ -892,16 +892,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 - 在院舍內發生事故及送院後死亡 總數(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -920,6 +920,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart1">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -999,16 +1007,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 - 在院舍內自殺及送院後死亡 總數(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1027,6 +1035,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart2">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1106,16 +1122,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 - 其他不尋常死亡／事故 總數(每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1134,6 +1150,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart3">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1213,16 +1237,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故 - 接獲死因裁判法庭要求出庭的傳票 總數(每月總數)
+                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthFinancialLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1241,6 +1265,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart4">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1340,16 +1372,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡(每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart1">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1368,6 +1400,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡(每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1447,16 +1487,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡(每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart2">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1475,6 +1515,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart2">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡(每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1555,16 +1603,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart3">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1583,6 +1631,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart3">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1661,17 +1717,17 @@ function LicenseCategory(siteCollectionUrl) {
                     </div>
                     <div className="row">
                         <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthCalendarLineChart4">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1690,6 +1746,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart4">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1783,16 +1847,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數
+                                特別事故統計 (牌照事務處) (每年總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byYearFinancialLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1811,6 +1875,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) (每年總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1889,16 +1961,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數
+                                特別事故統計 (牌照事務處) (每年總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byYearCalendarLineChart">
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1917,6 +1989,14 @@ function LicenseCategory(siteCollectionUrl) {
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (牌照事務處) (每年總數)
+                                </div>
+                            </div>
                             <Chart
                                 width={'100%'}
                                 height={'400px'}
@@ -1950,15 +2030,15 @@ function LicenseCategory(siteCollectionUrl) {
                         <div className="row">
                             <div className="col-12">
                                 <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        特別事故統計 (牌照事務處) - 特別事故類別
-                                    </div>
-                                </div>
                                 <div className="nonBarChart">
+                                    <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                        <div className="">
+                                            {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                        </div>
+                                        <div className="">
+                                            特別事故統計 (牌照事務處) - 特別事故類別
+                                        </div>
+                                    </div>
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
@@ -1980,15 +2060,15 @@ function LicenseCategory(siteCollectionUrl) {
                             </div>
                             <div className="col-12">
                                 <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
-                                <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                    <div className="">
-                                        {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
-                                    </div>
-                                    <div className="">
-                                        特別事故統計 (牌照事務處) - 特別事故類別
-                                    </div>
-                                </div>
                                 <div className="nonPieChart">
+                                    <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                        <div className="">
+                                            {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                        </div>
+                                        <div className="">
+                                            特別事故統計 (牌照事務處) - 特別事故類別
+                                        </div>
+                                    </div>
                                     <Chart
                                         chartType={"PieChart"}
                                         width={'100%'}
@@ -2020,16 +2100,16 @@ function LicenseCategory(siteCollectionUrl) {
                     <div className="row">
                         <div className="col-12">
                             <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    新發生意外或事故總數 (每月總數)
+                                    特別事故統計 (牌照事務處) - 特別事故類別 (每月總數)
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
                             <Chart
                                 width={newWidth}
                                 height={400}

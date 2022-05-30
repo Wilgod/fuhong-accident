@@ -1115,6 +1115,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setInvestigator([{ secondaryText: data.Investigator.EMail, id: data.Investigator.Id }]);
             }
 
+            debugger
             if (data.Attachments) {
                 getServiceUserAccidentAllAttachmentById(data.Id).then((attchementsRes) => {
                     let injuryAttachments = [];
@@ -1244,7 +1245,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         }
     }, [serviceUser, serviceUserRecordId]);
-    
+    console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
     return (
         <>
             {
@@ -1624,14 +1625,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 form.injuredArea.length > 0 &&
                                 <>
                                     <StyledDropzone selectedFiles={setInjuryFiles} />
-                                    {
-                                        uploadedInjuryFiles.length > 0 &&
-                                        <aside>
-                                            <h6>已上傳檔案</h6>
-                                            <ul>{UploadedFilesComponent(uploadedInjuryFiles)}</ul>
-                                        </aside>
-                                    }
+                                    
                                 </>
+                            }
+                            {
+                                uploadedInjuryFiles.length > 0 &&
+                                <aside>
+                                    <h6>已上傳檔案</h6>
+                                    <ul>{UploadedFilesComponent(uploadedInjuryFiles)}</ul>
+                                </aside>
                             }
                         </div>
                     </div>
@@ -1759,15 +1761,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     form.photo === "PHOTO_TRUE" &&
                                     <>
                                         <StyledDropzone selectedFiles={setSelectedCctvPhoto} />
-                                        {
-                                            uploadedInjuryFiles.length > 0 &&
-                                            <aside>
-                                                <h6>已上存檔案</h6>
-                                                <ul>{UploadedFilesComponent(uploadedCctvPhoto)}</ul>
-                                            </aside>
-                                        }
+                                        
                                         {/* {error.photo && <div className="text-danger">{error.photo}</div>} */}
                                     </>
+                                }
+                                {
+                                    setUploadedCctvPhoto.length > 0 &&
+                                    <aside>
+                                        <h6>已上存檔案</h6>
+                                        <ul>{UploadedFilesComponent(uploadedCctvPhoto)}</ul>
+                                    </aside>
                                 }
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="photo" id="photo-false" value="PHOTO_FALSE" onClick={radioButtonHandler} checked={form.photo === "PHOTO_FALSE"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />

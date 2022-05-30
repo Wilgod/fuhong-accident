@@ -23,6 +23,7 @@ import ServiceUserAccidentPersonal from '../../../components/Statistics/ServiceU
 import CaseSummaryScreen from '../../../components/CaseSummaryScreen/CaseSummaryScreen';
 import InsuranceEmailReportScreen from '../../../components/InsuranceEmailReportScreen/InsuranceEmailReportScreen';
 import LogScreen from '../../../components/LogScreen/LogScreen';
+import Dashboard from '../../../components/Statistics/General/Dashboard';
 import General from '../../../components/Statistics/General/General';
 import OutsiderAccidentEnv from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentEnv';
 import OutsiderAccidentNature from '../../../components/Statistics/OutsiderAccident/OutsiderAccidentNature';
@@ -495,7 +496,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case "STAT":
         // return <div>STAT</div>
         case "DASHBOARD":
-        // return <div>DASHBOARD</div>
+         return <Dashboard siteCollectionUrl={this.siteCollectionUrl}/>
         case "ADMIN":
             return <Admin context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case "HOME":
