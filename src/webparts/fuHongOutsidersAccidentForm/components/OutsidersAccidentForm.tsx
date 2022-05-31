@@ -843,6 +843,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 setInvestigator([{ secondaryText: data.Investigator.EMail, id: data.Investigator.Id }]);
             }
 
+            if (data.CctvRecordReceiveDate) {
+                setCctvRecordReceiveDate(new Date(data.CctvRecordReceiveDate));
+            }
+        
             if (data.SPT) {
                 /*setTimeout(() => {
                     setSPhysicalTherapyEmail(data.SPT.EMail);

@@ -1053,7 +1053,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
                 scenarioOutsideActivityRemark: data.CircumstanceLocation
             });
-
+            debugger
+            if (data.CctvRecordReceiveDate) {
+                setCctvRecordReceiveDate(new Date(data.CctvRecordReceiveDate));
+            }
+            
             setSmComment(data.SMComment);
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));

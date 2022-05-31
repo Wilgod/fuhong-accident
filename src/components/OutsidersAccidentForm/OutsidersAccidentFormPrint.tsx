@@ -92,26 +92,26 @@ return <>
                     <div className={`col-12`}>
                         <table style={{width:'900px', margin:'0 auto'}}>
                             <tr>
-                                <td style={{width:'200px'}}>姓名: (英文)</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
-                                <td>&nbsp;&nbsp;(中文)</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.ServiceUserNameTC != null ? formData.ServiceUserNameTC : ''}</td>
+                                <td style={{width:'180px'}}>姓名: (英文)</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
+                                <td style={{width:'100px'}}>&nbsp;&nbsp;(中文)</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.ServiceUserNameTC != null ? formData.ServiceUserNameTC : ''}</td>
                             </tr>
                             <tr>
-                                <td style={{width:'200px'}}>年齡: </td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                <td style={{width:'180px'}}>年齡: </td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>
                                 {formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}
                                 </td>
-                                <td style={{width:'200px'}}>&nbsp;&nbsp;性別:</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                <td style={{width:'100px'}}>&nbsp;&nbsp;性別:</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>
                                     {formData.ServiceUserGender == "male" && <span>男</span>}
                                     {formData.ServiceUserGender == "female" && <span>女</span>}
 
                                 </td>
                             </tr>
                             <tr>
-                                <td style={{width:'200px'}}>身份： </td>
-                                <td colSpan={3}>
+                                <td style={{width:'180px'}}>身份： </td>
+                                <td colSpan={2}>
                                     {formData.ServiceUserIdentity == "visitor"  && <span>&#9745;</span>}
                                     {formData.ServiceUserIdentity != "visitor" && <span>&#9744;</span>}
                                     訪客&nbsp;&nbsp;
@@ -126,16 +126,19 @@ return <>
                                     實習學生&nbsp;&nbsp;
                                     {formData.ServiceUserIdentity == "others"  && <span>&#9745;</span>}
                                     {formData.ServiceUserIdentity != "others" && <span>&#9744;</span>}
-                                    其他 (請註明&nbsp;&nbsp;
-                                    {formData.ServiceUserIdentityOther != null ? formData.ServiceUserIdentityOther : '____________________'})
+                                    其他 請註明&nbsp;&nbsp;
+                                    
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>
+                                {formData.ServiceUserIdentityOther != null ? formData.ServiceUserIdentityOther : ''}
                                 </td>
                             </tr>
                             <tr>
-                                <td style={{width:'200px'}}>意外發生日期及時間</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{width:'180px'}}>意外發生日期及時間</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
                                 </td>
-                                <td style={{width:'200px'}}>&nbsp;&nbsp;地點</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                                <td style={{width:'100px'}}>&nbsp;&nbsp;地點</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
                             </tr>
                         </table>
                     </div>
@@ -172,10 +175,10 @@ return <>
                                 {!formData.EnvUnevenGround && <span>&#9744;</span>}
                                 2.地面不平&nbsp;&nbsp;
                             </td>
-                            <td style={{width:'150px'}}>
+                            <td style={{width:'80px'}}>
                                 請註明：
                             </td>
-                            <td style={{width:'350px',borderBottom:'1px solid'}}>
+                            <td style={{width:'420px',borderBottom:'1px solid'}}>
                                 {formData.OtherFactor != null ? formData.OtherFactor : ''}
                             </td>
                         </tr>
@@ -285,33 +288,39 @@ return <>
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
-                    <div className={`col-12`}>
-                        <table>
+                    <div className={`col-12`} style={{verticalAlign:'top', width:'380px', fontWeight:'bold'}}>
+                    2.4 相片及CCTV記錄
+                    </div>
+                    <div className={`col-12`} >
+                        <table style={{width:'500px'}}>
                             <tr>
-                                <td style={{verticalAlign:'top', width:'380px', fontWeight:'bold'}}>
-                                2.4 相片及CCTV記錄
+                                <td style={{verticalAlign:'top'}}>
+                                    相片
+                                </td>
+                                <td style={{verticalAlign:'top'}}>
+                                    {formData.PhotoRecord && <span>&#9745;</span>}
+                                    {!formData.PhotoRecord && <span>&#9744;</span>}
+                                    有 (上載相片)
+                                </td>
+                                <td style={{verticalAlign:'top'}}>
+                                    {!formData.PhotoRecord && <span>&#9745;</span>}
+                                    {formData.PhotoRecord && <span>&#9744;</span>}
+                                    未能提供
                                 </td>
                             </tr>
                             <tr>
                                 <td style={{verticalAlign:'top'}}>
-                                    <div>
-                                    相片&nbsp;&nbsp;
-                                    {formData.PhotoRecord && <span>&#9745;</span>}
-                                    {!formData.PhotoRecord && <span>&#9744;</span>}
-                                    有 (上載相片) &nbsp;&nbsp;
-                                    {!formData.PhotoRecord && <span>&#9745;</span>}
-                                    {formData.PhotoRecord && <span>&#9744;</span>}
-                                    未能提供 &nbsp;&nbsp;
-                                    </div>
-                                    <div>
-                                    CCTV記錄&nbsp;&nbsp;
+                                CCTV記錄
+                                </td>
+                                <td style={{verticalAlign:'top'}}>
                                     {formData.CctvRecord && <span>&#9745;</span>}
                                     {!formData.CctvRecord && <span>&#9744;</span>}
-                                    有(註: 三個工作天內交總辦事處) &nbsp;&nbsp;
+                                    有(註: 三個工作天內交總辦事處) 
+                                </td>
+                                <td style={{verticalAlign:'top'}}>
                                     {!formData.CctvRecord && <span>&#9745;</span>}
                                     {formData.CctvRecord && <span>&#9744;</span>}
-                                    未能提供 &nbsp;&nbsp;
-                                    </div>
+                                    未能提供
                                 </td>
                             </tr>
                         </table>
