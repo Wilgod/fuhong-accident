@@ -45,6 +45,44 @@ export async function getNewServiceUserAccident(searchCriteria: ISearchCriteria)
     }
 }
 
+
+// Dashboard 新發生意外或事故
+export async function getDashboardServiceUserAccident(searchCriteria: ISearchCriteria, startDate: Date, endDate: Date) {
+    try {
+        const LIST_NAME = "Service User Accident";
+
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
+        filterQuery = `${filterQuery} and AccidentTime ge '${startDate.toISOString()}' and AccidentTime le '${endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "AccidentTime")
+            .filter(filterQuery)
+            .getAll();
+        return items
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccident error")
+    }
+}
+
+
+// General 新發生意外或事故
 export async function getNewOutsiderAccident(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Outsider Accident Form";
@@ -79,6 +117,42 @@ export async function getNewOutsiderAccident(searchCriteria: ISearchCriteria) {
     }
 }
 
+// Dashboard 新發生意外或事故
+export async function getDashboardOutsiderAccident(searchCriteria: ISearchCriteria, startDate: Date, endDate: Date) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
+        filterQuery = `${filterQuery} and AccidentTime ge '${startDate.toISOString()}' and AccidentTime le '${endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "AccidentTime")
+            .filter(filterQuery)
+            .getAll();
+        return items
+    } catch (err) {
+        console.error(err);
+        throw new Error("getNewOutsiderAccident error")
+    }
+}
+
+// General 新發生意外或事故
 export async function getNewSpecialIncidentReportLicense(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report License";
@@ -113,6 +187,42 @@ export async function getNewSpecialIncidentReportLicense(searchCriteria: ISearch
     }
 }
 
+// Dashboard 新發生意外或事故
+export async function getDashboardSpecialIncidentReportLicense(searchCriteria: ISearchCriteria, startDate: Date, endDate: Date) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
+        filterQuery = `${filterQuery} and IncidentTime ge '${startDate.toISOString()}' and IncidentTime le '${endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "IncidentTime")
+            .filter(filterQuery)
+            .getAll();
+        return items;
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getNewSpecialIncidentReportLicense error")
+    }
+}
+
+// General 新發生意外或事故
 export async function getNewSpecialIncidentReportAllowance(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
@@ -147,11 +257,83 @@ export async function getNewSpecialIncidentReportAllowance(searchCriteria: ISear
     }
 }
 
+
+// Dashboard 新發生意外或事故
+export async function getDashboardSpecialIncidentReportAllowance(searchCriteria: ISearchCriteria, startDate: Date, endDate: Date) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
+        filterQuery = `${filterQuery} and IncidentTime ge '${startDate.toISOString()}' and IncidentTime le '${endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "IncidentTime")
+            .filter(filterQuery)
+            .getAll();
+        return items
+
+    } catch (err) {
+        console.error(err);
+        throw new Error("getNewSpecialIncidentReportAllowance error")
+    }
+}
+
+// General 新發生意外或事故
 export async function getNewOtherIncidentReport(searchCriteria: ISearchCriteria) {
     try {
         const LIST_NAME = "Other Incident Report";
         let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
         filterQuery = `${filterQuery} and IncidentTime ge '${searchCriteria.startDate.toISOString()}' and IncidentTime le '${searchCriteria.endDate.toISOString()}'`;
+
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
+            let su = "";
+            searchCriteria.serviceUnits.forEach((item, index) => {
+                if (index === 0) {
+                    su = `ServiceLocation eq '${item}'`;
+                } else {
+                    su += `ServiceLocation eq '${item}'`;
+                }
+
+                if (index !== searchCriteria.serviceUnits.length - 1) {
+                    su = `${su} or `;
+                }
+            })
+            filterQuery = `${filterQuery} and (${su})`;
+        }
+
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
+            .select("CaseNumber", "IncidentTime")
+            .filter(filterQuery)
+            .getAll();
+
+        return items;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getNewOtherIncidentReport error")
+    }
+}
+
+// Dashboard 新發生意外或事故
+export async function getDashboardOtherIncidentReport(searchCriteria: ISearchCriteria, startDate: Date, endDate: Date) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        let filterQuery = `Status ne 'DRAFT' and Stage ne '1'`;
+        filterQuery = `${filterQuery} and IncidentTime ge '${startDate.toISOString()}' and IncidentTime le '${endDate.toISOString()}'`;
 
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1 && searchCriteria.serviceUnits.length > 0) {
             let su = "";

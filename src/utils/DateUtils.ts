@@ -51,3 +51,12 @@ export const getDateFinancialYear = (date: Date) => {
     }
     return result;
 }
+
+export const getDateYear = (date: Date) => {
+    const today = new Date(date.toISOString());
+    let result = "";
+    const start = today.getFullYear() - 1;
+    const end = today.getFullYear();
+    result = `${start}-${end}`
+    return result;
+}

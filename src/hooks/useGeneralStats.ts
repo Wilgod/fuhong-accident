@@ -10,6 +10,7 @@ export default function useGeneralStats(): [any[], Date, Date,string[], Dispatch
     const [serviceUnits, setServiceUnits] = useState<string[]>([]);
 
     const initialState = async () => {
+        
         const searchCriteria: ISearchCriteria = { startDate, endDate, serviceUnits };
         const serviceUserAccident = await getNewServiceUserAccident(searchCriteria);
         const outsiderAccident = await getNewOutsiderAccident(searchCriteria);
