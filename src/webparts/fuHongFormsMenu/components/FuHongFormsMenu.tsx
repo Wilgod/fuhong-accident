@@ -376,66 +376,66 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       console.log("ALL ", this.state.permissionList.indexOf("All") >=0);
       return <div className={`${styles.navigationMenu}`}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faHome} title={"主頁"} />
+            </div>
             <div>
               主頁
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faHome} title={"主頁"} />
             </div>
           </div>
         </div>
         <div className={`${styles.child}`} onClick={this.formToggleHandler}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faPen} title={"表格"} />
+            </div>
             <div>
               表格
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faPen} title={"表格"} />
             </div>
           </div>
           {this.state.formToggle && formList()}
         </div>
         <div className={`${styles.child}`} onClick={this.repotToggleHandler}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faFileContract} title={"報告"} />
+            </div>
             <div>
               報告
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faFileContract} title={"報告"} />
             </div>
           </div>
           {this.state.reportToggle && reportList()}
         </div>
         <div className={`${styles.child}`} onClick={(this.statToggleHandler)}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faChartBar} title={"統計資料"} />
+            </div>
             <div>
               統計資料
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faChartBar} title={"統計資料"} />
             </div>
           </div>
           {this.state.statToggle && statList()}
         </div>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"儀表板"} />
+            </div>
             <div>
               儀表板
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"儀表板"} />
             </div>
           </div>
         </div>
         {Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0 &&
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "ADMIN")}>
-          <div className="d-flex justify-content-between align-items center">
+          <div className="d-flex align-items center">
+            <div style={{marginRight:'10px'}}>
+              <FontAwesomeIcon size="lg" icon={fontawesome.faUserCog} title={"Admin"} />
+            </div>
             <div>
               Admin
-            </div>
-            <div className="">
-              <FontAwesomeIcon size="lg" icon={fontawesome.faUserCog} title={"Admin"} />
             </div>
           </div>
         </div>
@@ -644,9 +644,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       <div className={styles.fuHongFormsMenu} >
         <div className={styles.container} >
           <div className="container-fluid">
-            <div className="row no-gutters">
+            <div className="row no-gutters" style={{height:'90vh'}}>
               {/* Navigation menu */}
-              <div className="col-sm-12 col-md-3 col-lg-2" style={{ backgroundColor: "#F7CD70", minHeight: 500, padding: "10px 0px" }}>
+              <div className="col-sm-12 col-md-3 col-lg-2" style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
                 {navigationMenu()}
               </div>
               {/* Main Content */}
