@@ -976,11 +976,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         if (Array.isArray(departments) && departments.length) {
             const dept = departments[0];
             if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
-                setSMEmail(dept.hr_deptmgr);
+                if (!formData) {
+                    debugger
+                    setSMEmail(dept.hr_deptmgr);
+                }
+                
             }
 
             if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                setSDEmail(dept.hr_sd);
+                if (!formData) {
+                    setSDEmail(dept.hr_sd);
+                }
+                
             }
         }
     }, [departments]);

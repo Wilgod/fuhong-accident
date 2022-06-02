@@ -48,7 +48,6 @@ export default function StyledDropzone(props) {
     } = useDropzone({ accept: 'image/*' });
 
     const uploadedFilesHandler = () => {
-        debugger
         for (let item of acceptedFiles) {
             if (item.size / 1024 ** 2 > 3) {
                 setErrorMsg("每張相片不多於 3 MB");

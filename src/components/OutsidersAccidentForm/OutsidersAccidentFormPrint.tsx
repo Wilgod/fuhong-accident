@@ -331,49 +331,55 @@ return <>
                     3. 意外事件後之處理
                     </div>
                     <div className={`col-12`}> 
-                        <table>
+                        <table style={{width:'960px'}}>
                             <tr style={{fontWeight:'bold'}}>
                                 <td>
                                 3.1 就診安排:
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={4}>
+                                <td colSpan={7}>
                                 {formData.MedicalArrangement == "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9745;</span>}
                                 {formData.MedicalArrangement != "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9744;</span>}
                                 醫生到診&nbsp;&nbsp;
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={4}>
+                                <td colSpan={7}>
                                 {formData.MedicalArrangement == "ARRANGEMENT_OUTPATIENT" && <span>&#9745;</span>}
                                 {formData.MedicalArrangement != "ARRANGEMENT_OUTPATIENT" && <span>&#9744;</span>}
                                 門診&nbsp;&nbsp;
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style={{width:'100px'}}>
                                 {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9745;</span>}
                                 {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
                                 急症室&nbsp;&nbsp;
                                 </td>
-                                <td>
-                                醫院名稱&nbsp;&nbsp;
-                                {formData.MedicalArrangementHospital != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.MedicalArrangementHospital}</span> : '__________________'}
+                                <td style={{width:'80px'}}>
+                                醫院名稱:
                                 </td>
-                                <td>
-                                到達時間:&nbsp;&nbsp;
-                                {formData.HospitalArriveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                    {new Date(formData.HospitalArriveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalArriveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalArriveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalArriveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalArriveTime).getMinutes()).slice(-2)}</span> : '__________________'}
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                {formData.MedicalArrangementHospital != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>{formData.MedicalArrangementHospital}</span> : ''}
                                 </td>
-                                <td>
-                                離開時間:&nbsp;&nbsp;
-                                {formData.HospitalLeaveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                    {new Date(formData.HospitalLeaveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalLeaveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalLeaveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalLeaveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalLeaveTime).getMinutes()).slice(-2)}</span> : '__________________'}
+                                <td style={{width:'90px'}}>
+                                &nbsp;&nbsp;到達時間:
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                {formData.HospitalArriveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
+                                    {new Date(formData.HospitalArriveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalArriveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalArriveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalArriveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalArriveTime).getMinutes()).slice(-2)}</span> : ''}
+                                </td>
+                                <td style={{width:'90px'}}>
+                                &nbsp;&nbsp;離開時間:
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                {formData.HospitalLeaveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
+                                    {new Date(formData.HospitalLeaveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalLeaveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalLeaveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalLeaveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalLeaveTime).getMinutes()).slice(-2)}</span> : ''}
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={4}>
+                                <td colSpan={7}>
                                 {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9745;</span>}
                                 {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9744;</span>}
                                 拒絕就診&nbsp;&nbsp;
@@ -384,33 +390,37 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{width:'870px'}}>
                         <tr style={{fontWeight:'bold'}}>
                                 <td>
                                 3.2 報警處理:
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={3}>
+                                <td colSpan={5}>
                                 {!formData.Police&& <span>&#9745;</span>}
                                 {formData.Police && <span>&#9744;</span>}
                                 沒有&nbsp;&nbsp;
                                 </td>
                             </tr>
                             <tr>
-                                <td >
+                                <td style={{width:'60px'}}>
                                 {formData.Police && <span>&#9745;</span>}
                                 {!formData.Police && <span>&#9744;</span>}
                                 有&nbsp;&nbsp;
                                 </td>
-                                <td>
-                                若有:日期及時間:&nbsp;&nbsp;
-                                {formData.PoliceDateTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                    {new Date(formData.PoliceDateTime).getFullYear() + `-` +(`0`+(new Date(formData.PoliceDateTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.PoliceDateTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.PoliceDateTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.PoliceDateTime).getMinutes()).slice(-2)}</span> : '__________________'}
+                                <td style={{width:'140px'}}>
+                                若有:日期及時間:
                                 </td>
-                                <td>
-                                警署名稱:&nbsp;&nbsp;
-                                {formData.PoliceStation != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.PoliceStation}</span> : '__________________'}
+                                <td style={{borderBottom:'1px solid', width:'300px'}}>
+                                {formData.PoliceDateTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
+                                    {new Date(formData.PoliceDateTime).getFullYear() + `-` +(`0`+(new Date(formData.PoliceDateTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.PoliceDateTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.PoliceDateTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.PoliceDateTime).getMinutes()).slice(-2)}</span> : ''}
+                                </td>
+                                <td style={{width:'90px'}}>
+                                &nbsp;&nbsp;警署名稱:
+                                </td>
+                                <td  style={{borderBottom:'1px solid', width:'300px'}}>
+                                {formData.PoliceStation != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>{formData.PoliceStation}</span> : ''}
                                 </td>
                             </tr>
                         </table>
@@ -419,33 +429,37 @@ return <>
 
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{width:'900px'}}>
                         <tr style={{fontWeight:'bold'}}>
                                 <td>
                                 3.3家屬聯絡
                                 </td>
                             </tr>
                             <tr>
-                                <td colSpan={3}>
+                                <td colSpan={5}>
                                 {!formData.FamilyContact&& <span>&#9745;</span>}
                                 {formData.FamilyContact && <span>&#9744;</span>}
                                 沒有&nbsp;&nbsp;
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style={{width:'60px'}}>
                                 <td >
                                 {formData.FamilyContact && <span>&#9745;</span>}
                                 {!formData.FamilyContact && <span>&#9744;</span>}
                                 有&nbsp;&nbsp;
                                 </td>
-                                <td>
-                                若有，通知家屬日期及時間:&nbsp;&nbsp;
-                                {formData.FamilyContactDate != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                    {new Date(formData.FamilyContactDate).getFullYear() + `-` +(`0`+(new Date(formData.FamilyContactDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.FamilyContactDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.FamilyContactDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.FamilyContactDate).getMinutes()).slice(-2)}</span> : '__________________'}
+                                <td  style={{width:'230px'}}>
+                                若有，通知家屬日期及時間:
                                 </td>
-                                <td>
-                                與傷者關係:&nbsp;&nbsp;
-                                {formData.FamilyRelationship != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.FamilyRelationship}</span> : '__________________'}
+                                <td  style={{borderBottom:'1px solid', width:'250px'}}>
+                                {formData.FamilyContactDate != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
+                                    {new Date(formData.FamilyContactDate).getFullYear() + `-` +(`0`+(new Date(formData.FamilyContactDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.FamilyContactDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.FamilyContactDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.FamilyContactDate).getMinutes()).slice(-2)}</span> : ''}
+                                </td>
+                                <td style={{width:'110px'}}>
+                                &nbsp;&nbsp;與傷者關係:
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                {formData.FamilyRelationship != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>{formData.FamilyRelationship}</span> : ''}
                                 </td>
                             </tr>
                         </table>
@@ -454,18 +468,18 @@ return <>
                 
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table style={{width:'800px'}}>
+                        <table style={{width:'900px'}}>
                             <tr>
                                 <td style={{width:'200px'}}>
                                 填報人姓名及職級
                                 </td>
-                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {reporterName} &nbsp;&nbsp;{reporterJobTitle}
                                 </td>
-                                <td style={{width:'200px'}}>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
+                                <td style={{width:'200px', textAlign:'right'}}>
+                                日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
-                                <td style={{borderBottom:'1px solid', width:'200px'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.Created).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.Created).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
@@ -473,13 +487,13 @@ return <>
                                 <td>
                                 服務經理姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.SM != null && formData.SM.Title}
                                 </td>
-                                <td>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
+                                <td style={{width:'200px', textAlign:'right'}}>
+                                日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SMDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SMDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
@@ -491,23 +505,23 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                    交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.Investigator != null ? formData.Investigator.Title : '_________________'}&nbsp;</span>填寫「意外報告 (二)」
+                    交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table style={{width:'800px'}}>
+                        <table style={{width:'900px'}}>
                             <tr>
                                 <td style={{width:'200px'}}>
                                 高級物理治療師姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid',width:'200px'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.SPT.Title}
                                 </td>
-                                <td style={{width:'200px'}}>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期
+                                <td style={{width:'200px', textAlign:'right'}}>
+                                日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
-                                <td style={{borderBottom:'1px solid',width:'200px'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SPTDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SPTDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
