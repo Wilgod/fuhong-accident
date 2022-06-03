@@ -38,8 +38,11 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
-            let filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return item.ServiceUserNameCN == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
-                item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            let filterServiceUserAccidentData = serviceUserAccidentData;
+            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return item.ServiceUserNameCN == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
+                    item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            }
             for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
@@ -77,8 +80,11 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("PUI") > -1) {
             outsiderAccidentData = await getAllOutsiderAccidentWithClosed();
-            let filterOutsiderAccidentData = outsiderAccidentData.filter(item=> {return item.ServiceUserNameTC == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
-                item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            let filterOutsiderAccidentData = outsiderAccidentData;
+            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+                filterOutsiderAccidentData = outsiderAccidentData.filter(item=> {return item.ServiceUserNameTC == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
+                    item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            }
             
             for (let item of filterOutsiderAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
@@ -121,9 +127,12 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1) {
             specialIncidentReportLicense = await getAllSpecialIncidentReportLicenseWithClosed();
-            let filterSpecialIncidentReportLicense = specialIncidentReportLicense.filter(item=> {return item.ResponsibleName == searchCriteria.keyword || item.HomesManagerName == searchCriteria.keyword  || 
-                item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
-            
+
+            let filterSpecialIncidentReportLicense = specialIncidentReportLicense;
+            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+                filterSpecialIncidentReportLicense = specialIncidentReportLicense.filter(item=> {return item.ResponsibleName == searchCriteria.keyword || item.HomesManagerName == searchCriteria.keyword  || 
+                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            }
             for (let item of filterSpecialIncidentReportLicense) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
@@ -154,9 +163,13 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SID") > -1) {
             specialIncidentReportAllowance = await getAllSpecialIncidentReportAllowanceWithClosed();
-            let filterSpecialIncidentReporAllowance = specialIncidentReportAllowance.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
-                item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
-            
+
+            let filterSpecialIncidentReporAllowance = specialIncidentReportAllowance;
+            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+                filterSpecialIncidentReporAllowance = specialIncidentReportAllowance.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
+                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            }
+
             for (let item of filterSpecialIncidentReporAllowance) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
@@ -187,9 +200,13 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
 
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("OIN") > -1) {
             otherIncidentData = await getAllOtherIncidentReportWithClosed();
-            let filterOtherIncidentData = otherIncidentData.filter(item=> {return item.InsuranceCaseNo == searchCriteria.keyword || item.IncidentDescription == searchCriteria.keyword  || 
-                item.PoliceReportNumber == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword})
-            
+
+            let filterOtherIncidentData = otherIncidentData;
+            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+                filterOtherIncidentData = otherIncidentData.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
+                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            }
+                
             for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';

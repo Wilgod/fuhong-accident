@@ -421,10 +421,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>
           <div className="d-flex align-items center">
             <div style={{marginRight:'10px'}}>
-              <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"儀表板"} />
+              <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"常用圖表"} />
             </div>
             <div>
-              儀表板
+            常用圖表
             </div>
           </div>
         </div>

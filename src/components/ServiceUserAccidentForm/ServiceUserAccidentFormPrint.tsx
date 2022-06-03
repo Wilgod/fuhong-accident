@@ -145,137 +145,180 @@ return <>
                     
                 </div>
                 <div style={{fontSize:'18px'}}>
-                    <table>
+                    <table style={{width:'750px'}}>
                         <tr>
-                            <td style={{verticalAlign:'top'}}>
+                            <td style={{width:'300px'}}>
                             1.1服務使用者意外時情況
                             </td>
-                            <td>
-                                <div>
-                                    {formData.Circumstance == "SCENARIO_SLEEPING"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_SLEEPING" && <span>&#9744;</span>}
-                                    睡覺&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_DINNING" && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_DINNING" && <span>&#9744;</span>}
-                                    進食&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_WASHING" && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_WASHING" && <span>&#9744;</span>}
-                                    梳洗&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_TOLIET" && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_TOLIET" && <span>&#9744;</span>}
-                                    如廁&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_BATHING" && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_BATHING" && <span>&#9744;</span>}
-                                    洗澡&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_WALKING" && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_WALKING" && <span>&#9744;</span>}
-                                    步行期間&nbsp;&nbsp;
-                                </div>
-                                <div>
-                                    {formData.Circumstance == "SCENARIO_INSIDE_ACTIVITY"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_INSIDE_ACTIVITY" && <span>&#9744;</span>}
-                                    參與服務單位內活動&nbsp;&nbsp;
-                                    {formData.Circumstance == "SCENARIO_OUTSIDE_ACTIVITY"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_OUTSIDE_ACTIVITY" && <span>&#9744;</span>}
-                                    外出活動期間(請註明地點 :&nbsp;&nbsp;
-                                    {formData.CircumstanceLocation != null ? formData.CircumstanceLocation : '____________________'})
-                                </div>
-                                <div>
-                                    {formData.Circumstance == "SCENARIO_OTHER"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_OTHER" && <span>&#9744;</span>}
-                                    其他 (請註明&nbsp;&nbsp;
-                                    {formData.CircumstanceOtherRemark != null ? formData.CircumstanceOtherRemark : '____________________'})
-                                </div>
+                            <td style={{width:'450px'}}>
+                                {formData.Circumstance == "SCENARIO_SLEEPING"  && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_SLEEPING" && <span>&#9744;</span>}
+                                睡覺&nbsp;&nbsp;
+                                {formData.Circumstance == "SCENARIO_DINNING" && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_DINNING" && <span>&#9744;</span>}
+                                進食&nbsp;&nbsp;
+                                {formData.Circumstance == "SCENARIO_WASHING" && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_WASHING" && <span>&#9744;</span>}
+                                梳洗&nbsp;&nbsp;
+                                {formData.Circumstance == "SCENARIO_TOLIET" && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_TOLIET" && <span>&#9744;</span>}
+                                如廁&nbsp;&nbsp;
+                                {formData.Circumstance == "SCENARIO_BATHING" && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_BATHING" && <span>&#9744;</span>}
+                                洗澡&nbsp;&nbsp;
+                                {formData.Circumstance == "SCENARIO_WALKING" && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_WALKING" && <span>&#9744;</span>}
+                                步行期間&nbsp;&nbsp;
                             </td>
                         </tr>
                     </table>
-                    <table>
+                    <table  style={{width:'950px'}}>
                         <tr>
-                            <td style={{verticalAlign:'top', width:'380px'}}>
+                            <td style={{width:'300px'}}>
+                            </td>
+                            <td style={{width:'410px'}}>
+                                    {formData.Circumstance == "SCENARIO_INSIDE_ACTIVITY"  && <span>&#9745;</span>}
+                                    {formData.Circumstance != "SCENARIO_INSIDE_ACTIVITY" && <span>&#9744;</span>}
+                                    參與服務單位內活動
+                                    {formData.Circumstance == "SCENARIO_OUTSIDE_ACTIVITY"  && <span>&#9745;</span>}
+                                    {formData.Circumstance != "SCENARIO_OUTSIDE_ACTIVITY" && <span>&#9744;</span>}
+                                    外出活動期間 請註明地點 :
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'240px'}}>
+                                {formData.CircumstanceLocation != null ? formData.CircumstanceLocation : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table  style={{width:'950px'}}>
+                        <tr>
+                            <td style={{width:'300px'}}>
+                            </td>
+                            <td style={{width:'140px'}}>
+                                {formData.Circumstance == "SCENARIO_OTHER"  && <span>&#9745;</span>}
+                                {formData.Circumstance != "SCENARIO_OTHER" && <span>&#9744;</span>}
+                                其他 請註明 :&nbsp;&nbsp;
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'510px'}}>
+                            {formData.CircumstanceOtherRemark != null ? formData.CircumstanceOtherRemark : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table style={{marginTop:'20px'}}>
+                        <tr>
+                            <td style={{width:'380px'}}>
                             1.2 服務使用者受傷部位<span style={{fontSize:'14px'}}>（如有受傷，可選擇多項）</span>
                             </td>
                             <td>
-                                <div>
-                                    {formData.InjuredArea == "INJURY_HEAD"  && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_HEAD" && <span>&#9744;</span>}
-                                    頭部&nbsp;&nbsp;
-                                    {formData.InjuredArea == "INJURY_NECK" && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_NECK" && <span>&#9744;</span>}
-                                    頸部&nbsp;&nbsp;
-                                    {formData.InjuredArea == "INJURY_BODY" && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_BODY" && <span>&#9744;</span>}
-                                    軀幹&nbsp;&nbsp;
-                                    {formData.InjuredArea == "INJURY_UPPER_LIMB" && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_UPPER_LIMB" && <span>&#9744;</span>}
-                                    上肢&nbsp;&nbsp;
-                                    {formData.InjuredArea == "INJURY_LOWER_LIMB" && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_LOWER_LIMB" && <span>&#9744;</span>}
-                                    下肢&nbsp;&nbsp;
-                                </div>
-                                <div>
-                                    {formData.InjuredArea == "INJURY_OTHER"  && <span>&#9745;</span>}
-                                    {formData.InjuredArea != "INJURY_OTHER" && <span>&#9744;</span>}
-                                    其他 (請註明&nbsp;&nbsp;
-                                    {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : '____________________'})
-                                </div>
+                                {formData.InjuredArea == "INJURY_HEAD"  && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_HEAD" && <span>&#9744;</span>}
+                                頭部&nbsp;&nbsp;
+                                {formData.InjuredArea == "INJURY_NECK" && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_NECK" && <span>&#9744;</span>}
+                                頸部&nbsp;&nbsp;
+                                {formData.InjuredArea == "INJURY_BODY" && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_BODY" && <span>&#9744;</span>}
+                                軀幹&nbsp;&nbsp;
+                                {formData.InjuredArea == "INJURY_UPPER_LIMB" && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_UPPER_LIMB" && <span>&#9744;</span>}
+                                上肢&nbsp;&nbsp;
+                                {formData.InjuredArea == "INJURY_LOWER_LIMB" && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_LOWER_LIMB" && <span>&#9744;</span>}
+                                下肢&nbsp;&nbsp;
                             </td>
                         </tr>
                     </table>
-                    <table>
+                    <table style={{width:'950px'}}>
                         <tr>
-                            <td rowSpan={2} style={{verticalAlign:'top', width:'380px'}}>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'140px'}}>
+                                {formData.InjuredArea == "INJURY_OTHER"  && <span>&#9745;</span>}
+                                {formData.InjuredArea != "INJURY_OTHER" && <span>&#9744;</span>}
+                                其他 請註明&nbsp;&nbsp;
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'430px'}}>
+                            {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table style={{marginTop:'20px'}}>
+                        <tr>
+                            <td rowSpan={2} style={{width:'380px'}}>
                             1.3 服務使用者意外後有否身體不適／受傷：<div style={{fontSize:'14px'}}>可選擇多項</div>
                             </td>
-                            <td style={{verticalAlign:'top'}}>
+                            <td style={{width:'80px'}}>
                                 {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9745;</span>}
                                 {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9744;</span>}
                                 是&nbsp;&nbsp;
                             </td>
                             <td>
-                                <div>
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BLEEDING"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BLEEDING" && <span>&#9744;</span>}
-                                    流血&nbsp;&nbsp;
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BRUISE"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BRUISE" && <span>&#9744;</span>}
-                                    瘀腫&nbsp;&nbsp;
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_FRACTURE"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_FRACTURE" && <span>&#9744;</span>}
-                                    骨折&nbsp;&nbsp;
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_DIZZY"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_DIZZY" && <span>&#9744;</span>}
-                                    暈眩&nbsp;&nbsp;
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_SHOCK"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_SHOCK" && <span>&#9744;</span>}
-                                    休克/失去知覺&nbsp;&nbsp;
-                                </div>
-                                <div>
-                                    {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
-                                    {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_OTHER" && <span>&#9744;</span>}
-                                    其他 (請註明&nbsp;&nbsp;
-                                    {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : '____________________'})
-                                </div>
-                                <div>
-                                    受傷情況 : &nbsp;&nbsp;
-                                    {formData.UnwellAfterInjuredDescription != null ? formData.UnwellAfterInjuredDescription : '____________________'})
-                                </div>
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BLEEDING"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BLEEDING" && <span>&#9744;</span>}
+                                流血&nbsp;&nbsp;
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BRUISE"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BRUISE" && <span>&#9744;</span>}
+                                瘀腫&nbsp;&nbsp;
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_FRACTURE"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_FRACTURE" && <span>&#9744;</span>}
+                                骨折&nbsp;&nbsp;
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_DIZZY"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_DIZZY" && <span>&#9744;</span>}
+                                暈眩&nbsp;&nbsp;
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_SHOCK"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_SHOCK" && <span>&#9744;</span>}
+                                休克/失去知覺&nbsp;&nbsp;
                             </td>
                         </tr>
+                    </table>
+                    <table style={{width:'950px'}}>
                         <tr>
-                            <td style={{verticalAlign:'top'}}>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'80px'}}>
+                            </td>
+                            <td style={{width:'140px'}}>
+                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_OTHER" && <span>&#9744;</span>}
+                                其他 請註明&nbsp;&nbsp;
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'350px'}}>
+                            {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table style={{width:'950px'}}>
+                        <tr>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'80px'}}>
+                            </td>
+                            <td style={{width:'90px'}}>
+                            受傷情況 : 
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'400px'}}>
+                            {formData.UnwellAfterInjuredDescription != null ? formData.UnwellAfterInjuredDescription : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table style={{width:'950px'}}>
+                        <tr>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'80px'}}>
                                 {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9745;</span>}
                                 {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9744;</span>}
                                 否&nbsp;&nbsp;
                             </td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </table>
-                    <table>
+                    <table style={{marginTop:'20px'}}>
                         <tr>
-                            <td rowSpan={2} style={{verticalAlign:'top', width:'380px'}}>
+                            <td rowSpan={2} style={{width:'380px'}}>
                             1.4 服務使用者有否出現不安全的行為：<div style={{fontSize:'14px'}}>可選擇多項</div>
                             </td>
-                            <td style={{verticalAlign:'top'}}>
+                            <td style={{width:'80px'}}>
                                 {formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_TRUE' && <span>&#9745;</span>}
                                 {formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_FALSE' && <span>&#9744;</span>}
                                 是&nbsp;&nbsp;
@@ -297,52 +340,77 @@ return <>
                                     {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_REJECT") == -1)) && <span>&#9744;</span>}
                                     拒絕使用輔助器材&nbsp;&nbsp;
                                 </div>
-                                <div>
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") == -1)) && <span>&#9744;</span>}
-                                    其他 (請註明&nbsp;&nbsp;
-                                    {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : '____________________'})
-                                </div>
                             </td>
                         </tr>
+                    </table>
+                    <table style={{width:'950px'}}>
                         <tr>
-                            <td style={{verticalAlign:'top'}}>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'80px'}}>
+                            </td>
+                            <td style={{width:'140px'}}>
+                                    {formData.UnsafeBehaviorsChoices != null && formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
+                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") == -1)) && <span>&#9744;</span>}
+                                    其他 請註明&nbsp;&nbsp;
+                                    
+                            </td>
+                            <td style={{borderBottom:'1px solid',width:'350px'}}>
+                                {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                            </td>
+                        </tr>
+                    </table>
+                    <table style={{width:'950px'}}>
+                        <tr>
+                            <td style={{width:'380px'}}>
+                            </td>
+                            <td style={{width:'80px'}}>
                                 {formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_FALSE" && <span>&#9745;</span>}
                                 {formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_TRUE" && <span>&#9744;</span>}
                                 否&nbsp;&nbsp;
                             </td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </table>
-                    <table>
+
+                    <table style={{marginTop:'20px', width:'880px'}}>
                         <tr>
                             <td rowSpan={2} style={{verticalAlign:'top', width:'380px'}}>
                             1.5 相片及CCTV記錄
                             </td>
-                            <td style={{verticalAlign:'top'}}>
-                                <div>
-                                相片&nbsp;&nbsp;
+                            <td style={{verticalAlign:'top', width:'100px'}}>
+                                相片
+                            </td>
+                            <td style={{verticalAlign:'top', width:'200px'}}>
                                 {formData.PhotoRecord && <span>&#9745;</span>}
                                 {!formData.PhotoRecord && <span>&#9744;</span>}
-                                有 (上載相片) &nbsp;&nbsp;
+                                有 (上載相片)
+                            </td>
+                            <td style={{verticalAlign:'top', width:'200px'}}>
                                 {!formData.PhotoRecord && <span>&#9745;</span>}
                                 {formData.PhotoRecord && <span>&#9744;</span>}
-                                未能提供 &nbsp;&nbsp;
-                                </div>
-                                <div>
-                                CCTV記錄&nbsp;&nbsp;
+                                未能提供
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{verticalAlign:'top'}}>
+                            CCTV記錄
+                            </td>
+                            <td style={{verticalAlign:'top'}}>
                                 {formData.CctvRecord && <span>&#9745;</span>}
                                 {!formData.CctvRecord && <span>&#9744;</span>}
-                                有(註: 三個工作天內交總辦事處) &nbsp;&nbsp;
+                                有(註: 三個工作天內交總辦事處) 
+                            </td>
+                            <td style={{verticalAlign:'top'}}>
                                 {!formData.CctvRecord && <span>&#9745;</span>}
                                 {formData.CctvRecord && <span>&#9744;</span>}
-                                未能提供 &nbsp;&nbsp;
-                                </div>
+                                未能提供
                             </td>
                         </tr>
                     </table>
                 </div>
-                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                <div className="form-row mb-3" style={{fontSize:'18px',marginTop:'20px'}}>
                     <div className={`col-12`} style={{fontWeight:'bold'}}>
                     2. 初步觀察的意外成因<span style={{fontWeight:'normal'}}>（可選擇多項）</span>
                     </div>
@@ -451,16 +519,16 @@ return <>
                     <div className={`col-12`} >
                         <table>
                             <tr>
-                                <td style={{verticalAlign:'top', width:'330px'}}>3.1 服務單位即時治療/處理</td>
+                                <td style={{verticalAlign:'top', width:'230px'}}>3.1 服務單位即時治療/處理</td>
                                 <td style={{fontSize:'15px',verticalAlign:'top', borderBottom:'1px solid'}}>{formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{marginTop:'20px'}}>
                             <tr>
-                                <td style={{verticalAlign:'top'}}>3.2 就診安排</td>
-                                <td>
+                                <td style={{width:'130px'}}>3.2 就診安排</td>
+                                <td style={{width:'330px'}}>
                                     {formData.MedicalArrangement == "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9745;</span>}
                                     {formData.MedicalArrangement != "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9744;</span>}
                                     醫生到診&nbsp;&nbsp;
@@ -469,37 +537,47 @@ return <>
                                     門診&nbsp;&nbsp;
                                     {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9745;</span>}
                                     {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
-                                    急症室&nbsp;&nbsp;(醫院名稱 :
-                                    {formData.MedicalArrangementHospital != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.MedicalArrangementHospital}</span> : '____________________'})
+                                    急症室&nbsp;&nbsp;醫院名稱 :
+                                </td>
+                                <td style={{borderBottom:'1px solid',width:'400px'}}>
+                                    {formData.MedicalArrangementHospital != null ? formData.MedicalArrangementHospital : ''}
                                 </td>
                                 <td>
-                                    到達時間
+                                &nbsp;&nbsp;到達時間
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
                                     {formData.MedicalArrangementDate != null && new Date(formData.MedicalArrangementDate).getFullYear() + `-` +(`0`+(new Date(formData.MedicalArrangementDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.MedicalArrangementDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.MedicalArrangementDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.MedicalArrangementDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
+                        </table>
+                        <table >
                             <tr>
-                                <td></td>
-                                <td >提供予服務使用者的治療</td>
-                                <td colSpan={2} style={{borderBottom:'1px solid'}}>
-                                {formData.MedicalArrangementTreatment != null ? formData.MedicalArrangementTreatment : ''})
+                                <td style={{width:'130px'}}></td>
+                                <td style={{width:'210px'}}>提供予服務使用者的治療</td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formData.MedicalArrangementTreatment != null ? formData.MedicalArrangementTreatment : ''}
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{marginTop:'20px'}}>
                             <tr>
-                                <td style={{verticalAlign:'top'}}>3.3 是否在醫院留醫</td>
-                                <td>
+                                <td style={{width:'200px'}}>3.3 是否在醫院留醫</td>
+                                <td style={{width:'145px'}}>
                                     {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9745;</span>}
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9744;</span>}
-                                    是&nbsp;&nbsp; (醫院名稱：
-                                    {formData.StayInHospitalName != null ? formData.StayInHospitalName : '____________________'})&nbsp;&nbsp;
-                                    {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
+                                    是&nbsp;&nbsp; 醫院名稱：
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                    {formData.StayInHospitalName != null ? formData.StayInHospitalName : ''}&nbsp;&nbsp;
+                                </td>
+                                <td style={{width:'100px'}}>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;{formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
-                                    否&nbsp;&nbsp;
+                                    否
+                                </td>
+                                <td>
                                     {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
                                     不適用
@@ -510,26 +588,49 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                    <table>
+                    <table style={{width:'900px'}}>
                             <tr>
-                                <td rowSpan={2} style={{verticalAlign:'top',fontWeight:'bold', width:'100px'}}>4.	報警處理</td>
-                                <td style={{verticalAlign:'top'}}>
+                                <td style={{fontWeight:'bold', width:'120px'}}>4.	報警處理</td>
+                                <td style={{width:'100px'}}>
                                     {formData.CalledPolice && <span>&#9745;</span>}
                                     {!formData.CalledPolice && <span>&#9744;</span>}
                                     需要
                                 </td>
-                                <td style={{verticalAlign:'top'}}>
-                                    <div>日期及時間&nbsp;&nbsp; {formData.CalledPoliceDate != null ? formData.CalledPoliceDate : '____________________'}</div>
-                                    <div>報案編號&nbsp;&nbsp; {formData.CalledPoliceReportNumber != null ? formData.CalledPoliceReportNumber : '____________________'}&nbsp;&nbsp;&nbsp;&nbsp;
-                                    警署&nbsp;&nbsp; {formData.CalledPoliceStation != null ? formData.CalledPoliceStation : '____________________'}</div>
+                                <td style={{width:'100px'}}>
+                                    日期及時間
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                    {formData.CalledPoliceDate != null ? formData.CalledPoliceDate : ''}
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    報案編號
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                    {formData.CalledPoliceReportNumber != null ? formData.CalledPoliceReportNumber : ''}
+                                </td>
+                                <td style={{width:'80px'}}>
+                                &nbsp;&nbsp;警署
+                                </td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
+                                    {formData.CalledPoliceStation != null ? formData.CalledPoliceStation : ''}
                                 </td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td>
                                     {!formData.CalledPolice && <span>&#9745;</span>}
                                     {formData.CalledPolice && <span>&#9744;</span>}
                                     不需要
                                 </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </table>
                     
@@ -537,21 +638,21 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                    <table>
+                    <table style={{width:'650px'}}>
                             <tr>
-                                <td style={{verticalAlign:'top',fontWeight:'bold', width:'400px'}}>5.   意外後中心即時應變措施</td>
-                                <td style={{verticalAlign:'top'}}>
+                                <td style={{verticalAlign:'top',fontWeight:'bold', width:'250px'}}>5. 意外後中心即時應變措施</td>
+                                <td style={{verticalAlign:'top', width:'100px'}}>
                                     {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9745;</span>}
                                     {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9744;</span>}
                                     沒有
                                 </td>
-                                <td style={{verticalAlign:'top'}}>
+                                <td style={{verticalAlign:'top', width:'50px'}}>
                                     {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9745;</span>}
                                     {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9744;</span>}
                                     有 
                                     
                                 </td>
-                                <td style={{verticalAlign:'top', borderBottom:'1px solidb'}}>
+                                <td style={{verticalAlign:'top', borderBottom:'1px solid', width:'250px'}}>
                                 {formData.ContingencyMeasureRemark != null ? formData.ContingencyMeasureRemark : ''}
                                 </td>
                             </tr>
@@ -564,43 +665,43 @@ return <>
                     6. 家屬聯絡
                     </div>
                     <div className={`col-12`}>
-                    <table>
+                    <table style={{width:'950px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                     6.1通知家屬日期及時間
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.ContactFamilyDate != null && new Date(formData.ContactFamilyDate).getFullYear() + `-` +(`0`+(new Date(formData.ContactFamilyDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.ContactFamilyDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.ContactFamilyDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.ContactFamilyDate).getMinutes()).slice(-2)}
                                 </td>
-                                <td>
-                                    與服務使用者關係
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;與服務使用者關係
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.ContactFamilyRelationship != null ? formData.ContactFamilyRelationship : ''}
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 6.2 家屬姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.ContactFamilyName != null ? formData.ContactFamilyName : ''}
                                 </td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 6.3 負責通知家屬的職員姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.ContactStaff != null ? formData.ContactStaff.displayName : ''}
                                 </td>
-                                <td>職位</td>
-                                <td style={{borderBottom:'1px solid'}}>{formData.ContactStaff != null  ? formData.ContactStaff.jobTitle : ''}</td>
+                                <td style={{width:'200px'}}>&nbsp;&nbsp;&nbsp;&nbsp;職位</td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.ContactStaff != null  ? formData.ContactStaff.jobTitle : ''}</td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 6.4 服務使用者經診治後情况
                                 </td>
                                 <td colSpan={3} style={{borderBottom:'1px solid'}}>
@@ -612,32 +713,32 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'950px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 填報人姓名及職級
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.Author.displayName}&nbsp;&nbsp;{formData.Author.jobTitle}
                                 </td>
-                                <td>
-                                日期
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.Created != null && new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 高級服務經理/服務經理姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.SM != null && formData.SM.Title}
                                 </td>
-                                <td>
-                                日期
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.SMDate != null && new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2)}
                                 
                                 </td>
@@ -653,13 +754,13 @@ return <>
                     交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
                     <div className={`col-12`}>
-                    <table>
+                    <table style={{width:'950px'}}>
                         <tr>
                             <td style={{width:'60px'}}>
                             評語 :
                             </td>
                             <td style={{borderBottom:'1px solid'}}>
-                            &nbsp;&nbsp;{formTwentyData != null && formData.SPTComment != null ? formData.SPTComment : ''}
+                            {formTwentyData != null && formData.SPTComment != null ? formData.SPTComment : ''}
                             </td>
                         </tr>
                     </table>
@@ -668,18 +769,18 @@ return <>
                 
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'950px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'250px'}}>
                                 高級物理治療師姓名
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.SPT.Title}
                                 </td>
-                                <td>
-                                日期
+                                <td style={{width:'200px'}}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'250px'}}>
                                 {formData.SPTDate != null && new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2)}
                                 
                                 </td>

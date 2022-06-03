@@ -354,7 +354,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 }
             }
         } else {
-            error["ObserveEnvironmentFactor"] = true;
+            if (form.personalFactor.length == 0) {
+                error["ObserveEnvironmentFactor"] = true;
+            }
+            
         }
 
         //個人因素
@@ -368,7 +371,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 }
             }
         } else {
-            error["ObservePersonalFactor"] = true;
+            if (form.envFactor.length == 0) {
+                error["ObservePersonalFactor"] = true;
+            }
         }
 
         //事發過程

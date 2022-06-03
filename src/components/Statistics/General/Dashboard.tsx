@@ -356,6 +356,13 @@ function Dashboard(siteCollectionUrl) {
     const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
     const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useDashboardStats();
     const [unitDataset, setUnitDataset] = useState<IDataset>(initialDataset);
+    const [displayBarChart1, setDisplayBarChart1] = useState("none");
+    const [displayBarChart2, setDisplayBarChart2] = useState("none");
+    const [displayBarChart3, setDisplayBarChart3] = useState("none");
+    const [displayBarChart4, setDisplayBarChart4] = useState("none");
+    const [displayBarChart5, setDisplayBarChart5] = useState("none");
+    const [displayBarChart6, setDisplayBarChart6] = useState("none");
+
     const ref = React.useRef();
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -496,7 +503,13 @@ function Dashboard(siteCollectionUrl) {
                                 <h6>{`${title} - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                             <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                                {displayBarChart1 == '' &&
+                                    <button className="btn btn-primary" onClick={() => setDisplayBarChart1('none')}>隱藏圖表</button>
+                                }
+                                {displayBarChart1 == 'none' &&
+                                    <button className="btn btn-primary" onClick={() => setDisplayBarChart1('')}>顯示圖表</button>
+                                }
                             </div>
                         </div>
                         <div className="row">
@@ -505,65 +518,6 @@ function Dashboard(siteCollectionUrl) {
                             </div>
                         </div>
                     </React.Fragment>
-                )
-            case "BY_MONTH":
-                let montResult = sampleTwoParser(data, startDate, endDate);
-                return (
-                    <>
-                        <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
-                            <div className="col-12">
-                                <h6>{`${title} - 新發生意外或事故 (每月總數)  - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
-                            </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-12">
-                                <table className="table" id="table2">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">服務使用者意外</th>
-                                            <th scope="col">外界人士意外</th>
-                                            <th scope="col">特別事故 (牌照事務處)</th>
-                                            <th scope="col">特別事故 (津貼科)</th>
-                                            <th scope="col">其他事故</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {sampleTwoParser(data, startDate, endDate).map((item) => {
-                                            return (
-                                                <tr>
-                                                    <th scope="row">{item.month}</th>
-                                                    <td>{item.dataset.sui}</td>
-                                                    <td>{item.dataset.pui}</td>
-                                                    <td>{item.dataset.sih}</td>
-                                                    <td>{item.dataset.sid}</td>
-                                                    <td>{item.dataset.oin}</td>
-                                                </tr>
-                                            )
-                                        })}
-                                        {
-                                            <tr style={{ color: "red" }}>
-                                                <th scope="row">總數</th>
-                                                <td>{unitDataset.sui}</td>
-                                                <td>{unitDataset.pui}</td>
-                                                <td>{unitDataset.sih}</td>
-                                                <td>{unitDataset.sid}</td>
-                                                <td>{unitDataset.oin}</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </>
                 )
             default:
                 return null;
@@ -748,7 +702,7 @@ function Dashboard(siteCollectionUrl) {
         return (
             <React.Fragment>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-12" style={{display:displayBarChart1}}>
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
                         <div className="nonBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -775,7 +729,7 @@ function Dashboard(siteCollectionUrl) {
                             />
                         </div>
                     </div>
-                    <div className="col-12">
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
                         <div className="nonPieChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -803,7 +757,7 @@ function Dashboard(siteCollectionUrl) {
                                 }
                             />
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
 
                 <hr/>
@@ -819,7 +773,13 @@ function Dashboard(siteCollectionUrl) {
                 </div>
                 <div className="row">
                     <div className="col-12" style={{margin:'5px 0'}}>
-                        <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                        <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                        {displayBarChart2 == '' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart2('none')}>隱藏圖表</button>
+                        }
+                        {displayBarChart2 == 'none' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart2('')}>顯示圖表</button>
+                        }
                     </div>
                     <div className="col-12">
                         <table className="table" id="table3">
@@ -1000,8 +960,8 @@ function Dashboard(siteCollectionUrl) {
                         </table>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                <div className="row" style={{display:displayBarChart2}}>
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialLineChart1">
@@ -1020,7 +980,7 @@ function Dashboard(siteCollectionUrl) {
                             loader={<div>Loading Chart</div>}
                             data={SUIFYChart}
                         />
-                    </div>
+                    </div>*/}
                     <div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                     </div>
@@ -1054,7 +1014,13 @@ function Dashboard(siteCollectionUrl) {
                         <h6>{`${title} - 外界人士意外每月總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
                     <div className="col-12" style={{margin:'5px 0'}}>
-                        <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                        <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                        {displayBarChart3 == '' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart3('none')}>隱藏圖表</button>
+                        }
+                        {displayBarChart3 == 'none' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart3('')}>顯示圖表</button>
+                        }
                     </div>
                 </div>
                 <div className="row">
@@ -1237,8 +1203,8 @@ function Dashboard(siteCollectionUrl) {
                         </table>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                <div className="row" style={{display:displayBarChart3}}>
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialLineChart2">
@@ -1257,7 +1223,7 @@ function Dashboard(siteCollectionUrl) {
                             loader={<div>Loading Chart</div>}
                             data={PUIFYChart}
                         />
-                    </div>
+                    </div>*/}
                     <div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                     </div>
@@ -1290,7 +1256,13 @@ function Dashboard(siteCollectionUrl) {
                         <h6>{`${title} - 特別事故(牌照事務處)每月總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
                     <div className="col-12" style={{margin:'5px 0'}}>
-                        <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                        <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                        {displayBarChart4 == '' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart4('none')}>隱藏圖表</button>
+                        }
+                        {displayBarChart4 == 'none' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart4('')}>顯示圖表</button>
+                        }
                     </div>
                 </div>
                 <div className="row">
@@ -1473,8 +1445,8 @@ function Dashboard(siteCollectionUrl) {
                         </table>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                <div className="row" style={{display:displayBarChart4}}>
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialLineChart3">
@@ -1493,7 +1465,7 @@ function Dashboard(siteCollectionUrl) {
                             loader={<div>Loading Chart</div>}
                             data={SIHFYChart}
                         />
-                    </div>
+                    </div>*/}
                     <div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                     </div>
@@ -1526,7 +1498,13 @@ function Dashboard(siteCollectionUrl) {
                         <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
                     <div className="col-12" style={{margin:'5px 0'}}>
-                        <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                        <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                        {displayBarChart5 == '' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart5('none')}>隱藏圖表</button>
+                        }
+                        {displayBarChart5 == 'none' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart5('')}>顯示圖表</button>
+                        }
                     </div>
                 </div>
                 <div className="row">
@@ -1709,8 +1687,8 @@ function Dashboard(siteCollectionUrl) {
                         </table>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                <div className="row" style={{display:displayBarChart5}}>
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialLineChart4">
@@ -1729,7 +1707,7 @@ function Dashboard(siteCollectionUrl) {
                             loader={<div>Loading Chart</div>}
                             data={SIDFYChart}
                         />
-                    </div>
+                    </div>*/}
                     <div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                     </div>
@@ -1762,7 +1740,13 @@ function Dashboard(siteCollectionUrl) {
                         <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
                     <div className="col-12" style={{margin:'5px 0'}}>
-                        <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                        <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
+                        {displayBarChart6 == '' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart6('none')}>隱藏圖表</button>
+                        }
+                        {displayBarChart6 == 'none' &&
+                            <button className="btn btn-primary" onClick={() => setDisplayBarChart6('')}>顯示圖表</button>
+                        }
                     </div>
                 </div>
                 <div className="row">
@@ -1945,8 +1929,8 @@ function Dashboard(siteCollectionUrl) {
                         </table>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-12">
+                <div className="row" style={{display:displayBarChart6}}>
+                    {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialLineChart5">
@@ -1965,7 +1949,7 @@ function Dashboard(siteCollectionUrl) {
                             loader={<div>Loading Chart</div>}
                             data={OINFYChart}
                         />
-                    </div>
+                    </div>*/}
                     <div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                     </div>
@@ -1994,7 +1978,7 @@ function Dashboard(siteCollectionUrl) {
         <div>
             <div className="row mb-3">
                 <div className="col">
-                    <h6 style={{ fontWeight: 600 }}>儀表板</h6>
+                    <h6 style={{ fontWeight: 600 }}>常用圖表</h6>
                 </div>
             </div>
             <div className="row">
