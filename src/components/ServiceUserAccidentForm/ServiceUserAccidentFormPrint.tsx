@@ -504,7 +504,7 @@ return <>
                     2.2事發過程
                     </div>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{width:'950px'}}>
                             <tr>
                                 <td style={{verticalAlign:'top', width:'380px'}}>(請註明事發地點附近之員工當時執行的職務)</td>
                                 <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData.AccidentDetail != null ? formData.AccidentDetail : ''}</td>
@@ -517,7 +517,7 @@ return <>
                     3.	意外事件後之治療處理
                     </div>
                     <div className={`col-12`} >
-                        <table>
+                        <table style={{width:'950px'}}>
                             <tr>
                                 <td style={{verticalAlign:'top', width:'230px'}}>3.1 服務單位即時治療/處理</td>
                                 <td style={{fontSize:'15px',verticalAlign:'top', borderBottom:'1px solid'}}>{formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
@@ -525,7 +525,7 @@ return <>
                         </table>
                     </div>
                     <div className={`col-12`} >
-                        <table style={{marginTop:'20px'}}>
+                        <table style={{marginTop:'20px', width:'950px'}}>
                             <tr>
                                 <td style={{width:'130px'}}>3.2 就診安排</td>
                                 <td style={{width:'330px'}}>
@@ -539,18 +539,18 @@ return <>
                                     {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
                                     急症室&nbsp;&nbsp;醫院名稱 :
                                 </td>
-                                <td style={{borderBottom:'1px solid',width:'400px'}}>
+                                <td style={{borderBottom:'1px solid',width:'200px'}}>
                                     {formData.MedicalArrangementHospital != null ? formData.MedicalArrangementHospital : ''}
                                 </td>
-                                <td>
+                                <td style={{width:'90px'}}>
                                 &nbsp;&nbsp;到達時間
                                 </td>
-                                <td style={{borderBottom:'1px solid'}}>
+                                <td style={{borderBottom:'1px solid',width:'200px'}}>
                                     {formData.MedicalArrangementDate != null && new Date(formData.MedicalArrangementDate).getFullYear() + `-` +(`0`+(new Date(formData.MedicalArrangementDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.MedicalArrangementDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.MedicalArrangementDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.MedicalArrangementDate).getMinutes()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
-                        <table >
+                        <table  style={{width:'950px'}}>
                             <tr>
                                 <td style={{width:'130px'}}></td>
                                 <td style={{width:'210px'}}>提供予服務使用者的治療</td>
@@ -561,10 +561,10 @@ return <>
                         </table>
                     </div>
                     <div className={`col-12`} >
-                        <table style={{marginTop:'20px'}}>
+                        <table style={{marginTop:'20px',width:'800px'}}>
                             <tr>
                                 <td style={{width:'200px'}}>3.3 是否在醫院留醫</td>
-                                <td style={{width:'145px'}}>
+                                <td style={{width:'150px'}}>
                                     {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9745;</span>}
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9744;</span>}
                                     是&nbsp;&nbsp; 醫院名稱：
@@ -577,7 +577,7 @@ return <>
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
                                     否
                                 </td>
-                                <td>
+                                <td style={{width:'100px'}}>
                                     {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
                                     {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
                                     不適用
@@ -586,6 +586,7 @@ return <>
                         </table>
                     </div>
                 </div>
+                <div className={`${styles.pagebreak}`} ></div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
                     <table style={{width:'900px'}}>
@@ -659,7 +660,7 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className={`${styles.pagebreak}`} ></div>
+                
                 <div className="form-row mb-3" style={{marginTop:'150px', fontSize:'18px'}}>
                     <div className={`col-12`} style={{fontWeight:'bold'}}>
                     6. 家屬聯絡
@@ -804,10 +805,16 @@ return <>
                         服務使用者意外填報表(二)
                     </div>
                     <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                        保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.InsuranceCaseNo}</span> : '____________'}
-                    </div>
-                    <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
-                        檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.CaseNumber}</span> : '____________'}
+                        <table style={{width:'360px', float:'right'}}>
+                            <tr>
+                                <td style={{width:'160px',fontSize:'18px'}}>保險公司備案編號: </td>
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>{formData.InsuranceCaseNo != null ? formData.InsuranceCaseNo : ''}</td>
+                            </tr>
+                            <tr>
+                                <td style={{width:'160px',fontSize:'18px'}}>檔案編號: </td>
+                                <td style={{borderBottom:'1px solid', width:'200px'}}>{formData.CaseNumber != null ? formData.CaseNumber : ''}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -821,57 +828,57 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12 mb-2`} style={{fontSize:'18px'}}>
-                        <table style={{width:'850px'}}>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'150px'}}>服務使用者姓名: (中文)</td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
-                                <td style={{width:'100px'}}>(英文)</td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
+                                <td style={{width:'210px'}}>服務使用者姓名: (中文)</td>
+                                <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
+                                <td style={{width:'70px'}}>&nbsp;&nbsp;(英文)</td>
+                                <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12 mb-2`}>
-                        <table style={{width:'750px'}}>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{width:'50px'}}>年齡: </td>
-                                <td style={{width:'150px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
-                                <td style={{width:'50px'}}>性別:</td>
-                                <td style={{width:'200px'}}>{formData.ServiceUserGender == "male" && <span>&#9745;</span>}
+                                <td style={{width:'160px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
+                                <td style={{width:'70px'}}>&nbsp;&nbsp;性別:</td>
+                                <td style={{width:'180px'}}>{formData.ServiceUserGender == "male" && <span>&#9745;</span>}
                                     {formData.ServiceUserGender != "male" && <span>&#9744;</span>}
                                     男&nbsp;&nbsp;
                                     {formData.ServiceUserGender == "female" && <span>&#9745;</span>}
                                     {formData.ServiceUserGender != "female" && <span>&#9744;</span>}
                                     女</td>
-                                <td style={{width:'100px'}}>服務單位</td>
-                                <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}</td>
+                                <td style={{width:'100px'}}>&nbsp;&nbsp;服務單位</td>
+                                <td style={{width:'270px',borderBottom:'1px solid'}}>{formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}</td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12 mb-2`}>
-                        <table style={{width:'700px'}}>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'180px'}}>意外發生日期及時間</td>
-                                <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{width:'210px'}}>意外發生日期及時間</td>
+                                <td style={{width:'250px',borderBottom:'1px solid'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
                                 </td>
-                                <td style={{width:'80px'}}>地點</td>
-                                <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                                <td style={{width:'60px'}}>&nbsp;&nbsp;地點</td>
+                                <td style={{width:'260px',borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12 mb-2`}>
-                        <table style={{width:'500px'}}>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'200px'}}>收到「意外填報表」日期</td>
-                                <td style={{width:'200px',borderBottom:'1px solid'}}>{formData.SubmitDate != null && new Date(formData.SubmitDate).getFullYear() + `-` +(`0`+(new Date(formData.SubmitDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SubmitDate).getDate()).slice(-2)}
+                                <td style={{width:'180px'}}>收到「意外填報表」日期</td>
+                                <td style={{width:'600px',borderBottom:'1px solid'}}>{formData.SubmitDate != null && new Date(formData.SubmitDate).getFullYear() + `-` +(`0`+(new Date(formData.SubmitDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SubmitDate).getDate()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div className={`col-12 mb-2`}>
-                        <table style={{width:'600px'}}>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{width:'400px'}}>預計意外分析完成日期：(意外發生日期+1個月)</td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>{EstimatedPart2CompletionDate != null && new Date(EstimatedPart2CompletionDate).getFullYear() + `-` +(`0`+(new Date(EstimatedPart2CompletionDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(EstimatedPart2CompletionDate).getDate()).slice(-2)}
+                                <td style={{width:'380px', borderBottom:'1px solid'}}>{EstimatedPart2CompletionDate != null && new Date(EstimatedPart2CompletionDate).getFullYear() + `-` +(`0`+(new Date(EstimatedPart2CompletionDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(EstimatedPart2CompletionDate).getDate()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
@@ -884,9 +891,9 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12 mb-2`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'550px'}}>
                                     {formTwentyData != null && formTwentyData.AccidentNatureFall  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.AccidentNatureFall) && <span>&#9744;</span>}
                                     1 跌倒&nbsp;&nbsp;
@@ -901,9 +908,11 @@ return <>
                                     4 環境因素&nbsp;&nbsp;
                                     {formTwentyData != null && formTwentyData.AccidentNatureOther  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.AccidentNatureOther) && <span>&#9744;</span>}
-                                    5 其他 : &nbsp;&nbsp;
-                                    {formTwentyData != null && formTwentyData.AccidentNatureOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.AccidentNatureOtherRemark}</span> : '____________________'}
-                                </td>    
+                                    5 其他 :
+                                </td>
+                                <td style={{width:'230px',borderBottom:'1px solid'}}>
+                                    {formTwentyData != null && formTwentyData.AccidentNatureOtherRemark != null ? formTwentyData.AccidentNatureOtherRemark : ''}
+                                </td> 
                             </tr>
                         </table>
                     </div>
@@ -916,94 +925,121 @@ return <>
                     <span style={{borderBottom:'1px solid'}}>環境因素</span>
                     </div>
                     <div className={`col-12 mb-2`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'140px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorSlipperyGround  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorSlipperyGround) && <span>&#9744;</span>}
-                                    1 地面濕滑&nbsp;&nbsp;
+                                    1 地面濕滑
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorUnevenGround  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorUnevenGround) && <span>&#9744;</span>}
-                                    2 地面不平&nbsp;&nbsp;
+                                    2 地面不平
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorObstacleItems  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorObstacleItems) && <span>&#9744;</span>}
-                                    3 障礙物品&nbsp;&nbsp;
+                                    3 障礙物品
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorInsufficientLight  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorInsufficientLight) && <span>&#9744;</span>}
-                                    4 光線不足&nbsp;&nbsp;
+                                    4 光線不足
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorNotEnoughSpace  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorNotEnoughSpace) && <span>&#9744;</span>}
-                                    5 空間不足&nbsp;&nbsp;
+                                    5 空間不足
+                                </td>
+                                <td style={{width:'120px'}}>
                                     {formTwentyData != null && formTwentyData.EnvFactorNoise  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorNoise) && <span>&#9744;</span>}
-                                    6 聲響刺激&nbsp;&nbsp;
+                                    6 聲響刺激
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     {formTwentyData != null && formTwentyData.EnvFactorCollision  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorCollision) && <span>&#9744;</span>}
-                                    7 被別人碰撞&nbsp;&nbsp;
+                                    7 被別人碰撞
+                                </td>
+                                <td>
                                     {formTwentyData != null && formTwentyData.EnvFactorHurtByOthers  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorHurtByOthers) && <span>&#9744;</span>}
-                                    8 被別人傷害&nbsp;&nbsp;
+                                    8 被別人傷害
+                                </td>
+                                <td colSpan={4}>
                                     {formTwentyData != null && formTwentyData.EnvFactorAssistiveEquipment  && <span>&#9745;</span>}
                                     {(formTwentyData == null|| !formTwentyData.EnvFactorAssistiveEquipment) && <span>&#9744;</span>}
-                                    9 輔助器材使用不當 (如輪椅／便椅未上鎖)&nbsp;&nbsp;
+                                    9 輔助器材使用不當 (如輪椅／便椅未上鎖)
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     {formTwentyData != null && formTwentyData.EnvFactorOther  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.EnvFactorOther) && <span>&#9744;</span>}
-                                    10 其他&nbsp;&nbsp; (請註明
-                                    {formTwentyData.EnvFactorOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.EnvFactorOtherRemark}</span> : '____________________'})
+                                    10 其他 請註明
+                                    
+                                </td>
+                                <td colSpan={5} style={{borderBottom:'1px solid'}}>
+                                    {formTwentyData.EnvFactorOtherRemark != null ? formTwentyData.EnvFactorOtherRemark: ''}
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div className={`col-12`}>
+                    <div className={`col-12`} style={{marginTop:'20px'}}>
                     <span style={{borderBottom:'1px solid'}}>個人因素</span>
                     </div>
                     <div className={`col-12 mb-2`}>
-                    <table>
+                        <table style={{width:'780px'}}>
                             <tr>
-                                <td>
+                                <td style={{width:'140px'}}>
                                     {formTwentyData != null && formTwentyData.PersonalFactorEmotional  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.PersonalFactorEmotional) && <span>&#9744;</span>}
-                                    1 情緒不穩&nbsp;&nbsp;
+                                    1 情緒不穩
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.PersonalFactorImpatient  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.PersonalFactorImpatient) && <span>&#9744;</span>}
-                                    2 心急致傷&nbsp;&nbsp;
+                                    2 心急致傷
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.PersonalFactorChok  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.PersonalFactorChok) && <span>&#9744;</span>}
-                                    3 進食時哽塞&nbsp;&nbsp;
+                                    3 進食時哽塞
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.PersonalFactorUnsteadyWalk  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.PersonalFactorUnsteadyWalk) && <span>&#9744;</span>}
-                                    4 步履不穩&nbsp;&nbsp;
+                                    4 步履不穩
+                                </td>
+                                <td style={{width:'130px'}}>
                                     {formTwentyData != null && formTwentyData.PersonalFactorTwitch  && <span>&#9745;</span>}
                                     {(formTwentyData == null || !formTwentyData.PersonalFactorTwitch) && <span>&#9744;</span>}
-                                    5 抽搐&nbsp;&nbsp;
-                                    
+                                    5 抽搐
                                 </td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>
                                     {formTwentyData != null && formTwentyData.PersonalFactorOther  && <span>&#9745;</span>}
                                     {!formTwentyData.PersonalFactorOther && <span>&#9744;</span>}
-                                    6 其他&nbsp;&nbsp;(請註明
-                                    {formTwentyData != null && formTwentyData.PersonalFactorOtherRemark != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formTwentyData.PersonalFactorOtherRemark}</span> : '____________________'})
+                                    6 其他 請註明
+                                </td>
+                                <td colSpan={5} style={{borderBottom:'1px solid'}}>
+                                    {formTwentyData != null && formTwentyData.PersonalFactorOtherRemark != null ? formTwentyData.PersonalFactorOtherRemark : ''}
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
+                <div className="form-row" style={{fontSize:'18px', margin:'20px 0'}}>
                     <div className={`col-12 mb-2`} >
                     意外發現之經過
                     </div>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{borderBottom:'1px solid', padding:'0 10px'}}>
                                 &nbsp;&nbsp;{formTwentyData != null && formTwentyData.AccidentalDiscovery != null ? formTwentyData.AccidentalDiscovery : ''}
@@ -1012,12 +1048,12 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
+                <div className="form-row" style={{fontSize:'18px', margin:'20px 0'}}>
                     <div className={`col-12 mb-2`} >
                     可能引致意外之因素
                     </div>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{borderBottom:'1px solid', padding:'0 10px'}}>
                                 &nbsp;&nbsp;{formTwentyData != null && formTwentyData.AccidentCauseFactor != null ? formTwentyData.AccidentCauseFactor : ''}
@@ -1026,12 +1062,12 @@ return <>
                         </table>
                     </div>
                 </div>
-                <div className="form-row" style={{fontSize:'18px', marginBottom:'20px'}}>
+                <div className="form-row" style={{fontSize:'18px', margin:'20px 0'}}>
                     <div className={`col-12 mb-2`} >
                     建議
                     </div>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{borderBottom:'1px solid', padding:'0 10px'}}>
                                 &nbsp;&nbsp;{formTwentyData != null && formTwentyData.Suggestion != null ? formTwentyData.Suggestion: ''}
@@ -1042,18 +1078,18 @@ return <>
                 </div>
                 <div className="form-row" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table style={{width:'820px',margin:'80px 0 20px'}}>
+                        <table style={{width:'780px',margin:'80px 0 20px'}}>
                             <tr>
-                                <td  style={{width:'200px'}}>
+                                <td  style={{width:'180px'}}>
                                 調查員姓名及職級
                                 </td>
-                                <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                <td style={{width:'250px',borderBottom:'1px solid'}}>
                                 {formData.InvestigatorAD.displayName},&nbsp;&nbsp;{formData.InvestigatorAD.jobTitle}
                                 </td>
-                                <td  style={{width:'200px'}}>
-                                日期
+                                <td  style={{width:'100px'}}>
+                                &nbsp;&nbsp;日期
                                 </td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>
+                                <td style={{width:'250px', borderBottom:'1px solid'}}>
                                 {formTwentyData != null && new Date(formTwentyData.Created).getFullYear() + `-` +(`0`+(new Date(formTwentyData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
@@ -1063,7 +1099,7 @@ return <>
                     高級物理治療師建議
                     </div>
                     <div className={`col-12`}>
-                        <table>
+                        <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{borderBottom:'1px solid'}}>
                                 &nbsp;&nbsp;{formTwentyData != null && formTwentyData.SPTComment != null ? formTwentyData.SPTComment : ''}
@@ -1072,18 +1108,18 @@ return <>
                         </table>
                     </div>
                     <div className={`col-12`} style={{margin:'80px 0 20px'}}>
-                        <table  style={{width:'820px',margin:'80px 0 20px'}}>
+                        <table  style={{width:'780px',margin:'80px 0 20px'}}>
                             <tr>
-                                <td  style={{width:'200px'}}>
+                                <td  style={{width:'180px'}}>
                                 高級物理治療師簽署
                                 </td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>
+                                <td style={{width:'250px', borderBottom:'1px solid'}}>
                                 {formTwentyData != null && formTwentyData.SPT.Title != null ? formTwentyData.SPT.Title : ''}
                                 </td>
-                                <td  style={{width:'200px'}}>
-                                日期
+                                <td  style={{width:'100px'}}>
+                                &nbsp;&nbsp;日期
                                 </td>
-                                <td style={{width:'200px', borderBottom:'1px solid'}}>
+                                <td style={{width:'250px', borderBottom:'1px solid'}}>
                                 {formTwentyData != null && formTwentyData.SPTDate != null ? new Date(formTwentyData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formTwentyData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyData.SPTDate).getDate()).slice(-2) : ''}
                                 </td>
                             </tr>
@@ -1106,10 +1142,16 @@ return <>
                     服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                    保險公司備案編號: {formData.InsuranceCaseNo != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.InsuranceCaseNo}</span> : '____________'}
-                </div>
-                <div className={`col-12 font-weight-bold`} style={{textAlign:'right',fontSize:'18px'}}>
-                    檔案編號: {formData.CaseNumber != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.CaseNumber}</span> : '____________'}
+                    <table style={{width:'360px', float:'right'}}>
+                        <tr>
+                            <td style={{width:'160px',fontSize:'18px'}}>保險公司備案編號: </td>
+                            <td style={{borderBottom:'1px solid', width:'200px'}}>{formData.InsuranceCaseNo != null ? formData.InsuranceCaseNo : ''}</td>
+                        </tr>
+                        <tr>
+                            <td style={{width:'160px',fontSize:'18px'}}>檔案編號: </td>
+                            <td style={{borderBottom:'1px solid', width:'200px'}}>{formData.CaseNumber != null ? formData.CaseNumber : ''}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -1123,12 +1165,12 @@ return <>
             </div>
             <div className="form-row mb-3" style={{fontSize:'18px'}}>
                 <div className={`col-12 mb-2`} style={{fontSize:'18px'}}>
-                    <table style={{width:'850px'}}>
+                    <table style={{width:'780px'}}>
                         <tr>
                             <td style={{width:'150px'}}>發生意外者姓名</td>
-                            <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
-                            <td style={{width:'100px'}}>發生意外日期</td>
-                            <td style={{width:'200px', borderBottom:'1px solid'}}>
+                            <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
+                            <td style={{width:'130px'}}>&nbsp;&nbsp;發生意外日期</td>
+                            <td style={{width:'250px', borderBottom:'1px solid'}}>
                             {formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
                             </td>
                         </tr>
@@ -1169,18 +1211,18 @@ return <>
             </div>
             <div className="form-row" style={{fontSize:'18px'}}>
                 <div className={`col-12`}>
-                    <table style={{width:'870px',margin:'40px 0 20px'}}>
+                    <table style={{width:'780px',margin:'40px 0 20px'}}>
                         <tr>
-                            <td  style={{width:'250px'}}>
+                            <td  style={{width:'180px'}}>
                             高級服務經理/服務經理姓名
                             </td>
-                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            <td style={{width:'250px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SM.Title}
                             </td>
-                            <td  style={{width:'200px'}}>
-                            日期
+                            <td  style={{width:'100px'}}>
+                            &nbsp;&nbsp;日期
                             </td>
-                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            <td style={{width:'250px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SMDate != null && new Date(formTwentyOneData[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SMDate).getDate()).slice(-2)}
                             </td>
                         </tr>
@@ -1190,27 +1232,27 @@ return <>
                     評語
                 </div>
                 <div className={`col-12`}>
-                    <table>
+                    <table style={{width:'780px'}}>
                         <tr>
                             <td style={{borderBottom:'1px solid'}}>
-                            {formTwentyOneData != null && formTwentyOneData[0].SMComment != null ? formTwentyOneData[0].SMComment : ''}
+                            &nbsp;&nbsp;{formTwentyOneData != null && formTwentyOneData[0].SMComment != null ? formTwentyOneData[0].SMComment : ''}
                             </td>
                         </tr>
                     </table>
                 </div>
                 <div className={`col-12`}>
-                    <table style={{width:'870px',margin:'40px 0 20px'}}>
+                    <table style={{width:'780px',margin:'40px 0 20px'}}>
                         <tr>
-                            <td  style={{width:'250px'}}>
+                            <td  style={{width:'180px'}}>
                             服務總監姓名
                             </td>
-                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            <td style={{width:'250px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SD.Title}
                             </td>
-                            <td  style={{width:'200px'}}>
-                            日期
+                            <td  style={{width:'100px'}}>
+                            &nbsp;&nbsp;日期
                             </td>
-                            <td style={{width:'200px',borderBottom:'1px solid'}}>
+                            <td style={{width:'250px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SDDate != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
                             </td>
                         </tr>

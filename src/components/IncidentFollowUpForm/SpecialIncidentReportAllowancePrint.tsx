@@ -540,10 +540,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         報告單位資料
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>機構名稱 : </td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgName}</td>
+                                    <td style={{width:'200px'}}>機構名稱 : </td>
+                                    <td style={{borderBottom:'1px solid', width:'580px'}}>{form.orgName}</td>
                                 </tr>
                                 <tr>
                                     <td>單位名稱 : </td>
@@ -563,14 +563,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                             </table>
                         </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'20px'}}>
                         特別事故資料
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>(a)事故發生日期 :</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2):''}
+                                    <td style={{width:'200px'}}>(a)事故發生日期 :</td>
+                                    <td style={{borderBottom:'1px solid', width:'580px'}}>{form.incidentTime != null ? new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2):''}
                                     </td>
                                 </tr>
                                 <tr>
@@ -639,7 +639,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                                 其他(請註明 : {form.abusiveDescription != null ? <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{form.abusiveDescription}</span> : '__________________'})
                                             </div>
                                         </div>
-                                        <div>
+                                        <div style={{marginTop:'20px'}}>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9744;</span>}
                                             爭執以致有人身體受傷而需要報警求助
@@ -670,178 +670,192 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                             </table>
                         </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'20px'}}>
                             有關服務使用者的資料 (如適用)
                         </div>
                         <div className={`col-12`}>
-                            <table >
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>(a)	服務使用者(第一位)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{width:'250px'}}>(a)	服務使用者(第一位)</td>
+                                    <td style={{width:'70px'}}>性別</td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>
                                         {form.serviceUserGenderOne == 'male' && '男'}
                                         {form.serviceUserGenderOne == 'female' && '女'}
                                     </td>
-                                    <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeOne}</td>
+                                    <td style={{width:'70px'}}>&nbsp;&nbsp;年齡</td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>{form.serviceUserAgeOne}</td>
                                 </tr>
                                 <tr>
                                     <td>(b)	服務使用者(第二位，如有)</td>
                                     <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                         {form.serviceUserGenderTwo == 'male' && '男'}
                                         {form.serviceUserGenderTwo == 'female' && '女'}
                                     </td>
                                     <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeTwo}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.serviceUserAgeTwo}</td>
                                 </tr>
                                 <tr>
                                     <td>(c)	服務使用者(第三位，如有)</td>
                                     <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                         {form.serviceUserGenderThree == 'male' && '男'}
                                         {form.serviceUserGenderThree == 'female' && '女'}
                                     </td>
                                     <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeThree}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.serviceUserAgeThree}</td>
                                 </tr>
                             </table>
                         </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'20px'}}>
                         有關職員的資料 (如適用)
                         </div>
                         <div className={`col-12`}>
-                            <table >
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>(a)	職員(第一位)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{width:'250px'}}>(a)	職員(第一位)</td>
+                                    <td style={{width:'70px'}}>性別</td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>
                                         {form.staffGenderOne == 'male' && '男'}
                                         {form.staffGenderOne == 'female' && '女'}
                                     </td>
-                                    <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionOne}</td>
+                                    <td style={{width:'70px'}}>&nbsp;&nbsp;職位</td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>{form.staffPositionOne}</td>
                                 </tr>
                                 <tr>
                                     <td>(b)	服務使用者(第二位，如有)</td>
                                     <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                         {form.staffGenderTwo == 'male' && '男'}
                                         {form.staffGenderTwo == 'female' && '女'}
                                     </td>
                                     <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionTwo}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.staffPositionTwo}</td>
                                 </tr>
                                 <tr>
                                     <td>(c)	服務使用者(第三位，如有)</td>
                                     <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                         {form.staffGenderThree == 'male' && '男'}
                                         {form.staffGenderThree == 'female' && '女'}
                                     </td>
                                     <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionThree}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.staffPositionThree}</td>
                                 </tr>
                             </table>
                         </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'20px'}}>
                             跟進行動
                         </div>
                         <div className={`col-12`}>
-                            <table >
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td colSpan={2}>(a) 報警處理</td>
+                                    <td colSpan={4}>(a) 報警處理</td>
                                 </tr>
                                 <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
+                                    <td style={{width:'50px'}}></td>
+                                    <td style={{width:'80px'}}>
                                         {form.police&& <span>&#9745;</span>}
                                         {!form.police && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(報警日期和時間:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)}
-                                            </span>
+                                        有
                                     </td>
-                                    
+                                    <td style={{width:'150px'}}>報警日期和時間:</td>
+                                    <td style={{borderBottom:'1px solid',width:'500px'}}>
+                                        {form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        報案編號
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.policeReportNumber != null ? form.policeReportNumber: ''}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <div style={{paddingLeft:'150px'}}>(報案編號
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.policeReportNumber != null ? form.policeReportNumber: ''})
-                                            </span>
-                                        </div>
+                                    {!form.police&& <span>&#9745;</span>}
+                                    {form.police && <span>&#9744;</span>}
+                                        沒有
+                                    </td>
+                                    <td>
+                                        備註
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.policeDescription != null ? form.policeDescription: ''}
                                     </td>
                                 </tr>
+                            </table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.police&& <span>&#9745;</span>}
-                                        {form.police && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.policeDescription != null ? form.policeDescription: ''})
-                                            </span>
-                                    </td>
+                                    <td colSpan={4}>(b) 通知家人／親屬／監護人／保證人</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>(b) 通知家人／親屬／監護人／保證人</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
+                                    <td style={{width:'50px'}}></td>
+                                    <td style={{width:'80px'}}>
                                         {form.guardian&& <span>&#9745;</span>}
                                         {!form.guardian && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(通知日期和時間:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)}
-                                            </span>
+                                        有
+                                    </td>
+                                    <td style={{width:'170px'}}>
+                                    通知日期和時間:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        與服務使用者的關係:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.guardianRelationship != null ? form.guardianRelationship: ''}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        負責職員姓名:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.guardianStaff != null ? form.guardianStaff: ''}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <div style={{paddingLeft:'44px'}}>(與服務使用者的關係:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.guardianRelationship != null ? form.guardianRelationship: ''})
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div style={{paddingLeft:'44px'}}>(負責職員姓名:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.guardianStaff != null ? form.guardianStaff: ''})
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
                                         {!form.guardian&& <span>&#9745;</span>}
                                         {form.guardian && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.guardianDescription != null ? form.guardianDescription: ''})
-                                            </span>
+                                        沒有
+                                    </td>
+                                    <td >
+                                    備註:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.guardianDescription != null ? form.guardianDescription: ''}
                                     </td>
                                 </tr>
-
                                 <tr>
-                                    <td colSpan={2}>(c) 醫療安排</td>
+                                    <td colSpan={4}>(c) 醫療安排</td>
                                 </tr>
                                 <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
+                                    <td></td>
                                     <td >
                                         {form.medicalArrangement&& <span>&#9745;</span>}
                                         {!form.medicalArrangement && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.medicalArrangmentDetail != null ? form.medicalArrangmentDetail: ''})</span>
+                                        有
+                                    </td>
+                                    <td>
+                                    請註明:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.medicalArrangmentDetail != null ? form.medicalArrangmentDetail: ''}
                                     </td>
                                 </tr>
                                 <tr>
@@ -851,63 +865,66 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         {form.medicalArrangement && <span>&#9744;</span>}
                                         沒有&nbsp;&nbsp;
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>(d) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
+                                    <td colSpan={4}>(d) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
                                 </tr>
                                 <tr>
                                     <td><div style={{width:'50px'}}></div></td>
                                     <td >
                                         {form.carePlan&& <span>&#9745;</span>}
                                         {!form.carePlan && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明,包括日期:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.carePlanYesDescription != null ? form.carePlanYesDescription: ''})</span>
+                                        有
                                     </td>
+                                    <td>請註明,包括日期:</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.carePlanYesDescription != null ? form.carePlanYesDescription: ''}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td >
                                         {!form.carePlan&& <span>&#9745;</span>}
                                         {form.carePlan && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.carePlanNoDescription != null ? form.carePlanNoDescription: ''})
-                                            </span>
+                                        沒有
                                     </td>
+                                    <td>備註:</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.carePlanNoDescription != null ? form.carePlanNoDescription: ''}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>(e) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
+                                    <td colSpan={4}>(e) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
                                 </tr>
                                 <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
+                                    <td></td>
                                     <td >
                                         {form.needResponse&& <span>&#9745;</span>}
                                         {!form.needResponse && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.needResponseDetail != null ? form.needResponseDetail: ''})</span>
+                                        有
                                     </td>
+                                    <td>請註明:</td>
+                                    <td style={{borderBottom:'1px solid'}}>{form.needResponseDetail != null ? form.needResponseDetail: ''}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td >
                                         {!form.needResponse&& <span>&#9745;</span>}
                                         {form.needResponse && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;
+                                        沒有
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
+                                    <td colSpan={4}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.immediateFollowUp != null ? form.immediateFollowUp: ''}</td>
+                                    <td colSpan={4} style={{borderBottom:'1px solid'}}>&nbsp;&nbsp;{form.immediateFollowUp != null ? form.immediateFollowUp: ''}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2}>(g)	跟進計劃</td>
+                                    <td colSpan={4}>(g)	跟進計劃</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.followUpPlan != null ? form.followUpPlan: ''}</td>
+                                    <td colSpan={4} style={{borderBottom:'1px solid'}}>&nbsp;&nbsp;{form.followUpPlan != null ? form.followUpPlan: ''}</td>
                                 </tr>
                             </table>
                         </div>
@@ -917,59 +934,47 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
                     <div className="form-row mb-3" style={{fontSize:'18px', marginTop:'30px'}}>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td style={{width:'100px'}}>
+                                    <td style={{width:'140px'}}>
                                     填報人姓名 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                         {reporterName}
-                                        </div>
                                     </td>
-                                    <td style={{width:'100px'}}>
-                                    批簽人姓名 : 
+                                    <td style={{width:'140px'}}>
+                                    &nbsp;&nbsp;批簽人姓名 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {sdName}
-                                        </div>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
+                                    {sdName}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={{width:'100px'}}>
+                                    <td style={{width:'140px'}}>
                                     填報人職位 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {reporterJobTitle}
-                                        </div>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
+                                    {reporterJobTitle}
                                     </td>
-                                    <td style={{width:'100px'}}>
-                                    批簽人職位 : 
+                                    <td style={{width:'140px'}}>
+                                    &nbsp;&nbsp;批簽人職位 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {sdJobTitle}
-                                        </div>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
+                                    {sdJobTitle}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={{width:'100px'}}>
+                                    <td style={{width:'140px'}}>
                                     日期 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
-                                        </div>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
+                                    {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                     </td>
-                                    <td style={{width:'100px'}}>
-                                    日期 : 
+                                    <td style={{width:'140px'}}>
+                                    &nbsp;&nbsp;日期 : 
                                     </td>
-                                    <td style={{width:'300px', verticalAlign:'bottom'}}>
-                                        <div className={`${styles.underlineDiv}`}>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                         {form.sdDate != null && new Date(form.sdDate).getFullYear() + `-` +(`0`+(new Date(form.sdDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.sdDate).getDate()).slice(-2)}
-                                    </div>
                                     </td>
                                 </tr>
                             </table>
@@ -985,7 +990,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
                         </div>
                         <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                            保險公司備案編號: {form.insuranceCaseNo != null ? <span style={{borderBottom:'1px solid'}}>{form.insuranceCaseNo}</span> : '____________'}
+                            <table style={{width:'360px', float:'right'}}>
+                                <tr>
+                                    <td style={{width:'160px',fontSize:'18px'}}>保險公司備案編號: </td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>{form.insuranceCaseNo != null ? form.insuranceCaseNo : ''}</td>
+                                </tr>
+                            </table>
                         </div>
                         <div className={`col-12 font-weight-bold ${styles.header}`}>
                             事故跟進 / 結束報告
@@ -1002,10 +1012,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             其他事故
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>單位名稱</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.orgSUName}</td>
+                                    <td style={{width:'200px'}}>單位名稱</td>
+                                    <td style={{borderBottom:'1px solid', width:'550px'}}>{form.orgSUName}</td>
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
@@ -1055,18 +1065,18 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
-                                    <td  style={{width:'250px'}}>
+                                    <td  style={{width:'240px'}}>
                                     高級服務經理/服務經理姓名
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SM.Title}
                                     </td>
-                                    <td  style={{width:'200px'}}>
-                                    日期
+                                    <td  style={{width:'100px', textAlign:'right'}}>
+                                    日期&nbsp;&nbsp;
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
@@ -1076,27 +1086,27 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             評語
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
                                     <td style={{borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
+                                    &nbsp;&nbsp;{formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
                                     </td>
                                 </tr>
                             </table>
                         </div>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
-                                    <td  style={{width:'250px'}}>
+                                    <td  style={{width:'240px'}}>
                                     服務總監姓名
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SD.Title}
                                     </td>
-                                    <td  style={{width:'200px'}}>
-                                    日期
+                                    <td  style={{width:'100px', textAlign:'right'}}>
+                                    日期&nbsp;&nbsp;
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>

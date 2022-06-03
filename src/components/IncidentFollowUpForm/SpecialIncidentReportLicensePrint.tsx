@@ -381,46 +381,38 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            <div className="form-row">
-                                <div className={`col-2`}>
-                                殘疾人士院舍名稱
-                                </div>
-                                <div className={`col ${styles.underlineDiv}`}>
-                                {form.homesName}
-                                </div>
-                            </div>
-                        </div>
-                        <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td style={{width:'150px'}}>
+                                    <td style={{width:'200px'}}>
+                                    殘疾人士院舍名稱
+                                    </td>
+                                    <td colSpan={3} style={{borderBottom:'1px solid'}}>
+                                    {form.homesName}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         殘疾人士院舍主管姓名 : 
                                     </td>
-                                    <td style={{width:'250px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
+                                    <td style={{width:'240px',borderBottom:'1px solid'}}>
                                         {form.homesManagerName}
-                                        </div>
                                     </td>
                                     <td style={{width:'100px'}}>
-                                        聯絡電話 : 
+                                    &nbsp;&nbsp;聯絡電話 : 
                                     </td>
-                                    <td style={{width:'250px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
-                                        {form.homesManagerTel}
-                                        </div>
+                                    <td style={{width:'240px',borderBottom:'1px solid'}}>
+                                    {form.homesManagerTel}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    事故發生日期 : 
+                                    </td>
+                                    <td colSpan={3} style={{borderBottom:'1px solid'}}>
+                                    {new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
-                        </div>
-                        <div className={`col-12`}>
-                            <div className="form-row">
-                            <div className={`col-2`}>
-                                事故發生日期 : 
-                                </div>
-                                <div className={`col ${styles.underlineDiv}`}>
-                                {new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -877,30 +869,30 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className={`form-row ${styles.box}`}>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>
+                                    <td style={{width:'100px'}}>
                                         住客姓名
                                     </td>
-                                    <td className={`${styles.underlineTable}`}  style={{width:'100px'}}>
+                                    <td className={`${styles.underlineTable}`}  style={{width:'170px'}}>
                                     {form.residentName != null ? form.residentName : ''}
                                     </td>
-                                    <td>
-                                    年齡
+                                    <td style={{width:'80px'}}>
+                                    &nbsp;&nbsp;年齡
                                     </td>
                                     <td className={`${styles.underlineTable}`}  style={{width:'100px'}}>
                                     {form.residentAge != null ? form.residentAge : ''}
                                     </td>
-                                    <td>
-                                    性別
+                                    <td style={{width:'80px'}}>
+                                    &nbsp;&nbsp;性別
                                     </td>
-                                    <td className={`${styles.underlineTable}`}  style={{width:'100px'}}>
+                                    <td className={`${styles.underlineTable}`}  style={{width:'60px'}}>
                                     {form.residentGender != null ? form.residentGender == 'male'?'男':'女' : ''}
                                     </td>
-                                    <td>
-                                    房及／或床號
+                                    <td style={{width:'130px'}}>
+                                    &nbsp;&nbsp;房及／或床號
                                     </td>
-                                    <td className={`${styles.underlineTable}`}  style={{width:'100px'}}>
+                                    <td className={`${styles.underlineTable}`}  style={{width:'60px'}}>
                                     {form.residentRoomNo != null ? form.residentRoomNo : ''}
                                     </td>
                                 </tr>
@@ -914,16 +906,16 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     已通知住客監護人／保證人／家人／親屬
                                 </div>
                                 <div className={`col-12`}>
-                                    <table style={{width:'600px'}}>
+                                    <table style={{width:'630px'}}>
                                         <tr>
-                                            <td style={{width:'100px'}}>
+                                            <td style={{width:'180px'}}>
                                             姓名
                                             </td>
-                                            <td className={`${styles.underlineTable}`} style={{width:'200px'}}>
+                                            <td className={`${styles.underlineTable}`} style={{width:'170px'}}>
                                             {form.guardianName != null ? form.guardianName : ''}
                                             </td>
-                                            <td style={{width:'100px'}}>
-                                            及關係
+                                            <td style={{width:'80px'}}>
+                                            &nbsp;&nbsp;及關係
                                             </td>
                                             <td className={`${styles.underlineTable}`} style={{width:'200px'}}>
                                             {form.guardianRelation != null ? form.guardianRelation : ''}
@@ -932,30 +924,30 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </table>
                                 </div>
                                 <div className={`col-12`}>
-                                    <table style={{width:'500px'}}>
+                                    <table style={{width:'350px'}}>
                                         <tr>
-                                            <td>
+                                            <td style={{width:'180px'}}>
                                             日期及時間
                                             </td>
-                                            <td className={`${styles.underlineTable}`}>
+                                            <td className={`${styles.underlineTable}`} style={{width:'170px'}}>
                                             {form.guardianDate != null ? new Date(form.guardianDate).getFullYear() + `-` +(`0`+(new Date(form.guardianDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDate).getDate()).slice(-2) : ''}
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                                 <div className={`col-12`}>
-                                    <table style={{width:'600px'}}>
+                                    <table style={{width:'630px'}}>
                                         <tr>
-                                            <td>
+                                            <td style={{width:'180px'}}>
                                             負責通知的員工姓名
                                             </td>
-                                            <td className={`${styles.underlineTable}`}>
+                                            <td className={`${styles.underlineTable}`} style={{width:'170px'}}>
                                             {form.guardianStaffName != null ?form.guardianStaffName : ''}
                                             </td>
-                                            <td>
-                                            及職位
+                                            <td style={{width:'80px'}}>
+                                            &nbsp;&nbsp;及職位
                                             </td>
-                                            <td className={`${styles.underlineTable}`} style={{width:'100px'}}>
+                                            <td className={`${styles.underlineTable}`} style={{width:'200px'}}>
                                             {form.guardianStaffJobTitle != null ?form.guardianStaffJobTitle : ''}
                                             </td>
                                         </tr>
@@ -969,7 +961,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     <table>
                                         <tr>
-                                            <td style={{width:'100px'}}>
+                                            <td style={{width:'180px'}}>
                                             原因
                                             </td>
                                             <td className={`${styles.underlineTable}`}>
@@ -1029,60 +1021,52 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className={`form-row mb-3 ${styles.box}`} style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            <div className="form-row">
-                                <div className={`col-3`}>
-                                殘疾人士院舍名稱 :
-                                </div>
-                                <div className={`col ${styles.underlineDiv}`}>
-                                {form.homesName}
-                                </div>
-                            </div>
-                        </div>
-                        <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td style={{width:'130px'}}>
+                                    <td style={{width:'160px'}}>殘疾人士院舍名稱 :</td>
+                                    <td colSpan={3}>{form.homesName}</td>
+                                </tr>
+                                <tr>
+                                    <td>
                                     事故發生日期 : 
                                     </td>
-                                    <td style={{width:'250px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
+                                    <td style={{width:'240px', borderBottom:'1px solid'}}>
                                         {new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
-                                        </div>
                                     </td>
-                                    <td style={{width:'130px'}}>
-                                    事故發生時間 : 
+                                    <td style={{width:'140px'}}>
+                                    &nbsp;&nbsp;事故發生時間 : 
                                     </td>
-                                    <td style={{width:'250px'}}>
-                                        <div className={`${styles.underlineDiv}`}>
+                                    <td style={{width:'240px',borderBottom:'1px solid'}}>
                                         {new Date(form.incidentTime).getHours() + `:` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)} &nbsp;{new Date(form.incidentTime).getHours() > 12 ? 'pm' : 'am'}
-                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style={{width:'130px'}}>
+                                    <td >
                                     受影響住客姓名 : 
                                     </td>
-                                    <td style={{width:'250px', borderBottom:'1px solid'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                         {form.affectedName == null? '':form.affectedName}
                                     </td>
-                                    <td style={{width:'130px'}}>
-                                    身份證號碼 : 
+                                    <td >
+                                    &nbsp;&nbsp;身份證號碼 : 
                                     </td>
-                                    <td style={{width:'250px', borderBottom:'1px solid'}}>
+                                    <td style={{borderBottom:'1px solid'}}>
                                     {form.affectedIdCardNo == null? '':form.affectedIdCardNo}
                                     </td>
                                 </tr>
                             </table>
                         </div>
                         <div className={`col-12`}>
-                            <div className="form-row">
-                                <div className={`col-2`}>
-                                住客病歷 : 
-                                </div>
-                                <div className={`col ${styles.underlineDiv}`}>
-                                {form.affectedMedicalRecord}
-                                </div>
-                            </div>
+                            <table style={{width:'780px'}}>
+                                <tr>
+                                    <td style={{width:'160px'}}>
+                                    住客病歷 : 
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.affectedMedicalRecord}
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
 
@@ -1150,7 +1134,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
                         </div>
                         <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
-                            保險公司備案編號: {form.insuranceCaseNo != null ? <span style={{borderBottom:'1px solid'}}>{form.insuranceCaseNo}</span> : '____________'}
+                            <table style={{width:'360px', float:'right'}}>
+                                <tr>
+                                    <td style={{width:'160px',fontSize:'18px'}}>保險公司備案編號: </td>
+                                    <td style={{borderBottom:'1px solid', width:'200px'}}>{form.insuranceCaseNo != null ? form.insuranceCaseNo : ''}</td>
+                                </tr>
+                            </table>
                         </div>
                         <div className={`col-12 font-weight-bold ${styles.header}`}>
                             事故跟進 / 結束報告
@@ -1167,10 +1156,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             其他事故
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
-                                    <td>單位名稱</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.homesName}</td>
+                                    <td style={{width:'200px'}}>單位名稱</td>
+                                    <td style={{borderBottom:'1px solid', width:'550px'}}>{form.homesName}</td>
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
@@ -1182,8 +1171,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{borderBottom:'1px solid'}}>{form.caseNumber}</td>
                                 </tr>
                             </table>
-                            
-                            
                         </div>
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -1220,19 +1207,19 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
-                                    <td  style={{width:'250px'}}>
+                                    <td  style={{width:'240px'}}>
                                     高級服務經理/服務經理姓名
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SM.Title}
                                     </td>
-                                    <td  style={{width:'200px'}}>
-                                    日期
+                                    <td  style={{width:'100px', textAlign:'right'}}>
+                                    日期&nbsp;&nbsp;
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMDate != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
@@ -1241,28 +1228,28 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             評語
                         </div>
                         <div className={`col-12`}>
-                            <table>
+                            <table style={{width:'780px'}}>
                                 <tr>
                                     <td style={{borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
+                                    &nbsp;&nbsp;{formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
                                     </td>
                                 </tr>
                             </table>
                         </div>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
-                                    <td  style={{width:'250px'}}>
+                                    <td  style={{width:'240px'}}>
                                     服務總監姓名
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SD.Title}
                                     </td>
-                                    <td  style={{width:'200px'}}>
-                                    日期
+                                    <td  style={{width:'100px', textAlign:'right'}}>
+                                    日期&nbsp;&nbsp;
                                     </td>
-                                    <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    <td style={{width:'220px',borderBottom:'1px solid'}}>
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
