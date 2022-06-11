@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
+import classnames from 'classnames';
+import './FuHongFormsMenu.css';
 import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 import MainTableComponent from '../../../components/MainTable/MainTableComponent';
 import DatePicker from "react-datepicker";
@@ -39,8 +41,14 @@ import ServiceUserAccidentCaseSummary from '../../../components/CaseSummary/Serv
 import LicenseIncidentCaseSummary from '../../../components/CaseSummary/LicenseIncidentCaseSummary';
 import OtherIncidentCaseSummary from '../../../components/CaseSummary/OtherIncidentCaseSummary';
 import Admin from '../../../components/AdminPage/Admin';
+import FuHongServiceUserAccidentForm from '../../fuHongServiceUserAccidentForm/components/FuHongServiceUserAccidentForm';
+import FuHongOutsidersAccidentForm from '../../fuHongOutsidersAccidentForm/components/FuHongOutsidersAccidentForm';
+import FuHongSpecialIncidentReportAllowanceForm from '../../fuHongSpecialIncidentReportAllowance/components/FuHongSpecialIncidentReportAllowance';
+import FuHongSpecialIncidentReportLicenseForm from '../../fuHongSpecialIncidentReportLicense/components/FuHongSpecialIncidentReportLicense';
+import FuHongOtherIncidentReportForm from '../../fuHongOtherIncidentReport/components/FuHongOtherIncidentReport';
 import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 import { isArray } from '@pnp/pnpjs';
+import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -83,7 +91,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.substring(this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, this.props.context.pageContext.web.absoluteUrl.length).substring(0, 14);
 	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
 	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
-	
+	private formId = getQueryParameterNumber("formId");
+  private navScreen:string = getQueryParameterString("navScreen") ;
 
   public constructor(props) {
     super(props);
@@ -97,7 +106,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       reportToggle: false,
       statToggle: false,
       caseSummaryToggle: false,
-      screenNav: "",
+      screenNav: this.navScreen,
       searchDateStart: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
       searchDateEnd: new Date(),
       serviceUnitList: [],
@@ -126,12 +135,14 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   }
 
   private initialState = async () => {
+    debugger
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get();
     let adminPermissionOwner = adminPermission.filter(item => {item.Admin.EMail == this.CURRENT_USER.email})
     let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
+
     this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false, adminPermission:adminPermission, adminPermissionBoolean: adminPermissionBoolean });
   }
 
@@ -186,7 +197,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       </a>
     }
 
-    const formList = () => {
+    /*const formList = () => {
       return <ul>
         <li>{ItemComponent(this.SERVICE_USER_ACCIDENT, "服務使用者意外")}</li>
         <li>{ItemComponent(this.OUTSIDERS_ACCIDENT, "外界人士意外")}</li>
@@ -194,8 +205,36 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         <li>{ItemComponent(this.SPECIAL_INCIDENT_REPORT_ALLOWANCE, "特別事故報告 (津貼科)")}</li>
         <li>{ItemComponent(this.OTHER_INCIDENT_REPORT, "其他事故")}</li>
       </ul>
+    }*/
+    const formList = () => {
+      return <ul>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "ServiceUserAccident")}>
+            服務使用者意外
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "OutsidersAccident")}>
+          外界人士意外
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportAllowance")}>
+          特別事故報告 (牌照事務處)
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportLicense")}>
+          特別事故報告 (津貼科)
+          </div>
+        </li>
+        <li>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "OtherIncidentReport")}>
+          其他事故
+          </div>
+        </li>
+      </ul>
     }
-
     const reportList = () => {
       return <ul>
         <li>
@@ -445,6 +484,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
     const screenSwitch = () => {
       switch (this.state.screenNav) {
+        case 'ServiceUserAccident':
+          return <FuHongServiceUserAccidentForm context={this.props.context} description={""}/>
+        case 'OutsidersAccident':
+          return <FuHongOutsidersAccidentForm context={this.props.context} description={""}/>
+        case 'SpecialIncidentReportAllowance':
+          return <FuHongSpecialIncidentReportAllowanceForm context={this.props.context} description={""}/>
+        case 'SpecialIncidentReportLicense':
+          return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""}/>
+        case 'OtherIncidentReport':
+          return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""}/>
         case 'CASE_SUMMARY':
           return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'INSURANCE_EMAIL':
@@ -646,16 +695,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           <div className="container-fluid">
             <div className="row no-gutters" style={{height:'90vh'}}>
               {/* Navigation menu */}
-              <div className="col-sm-12 col-md-3 col-lg-2" style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
+              <div className={classnames("col-sm-12 col-md-3 col-lg-2 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
                 {navigationMenu()}
               </div>
               {/* Main Content */}
               <div className="col-sm-12 col-md-9 col-lg-10" >
-                <div className={`${styles.systemTitle}`}>
+                <div className={`${styles.systemTitle} notPrintable`}>
                   意外及事故呈報系統
-                  <div style={{ float: "right" }}>
+                  {/*<div style={{ float: "right" }}>
                     {siteContentCog()}
-                  </div>
+    </div>*/}
                 </div>
                 <div className="p-2">
                   {screenSwitch()}

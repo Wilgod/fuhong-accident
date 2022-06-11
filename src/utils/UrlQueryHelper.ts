@@ -9,6 +9,7 @@ export const getQueryParameterNumber = (targetValue: string) => {
 
 export const getQueryParameterString = (targetValue: string) => {
     const queryParms = new UrlQueryParameterCollection(window.location.href);
-    const value = queryParms.getValue(targetValue);
+    let value = queryParms.getValue(targetValue);
+    if (value == null ? "" : value)
     return value;
 }

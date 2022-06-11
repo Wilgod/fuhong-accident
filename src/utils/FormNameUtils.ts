@@ -15,7 +15,7 @@ export const caseNumberToFormNameParser = (caseType) => {
     }
 }
 
-export const caseNumberToSitePageParser = (caseType) => {
+/*export const caseNumberToSitePageParser = (caseType) => {
     switch (caseType) {
         case "SUI":
             return "ServiceUserAccident.aspx";
@@ -27,6 +27,23 @@ export const caseNumberToSitePageParser = (caseType) => {
             return "SpecialIncidentReportLicense.aspx";
         case "OIN":
             return "OtherIncidentReport.aspx";
+        default:
+            return "";
+    }
+}*/
+
+export const caseNumberToSitePageParser = (caseType) => {
+    switch (caseType) {
+        case "SUI":
+            return "ServiceUserAccident";
+        case "PUI":
+            return "OutsidersAccident";
+        case "SID":
+            return "SpecialIncidentReportAllowance";
+        case "SIH":
+            return "SpecialIncidentReportLicense";
+        case "OIN":
+            return "OtherIncidentReport";
         default:
             return "";
     }

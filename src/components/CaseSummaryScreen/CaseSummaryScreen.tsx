@@ -256,9 +256,13 @@ const columns = (context) => {
                 let formLink = "";
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
-                    formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
+                    //formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
+                    let navPage = caseNumberToSitePageParser(caseType)
+                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else if (data && data.Title) {
-                    formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
+                    //formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
+                    let navPage = caseNumberToSitePageParser(data.Title.toUpperCase())
+                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else {
                     return null;
                 }

@@ -1027,8 +1027,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{borderBottom:'1px solid'}}>{form.caseNumber}</td>
                                 </tr>
                             </table>
-                            
-                            
                         </div>
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -1067,7 +1065,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         <div className={`col-12`}>
                             <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
-                                    <td  style={{width:'240px'}}>
+                                    <td style={{width:'240px'}}>
                                     高級服務經理/服務經理姓名
                                     </td>
                                     <td style={{width:'220px',borderBottom:'1px solid'}}>
@@ -1077,7 +1075,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     日期&nbsp;&nbsp;
                                     </td>
                                     <td style={{width:'220px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMDate != null && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
@@ -1107,7 +1105,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     日期&nbsp;&nbsp;
                                     </td>
                                     <td style={{width:'220px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDDate != null  && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
