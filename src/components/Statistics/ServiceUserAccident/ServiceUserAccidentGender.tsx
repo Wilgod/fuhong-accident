@@ -1392,7 +1392,7 @@ function ServiceUserAccidentGender(siteCollectionUrl) {
                                     </div>
                                     <Chart
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={'600px'}
                                         chartType={"PieChart"}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={

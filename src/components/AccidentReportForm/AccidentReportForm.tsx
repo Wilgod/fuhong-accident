@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow, print }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow, serviceUnitList, print }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
@@ -507,13 +507,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
-    console.log(parentFormData);
-    console.log('formType :',formType);
-    console.log('serviceUser :',serviceUser);
-    console.log('serviceManager :',serviceManager);
-    console.log('getCurrentUser :',getCurrentUser);
-    console.log('currentUserRole :',currentUserRole);
-    console.log('stageTwoPendingSptApprove :',stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData));
+    
+    let ServiceUserUnit = "";
+    if (parentFormData && parentFormData.ServiceUserUnit) {
+        let ser = serviceUnitList.filter(o => {return o.location == parentFormData.ServiceUserUnit});
+        if (ser.length > 0) {
+            ServiceUserUnit = ser[0].su_name_tc
+        }
+    }
+    
+    
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -529,7 +532,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserUnit ? `${parentFormData.ServiceUserUnit}` : ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${ServiceUserUnit}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>

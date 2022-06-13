@@ -127,7 +127,8 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
             let AccidentCauseFactor = '';
             let Suggestion = '';
             if (results.AccidentTime != undefined &&results.AccidentTime != null) {
-                AccidentTime = new Date(results.AccidentTime).getFullYear() + `-` +(`0`+(new Date(results.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.AccidentTime).getMinutes()).slice(-2)
+                AccidentTime = moment(results.AccidentTime).format("YYYY-MM-DD hh:mm");
+                //AccidentTime = new Date(results.AccidentTime).getFullYear() + `-` +(`0`+(new Date(results.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.AccidentTime).getMinutes()).slice(-2)
             }
 
             if (results.AccidentReportForm != undefined && results.AccidentReportForm.length > 0) {
@@ -534,7 +535,8 @@ function genderFormatter(cell, rowIndex) {
 function dateFormatter(cell,rowIndex){
     let div = [];
     if (cell != undefined && cell != null) {
-        div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
+        div.push(<div >{moment(cell.IncidentTime).format("YYYY-MM-DD hh:mm")}</div>);
+        //div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
     }
     return div;
 }

@@ -37,7 +37,7 @@ import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
 import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
-
+import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -88,6 +88,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [asd, setAsd] = useState<boolean>(undefined);
     const [intelligence, setIntelligence] = useState("");
 
+
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
         injuredArea: [],
@@ -123,6 +124,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         uncomfortableDescription: "",
         uncomfortableOtherRemark: "",
         behaviorOtherRemark: "",
+        serviceCategory:""
     });
     const [sdComment, setSdComment] = useState("");
     const [sdDate, setSdDate] = useState(null);
@@ -166,6 +168,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         const value = event.target.value;
         setForm({ ...form, [name]: value });
     }
+
 
     const checkboxHandler = (event) => {
         const name = event.target.name;
@@ -337,7 +340,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (form.cctv) {
             body["CctvRecord"] = form.cctv === "CCTV_TRUE";
             if (form.cctv === "CCTV_TRUE") {
-                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
+                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString();
             }
         } else {
             error["CctvRecord"] = true;
@@ -681,6 +684,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let [body, error] = dataFactory("SUBMIT");
             console.log(error);
             if (Object.keys(error).length > 0) {
+                alert("提交錯誤");
                 setError(error);
             } else {
                 if (formStatus === "SM_VOID") {
@@ -1056,7 +1060,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 treatmentAfterAccident: data.TreatmentAfterAccident,
                 patientAcciedntScenario: data.Circumstance,
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
-                scenarioOutsideActivityRemark: data.CircumstanceLocation
+                scenarioOutsideActivityRemark: data.CircumstanceLocation,
+                serviceCategory:data.ServiceCategory
             });
             debugger
             if (data.CctvRecordReceiveDate) {
@@ -1282,12 +1287,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >=0 &&
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_Eng_name_display}</option>
+                                        return <option value={item.location} selected={item.location == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
-                                        return <option value={item} selected={item == serviceUnit}>{item}</option>
+                                        let ser = serviceUserUnitList.filter(o => {return o.location == item});
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].location} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+                                        
                                     })
                                 }
                             </select>
@@ -1395,14 +1404,43 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         </div>
                         {/* 接受服務類別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col ${(error && error['Circumstance'] ) ? styles.divInvalid: ""}`}>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="service" id="service-stay" value="住宿" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("住宿")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay">住宿</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="service" id="service-stay-morning" value="日間" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("日間")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-morning">日間</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="service" id="service-stay-short" value="暫宿" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("暫宿")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-short">暫宿</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="service" id="service-stay-other" value="其他" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("其他")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-other">其他</label>
+                            </div>
+                            {/*
+                                serviceCategory === "其他" &&
+                                <div className="">
+                                            <input type="text" className="form-control"
+                                        // value={serviceUser ? serviceUser.ServiceType : ""}
+                                        value={serviceCategory}
+                                        onChange={(event) => setServiceCategory(event.target.value)}
+                                        disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    />
+                                </div>
+                            */}
+                        </div>
+                        {/*<div className="col-12 col-xl-4">
                             <input type="text" className="form-control"
                                 // value={serviceUser ? serviceUser.ServiceType : ""}
                                 value={serviceCategory}
                                 onChange={(event) => setServiceCategory(event.target.value)}
                                 disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
-                        </div>
+                        </div>*/}
                     </div>
 
                     <div className="form-row mb-2">

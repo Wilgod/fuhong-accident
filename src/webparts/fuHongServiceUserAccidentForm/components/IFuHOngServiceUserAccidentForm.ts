@@ -36,6 +36,7 @@ interface IServiceUserAccidentFormStates {
     uncomfortableOtherRemark: string;
     uncomfortableDescription: string;
     behaviorOtherRemark: string;
+    serviceCategory:string;
     
 }
 

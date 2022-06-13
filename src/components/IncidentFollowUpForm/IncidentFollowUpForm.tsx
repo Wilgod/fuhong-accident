@@ -29,6 +29,7 @@ interface IIncidentFollowUpFormProps {
     workflow:string;
     changeFormTwentySixDataSelected:any;
     print:any;
+    serviceUnitList:any;
 }
 
 interface IIncidentFollowUpFormStates {
@@ -50,7 +51,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,formTwentySixData, workflow, changeFormTwentySixDataSelected, print }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,formTwentySixData, workflow, changeFormTwentySixDataSelected, serviceUnitList, print }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,

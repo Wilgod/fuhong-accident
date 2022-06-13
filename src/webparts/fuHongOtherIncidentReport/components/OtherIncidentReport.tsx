@@ -7,7 +7,7 @@ import Header from "../../../components/Header/Header";
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import {getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
+import {getUserInfoByEmailInUserInfoAD,getAllServiceUnit } from '../../../api/FetchUser';
 import { IErrorFields, IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHongOtherIncidentReport';
 import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport } from '../../../api/PostFuHongList';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
@@ -21,6 +21,7 @@ import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
+import useServiceUnit2 from '../../../hooks/useServiceUser2';
 
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl,workflow, print }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
@@ -67,7 +68,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [policeDatetime, setPoliceDatetime] = useState(null);
     const [guardianDatetime, setGuardianDatetime] = useState(null);
     //IncidentTime
-    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    const [serviceUnit, setServiceUnit] = useState("");
+    const [serviceUserUnitList, setServiceUserUnitList] = useState([]);;
+    const [serviceUnitTC, setServiceUnitTC] = useState("");
+    
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [serviceLocation, setServiceLocation] = useState("");
@@ -661,6 +666,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
 
     const loadData = async (data: any) => {
+        debugger
         if (data) {
             setIncidentTime(new Date(data.IncidentTime));
             setFormId(data.Id);
@@ -697,6 +703,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
             if (data.ServiceUnit) {
                 setServiceUnit(data.ServiceUnit);
+                let ser = serviceUserUnitList.filter(o => {return o.location == data.ServiceUnit});
+                if (ser.length > 0) {
+                    setServiceUnitTC(ser[0].su_name_tc);
+
+                }
             }
 
             if (data.SDPhone) {
@@ -743,12 +754,12 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }
 
     useEffect(() => {
-        if (formData) {
+        if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
             loadData(formData);
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
-    }, [formData]);
+    }, [formData, serviceUserUnitList]);
 
     useEffect(() => {
         if (reporter) {
@@ -782,12 +793,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [sdInfo])
     // Get current User info in ad
     useEffect(() => {
+        getAllServiceUnit(siteCollectionUrl).then(setServiceUserUnitList).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
     }, []);
 
     // Find SD && SM
     useEffect(() => {
-        if (formInitial(currentUserRole, formStatus)) {
+        if (formInitial(currentUserRole, formStatus) && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
             if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
                 setHrDepartment("CHH");
                 setServiceUnit("CHH");
@@ -795,12 +807,18 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             }
 
             if (userInfo && userInfo.hr_deptid) {
+                debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
+                let ser = serviceUserUnitList.filter(o => {return o.location == userInfo.hr_deptid});
+                if (ser.length > 0) {
+                    setServiceUnitTC(ser[0].su_name_tc);
+
+                }
                 setServiceLocation(userInfo.hr_location);
             }
         }
-    }, [userInfo]);
+    }, [userInfo, serviceUserUnitList]);
 
     // Get SD & SM
     useEffect(() => {
@@ -820,6 +838,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         }
     }, [departments]);
 
+
+    
     return (
         <>
             {isPrintMode && <Header displayName="其他事故呈報表" />}
@@ -842,8 +862,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                     return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
                                 })}
                             </select> */}
-                            <input type="text" className={`form-control  ${(error && error['ServiceUnit']) ? "is-invalid": ""}`} value={serviceUnit || ""} disabled />
+                            {<input type="text" className={`form-control  ${(error && error['ServiceUnit']) ? "is-invalid": ""}`} value={serviceUnitTC || ""} disabled />}
+                            
                         </div>
+                    
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                         <div className="col-12 col-md-4">

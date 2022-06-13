@@ -9,7 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './ServiceUserAccidentFormPrint.module.scss';
 import { JSONParser } from '@pnp/pnpjs';
-
+import * as moment from 'moment';
 
 interface IServiceUserAccidentFormPrintProps {
     index: number;
@@ -19,9 +19,10 @@ interface IServiceUserAccidentFormPrintProps {
     formTwentyOneDataSelected:number;
     siteCollectionUrl:string;
     permissionList:any;
+    serviceUnitList:any;
 }
 
-export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList}: IServiceUserAccidentFormPrintProps ) {
+export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList}: IServiceUserAccidentFormPrintProps ) {
     console.log('index :', index);
     let EstimatedPart2CompletionDate = null;
     if (formData.SubmitDate != null) {
@@ -37,6 +38,13 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
         }
     }
+    console.log('formData.InjuredArea',formData.InjuredArea);
+    let ServiceUserUnit = "";
+    let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceUserUnit});
+    if (ser.length > 0) {
+        ServiceUserUnit = ser[0].su_name_tc
+    }
+    debugger
 return <>
     <div style={{color:'black'}}>
         {index == 0 &&
@@ -50,7 +58,7 @@ return <>
                         服務使用者意外填報表(一)
                     </div>
                     <div className={`col-12 ${styles.header}`}>
-                        服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                        服務單位 {ServiceUserUnit}
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -76,8 +84,8 @@ return <>
                                 <td>{formData.ServiceUserId != null ? formData.ServiceUserId : ''}</td>
                             </tr>
                             <tr>
-                                <td>接受服務類別</td>
-                                <td>{formData.ServiceCategory != null ? formData.ServiceCategory : ''}</td>
+                                {/*<td>接受服務類別</td>
+                                <td>{formData.ServiceCategory != null ? formData.ServiceCategory : ''}</td>*/}
                                 <td>接受服務類別</td>
                                 <td>
                                     {formData.ServiceCategory == "住宿" && <span>&#9745;</span>}
@@ -93,10 +101,14 @@ return <>
                                     {formData.ServiceCategory != "其他" && <span>&#9744;</span>}
                                     其他
                                 </td>
+                                <td> </td>
+                                <td> </td>
                             </tr>
                             <tr>
                                 <td>意外發生日期及時間</td>
-                                <td>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td>
+                                    {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
+                                    {/*formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)*/}
                                 </td>
                                 <td>地點</td>
                                 <td>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
@@ -209,20 +221,20 @@ return <>
                             1.2 服務使用者受傷部位<span style={{fontSize:'14px'}}>（如有受傷，可選擇多項）</span>
                             </td>
                             <td>
-                                {formData.InjuredArea == "INJURY_HEAD"  && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_HEAD" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_HEAD") > -1  && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_HEAD") == -1 && <span>&#9744;</span>}
                                 頭部&nbsp;&nbsp;
-                                {formData.InjuredArea == "INJURY_NECK" && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_NECK" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_NECK") > -1 && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_NECK") == -1 && <span>&#9744;</span>}
                                 頸部&nbsp;&nbsp;
-                                {formData.InjuredArea == "INJURY_BODY" && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_BODY" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_BODY") > -1 && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_BODY") == -1 && <span>&#9744;</span>}
                                 軀幹&nbsp;&nbsp;
-                                {formData.InjuredArea == "INJURY_UPPER_LIMB" && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_UPPER_LIMB" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") == -1 && <span>&#9744;</span>}
                                 上肢&nbsp;&nbsp;
-                                {formData.InjuredArea == "INJURY_LOWER_LIMB" && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_LOWER_LIMB" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") == -1 && <span>&#9744;</span>}
                                 下肢&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -232,8 +244,8 @@ return <>
                             <td style={{width:'380px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.InjuredArea == "INJURY_OTHER"  && <span>&#9745;</span>}
-                                {formData.InjuredArea != "INJURY_OTHER" && <span>&#9744;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData.InjuredArea.indexOf("INJURY_OTHER") == -1 && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'430px'}}>
@@ -252,20 +264,20 @@ return <>
                                 是&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BLEEDING"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BLEEDING" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") == -1 && <span>&#9744;</span>}
                                 流血&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_BRUISE"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_BRUISE" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") == -1 && <span>&#9744;</span>}
                                 瘀腫&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_FRACTURE"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_FRACTURE" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") == -1 && <span>&#9744;</span>}
                                 骨折&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_DIZZY"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_DIZZY" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") == -1 && <span>&#9744;</span>}
                                 暈眩&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_SHOCK"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_SHOCK" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") == -1 && <span>&#9744;</span>}
                                 休克/失去知覺&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -277,8 +289,8 @@ return <>
                             <td style={{width:'80px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredOther != "UNCOMFORTABLE_OTHER" && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") == -1 && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'350px'}}>
@@ -292,7 +304,7 @@ return <>
                             </td>
                             <td style={{width:'80px'}}>
                             </td>
-                            <td style={{width:'90px'}}>
+                            <td style={{width:'90px',verticalAlign:'bottom'}}>
                             受傷情況 : 
                             </td>
                             <td style={{borderBottom:'1px solid',width:'400px'}}>
@@ -350,13 +362,13 @@ return <>
                             <td style={{width:'80px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnwellAfterInjuredOther == "UNCOMFORTABLE_OTHER"  && <span>&#9745;</span>}
+                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") > -1  && <span>&#9745;</span>}
                                     {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") == -1)) && <span>&#9744;</span>}
                                     其他 請註明&nbsp;&nbsp;
                                     
                             </td>
                             <td style={{borderBottom:'1px solid',width:'350px'}}>
-                                {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                                {formData.UnsafeBehaviorsOther != null ? formData.UnsafeBehaviorsOther : ''}
                             </td>
                         </tr>
                     </table>
@@ -465,7 +477,7 @@ return <>
                                         {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") > -1  && <span>&#9745;</span>}
                                         {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") == -1)) && <span>&#9744;</span>}
                                         10 其他 (請註明&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactorOther != null ? formData.ObserveEnvironmentFactorOther : '____________________'})
+                                        {formData.ObserveEnvironmentFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObserveEnvironmentFactorOther}</span> : '____________________'})
                                     </div>
                                 </td>
                                 <td>
@@ -492,7 +504,7 @@ return <>
                                         {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") > -1  && <span>&#9745;</span>}
                                         {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") == -1)) && <span>&#9744;</span>}
                                         6 其他個人因素 (請註明 :&nbsp;&nbsp;
-                                        {formData.ObservePersonalFactorOther != null ? formData.ObservePersonalFactorOther : '____________________'})
+                                        {formData.ObservePersonalFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObservePersonalFactorOther}</span> : '____________________'})
                                     </div>
                                 </td>
                             </tr>
@@ -506,7 +518,7 @@ return <>
                     <div className={`col-12`} >
                         <table style={{width:'950px'}}>
                             <tr>
-                                <td style={{verticalAlign:'top', width:'380px'}}>(請註明事發地點附近之員工當時執行的職務)</td>
+                                <td style={{verticalAlign:'bottom', width:'380px'}}>(請註明事發地點附近之員工當時執行的職務)</td>
                                 <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData.AccidentDetail != null ? formData.AccidentDetail : ''}</td>
                             </tr>
                         </table>
@@ -520,7 +532,7 @@ return <>
                         <table style={{width:'950px'}}>
                             <tr>
                                 <td style={{verticalAlign:'top', width:'230px'}}>3.1 服務單位即時治療/處理</td>
-                                <td style={{fontSize:'15px',verticalAlign:'top', borderBottom:'1px solid'}}>{formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
+                                <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
                             </tr>
                         </table>
                     </div>
@@ -546,7 +558,8 @@ return <>
                                 &nbsp;&nbsp;到達時間
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'200px'}}>
-                                    {formData.MedicalArrangementDate != null && new Date(formData.MedicalArrangementDate).getFullYear() + `-` +(`0`+(new Date(formData.MedicalArrangementDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.MedicalArrangementDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.MedicalArrangementDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.MedicalArrangementDate).getMinutes()).slice(-2)}
+                                    {formData.MedicalArrangementDate != null && moment(formData.MedicalArrangementDate).format("YYYY-MM-DD hh:mm")}
+                                    {/*formData.MedicalArrangementDate != null && new Date(formData.MedicalArrangementDate).getFullYear() + `-` +(`0`+(new Date(formData.MedicalArrangementDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.MedicalArrangementDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.MedicalArrangementDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.MedicalArrangementDate).getMinutes()).slice(-2)*/}
                                 </td>
                             </tr>
                         </table>
@@ -578,8 +591,8 @@ return <>
                                     否
                                 </td>
                                 <td style={{width:'100px'}}>
-                                    {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
-                                    {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
+                                    {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9745;</span>}
+                                    {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9744;</span>}
                                     不適用
                                 </td>
                             </tr>
@@ -672,7 +685,8 @@ return <>
                                     6.1通知家屬日期及時間
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContactFamilyDate != null && new Date(formData.ContactFamilyDate).getFullYear() + `-` +(`0`+(new Date(formData.ContactFamilyDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.ContactFamilyDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.ContactFamilyDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.ContactFamilyDate).getMinutes()).slice(-2)}
+                                {formData.ContactFamilyDate != null && moment(formData.ContactFamilyDate).format("YYYY-MM-DD hh:mm")}
+                                {/*formData.ContactFamilyDate != null && new Date(formData.ContactFamilyDate).getFullYear() + `-` +(`0`+(new Date(formData.ContactFamilyDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.ContactFamilyDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.ContactFamilyDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.ContactFamilyDate).getMinutes()).slice(-2)*/}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;與服務使用者關係
@@ -729,6 +743,8 @@ return <>
                                 {formData.Created != null && new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
+                        </table>
+                        <table style={{width:'950px', marginTop:'15px'}}>
                             <tr>
                                 <td style={{width:'250px'}}>
                                 高級服務經理/服務經理姓名
@@ -746,13 +762,22 @@ return <>
                             </tr>
                         </table>
                     </div>
-                    <div className={`col-12`} style={{fontWeight:'bold'}}>
+                    <div className={`col-12`} style={{fontWeight:'bold',marginTop:'20px'}}>
                     [此欄由高級物理治療師填寫]
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                    交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
+                        <table style={{width:'950px'}}>
+                            <tr>
+                                <td style={{width:'60px'}}>
+                                交由 :
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;填寫「意外報告 (二)」
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <div className={`col-12`}>
                     <table style={{width:'950px'}}>
@@ -799,7 +824,7 @@ return <>
                         <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
                     </div>
                     <div className={`col-12 ${styles.header}`}>
-                        扶康會 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                        扶康會 {ServiceUserUnit}
                     </div>
                     <div className={`col-12 font-weight-bold ${styles.header}`}>
                         服務使用者意外填報表(二)
@@ -858,7 +883,9 @@ return <>
                         <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{width:'210px'}}>意外發生日期及時間</td>
-                                <td style={{width:'250px',borderBottom:'1px solid'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{width:'250px',borderBottom:'1px solid'}}>
+                                    {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
+                                    {/*formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)*/}
                                 </td>
                                 <td style={{width:'60px'}}>&nbsp;&nbsp;地點</td>
                                 <td style={{width:'260px',borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
@@ -868,8 +895,8 @@ return <>
                     <div className={`col-12 mb-2`}>
                         <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'180px'}}>收到「意外填報表」日期</td>
-                                <td style={{width:'600px',borderBottom:'1px solid'}}>{formData.SubmitDate != null && new Date(formData.SubmitDate).getFullYear() + `-` +(`0`+(new Date(formData.SubmitDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SubmitDate).getDate()).slice(-2)}
+                                <td style={{width:'210px'}}>收到「意外填報表」日期</td>
+                                <td style={{width:'570px',borderBottom:'1px solid'}}>{formData.SubmitDate != null && new Date(formData.SubmitDate).getFullYear() + `-` +(`0`+(new Date(formData.SubmitDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SubmitDate).getDate()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
@@ -1139,7 +1166,7 @@ return <>
                     意外跟進/結束表(三)
                 </div>
                 <div className={`col-12 ${styles.header}`}>
-                    服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                    服務單位 {ServiceUserUnit}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
                     <table style={{width:'360px', float:'right'}}>
@@ -1171,7 +1198,8 @@ return <>
                             <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
                             <td style={{width:'130px'}}>&nbsp;&nbsp;發生意外日期</td>
                             <td style={{width:'250px', borderBottom:'1px solid'}}>
-                            {formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                            {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
+                            {/*formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)*/}
                             </td>
                         </tr>
                     </table>

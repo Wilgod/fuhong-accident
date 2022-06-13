@@ -10,7 +10,7 @@ import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './OutsidersAccidentFormPrint.module.scss';
 import { JSONParser } from '@pnp/pnpjs';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
-
+import * as moment from 'moment';
 interface IServiceUserAccidentFormPrintProps {
     index: number;
     formData: any;
@@ -19,13 +19,15 @@ interface IServiceUserAccidentFormPrintProps {
     formTwentyOneDataSelected:number;
     siteCollectionUrl:string;
     permissionList:any;
+    serviceUnitList:any;
 }
 
-export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList}: IServiceUserAccidentFormPrintProps ) {
+export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList}: IServiceUserAccidentFormPrintProps ) {
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [reporterName, setReporterName] = useState("");
     const [investigatorName, setInvestigatorName] = useState("");
     const [investigatorJobTitle, setInvestigatorJobTitle] = useState("");
+    const [serviceUserUnit, setServiceUserUnit] = useState("");
     let EstimatedPart2CompletionDate = null;
     if (formData.SubmitDate != null) {
         let SubmitDate = new Date(formData.SubmitDate);
@@ -40,10 +42,14 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
         }
     }
-    console.log('formData :',formData);
+    
 
     useEffect(() => {
         if (formData) {
+            let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceUserUnit});
+            if (ser.length > 0) {
+                setServiceUserUnit(ser[0].su_name_tc);
+            }
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Author.EMail).then((userInfosRes) => {
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
@@ -67,6 +73,8 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             
         }
     }, [formData])
+
+    
 return <>
     <div style={{color:'black'}}>
         {index == 0 &&
@@ -80,7 +88,7 @@ return <>
                         外界人士意外填報表(一)
                     </div>
                     <div className={`col-12 ${styles.header}`}>
-                        服務單位 {formData.ServiceLocation != null ? formData.ServiceLocation : ''}
+                        服務單位 {serviceUserUnit}
                     </div>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px', fontWeight:'bold'}}>
@@ -92,17 +100,17 @@ return <>
                     <div className={`col-12`}>
                         <table style={{width:'900px', margin:'0 auto'}}>
                             <tr>
-                                <td style={{width:'180px'}}>姓名: (英文)</td>
+                                <td style={{width:'180px'}}>姓名 (英文)</td>
                                 <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
                                 <td style={{width:'100px'}}>&nbsp;&nbsp;(中文)</td>
                                 <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.ServiceUserNameTC != null ? formData.ServiceUserNameTC : ''}</td>
                             </tr>
                             <tr>
-                                <td style={{width:'180px'}}>年齡: </td>
+                                <td style={{width:'180px'}}>年齡 </td>
                                 <td style={{borderBottom:'1px solid', width:'310px'}}>
                                 {formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}
                                 </td>
-                                <td style={{width:'100px'}}>&nbsp;&nbsp;性別:</td>
+                                <td style={{width:'100px'}}>&nbsp;&nbsp;性別</td>
                                 <td style={{borderBottom:'1px solid', width:'310px'}}>
                                     {formData.ServiceUserGender == "male" && <span>男</span>}
                                     {formData.ServiceUserGender == "female" && <span>女</span>}
@@ -110,7 +118,7 @@ return <>
                                 </td>
                             </tr>
                             <tr>
-                                <td style={{width:'180px'}}>身份： </td>
+                                <td style={{width:'180px'}}>身份 </td>
                                 <td colSpan={2}>
                                     {formData.ServiceUserIdentity == "visitor"  && <span>&#9745;</span>}
                                     {formData.ServiceUserIdentity != "visitor" && <span>&#9744;</span>}
@@ -135,7 +143,8 @@ return <>
                             </tr>
                             <tr>
                                 <td style={{width:'180px'}}>意外發生日期及時間</td>
-                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>
+                                    {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
                                 </td>
                                 <td style={{width:'100px'}}>&nbsp;&nbsp;地點</td>
                                 <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
@@ -333,7 +342,7 @@ return <>
                     <div className={`col-12`}> 
                         <table style={{width:'960px'}}>
                             <tr style={{fontWeight:'bold'}}>
-                                <td>
+                                <td colSpan={7}>
                                 3.1 就診安排:
                                 </td>
                             </tr>
@@ -368,14 +377,14 @@ return <>
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'200px'}}>
                                 {formData.HospitalArriveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
-                                    {new Date(formData.HospitalArriveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalArriveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalArriveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalArriveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalArriveTime).getMinutes()).slice(-2)}</span> : ''}
+                                    {moment(formData.HospitalArriveTime).format("YYYY-MM-DD hh:mm")} </span>:''}
                                 </td>
                                 <td style={{width:'90px'}}>
                                 &nbsp;&nbsp;離開時間:
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'200px'}}>
                                 {formData.HospitalLeaveTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
-                                    {new Date(formData.HospitalLeaveTime).getFullYear() + `-` +(`0`+(new Date(formData.HospitalLeaveTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.HospitalLeaveTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.HospitalLeaveTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.HospitalLeaveTime).getMinutes()).slice(-2)}</span> : ''}
+                                    {moment(formData.HospitalLeaveTime).format("YYYY-MM-DD hh:mm")} </span>:''}
                                 </td>
                             </tr>
                             <tr>
@@ -392,7 +401,7 @@ return <>
                     <div className={`col-12`} >
                         <table style={{width:'870px'}}>
                         <tr style={{fontWeight:'bold'}}>
-                                <td>
+                                <td colSpan={5}>
                                 3.2 報警處理:
                                 </td>
                             </tr>
@@ -414,7 +423,7 @@ return <>
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'300px'}}>
                                 {formData.PoliceDateTime != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
-                                    {new Date(formData.PoliceDateTime).getFullYear() + `-` +(`0`+(new Date(formData.PoliceDateTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.PoliceDateTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.PoliceDateTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.PoliceDateTime).getMinutes()).slice(-2)}</span> : ''}
+                                    {moment(formData.PoliceDateTime).format("YYYY-MM-DD hh:mm")} </span>:''}
                                 </td>
                                 <td style={{width:'90px'}}>
                                 &nbsp;&nbsp;警署名稱:
@@ -431,7 +440,7 @@ return <>
                     <div className={`col-12`} >
                         <table style={{width:'900px'}}>
                         <tr style={{fontWeight:'bold'}}>
-                                <td>
+                                <td colSpan={5}>
                                 3.3家屬聯絡
                                 </td>
                             </tr>
@@ -453,7 +462,8 @@ return <>
                                 </td>
                                 <td  style={{borderBottom:'1px solid', width:'250px'}}>
                                 {formData.FamilyContactDate != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>
-                                    {new Date(formData.FamilyContactDate).getFullYear() + `-` +(`0`+(new Date(formData.FamilyContactDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.FamilyContactDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.FamilyContactDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.FamilyContactDate).getMinutes()).slice(-2)}</span> : ''}
+                                    {moment(formData.FamilyContactDate).format("YYYY-MM-DD hh:mm")}</span>:''}
+                                    {/*new Date(formData.FamilyContactDate).getFullYear() + `-` +(`0`+(new Date(formData.FamilyContactDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.FamilyContactDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.FamilyContactDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.FamilyContactDate).getMinutes()).slice(-2)}</span> : ''*/}
                                 </td>
                                 <td style={{width:'110px'}}>
                                 &nbsp;&nbsp;與傷者關係:
@@ -480,7 +490,7 @@ return <>
                                 日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.Created).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.Created).getMinutes()).slice(-2)}
+                                {moment(formData.Created).format("YYYY-MM-DD hh:mm")}
                                 </td>
                             </tr>
                             <tr>
@@ -494,12 +504,12 @@ return <>
                                 日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SMDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SMDate).getMinutes()).slice(-2)}
+                                {formData.SMDate != null && moment(formData.SMDate).format("YYYY-MM-DD hh:mm")}
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div className={`col-12`} style={{fontWeight:'bold'}}>
+                    <div className={`col-12`} style={{fontWeight:'bold', marginTop:'15px'}}>
                     [此欄由高級物理治療師填寫]
                     </div>
                 </div>
@@ -522,7 +532,7 @@ return <>
                                 日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.SPTDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.SPTDate).getMinutes()).slice(-2)}
+                                {formData.SPTDate != null && moment(formData.SPTDate).format("YYYY-MM-DD hh:mm")}
                                 </td>
                             </tr>
                         </table>
@@ -537,7 +547,7 @@ return <>
                         <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
                     </div>
                     <div className={`col-12 ${styles.header}`}>
-                        扶康會 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                        扶康會 {serviceUserUnit}
                     </div>
                     <div className={`col-12 font-weight-bold ${styles.header}`}>
                     外界人士意外填報表(二)
@@ -568,7 +578,7 @@ return <>
                     <div className={`col-12 mb-2`} style={{fontSize:'18px'}}>
                         <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'210px'}}>服務使用者姓名: (中文)</td>
+                                <td style={{width:'210px'}}>服務使用者姓名 (中文)</td>
                                 <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
                                 <td style={{width:'70px'}}>&nbsp;&nbsp;(英文)</td>
                                 <td style={{width:'250px', borderBottom:'1px solid'}}>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
@@ -578,9 +588,9 @@ return <>
                     <div className={`col-12 mb-2`}>
                         <table style={{width:'780px'}}>
                             <tr>
-                                <td style={{width:'50px'}}>年齡: </td>
+                                <td style={{width:'50px'}}>年齡 </td>
                                 <td style={{width:'160px',borderBottom:'1px solid'}}>{formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
-                                <td style={{width:'70px'}}>&nbsp;&nbsp;性別:</td>
+                                <td style={{width:'70px'}}>&nbsp;&nbsp;性別</td>
                                 <td style={{width:'180px'}}>{formData.ServiceUserGender == "male" && <span>&#9745;</span>}
                                     {formData.ServiceUserGender != "male" && <span>&#9744;</span>}
                                     男&nbsp;&nbsp;
@@ -596,7 +606,8 @@ return <>
                         <table style={{width:'780px'}}>
                             <tr>
                                 <td style={{width:'210px'}}>意外發生日期及時間</td>
-                                <td style={{width:'250px',borderBottom:'1px solid'}}>{formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                                <td style={{width:'250px',borderBottom:'1px solid'}}>
+                                    {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
                                 </td>
                                 <td style={{width:'60px'}}>&nbsp;&nbsp;地點</td>
                                 <td style={{width:'260px',borderBottom:'1px solid'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
@@ -877,7 +888,7 @@ return <>
                 外界人士意外填報表(三)
                 </div>
                 <div className={`col-12 ${styles.header}`}>
-                    服務單位 {formData.ServiceUserUnit != null ? formData.ServiceUserUnit : ''}
+                    服務單位 {serviceUserUnit}
                 </div>
                 <div className={`col-12 font-weight-bold`} style={{textAlign:'right', fontSize:'15px'}}>
                     <table style={{width:'360px', float:'right'}}>
@@ -909,7 +920,7 @@ return <>
                             <td style={{width:'200px', borderBottom:'1px solid'}}>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
                             <td style={{width:'100px'}}>發生意外日期</td>
                             <td style={{width:'200px', borderBottom:'1px solid'}}>
-                            {formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)}
+                            {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
                             </td>
                         </tr>
                     </table>

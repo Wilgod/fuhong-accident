@@ -143,7 +143,8 @@ function LicenseIncidentCaseSummary({ context,siteCollectionUrl }: ILicenseIncid
             let IncidentTime = '';
             let ResidentAbuse = '';
             if (results.IncidentTime != undefined &&results.IncidentTime != null) {
-                IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
+                IncidentTime = moment(results.IncidentTime).format("YYYY-MM-DD hh:mm");
+                // IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
             }
             if (results.ResidentAbuse == "UNUSAL_INCIDENT_GENERAL") {
                 ResidentAbuse = "在院舍內發生事故及送院後死亡";
@@ -450,7 +451,8 @@ const column = [
 function dateFormatter(cell,rowIndex){
     let div = [];
     if (cell != undefined && cell != null) {
-        div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
+        div.push(<div >{moment(cell.IncidentTime).format("YYYY-MM-DD hh:mm")}</div>);
+        //div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
     }
     return div;
 }

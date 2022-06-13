@@ -9,6 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
+import * as moment from 'moment';
 interface IOtherIncidentReportPrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -18,6 +19,7 @@ interface IOtherIncidentReportPrint {
     formTwentySixDataSelected: any;
     siteCollectionUrl:string;
     index:number;
+    serviceUnitList:any
 }
 
 interface IOtherIncidentReportPrintStates {
@@ -139,7 +141,7 @@ interface IOtherIncidentReportPrintStates {
 
 }
 
-export default function OtherIncidentReportPrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl}: IOtherIncidentReportPrint) {
+export default function OtherIncidentReportPrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl, serviceUnitList}: IOtherIncidentReportPrint) {
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -157,13 +159,12 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
+    const [serviceUserUnit, setServiceUserUnit] = useState("");
     
     let followUpActions = null;
     let formTwentySixDataPrint = null;
-    debugger
     if (formTwentySixData != null && formTwentySixData.length > 0) {
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
-        debugger
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
         }
@@ -312,6 +313,10 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 setNotifyStaff([formData.GuardianStaff]);
             }
             debugger
+            let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceLocation});
+            if (ser.length > 0) {
+                setServiceUserUnit(ser[0].su_name_tc);
+            }
             setForm({
                 ...form,
                 toDepartment:formData.ToDepartment,
@@ -430,6 +435,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
         }
     }
     useEffect(() => {
+        
         setCurrentUserEmail(CURRENT_USER.email);
     }, [])
 
@@ -494,296 +500,296 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
 			</style>
             <div style={{color:'black'}}>
                 {index == 0 &&
-                    <div>
+                    <div style={{width:'800px'}}>
                         <div className="form-row mb-3">
-                        <div className={`col-12 font-weight-bold ${styles.header}`}>
-                        其他事故呈報表
+                            <div className={`col-12 font-weight-bold ${styles.header}`}>
+                            其他事故呈報表
+                            </div>
+                            <div className={`col-12 ${styles.header}`}>
+                            服務單位 <span>{serviceUserUnit}</span>
+                            </div>
                         </div>
-                        <div className={`col-12 ${styles.header}`}>
-                        服務單位 <span>{form.serviceLocation}</span>
-                        </div>
-                    </div>
 
-                    <div className="form-row mb-3" style={{fontSize:'18px'}}>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
-                        事故資料
-                        </div>
-                        <div className={`col-12`}>
-                            <table>
-                                <tr>
-                                    <td>(a)事故發生日期 :</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2):''}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>(b)事故發生時間	:</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''}</td>
-                                </tr>
-                                <tr>
-                                    <td>(c)事故發生地點	:</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.incidentLocation}</td>
-                                </tr>
-                                <tr>
-                                    <td>(e))事故被傳媒報導 :</td>
-                                    <td>{formData.mediaReports&& <span>&#9745;</span>}
-                                        {!formData.mediaReports && <span>&#9744;</span>}
-                                        是&nbsp;&nbsp;
-                                        {!formData.mediaReports&& <span>&#9745;</span>}
-                                        {formData.mediaReports && <span>&#9744;</span>}
-                                        否&nbsp;&nbsp;
-                                    </td>
+                        <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                            <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
+                            事故資料
+                            </div>
+                            <div className={`col-12`}>
+                                <table>
+                                    <tr>
+                                        <td>(a)事故發生日期 :</td>
+                                        <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2):''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>(b)事故發生時間	:</td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                            {/*form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''*/}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>(c)事故發生地點	:</td>
+                                        <td style={{borderBottom:'1px solid'}}>{form.incidentLocation}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(e))事故被傳媒報導 :</td>
+                                        <td>{formData.mediaReports&& <span>&#9745;</span>}
+                                            {!formData.mediaReports && <span>&#9744;</span>}
+                                            是&nbsp;&nbsp;
+                                            {!formData.mediaReports&& <span>&#9745;</span>}
+                                            {formData.mediaReports && <span>&#9744;</span>}
+                                            否&nbsp;&nbsp;
+                                        </td>
 
-                                </tr>
-                                <tr>
-                                    <td>(f)特別事故的描述:</td>
-                                    <td style={{borderBottom:'1px solid'}}>
-                                    {form.incidentDescription != null ? form.incidentDescription:"" }
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
-                            有關服務使用者的資料 (如適用)
-                        </div>
-                        <div className={`col-12`}>
-                            <table >
-                                <tr>
-                                    <td>(a)	服務使用者(第一位)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.serviceUserGenderOne == 'male' && '男'}
-                                        {form.serviceUserGenderOne == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeOne}</td>
-                                </tr>
-                                <tr>
-                                    <td>(b)	服務使用者(第二位，如有)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.serviceUserGenderTwo == 'male' && '男'}
-                                        {form.serviceUserGenderTwo == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeTwo}</td>
-                                </tr>
-                                <tr>
-                                    <td>(c)	服務使用者(第三位，如有)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.serviceUserGenderThree == 'male' && '男'}
-                                        {form.serviceUserGenderThree == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;年齡</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeThree}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
-                        有關職員的資料 (如適用)
-                        </div>
-                        <div className={`col-12`}>
-                            <table >
-                                <tr>
-                                    <td>(a)	職員(第一位)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.staffGenderOne == 'male' && '男'}
-                                        {form.staffGenderOne == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionOne}</td>
-                                </tr>
-                                <tr>
-                                    <td>(b)	服務使用者(第二位，如有)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.staffGenderTwo == 'male' && '男'}
-                                        {form.staffGenderTwo == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionTwo}</td>
-                                </tr>
-                                <tr>
-                                    <td>(c)	服務使用者(第三位，如有)</td>
-                                    <td>性別</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>
-                                        {form.staffGenderThree == 'male' && '男'}
-                                        {form.staffGenderThree == 'female' && '女'}
-                                    </td>
-                                    <td>&nbsp;&nbsp;職位</td>
-                                    <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionThree}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px'}}>
-                            跟進行動
-                        </div>
-                        <div className={`col-12`}>
-                            <table >
-                                <tr>
-                                    <td colSpan={2}>(a) 報警處理</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
-                                        {form.police&& <span>&#9745;</span>}
-                                        {!form.police && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(報警日期和時間:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)}
-                                            </span>
-                                    </td>
-                                    
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div style={{paddingLeft:'45px'}}>(報案編號:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.policeReportNumber != null ? form.policeReportNumber: ''})
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.police&& <span>&#9745;</span>}
-                                        {form.police && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.policeDescription != null ? form.policeDescription: ''})
-                                            </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>(b) 通知家人／親屬／監護人／保證人</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
-                                        {form.guardian&& <span>&#9745;</span>}
-                                        {!form.guardian && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(通知日期和時間:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)}
-                                            </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div style={{paddingLeft:'44px'}}>(與服務使用者的關係:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'200px'}}>
-                                            {form.guardianRelationship != null ? form.guardianRelationship: ''})
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <div style={{paddingLeft:'44px'}}>(負責職員姓名:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.guardianStaff != null ? form.guardianStaff: ''})
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.guardian&& <span>&#9745;</span>}
-                                        {form.guardian && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.guardianDescription != null ? form.guardianDescription: ''})
-                                            </span>
-                                    </td>
-                                </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>(f)特別事故的描述:</td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentDescription != null ? form.incidentDescription:"" }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'15px'}}>
+                                有關服務使用者的資料 (如適用)
+                            </div>
+                            <div className={`col-12`}>
+                                <table >
+                                    <tr>
+                                        <td>(a)	服務使用者(第一位)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.serviceUserGenderOne == 'male' && '男'}
+                                            {form.serviceUserGenderOne == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>年齡&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeOne}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(b)	服務使用者(第二位，如有)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.serviceUserGenderTwo == 'male' && '男'}
+                                            {form.serviceUserGenderTwo == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>年齡&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeTwo}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(c)	服務使用者(第三位，如有)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.serviceUserGenderThree == 'male' && '男'}
+                                            {form.serviceUserGenderThree == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>年齡&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.serviceUserAgeThree}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'15px'}}>
+                            有關職員的資料 (如適用)
+                            </div>
+                            <div className={`col-12`}>
+                                <table >
+                                    <tr>
+                                        <td>(a)	職員(第一位)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.staffGenderOne == 'male' && '男'}
+                                            {form.staffGenderOne == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>職位&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionOne}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(b)	服務使用者(第二位，如有)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.staffGenderTwo == 'male' && '男'}
+                                            {form.staffGenderTwo == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>職位&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionTwo}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>(c)	服務使用者(第三位，如有)</td>
+                                        <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>
+                                            {form.staffGenderThree == 'male' && '男'}
+                                            {form.staffGenderThree == 'female' && '女'}
+                                        </td>
+                                        <td style={{textAlign:'right'}}>職位&nbsp;&nbsp;</td>
+                                        <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionThree}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'15px'}}>
+                                跟進行動
+                            </div>
+                            <div className={`col-12`}>
+                                <table style={{width:'800px'}}>
+                                    <tr>
+                                        <td colSpan={3}>(a) 報警處理</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{width:'50px'}}></td>
+                                        <td style={{width:'200px'}}>
+                                            {form.police&& <span>&#9745;</span>}
+                                            {!form.police && <span>&#9744;</span>}
+                                            有&nbsp;&nbsp;報警日期和時間:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            
+                                            {form.policeDatetime != null ? moment(form.policeDatetime).format("YYYY-MM-DD hh:mm"):''}
+                                            
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>報案編號</td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            {form.policeReportNumber != null ? form.policeReportNumber: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            {!form.police&& <span>&#9745;</span>}
+                                            {form.police && <span>&#9744;</span>}
+                                            沒有&nbsp;&nbsp;備註
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            {form.policeDescription != null ? form.policeDescription: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3}>(b) 通知家人／親屬／監護人／保證人</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div style={{width:'50px'}}></div></td>
+                                        <td>
+                                            {form.guardian&& <span>&#9745;</span>}
+                                            {!form.guardian && <span>&#9744;</span>}
+                                            有&nbsp;&nbsp;通知日期和時間:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            {form.guardianDatetime != null ? moment(form.guardianDatetime).format("YYYY-MM-DD hh:mm"):''}
+                                                
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>與服務使用者的關係</td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.guardianRelationship != null ? form.guardianRelationship: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>負責職員姓名:</td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.guardianStaff != null ? form.guardianStaff: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            {!form.guardian&& <span>&#9745;</span>}
+                                            {form.guardian && <span>&#9744;</span>}
+                                            沒有&nbsp;&nbsp;備註:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.guardianDescription != null ? form.guardianDescription: ''}
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td colSpan={2}>(c) 醫療安排</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
-                                        {form.medicalArrangement&& <span>&#9745;</span>}
-                                        {!form.medicalArrangement && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.medicalArrangmentDetail != null ? form.medicalArrangmentDetail: ''})</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.medicalArrangement&& <span>&#9745;</span>}
-                                        {form.medicalArrangement && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>(d) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
-                                        {form.carePlan&& <span>&#9745;</span>}
-                                        {!form.carePlan && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明,包括日期:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.carePlanYesDescription != null ? form.carePlanYesDescription: ''})</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.carePlan&& <span>&#9745;</span>}
-                                        {form.carePlan && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;(備註:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.carePlanNoDescription != null ? form.carePlanNoDescription: ''})
-                                            </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>(e) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
-                                </tr>
-                                <tr>
-                                    <td><div style={{width:'50px'}}></div></td>
-                                    <td >
-                                        {form.needResponse&& <span>&#9745;</span>}
-                                        {!form.needResponse && <span>&#9744;</span>}
-                                        有&nbsp;&nbsp;(請註明:
-                                            <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>
-                                            {form.needResponseDetail != null ? form.needResponseDetail: ''})</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td >
-                                        {!form.needResponse&& <span>&#9745;</span>}
-                                        {form.needResponse && <span>&#9744;</span>}
-                                        沒有&nbsp;&nbsp;
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.immediateFollowUp != null ? form.immediateFollowUp: <span>&nbsp;&nbsp;</span>}</td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2}>(g)	跟進計劃</td>
-                                </tr>
-                                <tr>
-                                    <td colSpan={2} style={{borderBottom:'1px solid'}}>{form.followUpPlan != null ? form.followUpPlan:  <span>&nbsp;&nbsp;</span>}</td>
-                                </tr>
-                            </table>
+                                    <tr>
+                                        <td colSpan={3}>(c) 醫療安排</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div style={{width:'50px'}}></div></td>
+                                        <td>
+                                            {form.medicalArrangement&& <span>&#9745;</span>}
+                                            {!form.medicalArrangement && <span>&#9744;</span>}
+                                            有&nbsp;&nbsp;請註明:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            {form.medicalArrangmentDetail != null ? form.medicalArrangmentDetail: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colSpan={2}>
+                                            {!form.medicalArrangement&& <span>&#9745;</span>}
+                                            {form.medicalArrangement && <span>&#9744;</span>}
+                                            沒有&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3}>(d) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div style={{width:'50px'}}></div></td>
+                                        <td>
+                                            {form.carePlan&& <span>&#9745;</span>}
+                                            {!form.carePlan && <span>&#9744;</span>}
+                                            有&nbsp;&nbsp;請註明,包括日期:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                            {form.carePlanYesDescription != null ? form.carePlanYesDescription: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            {!form.carePlan&& <span>&#9745;</span>}
+                                            {form.carePlan && <span>&#9744;</span>}
+                                            沒有&nbsp;&nbsp;備註:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.carePlanNoDescription != null ? form.carePlanNoDescription: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3}>(e) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div style={{width:'50px'}}></div></td>
+                                        <td>
+                                            {form.needResponse&& <span>&#9745;</span>}
+                                            {!form.needResponse && <span>&#9744;</span>}
+                                            有&nbsp;&nbsp;請註明:
+                                        </td>
+                                        <td style={{borderBottom:'1px solid'}}>
+                                        {form.needResponseDetail != null ? form.needResponseDetail: ''}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colSpan={2}>
+                                            {!form.needResponse&& <span>&#9745;</span>}
+                                            {form.needResponse && <span>&#9744;</span>}
+                                            沒有&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3} style={{borderBottom:'1px solid'}}>{form.immediateFollowUp != null ? form.immediateFollowUp: <span>&nbsp;&nbsp;</span>}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3}>(g)	跟進計劃</td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan={3} style={{borderBottom:'1px solid'}}>{form.followUpPlan != null ? form.followUpPlan:  <span>&nbsp;&nbsp;</span>}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
 
 
@@ -877,11 +883,13 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             <table>
                                 <tr>
                                     <td>單位名稱</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.serviceLocation}</td>
+                                    <td style={{borderBottom:'1px solid'}}>{serviceUserUnit}</td>
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
-                                    <td style={{borderBottom:'1px solid'}}>{new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)}
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)*/}
                                     </td>
                                 </tr>
                                 <tr>

@@ -29,7 +29,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, print }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(null); // 高級服務經理
     const [sdDate, setSdDate] = useState(null); // 服務總監
     const [sptDate, setSptDate] = useState(null); // 高級物理治療師
@@ -49,7 +49,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); //[服務總監]
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
 
-
+    const [serviceUserUnit, setServiceUserUnit] = useState("");
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: undefined,
     });
@@ -665,13 +665,32 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         // Get stage oen form data
         if (parentFormData) {
+            if (parentFormData && parentFormData.ServiceUserUnit) {
+                let ser = serviceUnitList.filter(o => {return o.location == parentFormData.ServiceUserUnit});
+                if (ser.length > 0) {
+                    console.log("ser[0].su_name_tc",ser[0].su_name_tc)
+                    setServiceUserUnit(ser[0].su_name_tc);
+                }
+            }
             loadData();
         }
     }, [parentFormData]);
 
     useEffect(() => {
+        if (parentFormData && parentFormData.ServiceUserUnit) {
+            debugger
+            let ser = serviceUnitList.filter(o => {return o.location == parentFormData.ServiceUserUnit});
+            if (ser.length > 0) {
+                console.log("ser[0].su_name_tc",ser[0].su_name_tc)
+                setServiceUserUnit(ser[0].su_name_tc);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
+
     return (
         <>
             {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}
@@ -698,7 +717,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務單位 */}
                         <label className={`col-12 col-lg-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.ServiceUserUnit || ""}`} />
+                            <input type="text" className="form-control" readOnly value={`${serviceUserUnit}`} />
                         </div>
                         {/* 保險公司備案編號 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>

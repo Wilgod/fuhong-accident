@@ -9,6 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
+import * as moment from 'moment';
 interface ISpecialIncidentReportLicensePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -631,11 +632,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                                 <span>
                                                 {form.ra_other && <span>&#9745;</span>}
                                                 {!form.ra_other && <span>&#9744;</span>}
-                                                其他（請註明 : 
+                                                其他請註明 : 
                                                 </span>
                                             </td>
                                             <td className={`${styles.underlineTable}`}>
-                                            {form.ra_otherDescription != null ? form.ra_otherDescription : ''})
+                                            {form.ra_otherDescription != null ? form.ra_otherDescription : ''}
                                             </td>
                                         </tr>
                                     </table>
@@ -672,11 +673,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <span style={{marginLeft:'36px'}}>
                                         {form.abuser == "ABUSER_OTHER" && <span>&#9745;</span>}
                                         {form.abuser != "ABUSER_OTHER" && <span>&#9744;</span>}
-                                        其他（請註明 : 
+                                        其他請註明 : 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.abuserDescription != null ? form.abuserDescription : ''})
+                                    {form.abuserDescription != null ? form.abuserDescription : ''}
                                     </td>
                                 </tr>
                             </table>
@@ -772,7 +773,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             訪客與訪客 &nbsp;&nbsp;
                             {form.conflict == "DISPUTE_POLICE_OTHER" && <span>&#9745;</span>}
                             {form.conflict != "DISPUTE_POLICE_OTHER" && <span>&#9744;</span>}
-                            其他（請註明 : <span className={`${styles.underline}`}>{form.conflictDescription != null ? form.conflictDescription : ''}</span>)
+                            其他 請註明 : <span className={`${styles.underline}`}>{form.conflictDescription != null ? form.conflictDescription : ''}</span>
 
                         </div>
                         <div className={`col-12`}>
@@ -814,7 +815,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {form.medicalIncident == "SERIOUS_MEDICAL_INCIDENT_OTHER" && <span>&#9745;</span>}
                                     {form.medicalIncident != "SERIOUS_MEDICAL_INCIDENT_OTHER" && <span>&#9744;</span>}
-                                    其他（請註明 : <span className={`${styles.underline}`}>{form.mi_description != null ? form.mi_description : ''}</span>)
+                                    其他 請註明 : <span className={`${styles.underline}`}>{form.mi_description != null ? form.mi_description : ''}</span>
                                 </div>
                             </div>
                         </div>
@@ -854,11 +855,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <span style={{marginLeft:'36px'}}>
                                         {form.other && <span>&#9745;</span>}
                                         {!form.other && <span>&#9744;</span>}
-                                        其他（請註明 : 
+                                        其他 請註明 : 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.otherDescription != null ? form.otherDescription : ''})
+                                    {form.otherDescription != null ? form.otherDescription : ''}
                                     </td>
                                 </tr>
                             </table>
@@ -1024,7 +1025,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table style={{width:'780px'}}>
                                 <tr>
                                     <td style={{width:'160px'}}>殘疾人士院舍名稱 :</td>
-                                    <td colSpan={3}>{form.homesName}</td>
+                                    <td colSpan={3} style={{borderBottom:'1px solid'}}>{form.homesName}</td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -1037,7 +1038,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     &nbsp;&nbsp;事故發生時間 : 
                                     </td>
                                     <td style={{width:'240px',borderBottom:'1px solid'}}>
-                                        {new Date(form.incidentTime).getHours() + `:` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)} &nbsp;{new Date(form.incidentTime).getHours() > 12 ? 'pm' : 'am'}
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*new Date(form.incidentTime).getHours() + `:` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)} &nbsp;{new Date(form.incidentTime).getHours() > 12 ? 'pm' : 'am'*/}
                                     </td>
                                 </tr>
                                 <tr>
@@ -1163,7 +1165,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
-                                    <td style={{borderBottom:'1px solid'}}>{new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)}
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)*/}
                                     </td>
                                 </tr>
                                 <tr>

@@ -58,6 +58,7 @@ interface IFuHongServiceUserAccidentFormState {
   formTwentyOneDataPrint:any;
   serviceUserAccidentWorkflow:string;
   formTwentyOneDataSelected:number;
+  serviceUnitList:any;
 }
 
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
@@ -86,7 +87,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       formTwentyOneData: [],
       formTwentyOneDataPrint:[],
       serviceUserAccidentWorkflow:'',
-      formTwentyOneDataSelected:null
+      formTwentyOneDataSelected:null,
+      serviceUnitList:[]
     }
     console.log("Flow 1");
   }
@@ -104,77 +106,81 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
-    this.setState({ permissionList: PermissionList, serviceUserAccidentWorkflow:serviceUserAccidentWorkflow.Url });
+    const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
+    return [PermissionList,serviceUserAccidentWorkflow.Url,serviceUnitList]
+    //this.setState({ permissionList: PermissionList, serviceUserAccidentWorkflow:serviceUserAccidentWorkflow.Url,serviceUnitList:serviceUnitList });
   }
 
   public componentDidMount() {
-    this.initialState();
-    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
-      if (value && value.jobTitle) {
-        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
-      }
-      this.initialDataByFormId().then((data) => {
-        if (data && data.Investigator && data.Investigator.EMail) {
-          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.INVESTIGATOR });
-          }
+    this.initialState().then((lists)=> {
+      getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+        if (value && value.jobTitle) {
+          this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
         }
-
-        if (data) {
-          if (data.Stage == '1' && data.SM && data.SM.EMail) {
-            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
-            }
-          } else if (data.Stage == '2') {
-            if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
-            }
-          } else if (data.Stage == '3') {
-            if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-              this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || 
-              data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+        this.initialDataByFormId().then((data) => {
+          if (data && data.Investigator && data.Investigator.EMail) {
+            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
-          if ((data.Stage == '1' && data.SD && data.SD.EMail) || data.Stage == '2') {
-            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+  
+          if (data) {
+            if (data.Stage == '1' && data.SM && data.SM.EMail) {
+              if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+              }
+            } else if (data.Stage == '2') {
+              if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+              }
+            } else if (data.Stage == '3') {
+              if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+                this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || 
+                data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+              }
             }
-          } else if (data.Stage == '3') {
-            if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+            if ((data.Stage == '1' && data.SD && data.SD.EMail) || data.Stage == '2') {
+              if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+              }
+            } else if (data.Stage == '3') {
+              if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+              }
+            }
+            if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
+              if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+              }
+            } else if (data.Stage == '2') {
+              if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+              }
+            } else if (data.Stage == '3') {
+              if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+                this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
+                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+              }
             }
           }
-          if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
-            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-            }
-          } else if (data.Stage == '2') {
-            if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-              data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-            }
-          } else if (data.Stage == '3') {
-            if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-              this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-              data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-            }
-          }
-        }
-        getAdmin().then((admin) => {
-          admin.forEach((item) => {
-            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              console.log(Role.ADMIN === 4)
-              this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'] });
-            }
-          })
-        }).catch(console.error)
-        this.setState({ loading: false });
-        
-        //this.checkRole();// Testing Only 
+          getAdmin().then((admin) => {
+            admin.forEach((item) => {
+              if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                console.log(Role.ADMIN === 4)
+                this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'] });
+              }
+            })
+          }).catch(console.error)
+          this.setState({ permissionList: lists[0], loading:false, serviceUserAccidentWorkflow:lists[1], serviceUnitList:lists[2] });
+          
+          //this.checkRole();// Testing Only 
+        }).catch(console.error);
       }).catch(console.error);
-    }).catch(console.error);
+    });
+    
   }
 
   private async initialDataByFormId() {
@@ -264,7 +270,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               :
               !this.state.loading ?
                 this.state.isPrintMode ?
-                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList}/>
+                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList}/>
                   :
                   <div className={styles.eform}>
                     {/*this.state.serviceUserAccidentFormData != null &&
@@ -282,10 +288,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                           <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} print={this.print}/>
                         </TabPanel>
                         <TabPanel>
-                          <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.serviceUserAccidentWorkflow} print={this.print}/>
+                          <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.serviceUserAccidentWorkflow} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
                         </TabPanel>
                         <TabPanel>
-                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  workflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected} print={this.print}/>
+                          <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData}  workflow={this.state.serviceUserAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
                         </TabPanel>
                       </Tabs>
               </div>

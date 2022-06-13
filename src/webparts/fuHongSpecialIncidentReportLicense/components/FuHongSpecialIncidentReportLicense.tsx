@@ -17,8 +17,8 @@ import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getAdmin, getSpecialIncidentReportLicenseById, getSpeicalIncidentReportLicenseWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
-import { getUserAdByGraph } from '../../../api/FetchUser';
-import {checkDepartmentList } from '../../../api/FetchUser';
+import { getUserAdByGraph, getAllServiceUnit, checkDepartmentList} from '../../../api/FetchUser';
+
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -53,6 +53,7 @@ interface IFuHongSpecialIncidentReportLicenseStates {
   formTwentySixData:any;
   formTwentySixDataPrint:any;
   formTwentySixDataSelected:number;
+  serviceUnitList:any;
 }
 
 export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, IFuHongSpecialIncidentReportLicenseStates> {
@@ -80,75 +81,80 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       speicalIncidentReportWorkflow:'',
       formTwentySixData:[],
       formTwentySixDataPrint:[],
-      formTwentySixDataSelected:null
+      formTwentySixDataSelected:null,
+      serviceUnitList:[]
     }
   }
 
   private initialState = async () => {
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const speicalIncidentReportWorkflow = await getSpeicalIncidentReportLicenseWorkflow();
-    this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url });
+    const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
+    return [DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
+    //this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url,serviceUnitList:serviceUnitList });
   }
 
   public componentDidMount() {
-    this.initialState();
-    getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
-      if (value && value.jobTitle) {
-        this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
-      }
-
-      this.initialDataByFormId().then(async (data) => {
-        let formTwentySixData :any = [];
-        let formTwentySixDataPrint :any = [];
-        let formTwentySixDataSelected = null;
-        if (data) {
-          formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+    this.initialState().then((lists)=> {
+      getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+        if (value && value.jobTitle) {
+          this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
         }
-        
-        
-        if (formTwentySixDataPrint.length > 0) {
-          formTwentySixData = formTwentySixDataPrint[0];
-          formTwentySixDataSelected = formTwentySixData.Id
-        }
-        if (data && data.Investigator && data.Investigator.EMail) {
-          if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.INVESTIGATOR });
+  
+        this.initialDataByFormId().then(async (data) => {
+          let formTwentySixData :any = [];
+          let formTwentySixDataPrint :any = [];
+          let formTwentySixDataSelected = null;
+          if (data) {
+            formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
           }
-        }
-
-        if (data && data.SM && data.SM.EMail) {
-          if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+          
+          
+          if (formTwentySixDataPrint.length > 0) {
+            formTwentySixData = formTwentySixDataPrint[0];
+            formTwentySixDataSelected = formTwentySixData.Id
           }
-        }
-
-        if (data && data.SD && data.SD.EMail) {
-          if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
-          }
-        }
-
-        if (data && data.SPT && data.SPT.EMail) {
-          if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-            this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-          }
-        }
-        if (data && data.Stage == '1') {
-          this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
-        } else if (data && data.Stage == '2') {
-          this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
-        }
-        getAdmin().then((admin) => {
-          admin.forEach((item) => {
-            if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-              this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true} });
+          if (data && data.Investigator && data.Investigator.EMail) {
+            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
-          })
-        }).catch(console.error)
-
-        this.checkRole();// Testing Only 
+          }
+  
+          if (data && data.SM && data.SM.EMail) {
+            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+            }
+          }
+  
+          if (data && data.SD && data.SD.EMail) {
+            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+            }
+          }
+  
+          if (data && data.SPT && data.SPT.EMail) {
+            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
+          }
+          if (data && data.Stage == '1') {
+            this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
+          } else if (data && data.Stage == '2') {
+            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
+          }
+          getAdmin().then((admin) => {
+            admin.forEach((item) => {
+              if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+                this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true} });
+              }
+            })
+          }).catch(console.error)
+          this.setState({ departmentList: lists[0], loading:true, speicalIncidentReportWorkflow:lists[1], serviceUnitList:lists[2] });
+          this.checkRole();// Testing Only 
+        }).catch(console.error);
       }).catch(console.error);
-    }).catch(console.error);
+    });
+    
   }
 
   private checkRole = () => {
@@ -224,7 +230,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                         <SpecialIncidentReportLicense context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList} speicalIncidentReportWorkflow={this.state.speicalIncidentReportWorkflow} print={this.print}/>
                       </TabPanel>
                       <TabPanel>
-                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} print={this.print}/>
+                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_LICENSE"} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} parentFormData={this.state.specialINcidentReportLicenseData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
                       </TabPanel>
                     </Tabs>
                   </div>

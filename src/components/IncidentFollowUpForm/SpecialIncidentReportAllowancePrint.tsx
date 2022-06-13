@@ -9,6 +9,7 @@ import { IUser } from '../../interface/IUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
+import * as moment from 'moment';
 interface ISpecialIncidentReportAllowancePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -575,7 +576,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>(b)事故發生時間	:</td>
-                                    <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''}</td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''*/}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>(c)事故發生地點	:</td>
@@ -761,7 +765,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'150px'}}>報警日期和時間:</td>
                                     <td style={{borderBottom:'1px solid',width:'500px'}}>
-                                        {form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)}
+                                        {form.policeDatetime != null ? moment(form.policeDatetime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*form.policeDatetime !=null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.policeDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.policeDatetime).getMinutes()).slice(-2)*/}
                                     </td>
                                 </tr>
                                 <tr>
@@ -804,7 +809,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     通知日期和時間:
                                     </td>
                                     <td style={{borderBottom:'1px solid'}}>
-                                    {form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)}
+                                    {form.guardianDatetime != null ? moment(form.guardianDatetime).format("YYYY-MM-DD hh:mm"):''}
+                                    {/*form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)*/}
                                     </td>
                                 </tr>
                                 <tr>
@@ -1019,7 +1025,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>事故發生日期及時間</td>
-                                    <td style={{borderBottom:'1px solid'}}>{new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)}
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {/*new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2) + ` `+ new Date(form.incidentTime).getHours() + `-` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)*/}
                                     </td>
                                 </tr>
                                 <tr>

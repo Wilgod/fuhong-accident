@@ -3489,7 +3489,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                     <Chart
                                         chartType={"PieChart"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={'600px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={
                                             [

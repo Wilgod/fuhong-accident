@@ -1034,12 +1034,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >=0 &&
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_Eng_name_display}</option>
+                                        return <option value={item.location} selected={item.location == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
-                                        return <option value={item} selected={item == serviceUnit}>{item}</option>
+                                        let ser = serviceUserUnitList.filter(o => {return o.location == item});
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].location} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+                                        
                                     })
                                 }
                             </select>

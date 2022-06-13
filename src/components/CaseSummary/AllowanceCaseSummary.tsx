@@ -137,7 +137,8 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
             let IncidentTime = '';
             let IncidentCategory = '';
             if (results.IncidentTime != undefined &&results.IncidentTime != null) {
-                IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
+                IncidentTime = moment(results.IncidentTime).format("YYYY-MM-DD hh:mm");
+                //IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
             }
             if (results.IncidentCategory == "ACCIDENT_CATEGORY_UNUSUAL_DEATH") {
                 IncidentCategory = "服務使用者不尋常死亡／嚴重受傷導致死亡";
@@ -498,7 +499,9 @@ const column = [
 function dateFormatter(cell,rowIndex){
     let div = [];
     if (cell != undefined && cell != null) {
-        div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
+        
+        div.push(<div>{moment(cell).format("YYYY-MM-DD hh:mm")}</div>)
+        //div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
     }
     return div;
 }
