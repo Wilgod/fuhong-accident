@@ -20,8 +20,16 @@ import { FormFlow } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
 import { notifySpecialIncidentAllowance,notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
-
-
+import { sp } from "@pnp/sp";
+import { Web } from "@pnp/sp/webs"
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { IItem } from "@pnp/sp/items";
+import { IItemAddResult } from "@pnp/sp/items";
+import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
@@ -103,6 +111,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [policeDatetime, setPoliceDatetime] = useState(null);
     const [guardianDatetime, setGuardianDatetime] = useState(null);
 
+    const [openModel, setOpenModel] = useState(false);
+    const [file, setFile] = useState(null);
+    const [uploadButton, setUploadButton] = useState(true);
+    const [filename, setFilename] = useState("Choose file");
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -357,6 +369,29 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         return [body, error];
     }
 
+    async function send() {
+        let values: any = {};
+        values['Title'] = "-";
+        values['ServiceUnit'] = serviceLocation;
+        values['RecordId'] = formData.Id;
+        values['CaseNumber'] = formData.CaseNumber;
+        values['FormType'] = "SID";
+        values['AccidentTime'] = incidentTime.toISOString();
+        debugger
+        const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
+        const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
+        await item.attachmentFiles.add(encodeURIComponent(filename) , file);
+        setOpenModel(false);
+    }
+
+    const incomingfile = (event) => {
+        const filename = event.target.files[0].name;
+        setFilename(filename);
+        setFile(event.target.files[0]);
+        setUploadButton(false);
+	}
+
+
     const loadData = () => {
         console.log("loadData", formData);
         if (formData) {
@@ -400,7 +435,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             }
 
             setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus });
-
+            setServiceLocation(formData.ServiceLocation)
             setReporterPhone(formData.ReporterPhone);
             setPoliceDatetime(new Date(formData.PoliceDatetime));
             setForm({
@@ -1715,7 +1750,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         }
 
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
-                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
+                        <button className="btn btn-warning" onClick={()=> print()}>打印</button>
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                            <>
+                            <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                            </>
+                        }
                     </div>
                 </section>
                 {
@@ -1731,6 +1771,28 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </>
                 }
 
+                {openModel && 
+
+                <Modal dialogClassName="formModal" show={openModel}  size="lg" backdrop="static">
+                <Modal.Header>
+                    <div style={{height:'15px'}}>
+                        <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false) } />
+                    </div>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="row" style={{padding:'15px'}}>
+                        <div className="col-12" >
+                            <input type="file" onChange={incomingfile} className="custom-file-input"/>
+                            <label className="custom-file-label">{filename}</label>
+                        </div>
+                        <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                        <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
+                        </div>
+                    </div>
+                </Modal.Body>
+                </Modal>
+
+                }
             </div>
         </>
     )

@@ -25,6 +25,17 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifySpecialIncidentLicense, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import { generate } from '../../../api/SpecialIncidentReportLicensePrint';
+import { Role } from '../../../utils/RoleParser';
+import { sp } from "@pnp/sp";
+import { Web } from "@pnp/sp/webs"
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { IItem } from "@pnp/sp/items";
+import { IItemAddResult } from "@pnp/sp/items";
+import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print}: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -130,6 +141,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [uploadedExtraFile, setUploadedExtraFile] = useState([]);
     const [uploadedSubpoenaFile, setUploadedSubpoenaFile] = useState([]);
 
+    const [openModel, setOpenModel] = useState(false);
+    const [file, setFile] = useState(null);
+    const [uploadButton, setUploadButton] = useState(true);
+    const [filename, setFilename] = useState("Choose file");
     const uploadFile = async (id: number) => {
         try {
             let att: IAttachmentFileInfo[] = [];
@@ -831,6 +846,28 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }
 
+    async function send() {
+        debugger
+        let values: any = {};
+        values['Title'] = "-";
+        values['ServiceUnit'] = serviceLocation;
+        values['RecordId'] = formData.Id;
+        values['CaseNumber'] = formData.CaseNumber;
+        values['FormType'] = "SIH";
+        values['AccidentTime'] = incidentTime.toISOString();
+        const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
+        const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
+        await item.attachmentFiles.add(encodeURIComponent(filename) , file);
+        setOpenModel(false);
+    }
+
+    const incomingfile = (event) => {
+        const filename = event.target.files[0].name;
+        setFilename(filename);
+        setFile(event.target.files[0]);
+        setUploadButton(false);
+	}
+
     const loadData = async () => {
         console.log(formData)
         if (formData) {
@@ -870,6 +907,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
             }
+            setServiceLocation(formData.ServiceLocation);
             setForm({
                 ...form,
                 abuser: formData.Abuser,
@@ -2131,9 +2169,36 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         }
 
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
-                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
+                        <button className="btn btn-warning" onClick={()=> print()}>打印</button>
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                            <>
+                            <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                            </>
+                        }
                     </div>
                 </section>
+                {openModel && 
+
+                    <Modal dialogClassName="formModal" show={openModel}  size="lg" backdrop="static">
+                    <Modal.Header>
+                        <div style={{height:'15px'}}>
+                            <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false) } />
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row" style={{padding:'15px'}}>
+                            <div className="col-12" >
+                                <input type="file" onChange={incomingfile} className="custom-file-input"/>
+                                <label className="custom-file-label">{filename}</label>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    </Modal>
+
+                    }
             </div>
         </>
     )

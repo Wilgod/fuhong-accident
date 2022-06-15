@@ -28,6 +28,16 @@ import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifyOutsiderAccident, notifyOutsiderAccidentSMSDComment, notifyOutsiderAccidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
+import { sp } from "@pnp/sp";
+import { Web } from "@pnp/sp/webs"
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { IItem } from "@pnp/sp/items";
+import { IItemAddResult } from "@pnp/sp/items";
+import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -76,6 +86,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
     const [uploadedPhotoRecordFiles, setUploadedPhotoRecordFiles] = useState([]);
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
+    const [openModel, setOpenModel] = useState(false);
+    const [file, setFile] = useState(null);
+    const [uploadButton, setUploadButton] = useState(true);
+    const [filename, setFilename] = useState("Choose file");
+    
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
@@ -293,7 +308,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         body["CctvRecord"]
         if (form.cctvRecord === true) {
             if (cctvRecordReceiveDate) {
-                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate.toISOString();
+                body["CctvRecordReceiveDate"] = cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString();
             } else {
                 error["CctvRecordReceiveDate"] = true;
             }
@@ -398,7 +413,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
             if (currentUserRole === Role.ADMIN) {
                 updateOutsiderAccidentFormById(formId, {
-                    "InsuranceCaseNo": form.insuranceCaseNo
+                    "InsuranceCaseNo": form.insuranceCaseNo,
+                    "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                 }).then((res) => {
                     // Update form to stage 1-2
                     // Trigger notification workflow
@@ -805,6 +821,41 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             }).catch(console.error);
         }
     }
+
+    async function send() {
+        let values: any = {};
+        values['Title'] = "-";
+        values['ServiceUnit'] = formData.ServiceLocation;
+        values['RecordId'] = formId;
+        values['CaseNumber'] = formData.CaseNumber;
+        values['FormType'] = "PUI";
+        values['AccidentTime'] = accidentTime.toISOString();
+        debugger
+        const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
+        const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
+        await item.attachmentFiles.add(encodeURIComponent(filename) , file);
+        setOpenModel(false);
+    }
+
+    /*async function updateInsurance() {
+        let values: any = {};
+        values['InsuranceCaseNo'] = insuranceNumber;
+        const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Outsider Accident Form").items.getById(formId).update(values)
+        alert('保險公司備案編號已更新')
+    }
+    async function updateCCTVDate() {
+        let values: any = {};
+        values['CctvRecordReceiveDate'] = cctvRecordReceiveDate.toISOString();
+        const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Outsider Accident Form").items.getById(formId).update(values)
+        alert('CCTV日期已更新')
+    }*/
+    
+    const incomingfile = (event) => {
+        const filename = event.target.files[0].name;
+        setFilename(filename);
+        setFile(event.target.files[0]);
+        setUploadButton(false);
+	}
 
     const loadData = async (data: any) => {
 
@@ -1293,7 +1344,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
-                                            <DatePicker className={`form-control ${(error && error['CctvRecordReceiveDate'] ) ? "is-invalid": ""}`} dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                            <DatePicker className={`form-control ${(error && error['CctvRecordReceiveDate'] ) ? "is-invalid": ""}`} dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={currentUserRole !== Role.ADMIN} />
                                         </div>
                                     </div>
                                 }
@@ -1681,10 +1732,37 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
-                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
+                        <button className="btn btn-warning" onClick={()=> print()}>打印</button>
+                        {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && 
+                            <>
+                            <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                            </>
+                        }
                     </div>
                 </section>
+                {openModel && 
 
+                    <Modal dialogClassName="formModal" show={openModel}  size="lg" backdrop="static">
+                    <Modal.Header>
+                    <div style={{height:'15px'}}>
+                        <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false) } />
+                    </div>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        <div className="row" style={{padding:'15px'}}>
+                            <div className="col-12" >
+                                <input type="file" onChange={incomingfile} className="custom-file-input"/>
+                                <label className="custom-file-label">{filename}</label>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    </Modal>
+
+                    }
             </div>
         </>
     )

@@ -976,7 +976,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             <>
                                 {
                                     pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) &&
-                                    <button className="btn btn-warning" onClick={smSubmitHandler}>提交1</button>
+                                    <button className="btn btn-warning" onClick={smSubmitHandler}>提交</button>
                                 }
                                 {
                                     pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) &&

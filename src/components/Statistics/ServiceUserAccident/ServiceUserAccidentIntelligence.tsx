@@ -2164,7 +2164,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
                                         <div className="">
-                                        智力障礙程度統計
+                                        服務使用者意外 - 智力障礙程度統計
                                         </div>
                                     </div>
                                     <Chart
@@ -2204,7 +2204,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart

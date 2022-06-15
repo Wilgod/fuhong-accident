@@ -12,3 +12,16 @@
     font-size: 16px;
     font-weight: 500;
 }
+
+.modal-dialog{
+    max-width: 80% !important;
+    margin-top:150px !important;
+}
+
+.modal{
+    opacity: 1 !important;
+}
+
+.modal-backdrop.fade {
+    opacity: 0.4 !important;
+}

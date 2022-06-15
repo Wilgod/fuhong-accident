@@ -49,6 +49,7 @@ import FuHongOtherIncidentReportForm from '../../fuHongOtherIncidentReport/compo
 import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 import { isArray } from '@pnp/pnpjs';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
+//import {useSearchParams} from 'react-router-dom';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -78,7 +79,7 @@ interface IFuHongFormsMenuStates {
   loading:boolean;
   mainTableDisplay:boolean;
 }
-
+//const [searchParams, setSearchParams] = useSearchParams();
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
 
   private SERVICE_USER_ACCIDENT = "ServiceUserAccident"; // form 19
@@ -93,7 +94,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
 	private formId = getQueryParameterNumber("formId");
   private navScreen:string = getQueryParameterString("navScreen") ;
-
+  
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -168,6 +169,20 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private screenNavHandler = (event, nav: string) => {
     event.stopPropagation();
+    /*const paramFormId = searchParams.get('formId');
+    if (paramFormId) {
+      searchParams.delete('formId');
+    }
+    const paramNavScreen = searchParams.get('navScreen');
+    if (paramNavScreen) {
+      searchParams.delete('navScreen');
+    }
+    setSearchParams(searchParams);*/
+    let url = new URL(window.location.href);
+    let params = new URLSearchParams(url.search);
+    params.delete('formId');
+    params.delete('navScreen');
+    window.history.replaceState({}, '', `${location.pathname}?${params}`);
     this.setState({ screenNav: nav });
   }
 
@@ -493,7 +508,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'SpecialIncidentReportLicense':
           return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""}/>
         case 'OtherIncidentReport':
-          return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""}/>
+          return <FuHongOtherIncidentReportForm context={this.props.context} description={""}/>
         case 'CASE_SUMMARY':
           return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case 'INSURANCE_EMAIL':

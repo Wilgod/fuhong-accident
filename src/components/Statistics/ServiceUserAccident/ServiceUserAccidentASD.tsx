@@ -1377,7 +1377,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
                                         <div className="">
-                                            自閉症譜系障礙 (ASD)
+                                        服務使用者意外 - 自閉症譜系障礙 (ASD)
                                         </div>
                                     </div>
                                     <Chart
@@ -1414,7 +1414,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart

@@ -18,7 +18,7 @@ interface IInsuranceEmailReportScreenProps {
 function InsuranceEmailReportScreen({ context,siteCollectionUrl }: IInsuranceEmailReportScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
-    const [serviceUnitList] = useServiceUnit2(siteCollectionUrl);
+    //const [serviceUnitList] = useServiceUnit2(siteCollectionUrl);
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data] = useEmailRecord();
     console.log(data);
@@ -72,7 +72,7 @@ function InsuranceEmailReportScreen({ context,siteCollectionUrl }: IInsuranceEma
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item}>{item}</option>
+                                return <option value={item.locationTC}>{item.locationTC}</option>
                             })
                         }
                     </select>
