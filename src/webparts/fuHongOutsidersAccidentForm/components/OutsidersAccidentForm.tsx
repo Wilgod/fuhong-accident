@@ -14,11 +14,11 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById,updateInsuranceNumber } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
-import { FormFlow, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
+import { FormFlow, getOutsiderAccidentById,getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
@@ -90,7 +90,9 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
-    
+    const [emailTo, setEmailTo] = useState("");
+    const [emailBody, setEmailBody] = useState("");
+    const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
@@ -412,6 +414,55 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             setError(error);
         } else {
             if (currentUserRole === Role.ADMIN) {
+                if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
+                    getInsuranceEMailRecords(formData.CaseNumber,"PUI",formId).then((res1) => {
+                        if (res1.length > 0) {
+                            updateInsuranceNumber(res1[0].Id,form.insuranceCaseNo);
+                            updateOutsiderAccidentFormById(formId, {
+                                "InsuranceCaseNo": form.insuranceCaseNo,
+                                "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                            }).then((res) => {
+                                // Update form to stage 1-2
+                                // Trigger notification workflow
+                                console.log(res);
+                
+                                postLog({
+                                    AccidentTime: accidentTime.toISOString(),
+                                    Action: "更新",
+                                    CaseNumber: formData.CaseNumber,
+                                    FormType: "PUI",
+                                    Report: "外界人士意外填報表(一)",
+                                    ServiceUnit: serviceLocation,
+                                    RecordId: formData.Id
+                                }).catch(console.error);
+                
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        } else {
+                            alert('請先發送EMail');
+                        }
+                    })
+                } else if (form.cctvRecord) {
+                    updateOutsiderAccidentFormById(formId, {
+                        "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                    }).then((res) => {
+                        // Update form to stage 1-2
+                        // Trigger notification workflow
+                        console.log(res);
+        
+                        postLog({
+                            AccidentTime: accidentTime.toISOString(),
+                            Action: "更新",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "PUI",
+                            Report: "外界人士意外填報表(一)",
+                            ServiceUnit: serviceLocation,
+                            RecordId: formData.Id
+                        }).catch(console.error);
+        
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
                 updateOutsiderAccidentFormById(formId, {
                     "InsuranceCaseNo": form.insuranceCaseNo,
                     "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
@@ -824,12 +875,15 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     async function send() {
         let values: any = {};
+        let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
         values['Title'] = "-";
         values['ServiceUnit'] = formData.ServiceLocation;
         values['RecordId'] = formId;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "PUI";
         values['AccidentTime'] = accidentTime.toISOString();
+        values['EmailTo'] = emailTo;
+        values['EmailBody'] = emailBodyHtml;
         debugger
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
@@ -856,6 +910,15 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         setFile(event.target.files[0]);
         setUploadButton(false);
 	}
+
+    async function getInsuranceRecord(formData) {
+        const LIST_NAME = "Insurance EMail Records";
+        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'PUI' and RecordId eq '`+formData.Id+`'`).get();
+        if (result.length > 0) {
+            setSendInsuranceEmail(false);
+        }
+            
+    }
 
     const loadData = async (data: any) => {
 
@@ -984,10 +1047,40 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
     }
 
+    async function getInsuranceEMailSetting() {
+        try {
+            const LIST_NAME = "Insurance Email Setting";
+            const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.getAll();
+            for (let r of result) {
+                if (r.Title == 'To') {
+                    setEmailTo(r.Email);
+                }
+                if (r.Title == 'Email Body') {
+                    setEmailBody(r.Body);
+                }
+            }
+            return result;
+        } catch (err) {
+            console.error(err);
+            throw new Error("get Orphan error");
+        }
+    }
+
+    const emailToChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailTo(value)
+    }
+
+    const emailBodyChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailBody(value)
+    }
+
     useEffect(() => {
         if (formData) {
             setTimeout(() => {
                 loadData(formData);
+                getInsuranceRecord(formData);
             },1000);
             
         } else {
@@ -1004,6 +1097,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     // Get current User info in ad
     useEffect(() => {
         setCurrentUserEmail(CURRENT_USER.email);
+        getInsuranceEMailSetting();
     }, []);
 
     // Find SD && SM
@@ -1733,11 +1827,16 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>
-                        {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && 
+                        {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && sendInsuranceEmail &&
                             <>
                             <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
                             </>
                         }
+                        {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && !sendInsuranceEmail &&
+                                <>
+                                <button className="btn btn-secondary" disabled>發送保險(已發送)</button>
+                                </>
+                            }
                     </div>
                 </section>
                 {openModel && 
@@ -1754,6 +1853,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             <div className="col-12" >
                                 <input type="file" onChange={incomingfile} className="custom-file-input"/>
                                 <label className="custom-file-label">{filename}</label>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo}/>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                                <textarea className={`form-control`} style={{minHeight:'400px'}} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler}/>
                             </div>
                             <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
                             <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>

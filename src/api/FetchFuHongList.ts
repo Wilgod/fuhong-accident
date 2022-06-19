@@ -1058,3 +1058,17 @@ export async function getAllIncidentFollowUpFormByCaseNumber(caseNumber: string)
         throw new Error("getAllIncidentFollowUpFormByCaseNumber failed");
     }
 }
+
+
+export async function getInsuranceEMailRecords(caseNumber: string, formType:string, recordId:number) {
+    try {
+        const LIST_NAME = "Insurance EMail Records";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items
+            .filter(`CaseNumber eq '${caseNumber}' and FormType eq '${formType}' and RecordId eq '${recordId}'`)
+            .get();
+        return item;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getAllIncidentFollowUpFormByCaseNumber failed");
+    }
+}

@@ -17,7 +17,7 @@ import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { Role } from '../../../utils/RoleParser';
 import { adminUpdateInsuranceNumber, formInitBySm, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
-import { FormFlow } from '../../../api/FetchFuHongList';
+import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
 import { notifyOtherIncident, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
@@ -102,6 +102,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
+    const [emailTo, setEmailTo] = useState("");
+    const [emailBody, setEmailBody] = useState("");
+    const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     console.log(sdInfo);
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -658,33 +661,43 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     // fill in the insurance number
     const adminSubmitHandler = (event) => {
         event.preventDefault();
-        updateOtherIncidentReport(formData.Id, {
-            "InsuranceCaseNo": form.insuranceCaseNo
-        }).then(res => {
-            console.log(res);
-
-            postLog({
-                AccidentTime: incidentTime.toISOString(),
-                Action: "更新",
-                CaseNumber: formData.CaseNumber,
-                FormType: "OIN",
-                RecordId: formData.Id,
-                ServiceUnit: serviceLocation,
-                Report: "其他事故呈報表"
-            })
-
-            formSubmittedHandler();
-        }).catch(console.error);
+        getInsuranceEMailRecords(formData.CaseNumber,"OIN",formData.Id).then((res1) => {
+            if (res1.length > 0) {
+                updateOtherIncidentReport(formData.Id, {
+                    "InsuranceCaseNo": form.insuranceCaseNo
+                }).then(res => {
+                    console.log(res);
+        
+                    postLog({
+                        AccidentTime: incidentTime.toISOString(),
+                        Action: "更新",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "OIN",
+                        RecordId: formData.Id,
+                        ServiceUnit: serviceLocation,
+                        Report: "其他事故呈報表"
+                    })
+        
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                alert('請先發送EMail');
+            }
+        });
+        
     }
 
     async function send() {
         let values: any = {};
+        let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
         values['Title'] = "-";
         values['ServiceUnit'] = serviceLocation;
         values['RecordId'] = formData.Id;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "OIN";
         values['AccidentTime'] = incidentTime.toISOString();
+        values['EmailTo'] = emailTo;
+        values['EmailBody'] = emailBodyHtml;
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
         await item.attachmentFiles.add(encodeURIComponent(filename) , file);
@@ -697,6 +710,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setFile(event.target.files[0]);
         setUploadButton(false);
 	}
+    
+    async function getInsuranceRecord(formData) {
+        const LIST_NAME = "Insurance EMail Records";
+        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'OIN' and RecordId eq '`+formData.Id+`'`).get();
+        if (result.length > 0) {
+            setSendInsuranceEmail(false);
+        }
+            
+    }
+
     const loadData = async (data: any) => {
         if (data) {
             setIncidentTime(new Date(data.IncidentTime));
@@ -785,9 +808,39 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         }
     }
 
+    async function getInsuranceEMailSetting() {
+        try {
+            const LIST_NAME = "Insurance Email Setting";
+            const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.getAll();
+            for (let r of result) {
+                if (r.Title == 'To') {
+                    setEmailTo(r.Email);
+                }
+                if (r.Title == 'Email Body') {
+                    setEmailBody(r.Body);
+                }
+            }
+            return result;
+        } catch (err) {
+            console.error(err);
+            throw new Error("get Orphan error");
+        }
+    }
+
+    const emailToChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailTo(value)
+    }
+
+    const emailBodyChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailBody(value)
+    }
+
     useEffect(() => {
         if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
             loadData(formData);
+            getInsuranceRecord(formData);
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
@@ -827,6 +880,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     useEffect(() => {
         getAllServiceUnit(siteCollectionUrl).then(setServiceUserUnitList).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
+        getInsuranceEMailSetting();
     }, []);
 
     // Find SD && SM
@@ -1453,9 +1507,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>
-                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && sendInsuranceEmail &&
                             <>
                             <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                            </>
+                        }
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && !sendInsuranceEmail &&
+                            <>
+                            <button className="btn btn-secondary" disabled>發送保險(已發送)</button>
                             </>
                         }
                     </div>
@@ -1473,6 +1532,12 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             <div className="col-12" >
                                 <input type="file" onChange={incomingfile} className="custom-file-input"/>
                                 <label className="custom-file-label">{filename}</label>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo}/>
+                            </div>
+                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                                <textarea className={`form-control`} style={{minHeight:'400px'}} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler}/>
                             </div>
                             <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
                             <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>

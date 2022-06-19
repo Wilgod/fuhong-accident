@@ -710,11 +710,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           <div className="container-fluid">
             <div className="row no-gutters" style={{height:'90vh'}}>
               {/* Navigation menu */}
-              <div className={classnames("col-sm-12 col-md-4 col-lg-3 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
+              <div className={classnames("col-sm-12 col-md-3 col-lg-3 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
                 {navigationMenu()}
               </div>
               {/* Main Content */}
-              <div className="col-sm-12 col-md-8 col-lg-9" >
+              <div className="col-sm-12 col-md-9 col-lg-9" >
                 <div className={`${styles.systemTitle} notPrintable`}>
                   意外及事故呈報系統
                   {/*<div style={{ float: "right" }}>

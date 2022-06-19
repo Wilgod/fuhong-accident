@@ -271,3 +271,17 @@ export async function updateIncidentFollowUpForm(id: number, body: any) {
         throw new Error("updateIncidentFollowUpForm failed");
     }
 }
+
+
+export async function updateInsuranceNumber(id: number, InsuranceCaseNo: string) {
+    try {
+        const LIST_NAME = "Insurance EMail Records";
+        let values: any = {};
+        values['InsuranceCaseNo'] = InsuranceCaseNo;
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).update(values);
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("update Insurance EMail Records failed");
+    }
+}

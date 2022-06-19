@@ -70,7 +70,7 @@ function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item}>{item}</option>
+                                return <option value={item.locationTC}>{item.locationTC}</option>
                             })
                         }
                     </select>

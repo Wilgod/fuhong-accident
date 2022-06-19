@@ -16,7 +16,7 @@ import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApp
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
-import { FormFlow } from '../../../api/FetchFuHongList';
+import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import { addBusinessDays } from '../../../utils/DateUtils';
 import { notifySpecialIncidentAllowance,notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
@@ -115,6 +115,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
+    const [emailTo, setEmailTo] = useState("");
+    const [emailBody, setEmailBody] = useState("");
+    const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -371,13 +374,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     async function send() {
         let values: any = {};
+        let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
         values['Title'] = "-";
         values['ServiceUnit'] = serviceLocation;
         values['RecordId'] = formData.Id;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "SID";
         values['AccidentTime'] = incidentTime.toISOString();
-        debugger
+        values['EmailTo'] = emailTo;
+        values['EmailBody'] = emailBodyHtml;
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
         await item.attachmentFiles.add(encodeURIComponent(filename) , file);
@@ -392,6 +397,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 	}
 
 
+    async function getInsuranceRecord(formData) {
+        const LIST_NAME = "Insurance EMail Records";
+        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'SID' and RecordId eq '`+formData.Id+`'`).get();
+        if (result.length > 0) {
+            setSendInsuranceEmail(false);
+        }
+            
+    }
+    
     const loadData = () => {
         console.log("loadData", formData);
         if (formData) {
@@ -644,21 +658,28 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const adminSubmitHanlder = (event) => {
          event.preventDefault();
-         updateSpecialIncidentReportAllowance(formData.Id, {
-             "InsuranceCaseNo": form.insuranceCaseNo
-         }).then(res => {
-             console.log(res);
-             postLog({
-                AccidentTime: incidentTime.toISOString(),
-                Action: "更新",
-                CaseNumber: formData.CaseNumber,
-                FormType: "SID",
-                RecordId: formData.Id,
-                ServiceUnit: serviceLocation,
-                Report: "特別事故報告(津貼科)"
-            }).catch(console.error);
-             formSubmittedHandler();
-         }).catch(console.error);
+         getInsuranceEMailRecords(formData.CaseNumber,"SID",formData.Id).then((res1) => {
+            if (res1.length > 0) {
+                updateSpecialIncidentReportAllowance(formData.Id, {
+                    "InsuranceCaseNo": form.insuranceCaseNo
+                }).then(res => {
+                    console.log(res);
+                    postLog({
+                       AccidentTime: incidentTime.toISOString(),
+                       Action: "更新",
+                       CaseNumber: formData.CaseNumber,
+                       FormType: "SID",
+                       RecordId: formData.Id,
+                       ServiceUnit: serviceLocation,
+                       Report: "特別事故報告(津貼科)"
+                   }).catch(console.error);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                alert('請先發送EMail');
+            }
+         });
+         
      }
 
     const smApproveHandler = (event) => {
@@ -812,8 +833,38 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         }
     }
 
+    async function getInsuranceEMailSetting() {
+        try {
+            const LIST_NAME = "Insurance Email Setting";
+            const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.getAll();
+            for (let r of result) {
+                if (r.Title == 'To') {
+                    setEmailTo(r.Email);
+                }
+                if (r.Title == 'Email Body') {
+                    setEmailBody(r.Body);
+                }
+            }
+            return result;
+        } catch (err) {
+            console.error(err);
+            throw new Error("get Orphan error");
+        }
+    }
+
+    const emailToChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailTo(value)
+    }
+
+    const emailBodyChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailBody(value)
+    }
+
     useEffect(() => {
         setCurrentUserEmail(CURRENT_USER.email);
+        getInsuranceEMailSetting();
     }, [])
 
     useEffect(() => {
@@ -829,6 +880,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
         if (formData) {
             loadData();
+            getInsuranceRecord(formData);
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
@@ -1751,9 +1803,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>
-                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && sendInsuranceEmail &&
                             <>
                             <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                            </>
+                        }
+                        {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && !sendInsuranceEmail &&
+                            <>
+                            <button className="btn btn-secondary" disabled>發送保險(已發送)</button>
                             </>
                         }
                     </div>
@@ -1784,6 +1841,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <div className="col-12" >
                             <input type="file" onChange={incomingfile} className="custom-file-input"/>
                             <label className="custom-file-label">{filename}</label>
+                        </div>
+                        <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                        <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo}/>
+                        </div>
+                        <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <textarea className={`form-control`} style={{minHeight:'400px'}} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler}/>
                         </div>
                         <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
                         <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>

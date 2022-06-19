@@ -16,8 +16,8 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { IItem } from "@pnp/sp/items";
 import { IItemAddResult } from "@pnp/sp/items";
-import { FormFlow, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
-import { createAccidentReportForm, createServiceUserAccident, getServiceUserAccidentAllAttachmentById, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById } from '../../../api/PostFuHongList';
+import { FormFlow, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
+import { createAccidentReportForm, createServiceUserAccident, getServiceUserAccidentAllAttachmentById, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById, updateInsuranceNumber } from '../../../api/PostFuHongList';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
@@ -98,6 +98,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
+
+    const [emailTo, setEmailTo] = useState("");
+    const [emailBody, setEmailBody] = useState("");
+    const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
         injuredArea: [],
@@ -649,25 +653,54 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const submitHandler = (event) => {
         event.preventDefault();
         if (currentUserRole === Role.ADMIN) {
-            updateServiceUserAccidentById(formId, {
-                "InsuranceCaseNo": insuranceNumber,
-                "CctvRecordReceiveDate":cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
-            }).then((res) => {
-                // Update form to stage 1-2
-                // Trigger notification workflow
-                console.log(res);
-                postLog({
-                    AccidentTime: formData.AccidentTime,
-                    Action: "更新",
-                    CaseNumber: formData.CaseNumber,
-                    FormType: "SUI",
-                    Report: "服務使用者意外填報表(一)",
-                    ServiceUnit: formData.ServiceLocation,
-                    RecordId: formData.Id
+            if (insuranceNumber != null && insuranceNumber != "") {
+                getInsuranceEMailRecords(formData.CaseNumber,"SUI",formId).then((res1) => {
+                    if (res1.length > 0) {
+                        updateInsuranceNumber(res1[0].Id,insuranceNumber);
+                        updateServiceUserAccidentById(formId, {
+                            "InsuranceCaseNo": insuranceNumber,
+                            "CctvRecordReceiveDate":cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                        }).then((res) => {
+                            // Update form to stage 1-2
+                            // Trigger notification workflow
+                            console.log(res);
+                            postLog({
+                                AccidentTime: formData.AccidentTime,
+                                Action: "更新",
+                                CaseNumber: formData.CaseNumber,
+                                FormType: "SUI",
+                                Report: "服務使用者意外填報表(一)",
+                                ServiceUnit: formData.ServiceLocation,
+                                RecordId: formData.Id
+                            }).catch(console.error);
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    } else {
+                        alert('請先發送EMail');
+                    }
+                    
+                });
+            } else if (form.cctv === "CCTV_TRUE") {
+                updateServiceUserAccidentById(formId, {
+                    "CctvRecordReceiveDate":cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+                    postLog({
+                        AccidentTime: formData.AccidentTime,
+                        Action: "更新",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SUI",
+                        Report: "服務使用者意外填報表(一)",
+                        ServiceUnit: formData.ServiceLocation,
+                        RecordId: formData.Id
+                    }).catch(console.error);
+                    
+                    formSubmittedHandler();
                 }).catch(console.error);
-
-                formSubmittedHandler();
-            }).catch(console.error);
+            }
+            
         } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
             updateServiceUserAccidentById(formId, {
                 "SDComment": sdComment,
@@ -1011,12 +1044,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     async function send() {
         let values: any = {};
+        let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
+        debugger
         values['Title'] = "-";
         values['ServiceUnit'] = serviceLocation;
         values['RecordId'] = formId;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "SUI";
         values['AccidentTime'] = accidentTime.toISOString();
+        values['EmailTo'] = emailTo;
+        values['EmailBody'] = emailBodyHtml;
+        
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
         await item.attachmentFiles.add(encodeURIComponent(filename) , file);
@@ -1042,6 +1080,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         setFile(event.target.files[0]);
         setUploadButton(false);
 	}
+
+    async function getInsuranceRecord(formData) {
+        const LIST_NAME = "Insurance EMail Records";
+        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'SUI' and RecordId eq '`+formData.Id+`'`).get();
+        debugger
+        if (result.length > 0) {
+            setSendInsuranceEmail(false);
+        }
+            
+    }
     const loadData = async (data: any) => {
         
         if (data) {
@@ -1194,6 +1242,36 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
+    async function getInsuranceEMailSetting() {
+        try {
+            const LIST_NAME = "Insurance Email Setting";
+            const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.getAll();
+            for (let r of result) {
+                if (r.Title == 'To') {
+                    setEmailTo(r.Email);
+                }
+                if (r.Title == 'Email Body') {
+                    setEmailBody(r.Body);
+                }
+            }
+            return result;
+        } catch (err) {
+            console.error(err);
+            throw new Error("get Orphan error");
+        }
+    }
+
+    const emailToChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailTo(value)
+    }
+
+    const emailBodyChangeHandler = (event) => {
+        const value = event.target.value;
+        setEmailBody(value)
+    }
+
+
     useEffect(() => {
         if (Array.isArray(sptList) && sptList.length > 0) {
             //setSPhysicalTherapyEmail(sptList[0].mail);
@@ -1205,6 +1283,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (formData) {
             setTimeout(() => {
                 loadData(formData);
+                getInsuranceRecord(formData);
             },1000)
             //loadData(formData);
         } else {
@@ -1221,6 +1300,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     // Get current User info in ad
     useEffect(() => {
         setCurrentUserEmail(CURRENT_USER.email);
+        getInsuranceEMailSetting();
+        
         // setCurrentUserEmail("ade.leung@fuhong.org");
     }, []);
 
@@ -2507,9 +2588,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             }
                             <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                             <button className="btn btn-warning" onClick={()=> print()}>打印</button>
-                            {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && 
+                            {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && sendInsuranceEmail &&
                                 <>
                                 <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                                </>
+                            }
+                            {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && !sendInsuranceEmail &&
+                                <>
+                                <button className="btn btn-secondary" disabled>發送保險(已發送)</button>
                                 </>
                             }
                         </div>
@@ -2528,6 +2614,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <div className="col-12" >
                             <input type="file" onChange={incomingfile} className="custom-file-input"/>
                             <label className="custom-file-label">{filename}</label>
+                        </div>
+                        <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                        <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo}/>
+                        </div>
+                        <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
+                            <textarea className={`form-control`} style={{minHeight:'400px'}} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler}/>
                         </div>
                         <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
                         <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
