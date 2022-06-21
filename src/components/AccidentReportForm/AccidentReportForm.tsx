@@ -13,7 +13,7 @@ import useServiceUser from '../../hooks/useServiceUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
-import { addBusinessDays, addMonths } from '../../utils/DateUtils';
+import { addBusinessDays, addMonths,addDays } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment,notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
@@ -209,7 +209,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                     if (formType === "SERVICE_USER") {
-                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateServiceUserAccidentResponse) => {
+                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateServiceUserAccidentResponse) => {
                             console.log(updateServiceUserAccidentResponse)
                             // Trigger notification workflow;
 
@@ -226,7 +226,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             formSubmittedHandler();
                         }).catch(console.error)
                     } else {
-                        updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE" }).then((updateOutsiderAccidentResponse) => {
+                        updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateOutsiderAccidentResponse) => {
                             console.log(updateOutsiderAccidentResponse);
 
                             postLog({
@@ -306,6 +306,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             "Stage": "3",
                             "Status": "PENDING_SM_FILL_IN",
                             "NextDeadline": addMonths(new Date(), 6).toISOString(),
+                            "ReminderDate": addDays(new Date(), 173).toISOString(),
                         }
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {

@@ -14,7 +14,7 @@ import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
 import { getAccidentFollowUpFormById, getAccidentReportFormById, getAllAccidentFollowUpFormByCaseNumber, getAllAccidentFollowUpFormByParentId, getOutsiderAccidentById, getServiceUserAccidentById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
-import { addMonths } from '../../utils/DateUtils';
+import { addMonths,addDays } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
 import { notifyOutsiderAccident, notifyServiceUserAccident,notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
@@ -199,6 +199,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             },*/
                             "Status": "PENDING_SD_APPROVE",
                             "NextDeadline": addMonths(new Date(), 6),
+                            "ReminderDate": null,
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
                             notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
@@ -248,7 +249,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         updateServiceUserAccidentById(parentFormData.Id, {
                             "Status": "PENDING_SD_APPROVE"
                         }).then((updateServiceUserAccidentByIdRes) => {
-
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -265,7 +266,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         updateOutsiderAccidentFormById(parentFormData.Id, {
                             "Status": "PENDING_SD_APPROVE"
                         }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-
+                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                             postLog({
                                 AccidentTime: parentFormData.AccidentTime,
                                 Action: "提交",
@@ -474,6 +475,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
                             },
                             "NextDeadline": addMonths(new Date(), 6),
+                            "ReminderDate": addDays(new Date(), 173).toISOString()
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
                             notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
@@ -495,6 +497,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
                             },
                             "NextDeadline": addMonths(new Date(), 6),
+                            "ReminderDate": addDays(new Date(), 173).toISOString()
                         }).then((res) => {
                             console.log(res);
 
@@ -522,7 +525,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             }).then((updateAccidentFollowUpRepotFormByIdRes) => {
                 if (formType === "SERVICE_USER") {
                     updateServiceUserAccidentById(parentFormData.Id, {
-                        "Status": "CLOSED"
+                        "Status": "CLOSED",
+                        "ReminderDate": null
                     }).then((updateServiceUserAccidentByIdRes) => {
 
                         postLog({

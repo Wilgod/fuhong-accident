@@ -962,7 +962,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     "InvestigatorId": investigatorPickerInfo[0].id,
                     "Status": "PENDING_INVESTIGATE",
                     "Stage": "2",
-                    "NextDeadline": addMonths(new Date(), 1).toISOString()
+                    "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                    "ReminderDate": addDays(new Date(), 21).toISOString()
                 };
                 updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
                     // Create form 20, switch to stage 2]
