@@ -663,7 +663,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                                <h6>{`${title} - 服務使用者意外 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                             <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
@@ -734,7 +734,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`輕度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`服務使用者意外 - 智力障礙程度統計 - 輕度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
@@ -795,7 +795,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -807,7 +807,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '輕度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)',
                                     },
                                 }}
                             />
@@ -821,7 +821,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -834,7 +834,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '輕度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)',
                                     },
                                 }}
                             />
@@ -850,7 +850,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`中度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`服務使用者意外 - 智力障礙程度統計 - 中度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
@@ -911,7 +911,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -923,7 +923,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '中度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 中度(每月總數)',
                                     },
                                 }}
                             />
@@ -937,7 +937,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -950,7 +950,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '中度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 中度 - 智力障礙程度統計(每月總數)',
                                     },
                                 }}
                             />
@@ -965,7 +965,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`服務使用者意外 - 智力障礙程度統計 - 嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
@@ -1026,7 +1026,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1038,7 +1038,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -1052,7 +1052,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 嚴重(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1065,7 +1065,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -1080,7 +1080,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`極度嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`服務使用者意外 - 智力障礙程度統計 - 極度嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
@@ -1141,7 +1141,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1167,7 +1167,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1180,7 +1180,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '極度嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -1195,7 +1195,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`不知 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`服務使用者意外 - 智力障礙程度統計 - 不知 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
@@ -1256,7 +1256,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 不知 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1268,7 +1268,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '不知 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 不知(每月總數)',
                                     },
                                 }}
                             />
@@ -1282,7 +1282,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 不知(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1295,7 +1295,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '不知 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 不知(每月總數)',
                                     },
                                 }}
                             />
@@ -1333,7 +1333,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2}年 輕度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 輕度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
@@ -1393,7 +1393,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1405,7 +1405,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '輕度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)',
                                     },
                                 }}
                             />
@@ -1419,7 +1419,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1432,7 +1432,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '輕度 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)',
                                     },
                                 }}
                             />
@@ -1447,7 +1447,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2}年 中度 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 中度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
@@ -1507,7 +1507,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1533,7 +1533,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1561,7 +1561,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2}年 嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
@@ -1621,7 +1621,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1633,7 +1633,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 嚴重 - (每月總數)',
                                     },
                                 }}
                             />
@@ -1647,7 +1647,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1660,7 +1660,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 嚴重 - (每月總數)',
                                     },
                                 }}
                             />
@@ -1675,7 +1675,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2}年 極度嚴重 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 極度嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
@@ -1735,7 +1735,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1747,7 +1747,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '極度嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -1761,7 +1761,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1774,7 +1774,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '極度嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -1789,7 +1789,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2}年 不知 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 不知 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
@@ -1849,7 +1849,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                    智力障礙程度統計 (每月總數)
+                                服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1861,7 +1861,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '極度嚴重 - 智力障礙程度統計(每月總數)',
+                                        subtitle: '服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)',
                                     },
                                 }}
                             />
@@ -2070,7 +2070,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每年總數)
+                                服務使用者意外 - 智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2096,7 +2096,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每年總數)
+                                服務使用者意外 - 智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2136,7 +2136,7 @@ function ServiceUserAccidentIntelligence(siteCollectionUrl) {
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
                                         <div className="">
-                                            智力障礙程度統計
+                                            服務使用者意外 - 智力障礙程度統計
                                         </div>
                                     </div>
                                     <Chart

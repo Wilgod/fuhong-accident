@@ -1940,7 +1940,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {
                                     setUploadedCctvPhoto.length > 0 &&
                                     <aside>
-                                        <h6>已上存檔案</h6>
                                         <ul>{UploadedFilesComponent(uploadedCctvPhoto)}</ul>
                                     </aside>
                                 }

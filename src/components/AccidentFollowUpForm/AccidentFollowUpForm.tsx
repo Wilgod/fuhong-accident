@@ -475,7 +475,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
                             },
                             "NextDeadline": addMonths(new Date(), 6),
-                            "ReminderDate": addDays(new Date(), 173).toISOString()
+                            "ReminderDate": addDays(addMonths(new Date(), 6), -7).toISOString()
                         }).then((updateServiceUserAccidentByIdRes) => {
                             console.log(updateServiceUserAccidentByIdRes);
                             notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
@@ -497,7 +497,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
                             },
                             "NextDeadline": addMonths(new Date(), 6),
-                            "ReminderDate": addDays(new Date(), 173).toISOString()
+                            "ReminderDate": addDays(addMonths(new Date(), 6), -7)
                         }).then((res) => {
                             console.log(res);
 

@@ -305,8 +305,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             },
                             "Stage": "3",
                             "Status": "PENDING_SM_FILL_IN",
-                            "NextDeadline": addMonths(new Date(), 6).toISOString(),
-                            "ReminderDate": addDays(new Date(), 173).toISOString(),
+                            "NextDeadline": addMonths(new Date(), 6),
+                            "ReminderDate": addDays(addMonths(new Date(), 6), -7)
                         }
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, serviceUserAccidentFormBody).then((serviceUserAccidentFormResponse) => {

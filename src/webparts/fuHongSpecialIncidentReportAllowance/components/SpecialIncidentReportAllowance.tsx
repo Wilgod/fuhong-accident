@@ -510,6 +510,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
+            alert("提交錯誤");
         } else {
             if (formStatus === "SM_VOID") {
                 updateSpecialIncidentReportAllowance(formData.Id, {
@@ -779,6 +780,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             }).then((incidentFollowUpRes) => {
                 updateSpecialIncidentReportAllowance(formData.Id, {
                     "NextDeadline": addBusinessDays(new Date(), 28).toISOString(),
+                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
                     "SDDate": new Date().toISOString(),
                     "SDComment": sdComment,
                     "Stage": "2",
@@ -999,7 +1001,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             致:
                         </div>
                         <div className="col" >
-                            <div className="form-row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                            <div className="form-row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "flex" : "none"}`}}>
                                 <div className="col-auto mr-auto">
                                     津貼科
                                 </div>
@@ -1009,7 +1011,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             </div>
                         </div>
                     </div>
-                    <div className="row" style={{ textDecoration: `${form.toDepartment === "ELDERLY_SERVICES_DIVISION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "ELDERLY_SERVICES_DIVISION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "ELDERLY_SERVICES_DIVISION" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-1 col-auto mr-auto">
                             <div>安老服務科</div>
                         </div>
@@ -1017,7 +1019,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>(傳真: 2832 2936)</div>
                         </div>
                     </div>
-                    <div className="row" style={{ textDecoration: `${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-1 col-auto mr-auto">
                             <div>家庭及兒童福利科</div>
                         </div>
@@ -1025,7 +1027,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>(傳真: 2833 5840)</div>
                         </div>
                     </div>
-                    <div className="row" style={{ textDecoration: `${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-1 col-auto mr-auto">
                             <div>康復及醫務社會服務科</div>
                         </div>
@@ -1033,12 +1035,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>(傳真: 2893 6983)</div>
                         </div>
                     </div>
-                    <div className="row" >
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-1 col-auto mr-auto">
-                            <div style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}` }}>青年及感化服務科</div>
+                            <div>青年及感化服務科</div>
                         </div>
                     </div>
-                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || !form.toDepartment ? "none" : "line-through"}` }}>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-2 col-auto mr-auto">
                             <div>感化服務組</div>
                         </div>
@@ -1046,7 +1048,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>(傳真: 2833 5861)</div>
                         </div>
                     </div>
-                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}` }}>
+                    <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "flex" : "none"}` }}>
                         <div className="offset-2 col-auto mr-auto">
                             <div>青年事務組</div>
                         </div>

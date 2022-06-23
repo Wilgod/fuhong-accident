@@ -234,12 +234,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           </div>
         </li>
         <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportAllowance")}>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportLicense")}>
           特別事故報告 (牌照事務處)
           </div>
         </li>
         <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportLicense")}>
+          <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportAllowance")}>
           特別事故報告 (津貼科)
           </div>
         </li>
@@ -710,11 +710,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           <div className="container-fluid">
             <div className="row no-gutters" style={{height:'90vh'}}>
               {/* Navigation menu */}
-              <div className={classnames("col-sm-12 col-md-3 col-lg-3 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
+              <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
                 {navigationMenu()}
               </div>
               {/* Main Content */}
-              <div className="col-sm-12 col-md-9 col-lg-9" >
+              <div className="col-sm-12 col-md-10 col-lg-10" >
                 <div className={`${styles.systemTitle} notPrintable`}>
                   意外及事故呈報系統
                   {/*<div style={{ float: "right" }}>

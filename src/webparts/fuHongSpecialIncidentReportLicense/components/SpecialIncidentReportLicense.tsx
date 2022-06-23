@@ -530,6 +530,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
+            alert("提交錯誤");
         } else {
             if (formStatus === "SM_VOID") {
                 updateSpecialIncidentReportLicense(formData.Id, {
@@ -722,6 +723,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                 updateSpecialIncidentReportLicense(formData.Id, {
                     "NextDeadline": addBusinessDays(new Date(), 28).toISOString(),
+                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
                     "SDComment": sdComment,
                     "SDDate": new Date().toISOString(),
                     "Stage": "2",

@@ -11,7 +11,7 @@ import { Role } from '../../utils/RoleParser';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getAllIncidentFollowUpFormByCaseNumber, getAllIncidentFollowUpFormByParentId } from '../../api/FetchFuHongList';
 import { initialForm, pendingSdApprove, pendingSmFillIn } from './permissionConfig';
-import { addBusinessDays, addMonths } from '../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../utils/DateUtils';
 import { faPager } from '@fortawesome/free-solid-svg-icons';
 import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense, notifyIncidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
@@ -383,7 +383,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 "FollowUpFormsId": {
                                     "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
                                 },
-                                "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                                "NextDeadline": addMonths(new Date(), 6).toISOString(),
+                                "ReminderDate": addDays(addMonths(new Date(), 6), -7).toISOString(),
                                 "Status": "PENDING_SM_FILL_IN"
                             }).then((updateOtherIncidentReportRes) => {
                                 postLog({
@@ -403,7 +404,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 "FollowUpFormsId": {
                                     "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
                                 },
-                                "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                                "NextDeadline": addMonths(new Date(), 6).toISOString(),
+                                "ReminderDate": addDays(addMonths(new Date(), 6), -7).toISOString(),
                                 "Status": "PENDING_SM_FILL_IN"
                             }).then((updateSpecialIncidentReportLicenseRes) => {
     
@@ -424,7 +426,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 "FollowUpFormsId": {
                                     "results": [...parentFormData.FollowUpFormsId, createIncidentFollowUpFormRes.data.Id]
                                 },
-                                "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                                "NextDeadline": addMonths(new Date(), 6).toISOString(),
+                                "ReminderDate": addDays(addMonths(new Date(), 6), -7).toISOString(),
                                 "Status": "PENDING_SM_FILL_IN"
                             }).then((updateSpecialIncidentReportAllowanceRes) => {
                                 console.log("SPECIAL_INCIDENT_REPORT_ALLOWANCE")
@@ -448,7 +451,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 } else {
                     if (formType === "OTHER_INCIDENT") {
                         updateOtherIncidentReport(parentFormData.Id, {
-                            Status: "CLOSED"
+                            "ReminderDate": null,
+                            "Status": "CLOSED"
                         }).then((updateOtherIncidentReportRes) => {
                             console.log(updateOtherIncidentReportRes)
                             postLog({
@@ -466,7 +470,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         }).catch(console.error);
                     } else if (formType === "SPECIAL_INCIDENT_REPORT_LICENSE") {
                         updateSpecialIncidentReportLicense(parentFormData.Id, {
-                            Status: "CLOSED"
+                            "ReminderDate": null,
+                            "Status": "CLOSED"
                         }).then((updateSpecialIncidentReportLicenseRes) => {
                             console.log(updateSpecialIncidentReportLicenseRes)
     
@@ -484,6 +489,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         }).catch(console.error);
                     } else if (formType === "SPECIAL_INCIDENT_REPORT_ALLOWANCE") {
                         updateSpecialIncidentReportAllowance(parentFormData.Id, {
+                            "ReminderDate": null,
                             "Status": "CLOSED"
                         }).then(() => {
     

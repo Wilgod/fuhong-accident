@@ -335,6 +335,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
+            alert("提交錯誤");
         } else {
             if (formStatus === "SM_VOID") {
                 updateOtherIncidentReport(formData.Id, {
@@ -520,6 +521,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 updateOtherIncidentReport(formData.Id, {
                     ...body,
                     "NextDeadline": addBusinessDays(submitDate, 28).toISOString(),
+                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
                     "SDComment": sdComment,
                     "SDDate": new Date().toISOString(),
                     "Stage": "2",

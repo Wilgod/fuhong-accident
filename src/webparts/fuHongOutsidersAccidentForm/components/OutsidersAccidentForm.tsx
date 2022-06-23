@@ -23,7 +23,7 @@ import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
 import { formInitBySm, formInitial, pendingSmApprove, pendingSptApproveForSD, pendingSptApproveForSPT } from '../../fuHongServiceUserAccidentForm/permissionConfig';
-import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../../utils/DateUtils';
 import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 import { notifyOutsiderAccident, notifyOutsiderAccidentSMSDComment, notifyOutsiderAccidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
@@ -144,6 +144,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         return <li key={`${file.FileName}_${index}`}>
             <div className="d-flex">
                 <span className="flex-grow-1 text-break">
+                    <h6>已上存檔案</h6>
                     <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
                 </span>
                 {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
@@ -794,7 +795,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     "InvestigatorId": investigatorPickerInfo[0].id,
                     "Status": "PENDING_INVESTIGATE",
                     "Stage": "2",
-                    "NextDeadline": addMonths(new Date(), 1).toISOString()
+                    "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                    "ReminderDate": addDays(new Date(), 21).toISOString()
                 };
                 updateOutsiderAccidentFormById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
                     // Create form 20, switch to stage 2]
@@ -1412,7 +1414,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 {
                                     uploadedPhotoRecordFiles.length > 0 &&
                                     <aside>
-                                        <h6>已上存檔案</h6>
                                         <ul>
                                             {UploadedFilesComponent(uploadedPhotoRecordFiles)}
                                         </ul>

@@ -583,7 +583,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 自閉症譜系障礙 (ASD) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                                <h6>{`${title} - 服務使用者意外 - 自閉症譜系障礙 (ASD) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                             <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
@@ -606,7 +606,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 </h6>
                             </div>
                             <div className="col-12">
-                                <h6>{`${title} - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                                <h6>{`${title} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
                             <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
@@ -721,7 +721,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -733,7 +733,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '有 - ASD統計(每月總數)',
+                                        subtitle: '有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -747,7 +747,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -760,7 +760,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '有 - ASD統計(每月總數)',
+                                        subtitle: '有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -774,7 +774,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
@@ -835,7 +835,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -847,7 +847,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                        subtitle: '沒有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -861,7 +861,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -874,7 +874,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                        subtitle: '沒有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -963,7 +963,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                         {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                     </div>
                                     <div className="">
-                                    自閉症譜系障礙 (ASD) (每月總數)
+                                    服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                     </div>
                                 </div>
                             <Chart
@@ -975,7 +975,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '有 - ASD統計(每月總數)',
+                                        subtitle: '有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -989,7 +989,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1002,7 +1002,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '有 - ASD統計(每月總數)',
+                                        subtitle: '有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
 
@@ -1017,7 +1017,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
@@ -1077,7 +1077,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1089,7 +1089,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                        subtitle: '沒有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
                             />
@@ -1103,7 +1103,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每月總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1116,7 +1116,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '沒有 - ASD統計(每月總數)',
+                                        subtitle: '沒有 - 服務使用者意外 - ASD統計(每月總數)',
                                     },
                                 }}
 
@@ -1142,7 +1142,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear3} - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear3} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
@@ -1182,7 +1182,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每年總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1208,7 +1208,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每年總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1221,7 +1221,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: 'ASD統計(每年總數)',
+                                        subtitle: '服務使用者意外 - ASD統計(每年總數)',
                                     },
                                 }}
                             />
@@ -1246,7 +1246,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear4} - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear4} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
@@ -1286,7 +1286,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每年總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1298,7 +1298,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: 'ASD統計(每年總數)',
+                                        subtitle: '服務使用者意外 - ASD統計(每年總數)',
                                     },
                                 }}
                             />
@@ -1312,7 +1312,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                自閉症譜系障礙 (ASD) (每年總數)
+                                服務使用者意外 - 自閉症譜系障礙 (ASD) (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1325,7 +1325,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: 'ASD統計(每年總數)',
+                                        subtitle: '服務使用者意外 - ASD統計(每年總數)',
                                     },
                                 }}
 
@@ -1352,7 +1352,7 @@ function ServiceUserAccidentASD(siteCollectionUrl) {
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
                                         <div className="">
-                                            自閉症譜系障礙 (ASD)
+                                        服務使用者意外 - 自閉症譜系障礙 (ASD)
                                         </div>
                                     </div>
                                     <Chart
