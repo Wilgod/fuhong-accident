@@ -10,7 +10,9 @@ import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './ServiceUserAccidentFormPrint.module.scss';
 import { JSONParser } from '@pnp/pnpjs';
 import * as moment from 'moment';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import './ServiceUserAccidentFormPrint.css';
 interface IServiceUserAccidentFormPrintProps {
     index: number;
     formData: any;
@@ -20,9 +22,10 @@ interface IServiceUserAccidentFormPrintProps {
     siteCollectionUrl:string;
     permissionList:any;
     serviceUnitList:any;
+    backToForm:any;
 }
 
-export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList}: IServiceUserAccidentFormPrintProps ) {
+export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList, backToForm}: IServiceUserAccidentFormPrintProps ) {
     console.log('index :', index);
     let EstimatedPart2CompletionDate = null;
     if (formData.SubmitDate != null) {
@@ -44,9 +47,16 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
     if (ser.length > 0) {
         ServiceUserUnit = ser[0].su_name_tc
     }
-    debugger
+
+    useEffect( () => {
+        window.print();
+    }, [])
 return <>
     <div style={{color:'black'}}>
+        <div className={`notPrintable`}>
+        <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+        
+        </div>
         {index == 0 &&
             <div>
                 <div className="form-row mb-3">
@@ -264,20 +274,20 @@ return <>
                                 是&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") == -1 && <span>&#9744;</span>}
                                 流血&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") == -1 && <span>&#9744;</span>}
                                 瘀腫&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") == -1 && <span>&#9744;</span>}
                                 骨折&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") == -1 && <span>&#9744;</span>}
                                 暈眩&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") == -1 && <span>&#9744;</span>}
                                 休克/失去知覺&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -289,8 +299,8 @@ return <>
                             <td style={{width:'80px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") == -1 && <span>&#9744;</span>}
+                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") == -1 && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'350px'}}>

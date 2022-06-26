@@ -17,7 +17,7 @@ import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
-import { addBusinessDays } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../../utils/DateUtils';
 import { notifySpecialIncidentAllowance,notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import { sp } from "@pnp/sp";
@@ -779,8 +779,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Title": "事故跟主/結束報告 - 1"
             }).then((incidentFollowUpRes) => {
                 updateSpecialIncidentReportAllowance(formData.Id, {
-                    "NextDeadline": addBusinessDays(new Date(), 28).toISOString(),
-                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
+                    "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                    "ReminderDate": addDays(new Date(), 21).toISOString(),
                     "SDDate": new Date().toISOString(),
                     "SDComment": sdComment,
                     "Stage": "2",

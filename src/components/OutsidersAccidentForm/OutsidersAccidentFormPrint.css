@@ -1,0 +1,3 @@
+@media print {
+    .notPrintable {display: none;}
+  }

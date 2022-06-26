@@ -18,7 +18,7 @@ import { Role } from '../../../utils/RoleParser';
 import { adminUpdateInsuranceNumber, formInitBySm, formInitial, pendingSdApprove, pendingSmApprove } from '../permissionConfig';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
-import { addBusinessDays, addMonths } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../../utils/DateUtils';
 import { notifyOtherIncident, notifyIncidentReject } from '../../../api/Notification';
 import { postLog } from '../../../api/LogHelper';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
@@ -520,8 +520,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
                 updateOtherIncidentReport(formData.Id, {
                     ...body,
-                    "NextDeadline": addBusinessDays(submitDate, 28).toISOString(),
-                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
+                    "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                    "ReminderDate": addDays(new Date(), 21).toISOString(),
                     "SDComment": sdComment,
                     "SDDate": new Date().toISOString(),
                     "Stage": "2",

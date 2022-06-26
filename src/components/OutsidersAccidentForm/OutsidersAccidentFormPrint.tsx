@@ -11,6 +11,9 @@ import styles from './OutsidersAccidentFormPrint.module.scss';
 import { JSONParser } from '@pnp/pnpjs';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 import * as moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import './OutsidersAccidentFormPrint.css'
 interface IServiceUserAccidentFormPrintProps {
     index: number;
     formData: any;
@@ -20,9 +23,10 @@ interface IServiceUserAccidentFormPrintProps {
     siteCollectionUrl:string;
     permissionList:any;
     serviceUnitList:any;
+    backToForm:any;
 }
 
-export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList}: IServiceUserAccidentFormPrintProps ) {
+export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList, backToForm}: IServiceUserAccidentFormPrintProps ) {
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [reporterName, setReporterName] = useState("");
     const [investigatorName, setInvestigatorName] = useState("");
@@ -70,13 +74,17 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
                     console.error(err)
                 });
             }
-            
+            window.print();
         }
     }, [formData])
 
     
 return <>
     <div style={{color:'black'}}>
+        <div className={`notPrintable`}>
+        <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+        
+        </div>
         {index == 0 &&
             <div style={{width:'1000px', margin:'0 auto'}}>
                 <div className="form-row mb-3">

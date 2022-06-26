@@ -105,6 +105,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    debugger
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
     return [PermissionList,serviceUserAccidentWorkflow.Url,serviceUnitList]
@@ -239,6 +240,12 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     })
   }
 
+  private backToForm = () => {
+    this.setState({
+      isPrintMode:false
+    })
+  }
+
   private tab(index) {
     this.setState({
       indexTab:index
@@ -270,7 +277,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               :
               !this.state.loading ?
                 this.state.isPrintMode ?
-                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList}/>
+                  <ServiceUserAccidentFormPrint index={this.state.indexTab} formData={this.state.serviceUserAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList} backToForm={this.backToForm}/>
                   :
                   <div className={styles.eform}>
                     {/*this.state.serviceUserAccidentFormData != null &&

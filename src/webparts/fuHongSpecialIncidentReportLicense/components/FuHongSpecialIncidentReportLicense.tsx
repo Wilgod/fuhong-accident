@@ -191,6 +191,12 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
     })
   }
 
+  private backToForm = () => {
+    this.setState({
+      isPrintMode:false
+    })
+  }
+
   private tab(index) {
     this.setState({
       indexTab:index
@@ -215,7 +221,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
               :
               this.state.loading ?
                 this.state.isPrintMode ?
-                  <SpecialIncidentReportLicensePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl}/>
+                  <SpecialIncidentReportLicensePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialINcidentReportLicenseData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl} backToForm={this.backToForm}/>
                   :
                   <div className={styles.eform}>
                     {/*<div className="row" style={{ float:'right'}}>

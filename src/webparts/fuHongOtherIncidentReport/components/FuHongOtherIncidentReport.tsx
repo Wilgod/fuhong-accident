@@ -205,7 +205,11 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
       isPrintMode:true
     })
   }
-
+  private backToForm = () => {
+    this.setState({
+      isPrintMode:false
+    })
+  }
   public render(): React.ReactElement<IFuHongOtherIncidentReportProps> {
     return (
       <div className={styles.fuHongOtherIncidentReport}>
@@ -216,7 +220,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
               :
               this.state.loading ?
                 this.state.isPrintMode ?
-                  <OtherIncidentReportPrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl} serviceUnitList={this.state.serviceUnitList}/>
+                  <OtherIncidentReportPrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl} serviceUnitList={this.state.serviceUnitList}  backToForm={this.backToForm}/>
                   :
                   <div className={styles.eform}>
                     {/*<div className="row" style={{ float:'right'}}>

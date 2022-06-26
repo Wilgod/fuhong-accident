@@ -10,6 +10,9 @@ import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 import * as moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import './SpecialIncidentReport.css';
 interface ISpecialIncidentReportLicensePrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -19,6 +22,7 @@ interface ISpecialIncidentReportLicensePrint {
     formTwentySixDataSelected: any;
     siteCollectionUrl:string;
     index:number;
+    backToForm:any;
 }
 
 interface ISpecialIncidentReportLicenseStates {
@@ -95,7 +99,7 @@ interface ISpecialIncidentReportLicenseStates {
 
 }
 
-export default function SpecialIncidentReportLicensePrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl}: ISpecialIncidentReportLicensePrint) {
+export default function SpecialIncidentReportLicensePrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl, backToForm}: ISpecialIncidentReportLicensePrint) {
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -341,9 +345,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 console.error(err)
             });
         }
+        window.print();
     }, [reporter])
-
-    console.log('index :', index);
+    useEffect( () => {
+        window.print();
+    }, [])
     return (
         <>
             <style media="print">
@@ -353,6 +359,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 }`}
 			</style>
             <div style={{color:'black'}}>
+                <div className={`notPrintable`}>
+                    <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+                </div>
                 {index == 0 &&
                     <div>
                         <div className="form-row mb-3">

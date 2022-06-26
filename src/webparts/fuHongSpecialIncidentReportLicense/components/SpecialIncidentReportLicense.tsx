@@ -14,7 +14,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { pendingSmApprove, pendingSdApprove, adminUpdateInsuranceNumber, formInitial, formInitBySm } from "../../fuHongSpecialIncidentReportAllowance/permissionConfig";
-import { addBusinessDays } from '../../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../../utils/DateUtils';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import useServiceUnit from '../../../hooks/useServiceUnits';
@@ -722,8 +722,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }).then((incidentFollowUpRes) => {
 
                 updateSpecialIncidentReportLicense(formData.Id, {
-                    "NextDeadline": addBusinessDays(new Date(), 28).toISOString(),
-                    "ReminderDate": addBusinessDays(new Date(), 7).toISOString(),
+                    "NextDeadline": addMonths(new Date(), 1).toISOString(),
+                    "ReminderDate": addDays(new Date(), 21).toISOString(),
                     "SDComment": sdComment,
                     "SDDate": new Date().toISOString(),
                     "Stage": "2",

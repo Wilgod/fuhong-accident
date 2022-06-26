@@ -10,6 +10,9 @@ import useSharePointGroup from '../../hooks/useSharePointGroup';
 import styles from './SpecialIncidentReportLicensePrint.module.scss';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 import * as moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import './SpecialIncidentReport.css';
 interface IOtherIncidentReportPrint {
     context: WebPartContext;
     formSubmittedHandler(): void;
@@ -19,7 +22,8 @@ interface IOtherIncidentReportPrint {
     formTwentySixDataSelected: any;
     siteCollectionUrl:string;
     index:number;
-    serviceUnitList:any
+    serviceUnitList:any;
+    backToForm:any;
 }
 
 interface IOtherIncidentReportPrintStates {
@@ -141,7 +145,7 @@ interface IOtherIncidentReportPrintStates {
 
 }
 
-export default function OtherIncidentReportPrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl, serviceUnitList}: IOtherIncidentReportPrint) {
+export default function OtherIncidentReportPrint({ index, context, formSubmittedHandler, currentUserRole, formData, formTwentySixData, formTwentySixDataSelected,siteCollectionUrl, serviceUnitList, backToForm}: IOtherIncidentReportPrint) {
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -499,6 +503,9 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 }`}
 			</style>
             <div style={{color:'black'}}>
+                <div className={`notPrintable`}>
+                    <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+                </div>
                 {index == 0 &&
                     <div style={{width:'800px'}}>
                         <div className="form-row mb-3">

@@ -244,6 +244,12 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     })
   }
 
+  private backToForm = () => {
+    this.setState({
+      isPrintMode:false
+    })
+  }
+
   private redirectPath = this.props.context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
 
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
@@ -254,7 +260,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
           {this.state.isPrintMode ?
-          <OutsidersAccidentFormPrint index={this.state.indexTab} formData={this.state.outsiderAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList}/>
+          <OutsidersAccidentFormPrint index={this.state.indexTab} formData={this.state.outsiderAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList} backToForm={this.backToForm}/>
           :
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
