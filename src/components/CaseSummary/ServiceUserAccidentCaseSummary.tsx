@@ -51,8 +51,8 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
         let allServiceUserAccident = await getAllServiceUserAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
         for (let sa of allServiceUserAccident) {
-            let unit = serviceLocation.filter(o => {return o.location == sa.ServiceLocation});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceUserUnit});
+            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
             console.log('All CaseNumber', sa['CaseNumber'])
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             sa['AccidentReportForm'] = getARF;
@@ -82,7 +82,7 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
         if (selectedOptions.length > 0) {
             let dataLists = [];
             for (let option of selectedOptions) {
-                let newDataList = filterData.filter(item => { return item.ServiceLocation == option });
+                let newDataList = filterData.filter(item => { return item.ServiceUserUnit == option });
                 for (let dataList of newDataList) {
                     dataLists.push(dataList);
                 }
@@ -412,7 +412,7 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item.location}>{item.locationTC}</option>
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
                     </select>

@@ -613,7 +613,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     }}>
                       <option value="ALL">--- 所有 ---</option>
                       {this.state.serviceUnitList.map((item) => {
-                        return <option value={item.location}>{item.locationTC}</option>
+                        return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                       })}
                     </select>
                   </div>

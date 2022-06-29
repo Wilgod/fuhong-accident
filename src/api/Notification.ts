@@ -278,3 +278,26 @@ export async function notifyIncidentReject(context: WebPartContext, formId: numb
         throw new Error("notifyOtherIncident error");
     }
 }
+
+
+export async function postCMSWorkflowGetUser(context: WebPartContext, serviceLocation:string, workflowUrl:string) {
+    try {
+        const CONFIG: ISPHttpClientOptions = {
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "Content-Type": "application/json;odata=verbose",
+                "OData-Version": "" //Really important to specify
+            }, body: JSON.stringify({
+                __metadata: { type: 'SP.Data.TestListItem' },
+                "ServiceLocation": serviceLocation
+            })
+        };
+        let userList = await context.httpClient.post(workflowUrl, SPHttpClient.configurations.v1, CONFIG).then((response: SPHttpClientResponse) => {
+            return response.json();
+          });
+        return userList
+    } catch (err) {
+        console.error(err);
+        throw new Error("notifyServiceUserAccident error");
+    }
+}

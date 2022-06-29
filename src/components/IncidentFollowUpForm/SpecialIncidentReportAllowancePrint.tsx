@@ -160,10 +160,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const [sdJobTitle, setSdJobTitle] = useState("");
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
+    const [loadReporter, setLoadReporter] = useState(false);
+    const [loadSdInfo, setLoadSdInfo] = useState(false);
 
     let followUpActions = null;
     let formTwentySixDataPrint = null;
+    debugger
     if (formTwentySixData != null && formTwentySixData.length > 0) {
+        debugger
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
@@ -291,9 +295,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     useEffect(() => {
         if (formData) {
-            loadData();
+            loadData()
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
+            setLoadReporter(true);
+            setLoadSdInfo(true);
         }
     }, [formData]);
 
@@ -309,6 +315,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             }
             if (formData.SD) {
                 setSDEmail([{ secondaryText: formData.SD.EMail, id: formData.SD.Id }]);
+                setLoadSdInfo(false)
             }
             
             /*if (formData.GuardianStaff) {
@@ -427,8 +434,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 unusalIncident: formData.UnusalIncident,
                 sdDate: formData.SDDate ? new Date(formData.SDDate) : null
             })
-            
-        
+
         }
     }
     useEffect(() => {
@@ -443,13 +449,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
 
     useEffect(() => {
+        console.log("reporter");
         if (reporter) {
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,reporter.mail).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                    debugger
                     setReporterName(userInfosRes[0].Name);
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                    setLoadReporter(true);
                 }
 
 
@@ -462,12 +469,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     }, [reporter])
 
     useEffect(() => {
+        console.log("sdInfo",sdInfo);
         if (sdInfo) {
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,sdInfo.mail).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setSdName(sdInfo.displayName);
                     setSdJobTitle(userInfosRes[0].hr_jobcode);
+                    setLoadSdInfo(true);
                 }
 
 
@@ -475,12 +484,28 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 console.error('getUserInfoByEmailInUserInfoAD error')
                 console.error(err)
             });
+        } else {
+            setLoadSdInfo(true);
         }
-        window.print();
+        
     }, [sdInfo])
 
-    console.log('form.sdDate :', form.sdDate);
+    useEffect(() => {
+        if (loadSdInfo && loadReporter) {
+            setTimeout(
+                windowPrint
+            ,500)
+            
+        }
+    }, [loadSdInfo, loadReporter])
+
+    //console.log('form.sdDate :', form.sdDate);
+
+    //console.log('formData:', formData);
     
+    const windowPrint = async () => {
+        window.print()
+    }
     return (
         <>
             <style media="print">
@@ -666,11 +691,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>(e))事故被傳媒報導 :</td>
-                                    <td>{formData.mediaReports&& <span>&#9745;</span>}
-                                        {!formData.mediaReports && <span>&#9744;</span>}
+                                    <td>{formData != null && formData.mediaReports != null && formData.mediaReports&& <span>&#9745;</span>}
+                                        {formData != null && formData.mediaReports != null && !formData.mediaReports && <span>&#9744;</span>}
                                         是&nbsp;&nbsp;
-                                        {!formData.mediaReports&& <span>&#9745;</span>}
-                                        {formData.mediaReports && <span>&#9744;</span>}
+                                        {formData != null && formData.mediaReports != null && !formData.mediaReports&& <span>&#9745;</span>}
+                                        {formData != null && formData.mediaReports != null && formData.mediaReports && <span>&#9744;</span>}
                                         否&nbsp;&nbsp;
                                     </td>
 

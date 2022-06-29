@@ -22,9 +22,9 @@ export async function getNewServiceUserAccident(searchCriteria: ISearchCriteria)
             let su = "";
             searchCriteria.serviceUnits.forEach((item, index) => {
                 if (index === 0) {
-                    su = `ServiceLocation eq '${item}'`;
+                    su = `ServiceUserUnit eq '${item}'`;
                 } else {
-                    su += `ServiceLocation eq '${item}'`;
+                    su += `ServiceUserUnit eq '${item}'`;
                 }
 
                 if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -58,9 +58,9 @@ export async function getDashboardServiceUserAccident(searchCriteria: ISearchCri
             let su = "";
             searchCriteria.serviceUnits.forEach((item, index) => {
                 if (index === 0) {
-                    su = `ServiceLocation eq '${item}'`;
+                    su = `ServiceUserUnit eq '${item}'`;
                 } else {
-                    su += `ServiceLocation eq '${item}'`;
+                    su += `ServiceUserUnit eq '${item}'`;
                 }
 
                 if (index !== searchCriteria.serviceUnits.length - 1) {
@@ -376,9 +376,9 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
             let su = "";
             searchCriteria.serviceUnits.forEach((item, index) => {
                 if (index === 0) {
-                    su = `ServiceLocation eq '${item}'`;
+                    su = `ServiceUserUnit eq '${item}'`;
                 } else {
-                    su += `ServiceLocation eq '${item}'`;
+                    su += `ServiceUserUnit eq '${item}'`;
                 }
 
                 if (index !== searchCriteria.serviceUnits.length - 1) {

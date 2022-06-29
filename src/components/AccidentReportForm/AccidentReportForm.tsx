@@ -511,7 +511,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     
     let ServiceUserUnit = "";
     if (parentFormData && parentFormData.ServiceUserUnit) {
-        let ser = serviceUnitList.filter(o => {return o.location == parentFormData.ServiceUserUnit});
+        let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == parentFormData.ServiceUserUnit});
         if (ser.length > 0) {
             ServiceUserUnit = ser[0].su_name_tc
         }

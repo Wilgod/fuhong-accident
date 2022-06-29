@@ -508,6 +508,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         body["SubmitDate"] = new Date().toISOString();
         console.log(body);
         console.log(error);
+        debugger
         if (Object.keys(error).length > 0) {
             setError(error);
             alert("提交錯誤");
@@ -558,8 +559,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             ...extraBody
                         }).then(res => {
                             console.log(res)
-                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                                notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
+                            if (extraBody["Status"] === "PENDING_SM_APPROVE") {
+                                //notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
     
                                 postLog({
                                     AccidentTime: incidentTime.toISOString(),
@@ -589,7 +590,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             ...extraBody
                         }).then(res => {
                             console.log(res)
-                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 notifySpecialIncidentAllowance(context, res.data.Id, 1, speicalIncidentReportWorkflow);
     
                                 postLog({
@@ -603,6 +604,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 }).catch(console.error);
     
                             } else {
+                                notifySpecialIncidentAllowance(context, res.data.Id, 1, speicalIncidentReportWorkflow);
+    
                                 postLog({
                                     AccidentTime: incidentTime.toISOString(),
                                     Action: "提交",
@@ -695,7 +698,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "SMComment": smComment
             }).then((res) => {
                 console.log(res);
-
+                notifySpecialIncidentAllowance(context, formData.Id, 1, speicalIncidentReportWorkflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "批准",
@@ -791,7 +794,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "SDPhone": sdPhoneNo
                 }).then((res) => {
                     console.log(res);
-
+                    notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "批准",
@@ -802,7 +805,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         Report: "特別事故報告(津貼科)"
                     }).catch(console.error);
 
-                    notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
+                    
                     formSubmittedHandler();
                 }).catch(console.error);
             }).catch(console.error);

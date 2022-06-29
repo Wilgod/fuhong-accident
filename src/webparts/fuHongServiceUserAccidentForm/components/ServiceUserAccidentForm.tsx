@@ -38,7 +38,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject } from '../../../api/Notification';
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, postCMSWorkflowGetUser } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -52,7 +52,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -1262,6 +1262,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
+    async function changeCMSUser(value) {
+        debugger
+        setPatientServiceUnit(value);
+        let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
+        debugger
+    }
     const emailToChangeHandler = (event) => {
         const value = event.target.value;
         setEmailTo(value)
@@ -1326,7 +1332,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (formInitial(currentUserRole, formStatus)) {
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
-                setServiceLocation(dept.location);
+                setServiceLocation(dept.su_Eng_name_display);
                 if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
                     setSMEmail(dept.hr_deptmgr);
                 }
@@ -1406,20 +1412,20 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             </select> */}
                             {/* <input type="text" className="form-control" value={userInfo && userInfo.hr_location || ""} disabled /> */}
                             {/* <input type="text" className="form-control" value={serviceUnit || ""} disabled /> */}
-                            <select className={`custom-select ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                            <select className={`custom-select ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { changeCMSUser(event.target.value) }}//setPatientServiceUnit(event.target.value)
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             >
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >=0 &&
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.location} selected={item.location == serviceUnit}>{item.su_name_tc}</option>
+                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
-                                        let ser = serviceUserUnitList.filter(o => {return o.location == item});
+                                        let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == item});
                                         if (ser.length > 0) {
-                                            return <option value={ser[0].location} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
+                                            return <option value={ser[0].su_Eng_name_display} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
                                         }
                                         
                                     })
@@ -1445,7 +1451,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
-                            <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value)}
+                            <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value) } //
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                 <option>請選擇服務使用者</option>
                                 {
@@ -1523,7 +1529,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             <input type="text" className="form-control"
                                 // value={serviceUser ? serviceUser.ServiceNumber : ""} 
                                 value={serviceUserId}
-                                onChange={(event) => setServiceUserId(event.target.value)}
+                                onChange={(event) => setServiceUserId(event.target.value) }
                                 disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
                         </div>

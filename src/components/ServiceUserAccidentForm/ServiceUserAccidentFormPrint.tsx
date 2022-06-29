@@ -43,7 +43,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
     }
     console.log('formData.InjuredArea',formData.InjuredArea);
     let ServiceUserUnit = "";
-    let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceUserUnit});
+    let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceUserUnit});
     if (ser.length > 0) {
         ServiceUserUnit = ser[0].su_name_tc
     }

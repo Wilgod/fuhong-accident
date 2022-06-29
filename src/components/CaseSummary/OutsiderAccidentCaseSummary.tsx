@@ -49,8 +49,8 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
         let allOutsiderUserAccident = await getAllOutsiderAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
         for (let sa of allOutsiderUserAccident) {
-            let unit = serviceLocation.filter(o => {return o.location == sa.ServiceLocation});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
+            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             sa['AccidentReportForm'] = getARF;
             if (sa['Stage'] == '1') {
@@ -406,7 +406,7 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item.location}>{item.locationTC}</option>
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
                     </select>

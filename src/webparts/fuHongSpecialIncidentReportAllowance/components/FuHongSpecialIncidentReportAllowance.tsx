@@ -105,6 +105,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
           let formTwentySixDataSelected = null;
           if (data) {
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+            debugger
             if (formTwentySixDataPrint.length > 0) {
               formTwentySixData = formTwentySixDataPrint[0];
               formTwentySixDataSelected = formTwentySixData.Id;
@@ -143,7 +144,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
           if (data && data.Stage == '1') {
             this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
           } else if (data && data.Stage == '2') {
-            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataSelected:formTwentySixDataSelected });
+            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
@@ -212,6 +213,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
   }
   public render(): React.ReactElement<IFuHongSpecialIncidentReportAllowanceProps> {
 
+    console.log('this.state.formTwentySixDataPrint',this.state.formTwentySixDataPrint)
     return (
       <div className={styles.fuHongSpecialIncidentReportAllowance}>
         <div className={styles.container}>

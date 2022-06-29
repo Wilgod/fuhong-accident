@@ -44,8 +44,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
             }
             for (let item of filterServiceUserAccidentData) {
-                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
-                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUserUnit});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['ReportForm'] = [];
                 item['FollowUpForm'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
@@ -58,6 +58,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
                     item['StatusTC'] = '尚待調查員填表';
+                } else if (item['Status'] === "CLOSED") {
+                    item['StatusTC'] = '完結';
                 }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
@@ -87,8 +89,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             }
             
             for (let item of filterOutsiderAccidentData) {
-                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
-                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['ReportForm'] = [];
                 item['FollowUpForm'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
@@ -101,6 +103,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
                     item['StatusTC'] = '尚待調查員填表';
+                } else if (item['Status'] === "CLOSED") {
+                    item['StatusTC'] = '完結';
                 }
                 if (item.AccidentReportFormId != null) {
                     let reportForm = accidentReportForm.filter(o => {return o.Id == item.AccidentReportFormId});
@@ -134,8 +138,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
             }
             for (let item of filterSpecialIncidentReportLicense) {
-                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
-                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';
@@ -147,6 +151,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
                     item['StatusTC'] = '尚待調查員填表';
+                } else if (item['Status'] === "CLOSED") {
+                    item['StatusTC'] = '完結';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
@@ -171,8 +177,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             }
 
             for (let item of filterSpecialIncidentReporAllowance) {
-                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
-                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';
@@ -184,6 +190,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
                     item['StatusTC'] = '尚待調查員填表';
+                } else if (item['Status'] === "CLOSED") {
+                    item['StatusTC'] = '完結';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {
@@ -208,8 +216,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             }
                 
             for (let item of filterOtherIncidentData) {
-                let unit = serviceUnitList.filter(o => {return o.location == item.ServiceLocation});
-                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+                let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
+                item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';
@@ -221,6 +229,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     item['StatusTC'] = '尚待高級物理治療師批核';
                 } else if (item['Status'] === "PENDING_INVESTIGATE") {
                     item['StatusTC'] = '尚待調查員填表';
+                } else if (item['Status'] === "CLOSED") {
+                    item['StatusTC'] = '完結';
                 }
                 if (item.FollowUpFormsId != null) {
                     for (let followup of item.FollowUpFormsId) {

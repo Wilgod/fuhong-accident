@@ -2365,7 +2365,7 @@ function ServiceUserAccidentNature(siteCollectionUrl) {
                     }}>
                         <option value="ALL">--- 所有 ---</option>
                         {
-                            serivceLocation.map((item) => <option value={item.location}>{item.locationTC}</option>)
+                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
                         }
                     </select>
                 </div>

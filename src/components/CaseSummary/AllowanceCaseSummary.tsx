@@ -49,8 +49,8 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
         let allSpecialIncidentReportLicense = await getAllSpecialIncidentReportAllowanceWithClosed();
         let allIncidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         for (let sa of allSpecialIncidentReportLicense) {
-            let unit = serviceLocation.filter(o => {return o.location == sa.ServiceLocation});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].locationTC : '';
+            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
+            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
             let getARF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let residentAbuse = "";
             if (sa['Abusive_Body']) {
@@ -392,7 +392,7 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
                         <option value="ALL">--- 所有 ---</option>
                         {
                             serviceLocation.map((item) => {
-                                return <option value={item.location}>{item.locationTC}</option>
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
                     </select>

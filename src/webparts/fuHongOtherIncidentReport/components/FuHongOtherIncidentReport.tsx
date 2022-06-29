@@ -152,7 +152,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
           if (data && data.Stage == '1') {
             this.setState({ indexTab: 0, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint });
           } else if (data && data.Stage == '2') {
-            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint });
+            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {

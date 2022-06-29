@@ -113,12 +113,17 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
 
+    const [loadReporter, setLoadReporter] = useState(false);
+    const [loadNotifyStaff, setLoadNotifyStaff] = useState(false);
+    const [loadSpNotifyStaff, setLoadSpNotifyStaff] = useState(false);
+    useState(false);
     let followUpActions = null;
     let formTwentySixDataPrint = null;
     if (formTwentySixData != null && formTwentySixData.length > 0) {
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
+            
         }
     }
 
@@ -222,6 +227,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
             if (formData.Author) {
                 setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            } else {
+                setLoadReporter(true);
             }
 
             /*if (formData.SM) {
@@ -239,7 +246,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             setReportDate(new Date(formData.Created));
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
+            } else {
+                setLoadNotifyStaff(true);
+                setLoadSpNotifyStaff(true);
             }
+
             setForm({
                 ...form,
                 abuser: formData.Abuser,
@@ -310,6 +321,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             })
 
         
+        } else {
+            setLoadReporter(true);
+            setLoadNotifyStaff(true);
+            setLoadSpNotifyStaff(true);
         }
     }
     useEffect(() => {
@@ -319,6 +334,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     useEffect(() => {
         if (notifyStaff && notifyStaff.mail) {
             setNotifyStaffEmail(notifyStaff.mail)
+            setLoadNotifyStaff(true);
+            
         }
     }, [notifyStaff])
 
@@ -328,6 +345,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 guardianStaffName: spNotifyStaff.Title,
                 guardianStaffJobTitle: spNotifyStaff.jobTitle
             });
+            setLoadSpNotifyStaff(true);
         }
     }, [spNotifyStaff])
 
@@ -337,6 +355,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                    setLoadReporter(true);
+            
+            
                 }
 
 
@@ -345,11 +366,28 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 console.error(err)
             });
         }
-        window.print();
     }, [reporter])
-    useEffect( () => {
-        window.print();
-    }, [])
+
+    useEffect(() => {
+        if (spNotifyStaff) {
+            setLoadSpNotifyStaff(true);
+        }
+    }, [spNotifyStaff])
+
+    useEffect(() => {
+        if (loadReporter && loadNotifyStaff && loadSpNotifyStaff) {
+            debugger
+            setTimeout(
+                windowPrint
+            ,500)
+            
+        }
+    }, [loadReporter, loadNotifyStaff, loadSpNotifyStaff])
+
+
+    const windowPrint = async () => {
+        window.print()
+    }
     return (
         <>
             <style media="print">
@@ -419,7 +457,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     事故發生日期 : 
                                     </td>
                                     <td colSpan={3} style={{borderBottom:'1px solid'}}>
-                                    {new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
+                                    {form.incidentTime != null && new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
@@ -1041,7 +1079,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     事故發生日期 : 
                                     </td>
                                     <td style={{width:'240px', borderBottom:'1px solid'}}>
-                                        {new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
+                                        {form.incidentTime != null &&new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
                                     </td>
                                     <td style={{width:'140px'}}>
                                     &nbsp;&nbsp;事故發生時間 : 

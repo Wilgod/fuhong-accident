@@ -165,6 +165,10 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
     const [serviceUserUnit, setServiceUserUnit] = useState("");
     
+    const [loadReporter, setLoadReporter] = useState(false);
+    const [loadSDName, setLoadSDName] = useState(false);
+    const [loadNotifyStaff, setLoadNotifyStaff] = useState(false);
+    const [loadSpNotifyStaff, setLoadSpNotifyStaff] = useState(false);
     let followUpActions = null;
     let formTwentySixDataPrint = null;
     if (formTwentySixData != null && formTwentySixData.length > 0) {
@@ -298,6 +302,11 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
             loadData();
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
+            setLoadReporter(true);
+            setLoadSDName(true);
+            setLoadNotifyStaff(true);
+            setLoadSpNotifyStaff(true);
+
         }
     }, [formData]);
 
@@ -308,16 +317,23 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
             setIncidentTime(new Date(formData.IncidentTime));
             if (formData.Author) {
                 setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            } else {
+                setLoadReporter(true);
             }
             if (formData.SD) {
                 setSDEmail([{ secondaryText: formData.SD.EMail, id: formData.SD.Id }]);
+            }else {
+                setLoadSDName(true);
             }
             setReportDate(new Date(formData.Created));
             if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
+            } else {
+                setLoadNotifyStaff(true);
+                setLoadSpNotifyStaff(true);
             }
             debugger
-            let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceLocation});
+            let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceLocation});
             if (ser.length > 0) {
                 setServiceUserUnit(ser[0].su_name_tc);
             }
@@ -446,6 +462,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     useEffect(() => {
         if (notifyStaff && notifyStaff.mail) {
             setNotifyStaffEmail(notifyStaff.mail)
+            setLoadNotifyStaff(true);
         }
     }, [notifyStaff])
 
@@ -455,6 +472,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 guardianStaffName: spNotifyStaff.Title,
                 guardianStaffJobTitle: spNotifyStaff.jobTitle
             });
+            setLoadSpNotifyStaff(true);
         }
     }, [spNotifyStaff])
 
@@ -465,6 +483,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setReporterName(userInfosRes[0].Name);
                     setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                    setLoadReporter(true);
                 }
             }).catch((err) => {
                 console.error('getUserInfoByEmailInUserInfoAD error')
@@ -484,6 +503,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setSdJobTitle(userInfosRes[0].hr_jobcode);
                     setSdName(sdInfo.displayName);
+                    setLoadSDName(true);
                 }
             }).catch((err) => {
                 console.error('getUserInfoByEmailInUserInfoAD error')
@@ -493,7 +513,20 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     }, [sdInfo])
     console.log('index :', index);
 
-    
+    useEffect(() => {
+        console.log("loadReporter ",loadReporter + ", loadNotifyStaff ", loadNotifyStaff + ", loadSpNotifyStaff ", loadSpNotifyStaff)
+        if (loadReporter && loadNotifyStaff && loadSpNotifyStaff && loadSDName) {
+            setTimeout(
+                windowPrint
+            ,500)
+            
+        }
+    }, [loadReporter, loadNotifyStaff, loadSpNotifyStaff, loadSDName])
+
+
+    const windowPrint = async () => {
+        window.print()
+    }
     return (
         <>
             <style media="print">

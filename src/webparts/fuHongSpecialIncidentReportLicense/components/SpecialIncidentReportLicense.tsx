@@ -612,7 +612,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             ...extraBody
                         }).then(async (createSpecialIncidentReportLicenseRes) => {
                             await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
-                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 notifySpecialIncidentLicense(context, createSpecialIncidentReportLicenseRes.data.Id, 1, speicalIncidentReportWorkflow);
     
                                 postLog({
@@ -1234,7 +1234,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     <option value={""} ></option>
                                 {
                                     departmentList.map((list) => {
-                                        return <option value={list.location} data-location={list.location} selected={list.departmentNameTc == form.homesName}>{list.departmentNameTc}</option>
+                                        return <option value={list.su_Eng_name_display} data-su_Eng_name_display={list.su_Eng_name_display} selected={list.su_name_tc == form.homesName}>{list.su_name_tc}</option>
                                     })
                                 }
                             </select>

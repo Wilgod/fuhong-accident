@@ -78,6 +78,19 @@ export async function getOtherIncidentReportWorkflow() {
         throw new Error("getLastCaseNo failed");
     }
 }
+
+export async function getCMSUserWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'CMS_USER'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
 export async function getAdmin() {
     try {
         const LIST_NAME = "Admin";
@@ -232,9 +245,9 @@ export async function getServiceUserAccident(spId: number, searchCriteria?: ISea
                 let su = "";
                 searchCriteria.serviceUnits.forEach((item, index) => {
                     if (index === 0) {
-                        su = `ServiceLocation eq '${item}'`;
+                        su = `ServiceUserUnit eq '${item}'`;
                     } else {
-                        su += `ServiceLocation eq '${item}'`;
+                        su += `ServiceUserUnit eq '${item}'`;
                     }
 
                     if (index !== searchCriteria.serviceUnits.length - 1) {

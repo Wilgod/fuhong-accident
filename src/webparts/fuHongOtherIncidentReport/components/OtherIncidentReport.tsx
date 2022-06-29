@@ -415,7 +415,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             ...extraBody
                         }).then(createOtherIncidentReportRes => {
                             console.log(createOtherIncidentReportRes)
-                            if (extraBody["Status"] === "PENDING_SD_APPROVE") {
+                            if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1,workflow);
     
                                 postLog({
@@ -428,6 +428,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                     Report: "其他事故呈報表"
                                 })
                             } else {
+                                notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1,workflow);
                                 postLog({
                                     AccidentTime: incidentTime.toISOString(),
                                     Action: "提交",
@@ -618,7 +619,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 "SMComment": smComment
             }).then(res => {
                 console.log(res);
-
+                notifyOtherIncident(context, formData.Id, 1, workflow);
                 postLog({
                     AccidentTime: incidentTime.toISOString(),
                     Action: "批准",
@@ -759,7 +760,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
             if (data.ServiceUnit) {
                 setServiceUnit(data.ServiceUnit);
-                let ser = serviceUserUnitList.filter(o => {return o.location == data.ServiceUnit});
+                let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == data.ServiceUnit});
                 if (ser.length > 0) {
                     setServiceUnitTC(ser[0].su_name_tc);
 
@@ -898,7 +899,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
-                let ser = serviceUserUnitList.filter(o => {return o.location == userInfo.hr_deptid});
+                let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == userInfo.hr_deptid});
                 if (ser.length > 0) {
                     setServiceUnitTC(ser[0].su_name_tc);
 

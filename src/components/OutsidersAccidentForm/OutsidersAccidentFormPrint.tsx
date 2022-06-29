@@ -50,7 +50,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
 
     useEffect(() => {
         if (formData) {
-            let ser = serviceUnitList.filter(o => {return o.location == formData.ServiceUserUnit});
+            let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceUserUnit});
             if (ser.length > 0) {
                 setServiceUserUnit(ser[0].su_name_tc);
             }

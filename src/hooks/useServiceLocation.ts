@@ -7,7 +7,7 @@ export function locationFilterParser(serviceUnit: any[]) {
     if (Array.isArray(serviceUnit)) {
         serviceUnit.forEach((item) => {
             if (item.location) {
-                s.add({"location" : item.location, locationTC: item.su_name_tc});
+                s.add({"su_Eng_name_display" : item.su_Eng_name_display, "su_name_tc": item.su_name_tc});
             }
         })
     }

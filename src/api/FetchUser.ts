@@ -162,7 +162,7 @@ export async function checkDepartmentList(siteCollectionUrl,userEmail) {
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
           let getSMSD = getAllSMSD.filter(item => {return item.Title == user[0].hr_deptid})
           if (getSMSD.length > 0) {
-            dept.push({"location":getSMSD[0].location,"hr_deptid":getSMSD[0].hr_deptid,"departmentNameEng" : getSMSD[0].su_Eng_name_display,"departmentNameTc" : getSMSD[0].su_name_tc});
+            dept.push({"location":getSMSD[0].location,"hr_deptid":getSMSD[0].hr_deptid,"su_Eng_name_display" : getSMSD[0].su_Eng_name_display,"su_name_tc" : getSMSD[0].su_name_tc});
           }
         } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
           let groups = user[0].Group == null ? [] :user[0].Group.split(',')
@@ -171,7 +171,7 @@ export async function checkDepartmentList(siteCollectionUrl,userEmail) {
                 let deptName = group.trim().replace('_CMS_SU_', '')
                 let getSMSD = getAllSMSD.filter(item => {return item.su_Eng_name_display == deptName});
                 if (getSMSD.length > 0) {
-                    dept.push({"location":getSMSD[0].su_Eng_name_display,"hr_deptid":getSMSD[0].Title,"departmentNameEng" : getSMSD[0].su_Eng_name_display,"departmentNameTc" : getSMSD[0].su_name_tc});
+                    dept.push({"location":getSMSD[0].su_Eng_name_display,"hr_deptid":getSMSD[0].Title,"su_Eng_name_display" : getSMSD[0].su_Eng_name_display,"su_name_tc" : getSMSD[0].su_name_tc});
                 }
             }
           }
@@ -195,6 +195,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push('All');
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
+            debugger
           if (getSMSD.length > 0) {
             dept.push(getSMSD[0].su_Eng_name_display);
           }
