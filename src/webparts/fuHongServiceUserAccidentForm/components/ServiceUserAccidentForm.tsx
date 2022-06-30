@@ -68,6 +68,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
     const [investigator, setInvestigator, investigatorPickerInfo] = useUserInfoAD(); // [調查]
     const [serviceUserList, serviceUser, serviceUserRecordId, setServiceUserRecordId] = useServiceUser();
+    const [cmsUserList, setCmsUserList] = useState([]);
 
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
     const [serviceUnit, setServiceUnit] = useState("");
@@ -1266,8 +1267,28 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         debugger
         setPatientServiceUnit(value);
         let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
+        let cmsuser = []
+        let filter = userlist.results.filter(item => {return item.cr98a_namecn == '尹天仇'})
+        for (let user of userlist.results) {
+            cmsuser.push({
+                "ServiceNumber" : user,
+                "Age":user.cr98a_age,
+                "NameCN":user.cr98a_namecn,
+                "NameEN":user.cr98a_nameen,
+                "Sex": user.cr98a_sex == "111910000" ? "M":"F",
+                "Filenumber":user.cr98a_filenumber,
+                "Serviceproduct":user.cr98a_serviceproduct,
+                
+            })
+        }
+        setCmsUserList(cmsuser)
         debugger
     }
+
+    async function getCMSUserDetail(value) {
+
+    }
+
     const emailToChangeHandler = (event) => {
         const value = event.target.value;
         setEmailTo(value)
@@ -1451,6 +1472,19 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者</label>
                         <div className="col-12 col-xl-4">
+                            {cmsUserList.length > 0 &&
+                                <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => getCMSUserDetail(+event.target.value) } //
+                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
+                                    <option>請選擇服務使用者</option>
+                                    {
+                                        cmsUserList.map((user) => {
+                                            return <option value={user.ServiceNumber}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
+                                        })
+                                    }
+                                    <option value={-1}>沒有服務使用者紀錄</option>
+                                </select>
+                            } 
+                            {cmsUserList.length == 0 &&
                             <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value) } //
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                 <option>請選擇服務使用者</option>
@@ -1461,6 +1495,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 }
                                 <option value={-1}>沒有服務使用者紀錄</option>
                             </select>
+                            }
                         </div>
                     </div>
 
