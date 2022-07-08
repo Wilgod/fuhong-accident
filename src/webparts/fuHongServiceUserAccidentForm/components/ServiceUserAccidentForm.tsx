@@ -1271,7 +1271,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         let filter = userlist.results.filter(item => {return item.cr98a_namecn == '尹天仇'})
         for (let user of userlist.results) {
             cmsuser.push({
-                "ServiceNumber" : user,
+                "ServiceNumber" : user.cr98a_draftcasenumber,
                 "Age":user.cr98a_age,
                 "NameCN":user.cr98a_namecn,
                 "NameEN":user.cr98a_nameen,
