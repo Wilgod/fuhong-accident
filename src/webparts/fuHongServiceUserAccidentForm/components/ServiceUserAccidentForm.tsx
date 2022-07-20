@@ -1180,7 +1180,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
             // Service Unit
             setServiceUnit(data.ServiceUnit);
-
+            changeCMSUser(data.ServiceUnit);
             //Service User
             setServiceUserRecordId(data.ServiceUser);
 
@@ -1268,17 +1268,25 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         setPatientServiceUnit(value);
         let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
         let cmsuser = []
-        let filter = userlist.results.filter(item => {return item.cr98a_namecn == '尹天仇'})
         for (let user of userlist.results) {
+            if (user.cr98a_mentalretarded != 111910000) {
+                debugger
+            }
+            if (user.cr98a_wheelchairspecialchairandrelatedac != 111910006) {
+                debugger
+            }
             cmsuser.push({
-                "ServiceNumber" : user.cr98a_draftcasenumber,
+                "ServiceNumber" : user.cr98a_filenumber,
                 "Age":user.cr98a_age,
                 "NameCN":user.cr98a_namecn,
                 "NameEN":user.cr98a_nameen,
-                "Sex": user.cr98a_sex == "111910000" ? "M":"F",
+                "Sex": user.cr98a_sex == "111910000" ? "female":"male",
                 "Filenumber":user.cr98a_filenumber,
                 "Serviceproduct":user.cr98a_serviceproduct,
-                
+                "Mentalretarded":user.cr98a_mentalretarded,//智障
+                "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
+                "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
+                "Wheelchairtypes":user.cr98a_wheelchairtypes, //輪椅
             })
         }
         setCmsUserList(cmsuser)
@@ -1286,7 +1294,35 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     async function getCMSUserDetail(value) {
-
+        /*cmsuser.push({
+            "ServiceNumber" : user.cr98a_filenumber,
+            "Age":user.cr98a_age,
+            "NameCN":user.cr98a_namecn,
+            "NameEN":user.cr98a_nameen,
+            "Sex": user.cr98a_sex == "111910000" ? "M":"F",
+            "Filenumber":user.cr98a_filenumber,
+            "Serviceproduct":user.cr98a_serviceproduct,
+            "Mentalretarded":user.cr98a_mentalretarded,//智障
+            "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
+            "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
+            "Wheelchairtypes":user.cr98a_wheelchairtypes, //輪椅
+        })*/
+        debugger
+        let selectUser = cmsUserList.filter(item => {return item.ServiceNumber == value});
+        if (selectUser.length > 0) {
+            setServiceUserNameEN(selectUser[0].NameEN);
+            setServiceUserNameCN(selectUser[0].NameCN);
+            setServiceUserAge(selectUser[0].Age);
+            setServiceUserGender(selectUser[0].Sex);
+            setServiceUserId(value);
+            setServiceCategory(selectUser[0].Serviceproduct);
+            setAsd(selectUser[0].Autismspectrum);
+            if (selectUser[0].Mentalretarded != 111910000) {
+                setIntelligence(selectUser[0].Mentallyretardedlive);
+            }
+            
+        }
+        
     }
 
     const emailToChangeHandler = (event) => {
@@ -1320,6 +1356,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setServiceUnit(userInfo.hr_deptid);
                 setServiceLocation(userInfo.hr_location);
                 setPatientServiceUnit(userInfo.hr_deptid);
+                changeCMSUser(userInfo.hr_deptid);
             }
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
@@ -1337,12 +1374,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     useEffect(() => {
         // Testing data;
         if (formInitial(currentUserRole, formStatus)) {
-            if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            /*if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
                 setHrDepartment("CHH");
                 setServiceUnit("CHH");
                 setPatientServiceUnit("CHH")
                 return;
-            }
+            }*/
 
             
         }
@@ -1412,6 +1449,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }, [serviceUser, serviceUserRecordId]);
     console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
+    console.log('serviceUnit',serviceUnit);
+    
     return (
         <>
             {
