@@ -103,6 +103,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [emailTo, setEmailTo] = useState("");
     const [emailBody, setEmailBody] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
+
+    const [loadingService, setLoadingService] = useState(false);
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
         injuredArea: [],
@@ -207,17 +209,18 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["ServiceUserNameCN"] = serviceUserNameCN;
         body["ServiceUserAge"] = serviceUserAge;
         body["ServiceUserGender"] = serviceUserGender;
-        body["ServiceUserId"] = serviceUserId;
+        body["ServiceUserId"] = serviceUserId.toString();
         body["ServiceCategory"] = serviceCategory;
         body["Wheelchair"] = wheelchair;
         body["ASD"] = asd;
         body["Intelligence"] = intelligence;
-
+        
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUser"] = serviceUserRecordId;
         } else {
             error["ServiceUser"] = true;
         }
+        debugger
         //填寫人服務單位
         body["ServiceUnit"] = serviceUnit;
 
@@ -1095,7 +1098,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const loadData = async (data: any) => {
         
         if (data) {
-
+            debugger
             setServiceUserNameCN(data.ServiceUserNameCN);
             setServiceUserNameEN(data.ServiceUserNameEN);
             setServiceUserAge(data.ServiceUserAge);
@@ -1180,7 +1183,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
             // Service Unit
             setServiceUnit(data.ServiceUnit);
-            changeCMSUser(data.ServiceUnit);
+            debugger
+            changeCMSUser(data.ServiceUserUnit, false);
             //Service User
             setServiceUserRecordId(data.ServiceUser);
 
@@ -1263,33 +1267,61 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
     }
 
-    async function changeCMSUser(value) {
+    async function changeCMSUser(value, clean) {
         debugger
-        setPatientServiceUnit(value);
+        
+        setLoadingService(true);
+        if (clean) {
+            setServiceUserNameEN("");
+            setServiceUserNameCN("");
+            setServiceUserAge(0);
+            setServiceUserGender("");
+            setServiceUserId("");
+            setServiceCategory("");
+            setAsd(undefined);
+            setWheelchair(undefined)
+            setIntelligence("");
+            setPatientServiceUnit(value);
+        }
+        
         let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
         let cmsuser = []
         for (let user of userlist.results) {
-            if (user.cr98a_mentalretarded != 111910000) {
+            /*if (user.cr98a_mentalretarded != 111910000) {
                 debugger
             }
             if (user.cr98a_wheelchairspecialchairandrelatedac != 111910006) {
                 debugger
+            }*/
+            let mentalretarded = ""
+            if (user.cr98a_mentalretarded == 111910000) {
+                mentalretarded = "EXTREME_SEVERE";
+            } else if (user.cr98a_mentalretarded == 111910001) {
+                mentalretarded = "SEVERE";
+            } else if (user.cr98a_mentalretarded == 111910002) {
+                mentalretarded = "MODERATE";
+            } else if (user.cr98a_mentalretarded == 111910003) {
+                mentalretarded = "MILD";
+            } else if (user.cr98a_mentalretarded == 111910004) {
+                mentalretarded = "UNKNOWN";
             }
             cmsuser.push({
                 "ServiceNumber" : user.cr98a_filenumber,
-                "Age":user.cr98a_age,
+                "Age":parseInt(user.cr98a_age),
                 "NameCN":user.cr98a_namecn,
                 "NameEN":user.cr98a_nameen,
                 "Sex": user.cr98a_sex == "111910000" ? "female":"male",
                 "Filenumber":user.cr98a_filenumber,
                 "Serviceproduct":user.cr98a_serviceproduct,
-                "Mentalretarded":user.cr98a_mentalretarded,//智障
+                "Mentalretarded":mentalretarded,//智障
                 "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
                 "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
-                "Wheelchairtypes":user.cr98a_wheelchairtypes, //輪椅
+                "Wheelchairtypes":user.cr98a_wheelchairspecialchairandrelatedac == 111910006 ? false:true, //輪椅
+                "ServiceCategory":"住宿"
             })
         }
         setCmsUserList(cmsuser)
+        setLoadingService(false);
         debugger
     }
 
@@ -1315,12 +1347,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(selectUser[0].Age);
             setServiceUserGender(selectUser[0].Sex);
             setServiceUserId(value);
-            setServiceCategory(selectUser[0].Serviceproduct);
+            setServiceCategory(selectUser[0].ServiceCategory);
             setAsd(selectUser[0].Autismspectrum);
-            if (selectUser[0].Mentalretarded != 111910000) {
-                setIntelligence(selectUser[0].Mentallyretardedlive);
-            }
-            
+            setWheelchair(selectUser[0].Wheelchairtypes);
+            setIntelligence(selectUser[0].Mentalretarded);
+            setServiceUserRecordId(selectUser[0].ServiceNumber);
         }
         
     }
@@ -1356,7 +1387,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setServiceUnit(userInfo.hr_deptid);
                 setServiceLocation(userInfo.hr_location);
                 setPatientServiceUnit(userInfo.hr_deptid);
-                changeCMSUser(userInfo.hr_deptid);
+                changeCMSUser(userInfo.hr_deptid, true);
             }
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
@@ -1425,6 +1456,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setIntelligence(formData.Intelligence);
             setAsd(formData.ASD);
         } else if (serviceUserRecordId === -1) {
+            debugger
             setServiceUserNameCN("");
             setServiceUserNameEN("");
             setServiceUserAge(0);
@@ -1472,8 +1504,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             </select> */}
                             {/* <input type="text" className="form-control" value={userInfo && userInfo.hr_location || ""} disabled /> */}
                             {/* <input type="text" className="form-control" value={serviceUnit || ""} disabled /> */}
-                            <select className={`custom-select ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { changeCMSUser(event.target.value) }}//setPatientServiceUnit(event.target.value)
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                            <select className={`custom-select ${(error && error['ServiceUserUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { changeCMSUser(event.target.value, true) }}//setPatientServiceUnit(event.target.value)
+                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)) || loadingService}
                             >
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >=0 &&
@@ -1513,7 +1545,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <div className="col-12 col-xl-4">
                             {cmsUserList.length > 0 &&
                                 <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => getCMSUserDetail(+event.target.value) } //
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
+                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)) || loadingService}>
                                     <option>請選擇服務使用者</option>
                                     {
                                         cmsUserList.map((user) => {
@@ -1525,11 +1557,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             } 
                             {cmsUserList.length == 0 &&
                             <select className={`custom-select ${(error && error['ServiceUser'] ) ? "is-invalid": ""}`} value={serviceUserRecordId} onChange={(event) => setServiceUserRecordId(+event.target.value) } //
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
+                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)) || loadingService}>
                                 <option>請選擇服務使用者</option>
                                 {
                                     serviceUserList.map((user) => {
-                                        return <option value={user.ID}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
+                                        return <option value={user.ServiceNumber}>{`${user.ServiceNumber} - ${user.NameCN}`}</option>
                                     })
                                 }
                                 <option value={-1}>沒有服務使用者紀錄</option>

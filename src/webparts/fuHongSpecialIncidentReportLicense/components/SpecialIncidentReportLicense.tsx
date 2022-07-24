@@ -148,6 +148,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [emailTo, setEmailTo] = useState("");
     const [emailBody, setEmailBody] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
+
+    const [disabled1, setDisabled1] = useState(false);
+    const [disabledEx1, setDisabledEx1] = useState(true);
+    const [disabled2, setDisabled2] = useState(false);
+    const [disabledEx2, setDisabledEx2] = useState(true);
+    const [disabled3, setDisabled3] = useState(false);
+    const [disabledEx3, setDisabledEx3] = useState(true);
+    const [disabled4, setDisabled4] = useState(false);
+    const [disabled5, setDisabled5] = useState(false);
+    const [disabled6, setDisabled6] = useState(false);
+    const [disabled7, setDisabled7] = useState(false);
     const uploadFile = async (id: number) => {
         try {
             let att: IAttachmentFileInfo[] = [];
@@ -205,16 +216,501 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         const name = event.target.name;
         const value = event.target.value;
         const arr = form[name];
-        if (Array.isArray(arr)) {
-            if (arr.indexOf(value) > -1) {
-                const result = arr.filter((item) => item !== value);
-                setForm({ ...form, [name]: result });
-            } else {
-                setForm({ ...form, [name]: [...arr, value] });
-            }
+        let inputValue = ""
+        if (value != arr) {
+            inputValue = value
         }
+        let police = form.police;
+        let policeDatetime = form.policeDatetime;
+        let policeReportNumber = form.policeReportNumber;
+        let policeInvestigateDate = form.policeInvestigateDate;
+        let policeInvestigate = form.policeInvestigate
+        if (name == 'unusalIncident') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+                police = undefined;
+                policeDatetime = null;
+                policeReportNumber = ""
+                policeInvestigateDate = null;
+                policeInvestigate = undefined
+            } else {
+                setDisabled1(false);
+                setDisabledEx1(false);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(true);
+                setDisabled7(true);
+            }
+            
+            let unusalIncideintGeneral = form.unusalIncideintGeneral;
+            let unusalIncideintIncident = form.unusalIncideintIncident;
+            if (value != "UNUSAL_INCIDENT_GENERAL" || (inputValue == "" && value == "UNUSAL_INCIDENT_GENERAL")) {
+                unusalIncideintGeneral = ""
+            }
+            if (value != "UNUSAL_INCIDENT_OTHER" || (inputValue == "" && value == "UNUSAL_INCIDENT_OTHER")) {
+                unusalIncideintIncident = "";
+            }
+
+            setForm({ ...form, 
+                [name]: inputValue,
+                //part 1
+                ["unusalIncideintGeneral"]: unusalIncideintGeneral,
+                ["unusalIncideintIncident"]: unusalIncideintIncident,
+                ["police"]: police,
+                ["policeDatetime"]: policeDatetime,
+                ["policeReportNumber"]: policeReportNumber,
+                ["policeInvestigateDate"]: policeInvestigateDate,
+                ["policeInvestigate"]: policeInvestigate,
+                //part 2
+                ["residentMissing"]: "",
+                ["missingPoliceDate"]:null,
+                ["missingPoliceReportNo"]:"",
+                ["foundDate"]:null,
+                ["found"]:undefined,
+                ["notYetFoundDayCount"]:null,
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+             });
+            if (value != "UNUSAL_INCIDENT_COURT") {
+                setSubpoenaFile(null)
+            }
+        } else if (name == 'residentMissing') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(false);
+                setDisabled3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(true);
+                setDisabled7(true);
+            }
+            let residentMissingReason = form.residentMissingReason;
+            if (value != "RESIDENT_MISSING_OUTSIDE" || (inputValue == "" && value == "RESIDENT_MISSING_OUTSIDE")) {
+                residentMissingReason = ""
+            }
+            let found = form.found;
+            let foundDate = form.foundDate;
+            let notYetFoundDayCount = form.notYetFoundDayCount;
+            let medicalRecords = form.medicalRecords;
+            if (inputValue == "") {
+                found = undefined;
+                foundDate = null;
+                notYetFoundDayCount = null;
+                medicalRecords = "";
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                //part 1
+                ["unusalIncident"]:"",
+                ["unusalIncideintGeneral"]:"",
+                ["unusalIncideintIncident"]:"",
+                ["police"]: undefined,
+                ["policeDatetime"]: null,
+                ["policeReportNumber"]: "",
+                ["policeInvestigateDate"]: null,
+                ["policeInvestigate"]: undefined,
+                //part 2
+                ["residentMissingReason"]: residentMissingReason,
+                ["foundDate"]:foundDate,
+                ["found"]:found,
+                ["notYetFoundDayCount"]:notYetFoundDayCount,
+                ["medicalRecords"]:medicalRecords,
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+            });
+            setSubpoenaFile(null)
+        } else if (name == 'abuser') {
+            setForm({ ...form,
+                [name]: inputValue
+            });
+        } else if (name == 'conflict') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(true);
+                setDisabled6(true);
+                setDisabled7(true);
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:""
+            });
+        } else if (name == 'medicalIncident') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(true);
+                setDisabled5(false);
+                setDisabled6(true);
+                setDisabled7(true);
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                //part2
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+            });
+        } else if (name == 'otherIncident') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(false);
+                setDisabled7(true);
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                //part2
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+            });
+        } else if (name == 'otherIncident') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(false);
+                setDisabled7(true);
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                //part2
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+            });
+        } else if (name == 'other') {
+            if (inputValue == "") {
+                setDisabled1(false);
+                setDisabledEx1(true);
+                setDisabled2(false);
+                setDisabledEx2(true);
+                setDisabled3(false);
+                setDisabledEx3(true);
+                setDisabled4(false);
+                setDisabled5(false);
+                setDisabled6(false);
+                setDisabled7(false);
+            } else {
+                setDisabled1(true);
+                setDisabledEx1(true);
+                setDisabled2(true);
+                setDisabledEx2(true);
+                setDisabled3(true);
+                setDisabledEx3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(false);
+                setDisabled7(true);
+            }
+            setForm({ ...form,
+                [name]: inputValue,
+                //part2
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+            });
+        }
+
     }
 
+    const checkboxHandler1 = (event, value) => {
+        const name = event.target.name;
+        //const value = event.target.value;
+        const arr = form[name];
+        let inputValue = false
+        if (value != arr) {
+            inputValue = value
+        }
+
+        if (inputValue) {
+            setForm({ ...form, [name]: true });
+        } else {
+            if (name == 'police') {
+                setForm({ ...form, 
+                    [name]: false,
+                    ["policeReportNumber"]: undefined,
+                    ["policeDatetime"]: null, });
+            } else if (name == 'policeInvestigate') {
+                setForm({ ...form, 
+                    [name]: false,
+                    ["policeInvestigateDate"]: undefined
+                });
+            }
+        }  
+    }
+
+    const checkboxHandler2 = (event, value) => {
+        const name = event.target.name;
+        //const value = event.target.value;
+        const arr = form[name];
+        let inputValue = false;
+        debugger
+        if (value != arr) {
+            inputValue = value;
+            setDisabled1(true);
+            setDisabledEx1(true);
+            setDisabled2(true);
+            setDisabledEx2(true);
+            setDisabled3(true);
+            setDisabledEx3(true);
+            setDisabled4(true);
+            setDisabled5(true);
+            setDisabled6(true);
+            setDisabled7(false);
+            if (inputValue) {
+                setForm({ ...form, 
+                ["other"]: true,
+                //part2
+                ["missingPoliceDate"]: null,
+                ["missingPoliceReportNo"]: "",
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+             });
+            } else {
+                setForm({ ...form,  ["other"]: false });
+            }  
+        } else {
+            setDisabled1(false);
+            setDisabledEx1(true);
+            setDisabled2(false);
+            setDisabledEx2(true);
+            setDisabled3(false);
+            setDisabledEx3(true);
+            setDisabled4(false);
+            setDisabled5(false);
+            setDisabled6(false);
+            setDisabled7(false);
+            setForm({ ...form,  ["other"]: undefined });
+        }
+        
+        
+    }
+    const checkboxHandlerResidentAbuse = (event) => {
+        const name = event.target.name;
+        //const value = event.target.value;
+        const arr = form[name];
+        let trueTotal = 0;
+        if (name == "ra_body") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_mental || form.ra_negligent || form.ra_embezzleProperty || form.ra_abandoned || form.ra_sexualAssault || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_mental") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body || form.ra_negligent || form.ra_embezzleProperty || form.ra_abandoned || form.ra_sexualAssault || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_negligent") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body ||form.ra_mental || form.ra_embezzleProperty || form.ra_abandoned || form.ra_sexualAssault || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_embezzleProperty") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body ||form.ra_mental || form.ra_negligent || form.ra_abandoned || form.ra_sexualAssault || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_abandoned") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body ||form.ra_mental || form.ra_negligent || form.ra_embezzleProperty || form.ra_sexualAssault || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_sexualAssault") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body ||form.ra_mental || form.ra_negligent || form.ra_embezzleProperty || form.ra_abandoned || form.ra_other) {
+                trueTotal++;
+            }
+        } else if (name == "ra_other") {
+            if (!arr) {
+                trueTotal++;
+            }
+            if (form.ra_body ||form.ra_mental || form.ra_negligent || form.ra_embezzleProperty || form.ra_abandoned || form.ra_sexualAssault) {
+                trueTotal++;
+            }
+        }
+        debugger
+        if (trueTotal > 0) {
+            setDisabled1(true);
+            setDisabledEx1(true);
+            setDisabled2(true);
+            setDisabledEx2(true);
+            setDisabled3(false);
+            setDisabledEx3(false);
+            setDisabled4(true);
+            setDisabled5(true);
+            setDisabled6(true);
+            setDisabled7(true);
+            setForm({ ...form, 
+                [name]: !arr,
+                ["unusalIncident"]:"",
+                ["unusalIncideintGeneral"]:"",
+                ["unusalIncideintIncident"]:"",
+                ["police"]: undefined,
+                ["policeDatetime"]: null,
+                ["policeReportNumber"]: "",
+                ["policeInvestigateDate"]: null,
+                ["policeInvestigate"]: undefined,
+                //part 2
+                ["residentMissingReason"]: "",
+                ["residentMissing"]: "",
+                ["missingPoliceDate"]:null,
+                ["missingPoliceReportNo"]:"",
+                ["foundDate"]:null,
+                ["found"]:undefined,
+                ["notYetFoundDayCount"]:null,
+                ["medicalRecords"]:"",
+                //part 4
+                ["conflict_policeDate"]:null,
+                ["conflict_policeCaseNo"]:""
+             });
+        } else {
+            setDisabled1(false);
+            setDisabledEx1(true);
+            setDisabled2(false);
+            setDisabledEx2(true);
+            setDisabled3(false);
+            setDisabledEx3(true);
+            setDisabled4(false);
+            setDisabled5(false);
+            setDisabled6(false);
+            setDisabled7(false);
+            setForm({ ...form, 
+                [name]: !arr,
+                ["abuser"]:"",
+                ["referSocialWorker"]:undefined,
+                ["referDate"]:null,
+                ["referServiceUnit"]:"",
+                ["abuser_police"]:undefined,
+                ["abuser_policeDate"]:null,
+                ["abuser_policeCaseNo"]:""
+            });
+        }
+        
+            
+    }
+    
     const inputFieldHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -899,6 +1395,15 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
 
+            if (formData.Status != "DRAFT") {
+                setDisabled1(true);
+                setDisabled2(true);
+                setDisabled3(true);
+                setDisabled4(true);
+                setDisabled5(true);
+                setDisabled6(true);
+                setDisabled7(true);
+            }
             setSmComment(formData.SMComment);
             if (formData.SMDate) {
                 setSmDate(new Date(formData.SMDate));
@@ -1155,9 +1660,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }, [reporter])
     
-    console.log('departmentList',departmentList);
-    console.log('isPrintMode',isPrintMode);
-    console.log('reporter',reporter);
+    //console.log('departmentList',departmentList);
+    //console.log('isPrintMode',isPrintMode);
+    //console.log('reporter',reporter);
+    console.log('pendingSmApprove',!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo));
+    console.log('formInitial',!formInitial(currentUserRole, formStatus));
+    console.log('disabled1',disabled1);
+    console.log('final',!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus) && disabled1);
     return (
         <>
 
@@ -1300,8 +1809,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className={`col`}>
 
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
+                                <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院後死亡</label>
                             </div>
                             {
@@ -1313,13 +1822,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 </div>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-suicide" value="UNUSAL_INCIDENT_SUICIDE" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
+                                <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-suicide" value="UNUSAL_INCIDENT_SUICIDE" onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-suicide">在院舍內自殺及送院後死亡</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-other" value="UNUSAL_INCIDENT_OTHER" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
+                                <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-other" value="UNUSAL_INCIDENT_OTHER" onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-other">其他不尋常死亡／事故</label>
                             </div>
                             {
@@ -1331,8 +1840,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 </div>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="unusalIncident" id="unusal-incident-court" value="UNUSAL_INCIDENT_COURT" onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
+                                <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-court" value="UNUSAL_INCIDENT_COURT" onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-court">接獲死因裁判法庭要求出庭的傳票<br />(請夾附傳票副本並在附頁說明詳情)</label>
                             </div>
                             {
@@ -1364,13 +1873,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* 報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1a)</label>
                         <div className={`col`}>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="police" id="police-true" onChange={(e) => checkboxHandler1(e,true)} checked={form.police === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">已報警求助</label>
                             </div>
                             {
@@ -1389,20 +1898,20 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 </>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="police" id="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="police" id="police-false" onChange={(e) => checkboxHandler1(e,false)} checked={form.police === false}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有報警求助</label>
                             </div>
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* 警方到院舍調查日期及時間 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1b) 警方到院舍調查日期及時間</label>
                         <div className={`col`}>
                             <div className="form-check">
-                                <input className={"form-check-input"} type="radio" name="policeInvestigate" id="police-investigate-true" onClick={() => setForm({ ...form, policeInvestigate: true })} checked={form.policeInvestigate === true}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className={"form-check-input"} type="checkbox" name="policeInvestigate" id="police-investigate-true" value={"true"} onChange={(e) => checkboxHandler1(e,true)} checked={form.policeInvestigate === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-true">有</label>
                             </div>
                             {
@@ -1416,25 +1925,25 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 </>
                             }
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="policeInvestigate" id="police-investigate-false" onClick={() => setForm({ ...form, policeInvestigate: false })} checked={form.policeInvestigate === false}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="policeInvestigate" id="police-investigate-false" value={"false"} onChange={(e) => checkboxHandler1(e,false)} checked={form.policeInvestigate === false}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-false">沒有</label>
                             </div>
                         </div>
                     </div>
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (2) 住客失蹤以致需要報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2) 住客失蹤以致需要報警求助</label>
                         <div className={`col ${(error && error['ResidentMissing']) ? styles.divInvalid: ""}`}>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_INSIDE'} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_INSIDE'} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-inside">住客擅自／在員工不知情下離開院舍</label>
                             </div>
                             <div className="form-check mb-2">
-                                <input className="form-check-input" type="radio" name="residentMissing" id="resident-missing-outside" value="RESIDENT_MISSING_OUTSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_OUTSIDE'} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="residentMissing" id="resident-missing-outside" value="RESIDENT_MISSING_OUTSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_OUTSIDE'} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-outside">院外活動期間失蹤</label>
                             </div>
                             {
@@ -1461,23 +1970,23 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="mb-1">
                                 <label>報警日期</label>
                                 <DatePicker className={`form-control ${(error && error['MissingPoliceDate']) ? "is-invalid": ""}`} selected={form.missingPoliceDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, missingPoliceDate: date })}
-                                    readOnly={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    readOnly={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                             </div>
                             <div>
                                 <label>報警編號</label>
                                 <AutosizeTextarea className={`form-control ${(error && error['MissingPoliceReportNo']) ? "is-invalid": ""}`} value={form.missingPoliceReportNo} onChange={inputFieldHandler} name="missingPoliceReportNo"
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                             </div>
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (2a) */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2a)</label>
                         <div className="col">
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="residentMissingFound" id="resident-missing-found-true" onClick={() => setForm({ ...form, found: true })} checked={form.found === true}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="residentMissingFound" id="resident-missing-found-true" onClick={() => setForm({ ...form, found: true })} checked={form.found === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-true">已尋回</label>
                             </div>
                             {
@@ -1489,8 +1998,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 </div>
                             }
                             <div className="form-check">
-                                <input className={`form-check-input`} type="radio" name="residentMissingFound" id="resident-missing-found-false" onClick={() => setForm({ ...form, found: false })} checked={form.found === false}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className={`form-check-input`} type="checkbox" name="residentMissingFound" id="resident-missing-found-false" onClick={() => setForm({ ...form, found: false })} checked={form.found === false}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-false">仍未尋回</label>
                             </div>
                             {
@@ -1510,52 +2019,52 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
 
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (2b) 失蹤住客病歷 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2b) 失蹤住客病歷</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="medicalRecords" value={form.medicalRecords} onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                         </div>
                     </div>
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-body" checked={form.ra_body === true} onClick={() => setForm({ ...form, ra_body: !form.ra_body })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_body" id="resident-abuse-body" onChange={checkboxHandlerResidentAbuse} checked={form.ra_body === true} 
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-body">身體虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-mental" checked={form.ra_mental === true} onClick={() => setForm({ ...form, ra_mental: !form.ra_mental })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_mental" id="resident-abuse-mental" onChange={checkboxHandlerResidentAbuse} checked={form.ra_mental === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-mental">精神虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-negligent" checked={form.ra_negligent === true} onClick={() => setForm({ ...form, ra_negligent: !form.ra_negligent })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_negligent" id="resident-abuse-negligent" onChange={checkboxHandlerResidentAbuse} checked={form.ra_negligent === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-negligent">疏忽照顧</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-embezzle-property" checked={form.ra_embezzleProperty === true} onClick={() => setForm({ ...form, ra_embezzleProperty: !form.ra_embezzleProperty })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_embezzleProperty" id="resident-abuse-embezzle-property" onChange={checkboxHandlerResidentAbuse} checked={form.ra_embezzleProperty === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-embezzle-property">侵吞財產</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-abandoned" checked={form.ra_abandoned === true} onClick={() => setForm({ ...form, ra_abandoned: !form.ra_abandoned })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_abandoned" id="resident-abuse-abandoned" onChange={checkboxHandlerResidentAbuse} checked={form.ra_abandoned === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-abandoned">遺棄</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-sexual-assault" checked={form.ra_sexualAssault === true} onClick={() => setForm({ ...form, ra_sexualAssault: !form.ra_sexualAssault })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_sexualAssault" id="resident-abuse-sexual-assault" onChange={checkboxHandlerResidentAbuse} checked={form.ra_sexualAssault === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-sexual-assault">非禮／性侵犯</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="checkbox" name="residentAbuse" id="resident-abuse-other" checked={form.ra_other === true} onClick={() => setForm({ ...form, ra_other: !form.ra_other })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="ra_other" id="resident-abuse-other" onChange={checkboxHandlerResidentAbuse} checked={form.ra_other === true}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-other">其他</label>
                             </div>
                             {
@@ -1566,28 +2075,28 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (3a) 施虐者／懷疑施虐者的身份 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3a) 施虐者／懷疑施虐者的身份</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={radioButtonHandler} checked={form.abuser === "ABUSER_STAFF"}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={checkboxHandler} checked={form.abuser === "ABUSER_STAFF"}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-staff">員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="abuser" id="abuser-tenant" value="ABUSER_TENANT" onChange={radioButtonHandler} checked={form.abuser === "ABUSER_TENANT"}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="abuser" id="abuser-tenant" value="ABUSER_TENANT" onChange={checkboxHandler} checked={form.abuser === "ABUSER_TENANT"}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-tenant">住客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="abuser" id="abuser-guest" value="ABUSER_GUEST" onChange={radioButtonHandler} checked={form.abuser === "ABUSER_GUEST"}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="abuser" id="abuser-guest" value="ABUSER_GUEST" onChange={checkboxHandler} checked={form.abuser === "ABUSER_GUEST"}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-guest">訪客</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="abuser" id="abuser-other" value="ABUSER_OTHER" onChange={radioButtonHandler} checked={form.abuser === "ABUSER_OTHER"}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="abuser" id="abuser-other" value="ABUSER_OTHER" onChange={checkboxHandler} checked={form.abuser === "ABUSER_OTHER"}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-other">其他</label>
                             </div>
                             {
@@ -1598,18 +2107,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (3b)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3b)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="referrals" id="referrals-true" checked={form.referSocialWorker === true} onClick={() => setForm({ ...form, referSocialWorker: true })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="referrals" id="referrals-true" checked={form.referSocialWorker === true} onClick={() => setForm({ ...form, referSocialWorker: true })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-true">已轉介社工</label>
                             </div>
                             {
@@ -1630,18 +2139,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (3c)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === true} onClick={() => setForm({ ...form, abuser_police: true })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === true} onClick={() => setForm({ ...form, abuser_police: true })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-true">已報警求助</label>
                             </div>
                             {
@@ -1661,44 +2170,44 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (4) 院舍內有爭執事件以致需要報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(4) 院舍內有爭執事件以致需要報警求助</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_TENANT"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_TENANT"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-tenant">住客與住客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_STAFF"}onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_STAFF"}onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-staff">住客與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_GUEST"}onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_GUEST"}onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-guest">住客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_STAFF"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_STAFF"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-staff">員工與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_GUEST"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_GUEST"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-guest">員工與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_GUEST_AND_GUEST"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_GUEST_AND_GUEST"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-guest-and-guest">訪客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="conflict" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" checked={form.conflict === "DISPUTE_POLICE_OTHER"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" checked={form.conflict === "DISPUTE_POLICE_OTHER"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-other">其他 (請註明)</label>
                             </div>
                             {
@@ -1711,38 +2220,38 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="mb-1">
                                 <label>報警日期</label>
                                 <DatePicker className={`form-control ${(error && error['Conflict_PoliceDate']) ? "is-invalid": ""}`} selected={form.conflict_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, conflict_policeDate: date })}
-                                    readOnly={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    readOnly={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                             </div>
                             <div>
                                 <label>報案編號</label>
                                 <input className={`form-control ${(error && error['Conflict_PoliceCaseNo']) ? "is-invalid": ""}`} name="conflict_policeCaseNo" value={form.conflict_policeCaseNo} onChange={inputFieldHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                             </div>
                         </div>
                     </div>
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」） */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(5) 嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）</label>
                         <div className="col">
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_MISTAKE"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_MISTAKE"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-mistake">住客誤服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-over-or-missed">住客漏服或多服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-counter-drug">住客服用成藥或非處方藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="medicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-other">其他</label>
                             </div>
                             {
@@ -1754,34 +2263,34 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(6) 其他重大特別事故以致影響院舍日常運作</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_POWER_SUPPLY"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_POWER_SUPPLY"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-power-supply">停止電力供應</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" checked={form.otherIncident === "OTHER_INCIDENT_BUILDING"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" checked={form.otherIncident === "OTHER_INCIDENT_BUILDING"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-building">樓宇破損或結構問題</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" checked={form.otherIncident === "OTHER_INCIDENT_FIRE"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" checked={form.otherIncident === "OTHER_INCIDENT_FIRE"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-fire">火警</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_WATER_SUPPLY"} onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_WATER_SUPPLY"} onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-water-supply">停止食水供應</label>
                             </div>
                             <div className="form-check">
-                                <input className="form-check-input" type="radio" name="otherIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" checked={form.otherIncident === "OTHER_INCIDENT_OTHER"}     onChange={radioButtonHandler}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" checked={form.otherIncident === "OTHER_INCIDENT_OTHER"}  onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-other">水浸／山泥傾瀉／其他天災意外</label>
                             </div>
                             {/* {
@@ -1793,19 +2302,19 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                     </div>
 
-
-                    <div className="form-row mb-2">
+                    <hr/>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (7) 其他 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(7) 其他</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="other" id="other-incident-true" checked={form.other === true} onClick={() => setForm({ ...form, other: true })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="other" id="other-incident-true" checked={form.other === true} onChange={(e) => checkboxHandler2(e,true)}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="other" id="other-incident-false" checked={form.other === false} onClick={() => setForm({ ...form, other: false })}
-                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <input className="form-check-input" type="checkbox" name="other" id="other-incident-false" checked={form.other === false} onChange={(e) => checkboxHandler2(e,false)}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-false">沒有</label>
                             </div>
                             {

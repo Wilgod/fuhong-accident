@@ -280,13 +280,13 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             } else {
                 error["PoliceReportNumber"] = true;
             }
-        } else if (form.police === false) {
+        }/* else if (form.police === false) {
             if (form.policeDescription) {
                 body["PoliceDescription"] = form.policeDescription;
             } else {
                 error["PoliceDescription"] = true;
             }
-        } else if (form.police === undefined) {
+        }*/ else if (form.police === undefined) {
             error["Police"] = true;
         }
 
@@ -1460,11 +1460,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     </div>
                                 </>
                             }
-                            {
+                            {/*
                                 form.police === false &&
                                 <AutosizeTextarea className={`form-control ${(error &&error['PoliceDescription'] ) ? "is-invalid": ""}`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                            }
+                        */}
                         </div>
                     </div>
                     <div className="form-row mb-4">

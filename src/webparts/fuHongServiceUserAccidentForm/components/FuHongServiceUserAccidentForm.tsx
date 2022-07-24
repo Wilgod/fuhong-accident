@@ -107,7 +107,6 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
-    debugger
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
     const cmsUserWorkflow = await getCMSUserWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
@@ -195,7 +194,6 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         const contactStaff = await getUserAdByGraph(data.ContactFamilyStaff.EMail);
         const author = await getUserAdByGraph(data.Author.EMail);
         const investigator = data.Investigator != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
-        debugger
         data["ContactStaff"] = contactStaff;
         data["Author"] =author;
         data["InvestigatorAD"] =investigator;
