@@ -340,9 +340,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         } else if (form.carePlan === false) {
             if (form.carePlanNoDescription) {
                 body["CarePlanNoDescription"] = form.carePlanNoDescription;
-            } else {
+            }/* else {
                 error["CarePlanNoDescription"] = true;
-            }
+            }*/
         } else if (form.carePlan === undefined) {
             error["CarePlan"] = true;
         }
@@ -779,7 +779,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "CaseNumber": formData.CaseNumber,
                 "SMId": formData.SMId,
                 "SDId": formData.SDId,
-                "Title": "事故跟主/結束報告 - 1"
+                "Title": "事故跟進/結束報告 - 第1篇"
             }).then((incidentFollowUpRes) => {
                 updateSpecialIncidentReportAllowance(formData.Id, {
                     "NextDeadline": addMonths(new Date(), 1).toISOString(),

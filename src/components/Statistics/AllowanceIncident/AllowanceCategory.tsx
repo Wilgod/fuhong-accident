@@ -2228,11 +2228,11 @@ function AllowanceCategory(siteCollectionUrl) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["事故類別", "數量"],
-                                            ["服務使用者不尋常死亡／嚴重受傷導致死亡", categoryDataset.accidentCategoryUnusualDeath],
-                                            ["服務使用者失踪而需要報警求助", categoryDataset.accidentCategoryMissing],
-                                            ["已確立／懷疑有服務使用者被職員／其他服務使用者虐待", categoryDataset.accidentCategoryAbuse],
-                                            ["爭執以致有人身體受傷而需要報警求助", categoryDataset.accidentCategoryConflict],
-                                            ["其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注", categoryDataset.accidentCategoryOther],
+                                            ["不尋常死亡", categoryDataset.accidentCategoryUnusualDeath],
+                                            ["失踪", categoryDataset.accidentCategoryMissing],
+                                            ["被虐待", categoryDataset.accidentCategoryAbuse],
+                                            ["爭執致傷", categoryDataset.accidentCategoryConflict],
+                                            ["其他嚴重事故", categoryDataset.accidentCategoryOther],
                                         ]}
                                         options={{
                                             chart: {
@@ -2260,6 +2260,20 @@ function AllowanceCategory(siteCollectionUrl) {
                                         width={'100%'}
                                         height={'600px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        options={{
+                                            legend: {
+                                                position: 'labeled',
+                                                textStyle: {
+                                                  fontName: 'monospace',
+                                                  fontSize: 9
+                                                }
+                                              },
+                                              pieSliceTextStyle: {
+                                                fontSize: 8
+                                              },
+                                              sliceVisibilityThreshold: 0
+
+                                        }}
                                         data={[
                                             ["事故類別", "數量"],
                                             ["服務使用者不尋常死亡／嚴重受傷導致死亡", categoryDataset.accidentCategoryUnusualDeath],

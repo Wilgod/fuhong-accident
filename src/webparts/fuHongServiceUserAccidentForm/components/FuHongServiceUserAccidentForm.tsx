@@ -191,10 +191,15 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       const formId = getQueryParameterNumber("formId");
       if (formId) {
         const data = await getServiceUserAccidentById(formId);
-        const contactStaff = await getUserAdByGraph(data.ContactFamilyStaff.EMail);
+        debugger
+        let contactStaff = null;
+        if (data.ContactFamilyStaffId != null) {
+          contactStaff = await getUserAdByGraph(data.ContactFamilyStaff.EMail);
+          data["ContactStaff"] = contactStaff;
+        }
         const author = await getUserAdByGraph(data.Author.EMail);
         const investigator = data.Investigator != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
-        data["ContactStaff"] = contactStaff;
+        
         data["Author"] =author;
         data["InvestigatorAD"] =investigator;
         let stage = parseInt(data.Stage)-1;
@@ -290,7 +295,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                         <TabList>
                           <Tab onClick={()=>this.tab(0)}>服務使用者意外填報表(一)</Tab>
                           <Tab onClick={()=>this.tab(1)}>服務使用者意外報告(二)</Tab>
-                          <Tab onClick={()=>this.tab(2)}>意外跟進/結束表(三)</Tab>
+                          <Tab onClick={()=>this.tab(2)}>事故跟進/結束報告(三)</Tab>
                         </TabList>
                         <TabPanel>
                           <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} print={this.print} cmsUserWorkflow={this.state.cmsUserWorkflow}/>

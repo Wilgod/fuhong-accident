@@ -54,7 +54,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
 return <>
     <div style={{color:'black'}}>
         <div className={`notPrintable`}>
-        <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+        <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>返回前頁</span></span>
         
         </div>
         {index == 0 &&
@@ -1173,7 +1173,7 @@ return <>
                 </div>
                 
                 <div className={`col-12 font-weight-bold ${styles.header}`}>
-                    意外跟進/結束表(三)
+                    事故跟進/結束報告(三)
                 </div>
                 <div className={`col-12 ${styles.header}`}>
                     服務單位 {ServiceUserUnit}

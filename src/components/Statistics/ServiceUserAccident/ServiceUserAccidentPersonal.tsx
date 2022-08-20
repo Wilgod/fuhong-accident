@@ -2491,6 +2491,20 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                         width={'100%'}
                                         height={'600px'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
+                                        options={{
+                                            legend: {
+                                                position: 'labeled',
+                                                textStyle: {
+                                                  fontName: 'monospace',
+                                                  fontSize: 9
+                                                }
+                                              },
+                                              pieSliceTextStyle: {
+                                                fontSize: 8
+                                              },
+                                              sliceVisibilityThreshold: 0
+
+                                        }}
                                         data={
                                             [
                                                 ["個人因素", "數量"],

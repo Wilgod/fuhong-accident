@@ -375,7 +375,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         "SDId": parentFormData.SDId,
                         "ParentFormId": parentFormData.Id,
                         "CaseNumber": parentFormData.CaseNumber,
-                        "Title": `事故跟主/結束報告 - ${parentFormData.FollowUpFormsId.length + 1}`
+                        "Title": `事故跟進/結束報告 - 第${parentFormData.FollowUpFormsId.length + 1}篇`
                     }).then((createIncidentFollowUpFormRes) => {
                         console.log(createIncidentFollowUpFormRes);
                         if (formType === "OTHER_INCIDENT") {

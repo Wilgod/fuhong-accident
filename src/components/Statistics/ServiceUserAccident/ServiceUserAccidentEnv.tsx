@@ -198,7 +198,7 @@ const financialChartParser = (result) =>{
     let envAcousticStimulation =['聲響刺激'];
     let envCollidedByOthers =['被別人碰撞'];
     let envHurtByOthers =['被別人傷害'];
-    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
+    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當'];
     let envOther =['其他'];
     result.map((item) => {
         dataResult.push(item.financialYear);
@@ -239,7 +239,7 @@ const yearChartParser = (result) =>{
     let envAcousticStimulation =['聲響刺激'];
     let envCollidedByOthers =['被別人碰撞'];
     let envHurtByOthers =['被別人傷害'];
-    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當 (如輪椅／便椅未上鎖)'];
+    let envImproperUseOfAssistiveEquipment =['輔助器材使用不當'];
     let envOther =['其他'];
     result.map((item) => {
         dataResult.push(item.year.toString());
@@ -746,7 +746,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                             <th scope="col">聲響刺激</th>
                                             <th scope="col">被別人碰撞</th>
                                             <th scope="col">被別人傷害</th>
-                                            <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                            <th scope="col">輔助器材使用不當</th>
                                             <th scope="col">其他</th>
                                         </tr>
                                     </thead>
@@ -1811,7 +1811,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 意外成因 輔助器材使用不當 (如輪椅／便椅未上鎖) (每月總數)
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1823,7 +1823,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當(每月總數)',
                                     },
                                 }}
                             />
@@ -1837,7 +1837,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 意外成因 輔助器材使用不當 (如輪椅／便椅未上鎖) (每月總數)
+                                服務使用者意外 - 意外成因 輔助器材使用不當 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1850,7 +1850,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當(每月總數)',
                                     },
                                 }}
                             />
@@ -2942,7 +2942,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 意外成因 - 環境因素 - 輔助器材使用不當 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table21')}>複製到表格</button>
@@ -3014,7 +3014,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當(每月總數)',
                                     },
                                 }}
                             />
@@ -3041,7 +3041,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當 (如輪椅／便椅未上鎖)(每月總數)',
+                                        subtitle: '意外成因 - 環境因素 - 輔助器材使用不當(每月總數)',
                                     },
                                 }}
 
@@ -3204,7 +3204,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         <th scope="col">聲響刺激</th>
                                         <th scope="col">被別人碰撞</th>
                                         <th scope="col">被別人傷害</th>
-                                        <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                        <th scope="col">輔助器材使用不當</th>
                                         <th scope="col">其他</th>
                                     </tr>
                                 </thead>
@@ -3339,7 +3339,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         <th scope="col">聲響刺激</th>
                                         <th scope="col">被別人碰撞</th>
                                         <th scope="col">被別人傷害</th>
-                                        <th scope="col">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                                        <th scope="col">輔助器材使用不當</th>
                                         <th scope="col">其他</th>
                                     </tr>
                                 </thead>
@@ -3470,7 +3470,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                         <th>{envFactorDataset.envHurtByOthers}</th>
                     </tr>
                     <tr>
-                        <th scope="row">輔助器材使用不當 (如輪椅／便椅未上鎖)</th>
+                        <th scope="row">輔助器材使用不當</th>
                         <th>{envFactorDataset.envImproperUseOfAssistiveEquipment}</th>
                     </tr>
                     <tr>
@@ -3516,7 +3516,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                             ["聲響刺激", envFactorDataset.envAcousticStimulation],
                                             ["被別人碰撞", envFactorDataset.envCollidedByOthers],
                                             ["被別人傷害", envFactorDataset.envHurtByOthers],
-                                            ["輔助器材使用不當 (如輪椅／便椅未上鎖)", envFactorDataset.envImproperUseOfAssistiveEquipment],
+                                            ["輔助器材使用不當", envFactorDataset.envImproperUseOfAssistiveEquipment],
                                             ["其他", envFactorDataset.envOther],
                                         ]}
                                     />
@@ -3538,6 +3538,20 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                         chartType={"PieChart"}
                                         width={'100%'}
                                         height={'600px'}
+                                        options={{
+                                            legend: {
+                                                position: 'labeled',
+                                                textStyle: {
+                                                  fontName: 'monospace',
+                                                  fontSize: 9
+                                                }
+                                              },
+                                              pieSliceTextStyle: {
+                                                fontSize: 8
+                                              },
+                                              sliceVisibilityThreshold: 0
+
+                                        }}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={
                                             [
@@ -3550,7 +3564,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                                 ["聲響刺激", envFactorDataset.envAcousticStimulation],
                                                 ["被別人碰撞", envFactorDataset.envCollidedByOthers],
                                                 ["被別人傷害", envFactorDataset.envHurtByOthers],
-                                                ["輔助器材使用不當 (如輪椅／便椅未上鎖)", envFactorDataset.envImproperUseOfAssistiveEquipment],
+                                                ["輔助器材使用不當", envFactorDataset.envImproperUseOfAssistiveEquipment],
                                                 ["其他", envFactorDataset.envOther],
                                             ]
                                         }
@@ -3586,7 +3600,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                 chartType="ColumnChart"
                                 loader={<div>Loading Chart</div>}
                                 data={
-                                    [['月份', '地面濕滑', '地面不平', '障礙物品', '光線不足', '空間不足', '聲響刺激', '被別人碰撞', '被別人傷害', '輔助器材使用不當 (如輪椅／便椅未上鎖)', '其他'],
+                                    [['月份', '地面濕滑', '地面不平', '障礙物品', '光線不足', '空間不足', '聲響刺激', '被別人碰撞', '被別人傷害', '輔助器材使用不當', '其他'],
                                     ...sampleTwoParser(data, startDate, endDate).map((item) => {
                                         return [item.month, item.dataset.envSlipperyGround, item.dataset.envUnevenGround, item.dataset.envNotEnoughSpace, item.dataset.envInsufficientLight, item.dataset.envNotEnoughSpace
                                             , item.dataset.envAcousticStimulation, item.dataset.envCollidedByOthers, item.dataset.envHurtByOthers, item.dataset.envImproperUseOfAssistiveEquipment, item.dataset.envOther]

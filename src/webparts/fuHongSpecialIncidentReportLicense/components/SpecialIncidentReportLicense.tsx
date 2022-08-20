@@ -1214,7 +1214,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 "CaseNumber": formData.CaseNumber,
                 "SMId": formData.SMId,
                 "SDId": formData.SDId,
-                "Title": "事故跟主/結束報告 - 1"
+                "Title": "事故跟進/結束報告 - 第1篇"
             }).then((incidentFollowUpRes) => {
 
                 updateSpecialIncidentReportLicense(formData.Id, {

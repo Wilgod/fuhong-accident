@@ -119,9 +119,9 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (form.accidentalFollowUpContinue) {
                 let title = "";
                 if (parentFormData.AccidentFollowUpFormId) {
-                    title = `意外跟進/結束表 - ${parentFormData.AccidentFollowUpFormId.length + 1}`;
+                    title = `事故跟進/結束報告 - 第${parentFormData.AccidentFollowUpFormId.length + 1}篇`;
                 } else {
-                    title = `意外跟進/結束表 - 1`;
+                    title = `事故跟進/結束報告 - 第1篇`;
                 }
 
                 // Create a new follow up Form
@@ -156,7 +156,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     CaseNumber: parentFormData.CaseNumber,
                                     FormType: "SUI",
                                     RecordId: parentFormData.Id,
-                                    Report: "意外跟進/結束表(三)",
+                                    Report: "事故跟進/結束報告(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
                                 }).catch(console.error)
 
@@ -177,7 +177,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     CaseNumber: parentFormData.CaseNumber,
                                     FormType: "PUI",
                                     RecordId: parentFormData.Id,
-                                    Report: "意外跟進/結束表(三)",
+                                    Report: "事故跟進/結束報告(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
                                 }).catch(console.error)
 
@@ -209,7 +209,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "SUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error)
 
@@ -231,7 +231,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "PUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error)
 
@@ -256,7 +256,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "SUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error)
 
@@ -273,7 +273,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "PUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error)
 
@@ -330,7 +330,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     CaseNumber: parentFormData.CaseNumber,
                     FormType: "SUI",
                     RecordId: parentFormData.Id,
-                    Report: "意外跟進/結束表(三)",
+                    Report: "事故跟進/結束報告(三)",
                     ServiceUnit: parentFormData.ServiceLocation
                 }).catch(console.error)
             } else {
@@ -340,7 +340,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     CaseNumber: parentFormData.CaseNumber,
                     FormType: "PUI",
                     RecordId: parentFormData.Id,
-                    Report: "意外跟進/結束表(三)",
+                    Report: "事故跟進/結束報告(三)",
                     ServiceUnit: parentFormData.ServiceLocation
                 }).catch(console.error)
             }
@@ -369,7 +369,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         CaseNumber: parentFormData.CaseNumber,
                         FormType: "SUI",
                         RecordId: parentFormData.Id,
-                        Report: "意外跟進/結束表(三)",
+                        Report: "事故跟進/結束報告(三)",
                         ServiceUnit: parentFormData.ServiceLocation
                     }).catch(console.error)
 
@@ -384,7 +384,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         CaseNumber: parentFormData.CaseNumber,
                         FormType: "PUI",
                         RecordId: parentFormData.Id,
-                        Report: "意外跟進/結束表(三)",
+                        Report: "事故跟進/結束報告(三)",
                         ServiceUnit: parentFormData.ServiceLocation
                     }).catch(console.error)
 
@@ -412,7 +412,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             CaseNumber: parentFormData.CaseNumber,
                             FormType: "SUI",
                             RecordId: parentFormData.Id,
-                            Report: "意外跟進/結束表(三)",
+                            Report: "事故跟進/結束報告(三)",
                             ServiceUnit: parentFormData.ServiceLocation
                         }).catch(console.error);
 
@@ -427,7 +427,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             CaseNumber: parentFormData.CaseNumber,
                             FormType: "PUI",
                             RecordId: parentFormData.Id,
-                            Report: "意外跟進/結束表(三)",
+                            Report: "事故跟進/結束報告(三)",
                             ServiceUnit: parentFormData.ServiceLocation
                         }).catch(console.error);
 
@@ -445,9 +445,9 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
             let title = "";
             if (parentFormData.AccidentFollowUpFormId) {
-                title = `意外跟進/結束表(三) - ${parentFormData.AccidentFollowUpFormId.length + 1}`;
+                title = `事故跟進/結束報告(三) - 第${parentFormData.AccidentFollowUpFormId.length + 1}篇`;
             } else {
-                title = `意外跟進/結束表(三) - 1`;
+                title = `事故跟進/結束報告(三) - 第1篇`;
             }
 
             // Create a new follow up Form
@@ -485,7 +485,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "SUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error);
 
@@ -507,7 +507,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 CaseNumber: parentFormData.CaseNumber,
                                 FormType: "PUI",
                                 RecordId: parentFormData.Id,
-                                Report: "意外跟進/結束表(三)",
+                                Report: "事故跟進/結束報告(三)",
                                 ServiceUnit: parentFormData.ServiceLocation
                             }).catch(console.error);
 
@@ -535,7 +535,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             CaseNumber: parentFormData.CaseNumber,
                             FormType: "SUI",
                             RecordId: parentFormData.Id,
-                            Report: "意外跟進/結束表(三)",
+                            Report: "事故跟進/結束報告(三)",
                             ServiceUnit: parentFormData.ServiceLocation
                         }).catch(console.error);
 
@@ -552,7 +552,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             CaseNumber: parentFormData.CaseNumber,
                             FormType: "PUI",
                             RecordId: parentFormData.Id,
-                            Report: "意外跟進/結束表(三)",
+                            Report: "事故跟進/結束報告(三)",
                             ServiceUnit: parentFormData.ServiceLocation
                         }).catch(console.error);
 
@@ -697,14 +697,14 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     return (
         <>
-            {isPrintMode && <Header displayName="意外跟進/結束表(三)" />}
+            {isPrintMode && <Header displayName="事故跟進/結束報告(三)" />}
             {
                 accidentFollowUpFormList.length > 1 &&
                 <div className="row">
                     <div className="col-sm-12 col-md-6">
                         <select className={"form-control"} value={selectedAccidentFollowUpFormId} onChange={formChangeHandler}>
                             {accidentFollowUpFormList.map((item) => {
-                                return <option value={item.ID}>{moment(item.Created).format("YYYY-MM-DD")} - {item.Title}</option>
+                                return <option value={item.ID}>{moment(item.Created).format("YYYY-MM-DD")} - {item.Title}, 共{accidentFollowUpFormList.length}篇</option>
                             })}
                         </select>
                     </div>

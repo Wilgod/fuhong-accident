@@ -2,3 +2,7 @@ text {
     font-size: 15px !important;
     fill:black;
 }
+
+g text {
+    font-size: 12px !important;
+}

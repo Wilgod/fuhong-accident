@@ -353,7 +353,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
                 sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
             } else if (sa['Stage'] == '3') {
-                sa['Form'] = '意外跟進/結束表(三)';
+                sa['Form'] = '事故跟進/結束報告(三)';
                 sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
                 sa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
                 sa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
@@ -376,7 +376,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 oa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
                 oa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
             } else if (oa['Stage'] == '3') {
-                oa['Form'] = '意外跟進/結束表(三)';
+                oa['Form'] = '事故跟進/結束報告(三)';
                 oa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
                 oa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
                 oa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;

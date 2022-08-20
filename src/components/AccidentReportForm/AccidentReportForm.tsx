@@ -294,7 +294,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         "SDId": parentFormData.SDId,
                         "CaseNumber": parentFormData.CaseNumber,
                         "ParentFormId": parentFormData.Id,
-                        "Title": "意外跟進/結束表(三) - 1"
+                        "Title": "事故跟進/結束報告(三) - 第1篇"
                     };
                     createAccidentFollowUpRepotForm(accidentFollowUpReportFormBody).then((accidentFollowUpReportFormResponse) => {
 

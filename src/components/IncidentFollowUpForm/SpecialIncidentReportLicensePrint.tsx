@@ -398,7 +398,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 			</style>
             <div style={{color:'black'}}>
                 <div className={`notPrintable`}>
-                    <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>Back to Form</span></span>
+                    <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>返回前頁</span></span>
                 </div>
                 {index == 0 &&
                     <div>

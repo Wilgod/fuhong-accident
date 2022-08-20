@@ -276,7 +276,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                   <TabList>
                     <Tab onClick={()=>this.tab(0)}>外界人士意外填報表(一)</Tab>
                     <Tab onClick={()=>this.tab(1)}>外界人士意外報告(二)</Tab>
-                    <Tab onClick={()=>this.tab(2)}>意外跟進/結束表(三)</Tab>
+                    <Tab onClick={()=>this.tab(2)}>事故跟進/結束報告(三)</Tab>
                   </TabList>
                   <TabPanel>
                     <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow} print={this.print}/>
