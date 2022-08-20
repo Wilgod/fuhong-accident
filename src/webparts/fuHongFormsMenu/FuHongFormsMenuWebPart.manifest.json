@@ -1,6 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "736c52d7-16d3-45e3-804a-db0ca9c84999",
+  //prod
+  "id": "746c52d7-26d4-47e3-804a-db0ca9c85999",
+  //uat
+  //"id": "736c52d7-16d3-45e3-804a-db0ca9c84999",
   "alias": "FuHongFormsMenuWebPart",
   "componentType": "WebPart",
 
@@ -17,7 +20,10 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "fuHongFormsMenu" },
+    //prod
+    "title": { "default": "Fu Hong Forms Menu Prod" },
+    //uat
+    //"title": { "default": "fuHongFormsMenu" },
     "description": { "default": "Forms Menu" },
     "officeFabricIconFontName": "Page",
     "properties": {

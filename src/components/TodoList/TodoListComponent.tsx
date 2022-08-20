@@ -43,7 +43,7 @@ export default function TodoListComponent({ context, permissionList }: ITodoList
         name: context.pageContext.legacyPageContext.userDisplayName,
         id: context.pageContext.legacyPageContext.userId,
     }
-    let siteCollectionName = context.pageContext.web.absoluteUrl.substring(context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, context.pageContext.web.absoluteUrl.length).substring(0, 14);
+    let siteCollectionName = context.pageContext.web.absoluteUrl.substring(context.pageContext.web.absoluteUrl.indexOf("/sites/") + 7, context.pageContext.web.absoluteUrl.length).substring(0, 6);
 	let siteCollecitonOrigin = context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? context.pageContext.web.absoluteUrl.substring(0, context.pageContext.web.absoluteUrl.indexOf("/sites/")) : context.pageContext.web.absoluteUrl.substring(0, context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
 	let siteCollectionUrl = context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? siteCollecitonOrigin + "/sites/" + siteCollectionName : siteCollecitonOrigin;
 	

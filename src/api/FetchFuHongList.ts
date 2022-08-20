@@ -130,6 +130,7 @@ export async function getAccessRight() {
 
 export async function getSMSDMapping(siteCollectionUrl,deptId) {
     try {
+        debugger
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "SM SD Mapping";
         const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).getAll()
