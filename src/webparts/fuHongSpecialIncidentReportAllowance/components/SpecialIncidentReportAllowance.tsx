@@ -13,7 +13,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { IUser } from '../../../interface/IUser';
 import { formInitial, adminUpdateInsuranceNumber, pendingSdApprove, pendingSmApprove, formInitBySm } from "../permissionConfig";
-import useServiceUnit from '../../../hooks/useServiceUnits';
+//import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
@@ -34,7 +34,8 @@ const footNoteOne = "指在服務單位內及／或在其他地方提供服務�
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
 export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print }: ISpecialIncidentReportAllowanceProps) {
-    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    const [serviceUnit, setServiceUnit] = useState("");
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [formStage, setFormStage] = useState("");

@@ -16,7 +16,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { IItem } from "@pnp/sp/items";
 import { IItemAddResult } from "@pnp/sp/items";
-import { FormFlow, getServiceUnits, getServiceUserAccident, getServiceUserAccidentById, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
+import { FormFlow, getServiceUserAccident, getServiceUserAccidentById, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import { createAccidentReportForm, createServiceUserAccident, getServiceUserAccidentAllAttachmentById, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById, updateInsuranceNumber } from '../../../api/PostFuHongList';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
@@ -216,7 +216,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["Intelligence"] = intelligence;
         
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
-            body["ServiceUser"] = serviceUserRecordId;
+            body["ServiceUser"] = serviceUserRecordId.toString();
         } else {
             error["ServiceUser"] = true;
         }
@@ -1352,6 +1352,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setWheelchair(selectUser[0].Wheelchairtypes);
             setIntelligence(selectUser[0].Mentalretarded);
             setServiceUserRecordId(selectUser[0].ServiceNumber);
+        } else {
+            setServiceUserRecordId(-1);
         }
         
     }
@@ -1643,20 +1645,24 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
                         <div className={`col ${(error && error['Circumstance'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="service-stay" value="住宿" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("住宿")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay">住宿</label>
+                                <input className="form-check-input" type="radio" name="service" id="Residential-Services" value="住宿服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("住宿服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="Residential-Services">住宿服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="service-stay-morning" value="日間" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("日間")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-morning">日間</label>
+                                <input className="form-check-input" type="radio" name="service" id="Day-Training-Services" value="日間訓練服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("日間訓練服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="Day-Training-Services">日間訓練服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="service-stay-short" value="暫宿" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("暫宿")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-short">暫宿</label>
+                                <input className="form-check-input" type="radio" name="service" id="Community-Support-Services" value="社區支援服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("社區支援服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="Community-Support-Services">社區支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="service-stay-other" value="其他" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("其他")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="service-stay-other">其他</label>
+                                <input className="form-check-input" type="radio" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("自閉症及發展障礙支援服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services">自閉症及發展障礙支援服務</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("職業康復及發展服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="Vocational-Rehabilitation-and-Development-Services">職業康復及發展服務</label>
                             </div>
                             {/*
                                 serviceCategory === "其他" &&
