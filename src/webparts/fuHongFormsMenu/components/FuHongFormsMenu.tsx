@@ -482,7 +482,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
             </div>
           </div>
         </div>
-        {Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0 &&
+        {this.state.adminPermissionBoolean &&
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "ADMIN")}>
           <div className="d-flex align-items center">
             <div style={{marginRight:'10px'}}>
