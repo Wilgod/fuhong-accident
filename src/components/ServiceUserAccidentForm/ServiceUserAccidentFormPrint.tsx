@@ -98,18 +98,21 @@ return <>
                                 <td>{formData.ServiceCategory != null ? formData.ServiceCategory : ''}</td>*/}
                                 <td>接受服務類別</td>
                                 <td>
-                                    {formData.ServiceCategory == "住宿" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "住宿" && <span>&#9744;</span>}
-                                    住宿&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "日間" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "日間" && <span>&#9744;</span>}
-                                    日間&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "暫宿" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "暫宿" && <span>&#9744;</span>}
-                                    暫宿&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "其他" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "其他" && <span>&#9744;</span>}
-                                    其他
+                                    {formData.ServiceCategory == "住宿服務" && <span>&#9745;</span>}
+                                    {formData.ServiceCategory != "住宿服務" && <span>&#9744;</span>}
+                                    住宿服務&nbsp;&nbsp;
+                                    {formData.ServiceCategory == "日間訓練服務" && <span>&#9745;</span>}
+                                    {formData.ServiceCategory != "日間訓練服務" && <span>&#9744;</span>}
+                                    日間訓練服務&nbsp;&nbsp;
+                                    {formData.ServiceCategory == "社區支援服務" && <span>&#9745;</span>}
+                                    {formData.ServiceCategory != "社區支援服務" && <span>&#9744;</span>}
+                                    社區支援服務&nbsp;&nbsp;
+                                    {formData.ServiceCategory == "自閉症及發展障礙支援服務" && <span>&#9745;</span>}
+                                    {formData.ServiceCategory != "自閉症及發展障礙支援服務" && <span>&#9744;</span>}
+                                    自閉症及發展障礙支援服務
+                                    {formData.ServiceCategory == "職業康復及發展服務" && <span>&#9745;</span>}
+                                    {formData.ServiceCategory != "職業康復及發展服務" && <span>&#9744;</span>}
+                                    職業康復及發展服務
                                 </td>
                                 <td> </td>
                                 <td> </td>

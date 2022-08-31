@@ -93,6 +93,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [emailTo, setEmailTo] = useState("");
     const [emailBody, setEmailBody] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
+    const [serviceUnit, setServiceUnit] = useState("");
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
         accidentDetail: "",
         accidentLocation: "",
@@ -130,8 +131,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     });
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
-    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
-
+    //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
 
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -1105,11 +1105,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     // Find SD && SM
     useEffect(() => {
         // Testing data;
-        if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+        /*if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
             setHrDepartment("CHH");
             setServiceUnit("CHH");
             return;
-        }
+        }*/
 
         if (userInfo && userInfo.hr_deptid) {
             setHrDepartment(userInfo.hr_deptid);

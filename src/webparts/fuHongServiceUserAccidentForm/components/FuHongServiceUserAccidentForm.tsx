@@ -177,6 +177,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             })
           }).catch(console.error)
+          debugger
           this.setState({ permissionList: lists[0], loading:false, serviceUserAccidentWorkflow:lists[1], serviceUnitList:lists[2], cmsUserWorkflow:lists[3] });
           
           //this.checkRole();// Testing Only 

@@ -133,7 +133,7 @@ export async function getSMSDMapping(siteCollectionUrl,deptId) {
         debugger
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "SM SD Mapping";
-        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).getAll()
+        const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).get()
         return items;
     } catch (err) {
         console.log(err);
@@ -164,7 +164,7 @@ export async function getAllSMSDMapping(siteCollectionUrl) {
     }
 }
 
-export async function getServiceUnits() {
+/*export async function getServiceUnits() {
     try {
         const LIST_NAME = "Service Units";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.orderBy("ShortForm", true).getAll();
@@ -173,7 +173,7 @@ export async function getServiceUnits() {
         console.error(err);
         throw new Error("getServiceUnit failed");
     }
-}
+}*/
 
 export async function getServiceUnitByShortForm(serviceUnitShortForm: string) {
     try {

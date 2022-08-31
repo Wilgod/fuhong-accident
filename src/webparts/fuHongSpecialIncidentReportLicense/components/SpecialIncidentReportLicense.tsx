@@ -17,7 +17,7 @@ import { pendingSmApprove, pendingSdApprove, adminUpdateInsuranceNumber, formIni
 import { addBusinessDays, addMonths, addDays } from '../../../utils/DateUtils';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { FormFlow, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
-import useServiceUnit from '../../../hooks/useServiceUnits';
+//import useServiceUnit from '../../../hooks/useServiceUnits';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import { IAttachmentFileInfo } from '@pnp/sp/attachments';
@@ -46,7 +46,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [reporterJobTitle, setReporterJobTitle] = useState("");
-    const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
+    const [serviceUnit, setServiceUnit] = useState("");
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [ selectDepartment, setSelectDepartment ] = useState("");
     
