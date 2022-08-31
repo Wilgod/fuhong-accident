@@ -139,7 +139,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     debugger
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get();
-    let adminPermissionOwner = adminPermission.filter(item => {item.Admin.EMail == this.CURRENT_USER.email})
+    let adminPermissionOwner = adminPermission.filter(item => {return item.Admin.EMail == this.CURRENT_USER.email})
     let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
