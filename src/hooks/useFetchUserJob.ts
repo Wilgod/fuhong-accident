@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getOtherIncidentReportBySPId, getOutsiderAccidentBySPId, getServiceUserAccidentBySPId, getSpecialIncidentReportAllowanceBySPId, getSpecialIncidentReportLicenseBySPId } from "../api/FetchFuHongList";
-import {getAllServiceUserAccident, getAllAccidentReportForm,  getAllAccidentFollowUpForm,getAllSMSDMapping} from '../api/FetchFuHongList';
+import {getAllServiceUserAccident, getAllAccidentReportForm,  getAllAccidentFollowUpForm,getAllIncidentFollowUpForm,getAllSMSDMapping} from '../api/FetchFuHongList';
 export default function useFetchUserJob(spId: number,permissionList:any[], siteCollectionUrl:any) {
     const [result, setResult] = useState([]);
 
@@ -10,6 +10,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         let allServiceUserAccident = await getAllServiceUserAccident();
         let allAccidentReportForm = await getAllAccidentReportForm();
         let allAccidentFollowUpForm = await getAllAccidentFollowUpForm();
+        let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         let allSMSDMapping = await getAllSMSDMapping(siteCollectionUrl);
         debugger
         let serviceUserAccidentData = [];
@@ -56,35 +57,38 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             } else {
                 let admin = permissionList.filter(p => {return p == 'All'});
                 if (admin.length > 0) {
-                    serviceUserAccidentData.push(sa);
+                    //serviceUserAccidentData.push(sa);
                 } else {
-                    let permission = permissionList.filter(p => {return p == sa.ServiceUserUnit});
+                    /*let permission = permissionList.filter(p => {return p == sa.ServiceUserUnit});
                     if (permission.length > 0) {
                         serviceUserAccidentData.push(sa);
-                    } else if (sa['Stage'] == '1') {
-                        if (sa.Status === "PENDING_SM_APPROVE" && sa['SMId'] == spId) {
-                            serviceUserAccidentData.push(sa);
-                        } else if (sa.Status === "PENDING_SPT_APPROVE" && (sa['SPTId'].Id == spId || sa['SDId'] == spId)) {
-                            serviceUserAccidentData.push(sa);
-                        }
-                    } else if (sa['Stage'] == '2') {
-                        if (sa.Status === "PENDING_INVESTIGATE" && sa['InvestigatorId'] == spId) {
-                            serviceUserAccidentData.push(sa);
-                        } else if (sa.Status === "PENDING_SPT_APPROVE" && getARF.length > 0 && (getARF[0]['SMId'] == spId || getARF[0]['SPTId'] == spId)) {
-                            serviceUserAccidentData.push(sa);
-                        }  
-                    } else if (sa['Stage'] == '3') {
-                        if (sa.Status === "PENDING_SM_FILL_IN" && getARF.length > 0 && getAFUF[getAFUF.length -1]['SMId'] == spId) {
-                            serviceUserAccidentData.push(sa);
-                        } else if (sa.Status === "PENDING_SD_APPROVE" && getARF.length > 0 && (getAFUF[getAFUF.length -1]['SDId'] == spId || getAFUF[getAFUF.length -1]['SPTId'] == spId)) {
-                            serviceUserAccidentData.push(sa);
-                        }
-                    }    
+                    } else */
+                    
                 }
+                if (sa['Stage'] == '1') {
+                    if (sa.Status === "PENDING_SM_APPROVE" && sa['SMId'] == spId) {
+                        serviceUserAccidentData.push(sa);
+                    } else if (sa.Status === "PENDING_SPT_APPROVE" && (sa['SPTId'].Id == spId || sa['SDId'] == spId)) {
+                        serviceUserAccidentData.push(sa);
+                    }
+                } else if (sa['Stage'] == '2') {
+                    if (sa.Status === "PENDING_INVESTIGATE" && sa['InvestigatorId'] == spId) {
+                        serviceUserAccidentData.push(sa);
+                    } else if (sa.Status === "PENDING_SPT_APPROVE" && getARF.length > 0 && (getARF[0]['SMId'] == spId || getARF[0]['SPTId'] == spId)) {
+                        serviceUserAccidentData.push(sa);
+                    }  
+                } else if (sa['Stage'] == '3') {
+                    if (sa.Status === "PENDING_SM_FILL_IN" && getARF.length > 0 && getAFUF[getAFUF.length -1]['SMId'] == spId) {
+                        serviceUserAccidentData.push(sa);
+                    } else if (sa.Status === "PENDING_SD_APPROVE" && getARF.length > 0 && (getAFUF[getAFUF.length -1]['SDId'] == spId || getAFUF[getAFUF.length -1]['SPTId'] == spId)) {
+                        serviceUserAccidentData.push(sa);
+                    }
+                }    
             }
         }
-        const outsiderAccidentData = await getOutsiderAccidentBySPId(spId);
-        for (let oa of outsiderAccidentData) {
+        const allOutsiderAccidentData = await getOutsiderAccidentBySPId(spId);
+        let outsiderAccidentData = [];
+        for (let oa of allOutsiderAccidentData) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == oa.ServiceUnit });
@@ -121,27 +125,85 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 oa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
             }
             oa['ServiceUserNameCN'] = oa['ServiceUserNameTC']
+            if (oa.Status === "DRAFT") {
+                if (oa.AuthorId === spId) {
+                    serviceUserAccidentData.push(oa);
+                }
+            } else {
+                let admin = permissionList.filter(p => {return p == 'All'});
+                if (admin.length > 0) {
+                    //serviceUserAccidentData.push(sa);
+                } else {
+                    /*let permission = permissionList.filter(p => {return p == oa.ServiceUserUnit});
+                    if (permission.length > 0) {
+                        serviceUserAccidentData.push(oa);
+                    } else */
+                       
+                }
+                if (oa['Stage'] == '1') {
+                    if (oa.Status === "PENDING_SM_APPROVE" && oa['SMId'] == spId) {
+                        outsiderAccidentData.push(oa);
+                    } else if (oa.Status === "PENDING_SPT_APPROVE" && (oa['SPTId'].Id == spId || oa['SDId'] == spId)) {
+                        outsiderAccidentData.push(oa);
+                    }
+                } else if (oa['Stage'] == '2') {
+                    if (oa.Status === "PENDING_INVESTIGATE" && oa['InvestigatorId'] == spId) {
+                        outsiderAccidentData.push(oa);
+                    } else if (oa.Status === "PENDING_SPT_APPROVE" && getARF.length > 0 && (getARF[0]['SMId'] == spId || getARF[0]['SPTId'] == spId)) {
+                        outsiderAccidentData.push(oa);
+                    }  
+                } else if (oa['Stage'] == '3') {
+                    if (oa.Status === "PENDING_SM_FILL_IN" && getARF.length > 0 && getAFUF[getAFUF.length -1]['SMId'] == spId) {
+                        outsiderAccidentData.push(oa);
+                    } else if (oa.Status === "PENDING_SD_APPROVE" && getARF.length > 0 && (getAFUF[getAFUF.length -1]['SDId'] == spId || getAFUF[getAFUF.length -1]['SPTId'] == spId)) {
+                        outsiderAccidentData.push(oa);
+                    }
+                } 
+            }
         }
-        const otherIncidentData = await getOtherIncidentReportBySPId(spId);
-        for (let oid of otherIncidentData) {
+        const allOtherIncidentData = await getOtherIncidentReportBySPId(spId);
+        let otherIncidentData = [];
+        for (let oid of allOtherIncidentData) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == oid.ServiceUnit });
+            let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == oid.CaseNumber && item.ParentFormId == oid.ID});
             if (oid.Status === "PENDING_SM_FILL_IN") {
                 oid['StatusTC'] = '尚待服務經理填表';
             } else if (oid.Status === "PENDING_SM_APPROVE") {
                 oid['StatusTC'] = '尚待服務經理批核';
             } else if (oid.Status === "PENDING_SD_APPROVE") {
                 oid['StatusTC'] = '尚待服務總監批核';
-            } else if (oid.Status === "PENDING_SPT_APPROVE") {
-                oid['StatusTC'] = '尚待高級物理治療師批核';
-            } else if (oid.Status === "PENDING_INVESTIGATE") {
-                oid['StatusTC'] = '尚待調查員填表';
+            }
+            if (oid['Stage'] == '1') {
+                oid['Form'] = '其他事故呈報表';
+                oid['CurrentSM'] = oid['SM'];
+                oid['CurrentSD'] = oid['SD'];
+            } else if (oid['Stage'] == '2') {
+                oid['Form'] = '事故跟進/結束報告';
+                oid['CurrentSM'] = getIFF.length > 0 ? getIFF[0]['SM'] : null;
+                oid['CurrentSD'] = getIFF.length > 0 ? getIFF[0]['SD'] : null;
+
+            }
+            if (oid['Stage'] == '1') {
+                if (oid.Status === "PENDING_SM_APPROVE" && oid['SMId'] == spId) {
+                    otherIncidentData.push(oid);
+                } else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'].Id == spId || oid['SDId'] == spId)) {
+                    otherIncidentData.push(oid);
+                }
+            } else if (oid['Stage'] == '2') {
+                if (oid.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
+                    otherIncidentData.push(oid);
+                }  else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'].Id == spId || oid['SDId'] == spId)) {
+                    otherIncidentData.push(oid);
+                } 
             }
             oid['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             
         }
-        const specialIncidentReportLicense = await getSpecialIncidentReportLicenseBySPId(spId);
-        for (let sirl of specialIncidentReportLicense) {
+        const allSpecialIncidentReportLicense = await getSpecialIncidentReportLicenseBySPId(spId);
+        let specialIncidentReportLicense = [];
+        for (let sirl of allSpecialIncidentReportLicense) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sirl.ServiceUnit });
+            let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sirl.CaseNumber && item.ParentFormId == sirl.ID});
             sirl['ServiceUserNameCN'] = sirl['ResponsibleName']
             sirl['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             if (sirl.Status === "PENDING_SM_FILL_IN") {
@@ -150,16 +212,37 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 sirl['StatusTC'] = '尚待服務經理批核';
             } else if (sirl.Status === "PENDING_SD_APPROVE") {
                 sirl['StatusTC'] = '尚待服務總監批核';
-            } else if (sirl.Status === "PENDING_SPT_APPROVE") {
-                sirl['StatusTC'] = '尚待高級物理治療師批核';
-            } else if (sirl.Status === "PENDING_INVESTIGATE") {
-                sirl['StatusTC'] = '尚待調查員填表';
+            }
+            if (sirl['Stage'] == '1') {
+                sirl['Form'] = '特別事故報告(牌照事務處)';
+                sirl['CurrentSM'] = sirl['SM'];
+                sirl['CurrentSD'] = sirl['SD'];
+            } else if (sirl['Stage'] == '2') {
+                sirl['Form'] = '事故跟進/結束報告';
+                sirl['CurrentSM'] = getIFF.length > 0 ? getIFF[0]['SM'] : null;
+                sirl['CurrentSD'] = getIFF.length > 0 ? getIFF[0]['SD'] : null;
+
+            }
+            if (sirl['Stage'] == '1') {
+                if (sirl.Status === "PENDING_SM_APPROVE" && sirl['SMId'] == spId) {
+                    specialIncidentReportLicense.push(sirl);
+                } else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'].Id == spId || sirl['SDId'] == spId)) {
+                    specialIncidentReportLicense.push(sirl);
+                }
+            } else if (sirl['Stage'] == '2') {
+                if (sirl.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
+                    specialIncidentReportLicense.push(sirl);
+                }  else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'].Id == spId || sirl['SDId'] == spId)) {
+                    specialIncidentReportLicense.push(sirl);
+                } 
             }
             
         }
-        const specialIncidentReportAllowance = await getSpecialIncidentReportAllowanceBySPId(spId);
-        for (let sira of specialIncidentReportAllowance) {
+        const allSpecialIncidentReportAllowance = await getSpecialIncidentReportAllowanceBySPId(spId);
+        let specialIncidentReportAllowance = [];
+        for (let sira of allSpecialIncidentReportAllowance) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sira.ServiceUnit });
+            let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sira.CaseNumber && item.ParentFormId == sira.ID});
             sira['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             if (sira.Status === "PENDING_SM_FILL_IN") {
                 sira['StatusTC'] = '尚待服務經理填表';
@@ -167,12 +250,30 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 sira['StatusTC'] = '尚待服務經理批核';
             } else if (sira.Status === "PENDING_SD_APPROVE") {
                 sira['StatusTC'] = '尚待服務總監批核';
-            } else if (sira.Status === "PENDING_SPT_APPROVE") {
-                sira['StatusTC'] = '尚待高級物理治療師批核';
-            } else if (sira.Status === "PENDING_INVESTIGATE") {
-                sira['StatusTC'] = '尚待調查員填表';
             }
-            
+            if (sira['Stage'] == '1') {
+                sira['Form'] = '特別事故報告(牌照事務處)';
+                sira['CurrentSM'] = sira['SM'];
+                sira['CurrentSD'] = sira['SD'];
+            } else if (sira['Stage'] == '2') {
+                sira['Form'] = '事故跟進/結束報告';
+                sira['CurrentSM'] = getIFF.length > 0 ? getIFF[0]['SM'] : null;
+                sira['CurrentSD'] = getIFF.length > 0 ? getIFF[0]['SD'] : null;
+
+            }
+            if (sira['Stage'] == '1') {
+                if (sira.Status === "PENDING_SM_APPROVE" && sira['SMId'] == spId) {
+                    specialIncidentReportAllowance.push(sira);
+                } else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'].Id == spId || sira['SDId'] == spId)) {
+                    specialIncidentReportAllowance.push(sira);
+                }
+            } else if (sira['Stage'] == '2') {
+                if (sira.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
+                    specialIncidentReportAllowance.push(sira);
+                }  else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'].Id == spId || sira['SDId'] == spId)) {
+                    specialIncidentReportAllowance.push(sira);
+                } 
+            }
         }
         let result = [...serviceUserAccidentData, ...outsiderAccidentData, ...otherIncidentData, ...specialIncidentReportLicense, ...specialIncidentReportAllowance].sort((a, b) => {
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
