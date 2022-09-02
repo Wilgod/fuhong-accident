@@ -1283,44 +1283,46 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setIntelligence("");
             setPatientServiceUnit(value);
         }
-        
-        let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
-        let cmsuser = []
-        for (let user of userlist.results) {
-            /*if (user.cr98a_mentalretarded != 111910000) {
-                debugger
+        if (cmsUserWorkflow != null) {
+            let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
+            let cmsuser = []
+            for (let user of userlist.results) {
+                /*if (user.cr98a_mentalretarded != 111910000) {
+                    debugger
+                }
+                if (user.cr98a_wheelchairspecialchairandrelatedac != 111910006) {
+                    debugger
+                }*/
+                let mentalretarded = ""
+                if (user.cr98a_mentalretarded == 111910000) {
+                    mentalretarded = "EXTREME_SEVERE";
+                } else if (user.cr98a_mentalretarded == 111910001) {
+                    mentalretarded = "SEVERE";
+                } else if (user.cr98a_mentalretarded == 111910002) {
+                    mentalretarded = "MODERATE";
+                } else if (user.cr98a_mentalretarded == 111910003) {
+                    mentalretarded = "MILD";
+                } else if (user.cr98a_mentalretarded == 111910004) {
+                    mentalretarded = "UNKNOWN";
+                }
+                cmsuser.push({
+                    "ServiceNumber" : user.cr98a_filenumber,
+                    "Age":parseInt(user.cr98a_age),
+                    "NameCN":user.cr98a_namecn,
+                    "NameEN":user.cr98a_nameen,
+                    "Sex": user.cr98a_sex == "111910000" ? "female":"male",
+                    "Filenumber":user.cr98a_filenumber,
+                    "Serviceproduct":user.cr98a_serviceproduct,
+                    "Mentalretarded":mentalretarded,//智障
+                    "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
+                    "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
+                    "Wheelchairtypes":user.cr98a_wheelchairspecialchairandrelatedac == 111910006 ? false:true, //輪椅
+                    "ServiceCategory":"住宿"
+                })
             }
-            if (user.cr98a_wheelchairspecialchairandrelatedac != 111910006) {
-                debugger
-            }*/
-            let mentalretarded = ""
-            if (user.cr98a_mentalretarded == 111910000) {
-                mentalretarded = "EXTREME_SEVERE";
-            } else if (user.cr98a_mentalretarded == 111910001) {
-                mentalretarded = "SEVERE";
-            } else if (user.cr98a_mentalretarded == 111910002) {
-                mentalretarded = "MODERATE";
-            } else if (user.cr98a_mentalretarded == 111910003) {
-                mentalretarded = "MILD";
-            } else if (user.cr98a_mentalretarded == 111910004) {
-                mentalretarded = "UNKNOWN";
-            }
-            cmsuser.push({
-                "ServiceNumber" : user.cr98a_filenumber,
-                "Age":parseInt(user.cr98a_age),
-                "NameCN":user.cr98a_namecn,
-                "NameEN":user.cr98a_nameen,
-                "Sex": user.cr98a_sex == "111910000" ? "female":"male",
-                "Filenumber":user.cr98a_filenumber,
-                "Serviceproduct":user.cr98a_serviceproduct,
-                "Mentalretarded":mentalretarded,//智障
-                "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
-                "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
-                "Wheelchairtypes":user.cr98a_wheelchairspecialchairandrelatedac == 111910006 ? false:true, //輪椅
-                "ServiceCategory":"住宿"
-            })
+            setCmsUserList(cmsuser)
         }
-        setCmsUserList(cmsuser)
+        
         setLoadingService(false);
         debugger
     }
@@ -1484,7 +1486,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }, [serviceUser, serviceUserRecordId]);
     console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
     console.log('serviceUnit',serviceUnit);
-    
     return (
         <>
             {

@@ -16,7 +16,8 @@ import { jobTitleParser, jobTitleParser2, Role } from '../../../utils/RoleParser
 import "./react-tabs.css";
 import "./custom.css";
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
-import { getUserAdByGraph, getAllServiceUnit, checkDepartmentList } from '../../../api/FetchUser';
+import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
+import { getUserAdByGraph, getAllServiceUnit, checkDepartmentList,checkPermissionList } from '../../../api/FetchUser';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import { getAdmin, getSpecialIncidentReportAllowanceById, getSpeicalIncidentReportAllowanceWorkflow, getAllIncidentFollowUpFormByParentId } from '../../../api/FetchFuHongList';
 if (document.getElementById('workbenchPageContent') != null) {
@@ -42,6 +43,7 @@ const getCanvasZone = () => {
 
 export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, { 
   currentUserRole: Role,
+  permissionList:any;
   specialIncidentReportAllowanceFormData: any, 
   stage: string, 
   formSubmitted: boolean, 
@@ -67,7 +69,8 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.GENERAL,
+      currentUserRole: Role.NoAccessRight,//Role.GENERAL,
+      permissionList: [],
       specialIncidentReportAllowanceFormData: null,
       stage: "",
       formSubmitted: false,
@@ -85,10 +88,11 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
   }
 
   private initialState = async () => {
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const speicalIncidentReportWorkflow = await getSpeicalIncidentReportAllowanceWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
-    return [DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
+    return [PermissionList,DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
     //this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url,serviceUnitList:serviceUnitList });
   }
 
@@ -153,7 +157,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
               }
             })
           }).catch(console.error)
-          this.setState({ departmentList: lists[0], loading:true, speicalIncidentReportWorkflow:lists[1], serviceUnitList:lists[2] });
+          this.setState({ permissionList: lists[0], departmentList: lists[1], loading:true, speicalIncidentReportWorkflow:lists[2], serviceUnitList:lists[3] });
           this.checkRole();// Testing Only 
         }).catch(console.error);
       }).catch(console.error);
@@ -217,7 +221,40 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
     return (
       <div className={styles.fuHongSpecialIncidentReportAllowance}>
         <div className={styles.container}>
-          {
+        {
+            !this.state.loading && this.state.formSubmitted ?
+              <ThankYouComponent redirectLink={this.redirectPath} />
+              :
+              !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
+              <NoAccessComponent redirectLink={this.redirectPath} />
+              :
+              !this.state.loading ?
+                this.state.isPrintMode ?
+                  <SpecialIncidentReportAllowancePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialIncidentReportAllowanceFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl} backToForm={this.backToForm}/>
+                  :
+                  <div className={styles.eform}>
+                    {/*this.state.serviceUserAccidentFormData != null &&
+                      <div className="row" style={{float:'right'}}>
+                        <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                      </div>
+                    */}
+                      <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
+                      <TabList>
+                        <Tab onClick={()=>this.tab(0)}>特別事故報告(津貼科)</Tab>
+                        <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
+                      </TabList>
+                      <TabPanel>
+                        <SpecialIncidentReportAllowance context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} formData={this.state.specialIncidentReportAllowanceFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} departmentList={this.state.departmentList} speicalIncidentReportWorkflow={this.state.speicalIncidentReportWorkflow} print={this.print} />
+                      </TabPanel>
+                      <TabPanel>
+                        <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"SPECIAL_INCIDENT_REPORT_ALLOWANCE"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.specialIncidentReportAllowanceFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
+                      </TabPanel>
+                    </Tabs>
+              </div>
+              : <div></div>
+              
+          }
+          {/*
             this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
@@ -226,9 +263,6 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
                   <SpecialIncidentReportAllowancePrint index={this.state.indexTab} context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.specialIncidentReportAllowanceFormData} formTwentySixData={this.state.formTwentySixDataPrint} formTwentySixDataSelected={this.state.formTwentySixDataSelected} siteCollectionUrl={this.siteCollectionUrl} backToForm={this.backToForm}/>
                   :
                   <div className={styles.eform}>
-                    {/*<div className="row" style={{ float:'right'}}>
-                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
-                    </div>*/}
                     <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                       <TabList>
                         <Tab onClick={()=>this.tab(0)}>特別事故報告(津貼科)</Tab>
@@ -244,7 +278,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
                   </div>
                   :
                   <div></div>
-          }
+        */}
         </div>
       </div>
     );
