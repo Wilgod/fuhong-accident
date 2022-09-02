@@ -1486,6 +1486,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }, [serviceUser, serviceUserRecordId]);
     console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
     console.log('serviceUnit',serviceUnit);
+    console.log('permissionList',permissionList);
     return (
         <>
             {
