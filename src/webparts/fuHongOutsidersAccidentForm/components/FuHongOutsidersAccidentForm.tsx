@@ -20,6 +20,7 @@ import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList'
 import { getAccidentReportFormById, getAllAccidentFollowUpFormByCaseNumber, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
 import { getOutsiderAccidentWorkflow } from '../../../api/FetchFuHongList';
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
+import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import OutsidersAccidentFormPrint from "../../../components/OutsidersAccidentForm/OutsidersAccidentFormPrint";
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
@@ -72,7 +73,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     graph.setup({ spfxContext: this.props.context });
 
     this.state = {
-      currentUserRole: Role.GENERAL,
+      currentUserRole: Role.NoAccessRight,//Role.GENERAL,
       permissionList: [],
       outsiderAccidentFormData: null,
       stage: "",
@@ -103,6 +104,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
+    debugger
     return [PermissionList,outsiderAccidentWorkflow.Url,serviceUnitList]
     //this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow.Url,serviceUnitList:serviceUnitList });
   }
@@ -170,6 +172,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               }
             })
           }).catch(console.error)
+          debugger
           this.setState({ permissionList: lists[0], loading:false, outsiderAccidentWorkflow:lists[1], serviceUnitList:lists[2] });
 
           this.checkRole();// Testing Only 
@@ -259,7 +262,44 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
-          {this.state.isPrintMode ?
+          {
+            !this.state.loading && this.state.formSubmitted ?
+            <ThankYouComponent redirectLink={this.redirectPath} />
+            :
+            !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
+            <NoAccessComponent redirectLink={this.redirectPath} />
+            :
+            !this.state.loading ?
+              this.state.isPrintMode ?
+                <OutsidersAccidentFormPrint index={this.state.indexTab} formData={this.state.outsiderAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList} backToForm={this.backToForm}/>
+                :
+                <div className={styles.eform}>
+                  {/*this.state.serviceUserAccidentFormData != null &&
+                    <div className="row" style={{float:'right'}}>
+                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
+                    </div>
+                  */}
+                    <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
+                      <TabList>
+                        <Tab onClick={()=>this.tab(0)}>外界人士意外填報表(一)</Tab>
+                        <Tab onClick={()=>this.tab(1)}>外界人士意外報告(二)</Tab>
+                        <Tab onClick={()=>this.tab(2)}>事故跟進/結束報告(三)</Tab>
+                      </TabList>
+                      <TabPanel>
+                    <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow} print={this.print}/>
+                  </TabPanel>
+                  <TabPanel>
+                    <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.outsiderAccidentWorkflow} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
+                  </TabPanel>
+                  <TabPanel>
+                    <AccidentFollowUpForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} formTwentyOneData={this.state.formTwentyOneData} workflow={this.state.outsiderAccidentWorkflow} changeFormTwentyOneDataSelected={this.changeFormTwentyOneDataSelected} serviceUnitList={this.state.serviceUnitList} print={this.print}/>
+                  </TabPanel>
+                    </Tabs>
+            </div>
+            : <div></div>
+          }
+
+          {/*this.state.isPrintMode ?
           <OutsidersAccidentFormPrint index={this.state.indexTab} formData={this.state.outsiderAccidentFormData} formTwentyData={this.state.formTwentyData} formTwentyOneDataPrint={this.state.formTwentyOneDataPrint} formTwentyOneDataSelected={this.state.formTwentyOneDataSelected} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUnitList={this.state.serviceUnitList} backToForm={this.backToForm}/>
           :
             this.state.formSubmitted ?
@@ -267,11 +307,6 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               :
               !this.state.loading ?
               <div className={styles.eform}>
-                  {/*this.state.outsiderAccidentFormData != null &&
-                    <div className="row" style={{float:'right'}}>
-                      <div className="col-12" style={{padding:'10px 20px'}}><button className="btn btn-warning mr-3" onClick={()=>this.print()}>打印</button></div>
-                    </div>
-                  */}
                 <Tabs variant="fullWidth" defaultIndex={this.state.indexTab}>
                   <TabList>
                     <Tab onClick={()=>this.tab(0)}>外界人士意外填報表(一)</Tab>
@@ -291,7 +326,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               </div>
               :
               <div></div>
-          }
+        */}
         </div>
       </div>
     );

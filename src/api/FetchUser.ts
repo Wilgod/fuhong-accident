@@ -156,7 +156,6 @@ export async function checkDepartmentList(siteCollectionUrl,userEmail) {
       let getAllSMSD = await getAllSMSDMapping(siteCollectionUrl);
       access.forEach(async(item) => {
          // console.log('item.JobCode : ' + item.JobCode + ', item.CMS : ' + item.CMS);
-        debugger
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push({"All":true});
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {

@@ -48,6 +48,7 @@ import FuHongSpecialIncidentReportLicenseForm from '../../fuHongSpecialIncidentR
 import FuHongOtherIncidentReportForm from '../../fuHongOtherIncidentReport/components/FuHongOtherIncidentReport';
 import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
 import { isArray } from '@pnp/pnpjs';
+import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 //import {useSearchParams} from 'react-router-dom';
 if (document.getElementById('workbenchPageContent') != null) {
@@ -709,22 +710,30 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         <div className={styles.container} >
           <div className="container-fluid">
             <div className="row no-gutters" style={{height:'90vh'}}>
-              {/* Navigation menu */}
-              <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
-                {navigationMenu()}
-              </div>
-              {/* Main Content */}
-              <div className="col-sm-12 col-md-10 col-lg-10" >
-                <div className={`${styles.systemTitle} notPrintable`}>
-                  意外及事故呈報系統
-                  {/*<div style={{ float: "right" }}>
-                    {siteContentCog()}
-    </div>*/}
-                </div>
-                <div className="p-2">
-                  {screenSwitch()}
-                </div>
-              </div>
+              {
+                !this.state.loading && (this.state.permissionList.length == 0) ? 
+                <NoAccessComponent redirectLink={""} />
+                :
+                <>
+                {/* Navigation menu */}
+                  <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
+                    {navigationMenu()}
+                  </div>
+                  {/* Main Content */}
+                  <div className="col-sm-12 col-md-10 col-lg-10" >
+                    <div className={`${styles.systemTitle} notPrintable`}>
+                      意外及事故呈報系統
+                      {/*<div style={{ float: "right" }}>
+                        {siteContentCog()}
+        </div>*/}
+                    </div>
+                    <div className="p-2">
+                      {screenSwitch()}
+                    </div>
+                  </div>
+                </>
+              }
+              
             </div>
           </div>
         </div>
