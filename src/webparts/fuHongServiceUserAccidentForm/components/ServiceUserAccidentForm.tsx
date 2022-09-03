@@ -90,7 +90,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [serviceUserAge, setServiceUserAge] = useState(0);
     const [serviceUserGender, setServiceUserGender] = useState("");
     const [serviceUserId, setServiceUserId] = useState("");
-    const [serviceCategory, setServiceCategory] = useState("");
+    const [serviceCategory, setServiceCategory] = useState([]);
     const [wheelchair, setWheelchair] = useState<boolean>(undefined);
     const [asd, setAsd] = useState<boolean>(undefined);
     const [intelligence, setIntelligence] = useState("");
@@ -186,6 +186,26 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
 
+    const checkboxServiceCategoryHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        if (Array.isArray(serviceCategory)) {
+            if (serviceCategory.length > 0) {
+                if (serviceCategory.indexOf(value) > -1) {
+                    const result = serviceCategory.filter((item) => item !== value);
+                    setServiceCategory(result)
+                    //setForm({ ...form, [name]: result });
+                } else {
+                    setServiceCategory([...serviceCategory, value])
+                    //setForm({ ...form, [name]: [...arr, value] });
+                }
+            } else {
+                setServiceCategory([value])
+            }
+            
+        }
+    }
+
     const checkboxHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -210,7 +230,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["ServiceUserAge"] = serviceUserAge;
         body["ServiceUserGender"] = serviceUserGender;
         body["ServiceUserId"] = serviceUserId.toString();
-        body["ServiceCategory"] = serviceCategory;
+        body["ServiceCategory"] = JSON.stringify(serviceCategory);
         body["Wheelchair"] = wheelchair;
         body["ASD"] = asd;
         body["Intelligence"] = intelligence;
@@ -1157,7 +1177,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 patientAcciedntScenario: data.Circumstance,
                 scenarioOtherRemark: data.CircumstanceOtherRemark,
                 scenarioOutsideActivityRemark: data.CircumstanceLocation,
-                serviceCategory:data.ServiceCategory
+                serviceCategory: JSON.parse(data.ServiceCategory) || []
             });
             debugger
             if (data.CctvRecordReceiveDate) {
@@ -1277,7 +1297,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(0);
             setServiceUserGender("");
             setServiceUserId("");
-            setServiceCategory("");
+            setServiceCategory([]);
             setAsd(undefined);
             setWheelchair(undefined)
             setIntelligence("");
@@ -1317,7 +1337,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     "Mentallyretardedlive":user.cr98a_mentallyretardedlive,//智障程度
                     "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
                     "Wheelchairtypes":user.cr98a_wheelchairspecialchairandrelatedac == 111910006 ? false:true, //輪椅
-                    "ServiceCategory":"住宿"
+                    "ServiceCategory":["住宿"]
                 })
             }
             setCmsUserList(cmsuser)
@@ -1348,7 +1368,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(selectUser[0].Age);
             setServiceUserGender(selectUser[0].Sex);
             setServiceUserId(value);
-            setServiceCategory(selectUser[0].ServiceCategory);
+            setServiceCategory([selectUser[0].ServiceCategory]);
             setAsd(selectUser[0].Autismspectrum);
             setWheelchair(selectUser[0].Wheelchairtypes);
             setIntelligence(selectUser[0].Mentalretarded);
@@ -1454,7 +1474,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(formData.ServiceUserAge);
             setServiceUserGender(formData.ServiceUserGender);
             setServiceUserId(formData.ServiceUserId);
-            setServiceCategory(formData.ServiceCategory);
+            setServiceCategory([formData.ServiceCategory]);
             setWheelchair(formData.Wheelchair);
             setIntelligence(formData.Intelligence);
             setAsd(formData.ASD);
@@ -1465,7 +1485,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(0);
             setServiceUserGender("");
             setServiceUserId("");
-            setServiceCategory("");
+            setServiceCategory([]);
             setWheelchair(undefined);
             setIntelligence("");
             setAsd(undefined);
@@ -1476,7 +1496,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setServiceUserAge(serviceUser.Age);
                 setServiceUserGender(serviceUser.Gender);
                 setServiceUserId(serviceUser.ServiceNumber);
-                setServiceCategory(serviceUser.ServiceType);
+                setServiceCategory([serviceUser.ServiceType]);
                 setWheelchair(serviceUser.Wheelchair);
                 setIntelligence(serviceUser.IntellectualDisability);
                 setAsd(serviceUser.ASD);
@@ -1646,23 +1666,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
                         <div className={`col ${(error && error['Circumstance'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="Residential-Services" value="住宿服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("住宿服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Residential-Services" value="住宿服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("住宿服務") > -1} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Residential-Services">住宿服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="Day-Training-Services" value="日間訓練服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("日間訓練服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Day-Training-Services" value="日間訓練服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("日間訓練服務") > -1} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Day-Training-Services">日間訓練服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="Community-Support-Services" value="社區支援服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("社區支援服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Community-Support-Services" value="社區支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("社區支援服務") > -1} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Community-Support-Services">社區支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("自閉症及發展障礙支援服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("自閉症及發展障礙支援服務") > -1} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services">自閉症及發展障礙支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onChange={(event) => setServiceCategory(event.target.value)} checked={serviceCategory === ("職業康復及發展服務")} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("職業康復及發展服務") > -1} disabled={serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Vocational-Rehabilitation-and-Development-Services">職業康復及發展服務</label>
                             </div>
                             {/*
