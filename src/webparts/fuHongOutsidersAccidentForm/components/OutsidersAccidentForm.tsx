@@ -197,7 +197,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         const body = {};
         const error = {};
 
-
+        body["ReporterId"] = CURRENT_USER.id;
         if (serviceUnit) {
             body["ServiceUnit"] = serviceUnit
         } else {
@@ -759,7 +759,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     const smRejectHandler = (event) => {
         if (confirm("確認拒絕 ?")) {
-            if (spSmInfo.Email === formData.Author.EMail) return;
+            if (spSmInfo.Email === formData.Reporter.EMail) return;
             const body = {
                 "SMApproved": false,
                 "SMComment": smComment,
@@ -947,8 +947,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
             setAccidentTime(new Date(data.AccidentTime));
 
-            if (data.Author) {
-                setReporter([{ secondaryText: data.Author.EMail, id: data.Author.Id }]);
+            if (data.Reporter) {
+                setReporter([{ secondaryText: data.Reporter.EMail, id: data.Reporter.Id }]);
             }
 
             if (data.Created) {

@@ -747,7 +747,7 @@ return <>
                                 填報人姓名及職級
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.Author.displayName}&nbsp;&nbsp;{formData.Author.jobTitle}
+                                {formData.Reporter.displayName}&nbsp;&nbsp;{formData.Reporter.jobTitle}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;日期

@@ -948,7 +948,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     const smRejectHandler = () => {
-        if (spSmInfo.Email === formData.Author.EMail) return;
+        if (spSmInfo.Email === formData.Reporter.EMail) return;
         if (confirm("確認拒絕 ?")) {
             const body = {
                 "SMApproved": false,
@@ -1217,8 +1217,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setContactFamilyDate(new Date(data.ContactFamilyDate));
             }
             //Created By whom
-            if (data.Author) {
-                setReporter([{ secondaryText: data.Author.mail, id: data.AuthorId }]);
+            if (data.Reporter) {
+                setReporter([{ secondaryText: data.Reporter.mail, id: data.Reporter }]);
             }
 
             if (data.Created) {

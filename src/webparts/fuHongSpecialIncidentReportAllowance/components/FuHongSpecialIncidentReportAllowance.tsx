@@ -77,7 +77,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
       isPrintMode: false,
       speicalIncidentReportWorkflow:'',
       departmentList:[],
-      loading:false,
+      loading:true,
       formTwentySixData:[],
       formTwentySixDataPrint:[],
       formTwentySixDataSelected:null,
@@ -107,6 +107,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
           let formTwentySixData :any = [];
           let formTwentySixDataPrint :any = [];
           let formTwentySixDataSelected = null;
+          debugger
           if (data) {
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
             debugger
@@ -157,7 +158,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
               }
             })
           }).catch(console.error)
-          this.setState({ permissionList: lists[0], departmentList: lists[1], loading:true, speicalIncidentReportWorkflow:lists[2], serviceUnitList:lists[3] });
+          this.setState({ permissionList: lists[0], departmentList: lists[1], loading:false, speicalIncidentReportWorkflow:lists[2], serviceUnitList:lists[3] });
           this.checkRole();// Testing Only 
         }).catch(console.error);
       }).catch(console.error);
@@ -218,6 +219,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
   public render(): React.ReactElement<IFuHongSpecialIncidentReportAllowanceProps> {
 
     console.log('this.state.formTwentySixDataPrint',this.state.formTwentySixDataPrint)
+    console.log('this.state.loading',this.state.loading)
     return (
       <div className={styles.fuHongSpecialIncidentReportAllowance}>
         <div className={styles.container}>

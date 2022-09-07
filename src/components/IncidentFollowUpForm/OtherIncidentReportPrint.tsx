@@ -315,8 +315,8 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
         if (formData) {
 
             setIncidentTime(new Date(formData.IncidentTime));
-            if (formData.Author) {
-                setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            if (formData.Reporter) {
+                setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             } else {
                 setLoadReporter(true);
             }

@@ -225,8 +225,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 setSdDate(new Date(formData.SDDate));
             }*/
 
-            if (formData.Author) {
-                setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            if (formData.Reporter) {
+                setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             } else {
                 setLoadReporter(true);
             }
