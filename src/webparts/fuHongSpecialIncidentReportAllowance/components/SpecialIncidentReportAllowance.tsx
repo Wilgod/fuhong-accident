@@ -182,7 +182,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         body["OrgPhone"] = reportPhone;
         body["OrgAddress"] = reportAddress;
         body["OrgSUName"] = suTcName;
-
+        body["ReporterId"] = CURRENT_USER.id;
+        
 
         //致部門
         body["ToDepartment"] = form.toDepartment;
@@ -441,8 +442,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 setServiceUnit(formData.ServiceUnit);
             }
 
-            if (formData.Author) {
-                setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            if (formData.Reporter) {
+                setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             }
 
             if (formData.GuardianDatetime) {
@@ -718,7 +719,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const smRejectHandler = (event) => {
         event.preventDefault();
-        if (spSmInfo.Email === formData.Author.EMail) return;
+        if (spSmInfo.Email === formData.Reporter.EMail) return;
         const [body, error] = dataFactory();
         if (confirm("確認拒絕 ?")) {
 

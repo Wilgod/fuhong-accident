@@ -723,7 +723,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         let body = {};
         let error = {};
         body["ServiceUnit"] = serviceUnit
-
+        body["ReporterId"] = CURRENT_USER.id;
         //經辦人 (負責督察姓名)
         if (form.responsibleName) {
             body["ResponsibleName"] = form.responsibleName;
@@ -1327,7 +1327,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const smRejectHandler = () => {
 
-        if (spSmInfo.Email === formData.Author.EMail) return;
+        if (spSmInfo.Email === formData.Reporter.EMail) return;
 
         if (confirm("確認拒絕 ?")) {
             const [body, error] = dataFactory();
@@ -1415,8 +1415,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 setSdDate(new Date(formData.SDDate));
             }
 
-            if (formData.Author) {
-                setReporter([{ secondaryText: formData.Author.EMail, id: formData.Author.Id }]);
+            if (formData.Reporter) {
+                setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             }
 
             if (formData.SM) {
@@ -1757,7 +1757,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍主管<span className="d-sm-inline d-md-block">姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control ${(error && error['HomesName']) ? "is-invalid": ""}`} value={form.homesManagerName} name="homesManagerName" onChange={inputFieldHandler}
+                            <input type="text" className={`form-control ${(error && error['HomesManagerName']) ? "is-invalid": ""}`} value={form.homesManagerName} name="homesManagerName" onChange={inputFieldHandler}
                              disabled={true}   
                             />
                         </div>

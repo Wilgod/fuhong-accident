@@ -79,7 +79,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       formSubmitted: false,
       isPrintMode: false,
       departmentList:[],
-      loading:false,
+      loading:true,
       indexTab: 0,
       speicalIncidentReportWorkflow:'',
       formTwentySixData:[],
@@ -153,7 +153,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
               }
             })
           }).catch(console.error)
-          this.setState({ permissionList: lists[0], departmentList: lists[1], loading:true, speicalIncidentReportWorkflow:lists[2], serviceUnitList:lists[3] });
+          this.setState({ permissionList: lists[0], departmentList: lists[1], loading:false, speicalIncidentReportWorkflow:lists[2], serviceUnitList:lists[3] });
           this.checkRole();// Testing Only 
         }).catch(console.error);
       }).catch(console.error);

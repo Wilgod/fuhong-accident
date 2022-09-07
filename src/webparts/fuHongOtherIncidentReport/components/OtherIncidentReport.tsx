@@ -148,6 +148,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         let body = {};
         let error = {};
 
+        body["ReporterId"] = CURRENT_USER.id;
+        
         //服務單位
         if (serviceUnit) {
             body["ServiceUnit"] = serviceUnit;
@@ -637,7 +639,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const smRejectHandler = (event) => {
         event.preventDefault();
-        if (spSmInfo.Email === formData.Author.EMail) return;
+        if (spSmInfo.Email === formData.Reporter.EMail) return;
         if (confirm("確認拒絕 ?")) {
 
             const [body, error] = dataFactory();
@@ -741,8 +743,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 setSdDate(new Date(data.SDDate));
             }
 
-            if (data.Author) {
-                setReporter([{ secondaryText: data.Author.EMail, id: data.Author.Id }]);
+            if (data.Reporter) {
+                setReporter([{ secondaryText: data.Reporter.EMail, id: data.Reporter.Id }]);
             }
 
             if (data.SubmitDate) {

@@ -51,7 +51,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 sa['StatusTC'] = '尚待調查員填表';
             }
             if (sa.Status === "DRAFT") {
-                if (sa.AuthorId === spId) {
+                if (sa.ReporterId === spId) {
                     serviceUserAccidentData.push(sa);
                 }
             } else {
@@ -126,7 +126,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             }
             oa['ServiceUserNameCN'] = oa['ServiceUserNameTC']
             if (oa.Status === "DRAFT") {
-                if (oa.AuthorId === spId) {
+                if (oa.ReporterId === spId) {
                     serviceUserAccidentData.push(oa);
                 }
             } else {
