@@ -10,13 +10,16 @@ export default function useUserInfo(siteCollectionUrl) {
 
         if (email) {
             // UserInfoAd list
+            //console.log('email',email);
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,email).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     getSMSDMapping(siteCollectionUrl,userInfosRes[0].hr_deptid).then((userSMSD) => {
-                        userInfosRes[0].hr_deptid = userSMSD[0].su_Eng_name_display;
-                        const [user] = userInfosRes;
-                        setUserInfo(user);
+                        //if (userSMSD.length > 0) {
+                            userInfosRes[0].hr_deptid = userSMSD[0].su_Eng_name_display;
+                            const [user] = userInfosRes;
+                            setUserInfo(user);
+                        //}
                     }).catch((err) => {
                         console.error('getSMSDMapping error')
                         console.error(err)

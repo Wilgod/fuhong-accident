@@ -179,6 +179,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             for (let item of filterSpecialIncidentReporAllowance) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
+                if (item.Id == 50) {
+                    debugger
+                }
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';

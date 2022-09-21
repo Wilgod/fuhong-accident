@@ -593,6 +593,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             error["SPTId"] = true;
         }
 
+        body["ReporterId"] = CURRENT_USER.id;
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
             body["SMApproved"] = true;
             body["Status"] = "PENDING_SPT_APPROVE";
@@ -1506,7 +1507,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }, [serviceUser, serviceUserRecordId]);
     console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
     console.log('serviceUnit',serviceUnit);
-    console.log('permissionList',permissionList);
     return (
         <>
             {
