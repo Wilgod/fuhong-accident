@@ -1009,7 +1009,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         // //殘疾人士院舍特別事故報告 (附頁)
         body["AffectedName"] = form.affectedName;
-        body["AffectedIdCardNo"] = form.affectedIdCardNo;
+        
+        if (form.affectedIdCardNo.length != 8) {
+            error["AffectedIdCardNo"] = true;
+        } else  {
+            body["AffectedIdCardNo"] = form.affectedIdCardNo;
+        }
         body["AffectedGender"] = form.affectedGender;
         body["AffectedAge"] = form.affectedAge;
         body["AffectedMedicalRecord"] = form.affectedMedicalRecord;
@@ -2520,7 +2525,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份證號碼</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="affectedIdCardNo" value={form.affectedIdCardNo} onChange={inputFieldHandler}
+                            <input type="text" className={`form-control IdCard ${(error && error['AffectedIdCardNo']) ? "is-invalid": ""}`} name="affectedIdCardNo" value={form.affectedIdCardNo} onChange={inputFieldHandler} placeholder={'A01234567'}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>

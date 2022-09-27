@@ -65,10 +65,13 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                     } else */
                     
                 }
+                if (sa['CaseNumber'] == 'SUI-2223COATC009') {
+                    debugger
+                }
                 if (sa['Stage'] == '1') {
                     if (sa.Status === "PENDING_SM_APPROVE" && sa['SMId'] == spId) {
                         serviceUserAccidentData.push(sa);
-                    } else if (sa.Status === "PENDING_SPT_APPROVE" && (sa['SPTId'].Id == spId || sa['SDId'] == spId)) {
+                    } else if (sa.Status === "PENDING_SPT_APPROVE" && (sa['SPTId'] == spId || sa['SDId'] == spId)) {
                         serviceUserAccidentData.push(sa);
                     }
                 } else if (sa['Stage'] == '2') {
@@ -143,7 +146,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 if (oa['Stage'] == '1') {
                     if (oa.Status === "PENDING_SM_APPROVE" && oa['SMId'] == spId) {
                         outsiderAccidentData.push(oa);
-                    } else if (oa.Status === "PENDING_SPT_APPROVE" && (oa['SPTId'].Id == spId || oa['SDId'] == spId)) {
+                    } else if (oa.Status === "PENDING_SPT_APPROVE" && (oa['SPTId'] == spId || oa['SDId'] == spId)) {
                         outsiderAccidentData.push(oa);
                     }
                 } else if (oa['Stage'] == '2') {
@@ -186,13 +189,13 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             if (oid['Stage'] == '1') {
                 if (oid.Status === "PENDING_SM_APPROVE" && oid['SMId'] == spId) {
                     otherIncidentData.push(oid);
-                } else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'].Id == spId || oid['SDId'] == spId)) {
+                } else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'] == spId || oid['SDId'] == spId)) {
                     otherIncidentData.push(oid);
                 }
             } else if (oid['Stage'] == '2') {
                 if (oid.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
                     otherIncidentData.push(oid);
-                }  else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'].Id == spId || oid['SDId'] == spId)) {
+                }  else if (oid.Status === "PENDING_SD_APPROVE" && (oid['SDId'] == spId || oid['SDId'] == spId)) {
                     otherIncidentData.push(oid);
                 } 
             }
@@ -226,13 +229,13 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             if (sirl['Stage'] == '1') {
                 if (sirl.Status === "PENDING_SM_APPROVE" && sirl['SMId'] == spId) {
                     specialIncidentReportLicense.push(sirl);
-                } else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'].Id == spId || sirl['SDId'] == spId)) {
+                } else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'] == spId || sirl['SDId'] == spId)) {
                     specialIncidentReportLicense.push(sirl);
                 }
             } else if (sirl['Stage'] == '2') {
                 if (sirl.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
                     specialIncidentReportLicense.push(sirl);
-                }  else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'].Id == spId || sirl['SDId'] == spId)) {
+                }  else if (sirl.Status === "PENDING_SD_APPROVE" && (sirl['SDId'] == spId || sirl['SDId'] == spId)) {
                     specialIncidentReportLicense.push(sirl);
                 } 
             }
@@ -264,13 +267,13 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             if (sira['Stage'] == '1') {
                 if (sira.Status === "PENDING_SM_APPROVE" && sira['SMId'] == spId) {
                     specialIncidentReportAllowance.push(sira);
-                } else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'].Id == spId || sira['SDId'] == spId)) {
+                } else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'] == spId || sira['SDId'] == spId)) {
                     specialIncidentReportAllowance.push(sira);
                 }
             } else if (sira['Stage'] == '2') {
                 if (sira.Status === "PENDING_SM_FILL_IN" && getIFF.length > 0 && getIFF[0]['SMId'] == spId) {
                     specialIncidentReportAllowance.push(sira);
-                }  else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'].Id == spId || sira['SDId'] == spId)) {
+                }  else if (sira.Status === "PENDING_SD_APPROVE" && (sira['SDId'] == spId || sira['SDId'] == spId)) {
                     specialIncidentReportAllowance.push(sira);
                 } 
             }
