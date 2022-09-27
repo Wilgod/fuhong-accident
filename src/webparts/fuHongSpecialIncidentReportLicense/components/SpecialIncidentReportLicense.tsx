@@ -1009,11 +1009,40 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         // //殘疾人士院舍特別事故報告 (附頁)
         body["AffectedName"] = form.affectedName;
-        
-        if (form.affectedIdCardNo.length != 8) {
+        debugger
+        if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
             error["AffectedIdCardNo"] = true;
-        } else  {
-            body["AffectedIdCardNo"] = form.affectedIdCardNo;
+        }
+        if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
+            let mNumber = form.affectedIdCardNo.substr(1,6);
+            if (mNumber.search(/[^0-9]+/) == -1) {
+                if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
+                    error["AffectedIdCardNo"] = true;
+                } else {
+                    body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                }
+
+            } else {
+                error["AffectedIdCardNo"] = true;
+            }
+
+        } else {
+            if (form.affectedIdCardNo.charAt(1).search(/[^a-zA-Z]+/) != -1) {
+                error["AffectedIdCardNo"] = true;
+            } else {
+                if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
+                    let mNumber = form.affectedIdCardNo.substr(2,6);
+                    if (mNumber.search(/[^0-9]+/) == -1) {
+                        if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
+                            error["AffectedIdCardNo"] = true;
+                        } else {
+                            body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                        }
+                    } else {
+                        error["AffectedIdCardNo"] = true;
+                    }
+                }
+            }
         }
         body["AffectedGender"] = form.affectedGender;
         body["AffectedAge"] = form.affectedAge;
@@ -2523,9 +2552,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <input type="text" className="form-control" name="affectedName" value={form.affectedName} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份證號碼</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份證號碼 (A123456(7))</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control IdCard ${(error && error['AffectedIdCardNo']) ? "is-invalid": ""}`} name="affectedIdCardNo" value={form.affectedIdCardNo} onChange={inputFieldHandler} placeholder={'A01234567'}
+                            <input type="text" className={`form-control IdCard ${(error && error['AffectedIdCardNo']) ? "is-invalid": ""}`} name="affectedIdCardNo" value={form.affectedIdCardNo} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
