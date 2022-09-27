@@ -1540,6 +1540,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
                                         let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == item});
+                                        
+                                        if (serviceUserUnitList.length > 0) {
+                                            debugger
+                                        }
                                         if (ser.length > 0) {
                                             return <option value={ser[0].su_Eng_name_display} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
                                         }
