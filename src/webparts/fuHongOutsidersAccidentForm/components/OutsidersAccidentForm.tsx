@@ -92,6 +92,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [filename, setFilename] = useState("Choose file");
     const [emailTo, setEmailTo] = useState("");
     const [emailBody, setEmailBody] = useState("");
+    const [emailCc, setEmailCc] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     const [serviceUnit, setServiceUnit] = useState("");
     const [form, setForm] = useState<IOutsidersAccidentFormStates>({
@@ -885,6 +886,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         values['FormType'] = "PUI";
         values['AccidentTime'] = accidentTime.toISOString();
         values['EmailTo'] = emailTo;
+        values['EmailCC'] = emailCc;
         values['EmailBody'] = emailBodyHtml;
         debugger
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
@@ -1059,6 +1061,9 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 }
                 if (r.Title == 'Email Body') {
                     setEmailBody(r.Body);
+                }
+                if (r.Title == 'CC') {
+                    setEmailCc(r.Email);
                 }
             }
             return result;

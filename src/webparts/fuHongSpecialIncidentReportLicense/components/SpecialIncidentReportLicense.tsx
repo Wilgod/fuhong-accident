@@ -148,6 +148,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [filename, setFilename] = useState("Choose file");
     const [emailTo, setEmailTo] = useState("");
     const [emailBody, setEmailBody] = useState("");
+    const [emailCc, setEmailCc] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
 
     const [disabled1, setDisabled1] = useState(false);
@@ -1182,28 +1183,69 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory()
+        let error = {};
+        if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
+            error["AffectedIdCardNo"] = true;
+        }
+        if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
+            let mNumber = form.affectedIdCardNo.substr(1,6);
+            if (mNumber.search(/[^0-9]+/) == -1) {
+                if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
+                    error["AffectedIdCardNo"] = true;
+                } else {
+                    body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                }
+
+            } else {
+                error["AffectedIdCardNo"] = true;
+            }
+
+        } else {
+            if (form.affectedIdCardNo.charAt(1).search(/[^a-zA-Z]+/) != -1) {
+                error["AffectedIdCardNo"] = true;
+            } else {
+                if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
+                    let mNumber = form.affectedIdCardNo.substr(2,6);
+                    if (mNumber.search(/[^0-9]+/) == -1) {
+                        if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
+                            error["AffectedIdCardNo"] = true;
+                        } else {
+                            body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                        }
+                    } else {
+                        error["AffectedIdCardNo"] = true;
+                    }
+                }
+            }
+        }
         console.log(body);
         console.log(error);
-        if (formStatus === "DRAFT") {
-            updateSpecialIncidentReportLicense(formData.Id, {
-                ...body,
-                "Status": "DRAFT",
-                "Title": "SIH"
-            }).then(async (updateSpecialIncidentReportLicenseRes) => {
-                console.log(updateSpecialIncidentReportLicenseRes);
-                await uploadFile(formData.Id);
-                formSubmittedHandler();
-            }).catch(console.error);
+        if (Object.keys(error).length > 0) {
+            setError(error);
+            alert("提交錯誤");
         } else {
-            createSpecialIncidentReportLicense({
-                ...body,
-                "Status": "DRAFT",
-                "Title": "SIH"
-            }).then(async (createSpecialIncidentReportLicenseRes) => {
-                await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
-                formSubmittedHandler();
-            }).catch(console.error);
+            if (formStatus === "DRAFT") {
+                updateSpecialIncidentReportLicense(formData.Id, {
+                    ...body,
+                    "Status": "DRAFT",
+                    "Title": "SIH"
+                }).then(async (updateSpecialIncidentReportLicenseRes) => {
+                    console.log(updateSpecialIncidentReportLicenseRes);
+                    await uploadFile(formData.Id);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                createSpecialIncidentReportLicense({
+                    ...body,
+                    "Status": "DRAFT",
+                    "Title": "SIH"
+                }).then(async (createSpecialIncidentReportLicenseRes) => {
+                    await uploadFile(createSpecialIncidentReportLicenseRes.data.Id);
+                    formSubmittedHandler();
+                }).catch(console.error);
+            }
         }
+        
 
     }
 
@@ -1399,6 +1441,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         values['FormType'] = "SIH";
         values['AccidentTime'] = incidentTime.toISOString();
         values['EmailTo'] = emailTo;
+        values['EmailCC'] = emailCc;
         values['EmailBody'] = emailBodyHtml;
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
@@ -1572,6 +1615,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 }
                 if (r.Title == 'Email Body') {
                     setEmailBody(r.Body);
+                }
+                if (r.Title == 'CC') {
+                    setEmailCc(r.Email);
                 }
             }
             return result;
