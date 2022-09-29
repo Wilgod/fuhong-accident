@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //prod
-  "id": "53b8d895-b611-4257-b198-896f9565f47d",
+  //"id": "53b8d895-b611-4257-b198-896f9565f47d",
   //uat
-  //"id": "50b8d895-b600-4057-b098-896f9464f47d",
+  "id": "50b8d895-b600-4057-b098-896f9464f47d",
   "alias": "FuHongOutsidersAccidentFormWebPart",
   "componentType": "WebPart",
 
@@ -22,9 +22,9 @@
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
     //prod
-    "title": { "default": "Fu Hong Outsiders Accident Form Prod" },
+    //"title": { "default": "Fu Hong Outsiders Accident Form Prod" },
     //uat
-    //"title": { "default": "fuHongOutsidersAccidentForm" },
+    "title": { "default": "fuHongOutsidersAccidentForm" },
     "description": { "default": "Fu Hong Outsiders Accident Form 22" },
     "officeFabricIconFontName": "Page",
     "properties": {
