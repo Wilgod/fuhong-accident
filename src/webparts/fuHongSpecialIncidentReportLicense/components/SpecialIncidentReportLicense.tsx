@@ -1184,40 +1184,43 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         event.preventDefault();
         const [body] = dataFactory()
         let error = {};
-        if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
-            error["AffectedIdCardNo"] = true;
-        }
-        if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
-            let mNumber = form.affectedIdCardNo.substr(1,6);
-            if (mNumber.search(/[^0-9]+/) == -1) {
-                if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
-                    error["AffectedIdCardNo"] = true;
-                } else {
-                    body["AffectedIdCardNo"] = form.affectedIdCardNo;
-                }
-
-            } else {
+        if (form.affectedIdCardNo != null && form.affectedIdCardNo !='') {
+            if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
                 error["AffectedIdCardNo"] = true;
             }
-
-        } else {
-            if (form.affectedIdCardNo.charAt(1).search(/[^a-zA-Z]+/) != -1) {
-                error["AffectedIdCardNo"] = true;
-            } else {
-                if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
-                    let mNumber = form.affectedIdCardNo.substr(2,6);
-                    if (mNumber.search(/[^0-9]+/) == -1) {
-                        if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
-                            error["AffectedIdCardNo"] = true;
-                        } else {
-                            body["AffectedIdCardNo"] = form.affectedIdCardNo;
-                        }
-                    } else {
+            if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
+                let mNumber = form.affectedIdCardNo.substr(1,6);
+                if (mNumber.search(/[^0-9]+/) == -1) {
+                    if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
                         error["AffectedIdCardNo"] = true;
+                    } else {
+                        body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                    }
+    
+                } else {
+                    error["AffectedIdCardNo"] = true;
+                }
+    
+            } else {
+                if (form.affectedIdCardNo.charAt(1).search(/[^a-zA-Z]+/) != -1) {
+                    error["AffectedIdCardNo"] = true;
+                } else {
+                    if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
+                        let mNumber = form.affectedIdCardNo.substr(2,6);
+                        if (mNumber.search(/[^0-9]+/) == -1) {
+                            if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
+                                error["AffectedIdCardNo"] = true;
+                            } else {
+                                body["AffectedIdCardNo"] = form.affectedIdCardNo;
+                            }
+                        } else {
+                            error["AffectedIdCardNo"] = true;
+                        }
                     }
                 }
             }
         }
+        
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {

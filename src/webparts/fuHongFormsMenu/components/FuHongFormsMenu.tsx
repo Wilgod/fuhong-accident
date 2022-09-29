@@ -100,7 +100,6 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   public constructor(props) {
     super(props);
     getCanvasZone();
-
     sp.setup({ spfxContext: this.props.context });
     graph.setup({ spfxContext: this.props.context });
 
