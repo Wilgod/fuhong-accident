@@ -528,6 +528,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 

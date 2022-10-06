@@ -613,9 +613,24 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       this.setState({  mainTableDisplay:false,searchServiceUnit: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
-                      {this.state.serviceUnitList.map((item) => {
+                      {this.state.permissionList.indexOf('All') >=0 &&
+                            this.state.serviceUnitList.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                      }
+                      {this.state.permissionList.indexOf('All') < 0 && 
+                          this.state.permissionList.map((item) => {
+                              let ser = this.state.serviceUnitList.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                      }
+                      {/*this.state.serviceUnitList.map((item) => {
                         return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
-                      })}
+                      })*/}
                     </select>
                   </div>
                   <div className="col" >
@@ -696,6 +711,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     searchKeyword={this.state.searchKeyword}
                     adminPermissionBoolean={this.state.adminPermissionBoolean}
                     serviceUnitList={this.state.serviceUnitList}
+                    permissionList={this.state.permissionList}
                 />
                 }
                 

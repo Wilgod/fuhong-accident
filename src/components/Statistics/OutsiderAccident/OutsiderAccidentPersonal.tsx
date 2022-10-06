@@ -527,6 +527,7 @@ const sampleFiveParser = (data: any[], startDate, endDate): ISampleFiveDataset[]
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -2170,7 +2171,7 @@ function OutsiderAccidentPersonal(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{personalFactorDataset.personalFactorEmotional}</td>
@@ -2180,7 +2181,7 @@ function OutsiderAccidentPersonal(siteCollectionUrl) {
                                             <td>{personalFactorDataset.personalFactorTwitch}</td>
                                             <td>{personalFactorDataset.personalFactorOther}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>

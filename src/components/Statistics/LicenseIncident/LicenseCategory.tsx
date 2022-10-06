@@ -568,6 +568,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -1828,7 +1829,7 @@ function LicenseCategory(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{categoryDataset.unusalIncident}</td>
@@ -1839,7 +1840,7 @@ function LicenseCategory(siteCollectionUrl) {
                                             <td>{categoryDataset.otherIncident}</td>
                                             <td>{categoryDataset.other}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>

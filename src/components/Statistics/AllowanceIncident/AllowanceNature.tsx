@@ -2016,7 +2016,7 @@ function AllowanceNature(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{abuseNatureDataset.body}</td>
@@ -2025,7 +2025,7 @@ function AllowanceNature(siteCollectionUrl) {
                                             <td>{abuseNatureDataset.negligent}</td>
                                             <td>{abuseNatureDataset.other}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>

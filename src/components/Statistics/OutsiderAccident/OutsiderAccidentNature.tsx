@@ -496,6 +496,7 @@ const sampleFiveParser = (data: any[],startDate,endDate): ISampleFiveDataset[] =
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -1930,7 +1931,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{natureDataset.accidentNatureFall}</td>
@@ -1939,7 +1940,7 @@ function OutsiderAccidentNature(siteCollectionUrl) {
                                             <td>{natureDataset.accidentNatureEnvFactor}</td>
                                             <td>{natureDataset.accidentNatureOther}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>

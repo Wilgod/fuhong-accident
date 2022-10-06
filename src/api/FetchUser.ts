@@ -184,7 +184,6 @@ export async function checkDepartmentList(siteCollectionUrl,userEmail) {
 export async function checkPermissionList(siteCollectionUrl,userEmail) {
     let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
     let dept = [];
-    debugger
     if (user.length > 0) {
       let access = await getAccessRight();
       console.log('user hr_jobcode : ' +  user[0].hr_jobcode);
@@ -195,7 +194,6 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
         if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
           dept.push('All');
         } else if (item.JobCode == user[0].hr_jobcode && (!item.CMS || item.CMS == undefined)) {
-            debugger
           if (getSMSD.length > 0) {
             dept.push(getSMSD[0].su_Eng_name_display);
           }

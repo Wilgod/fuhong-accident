@@ -24,7 +24,6 @@ export default function useServiceLocation(siteCollectionUrl) {
 
     useEffect(() => {
         getAllServiceUnit(siteCollectionUrl).then((data) => {
-            debugger
             const result = locationFilterParser(data);
             setServiceLocation(result);
         }).catch(console.error);

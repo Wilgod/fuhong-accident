@@ -607,6 +607,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -3226,7 +3227,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{envFactorDataset.envSlipperyGround}</td>
@@ -3240,7 +3241,7 @@ function ServiceUserAccidentEnv(siteCollectionUrl) {
                                             <td>{envFactorDataset.envImproperUseOfAssistiveEquipment}</td>
                                             <td>{envFactorDataset.envOther}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>

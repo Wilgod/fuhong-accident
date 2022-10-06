@@ -1144,7 +1144,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (data.ServiceUserUnit) {
                 setPatientServiceUnit(data.ServiceUserUnit);
             }
-
+            setMedicalArrangementDate(data.MedicalArrangementDate != null ? new Date(data.MedicalArrangementDate) : null);
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -1510,8 +1510,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         }
     }, [serviceUser, serviceUserRecordId]);
-    console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
-    console.log('serviceUnit',serviceUnit);
+    //console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
+    //console.log('serviceUnit',serviceUnit);
     return (
         <>
             {
