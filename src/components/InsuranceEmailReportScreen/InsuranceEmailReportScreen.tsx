@@ -12,15 +12,16 @@ import useServiceLocation from '../../hooks/useServiceLocation';
 interface IInsuranceEmailReportScreenProps {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any;
 }
 
 
-function InsuranceEmailReportScreen({ context,siteCollectionUrl }: IInsuranceEmailReportScreenProps) {
+function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: IInsuranceEmailReportScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     //const [serviceUnitList] = useServiceUnit2(siteCollectionUrl);
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
-    const [data] = useEmailRecord();
+    const [data] = useEmailRecord(permission);
     console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -70,11 +71,27 @@ function InsuranceEmailReportScreen({ context,siteCollectionUrl }: IInsuranceEma
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          permission.map((item) => {
+                            //debugger
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col" >

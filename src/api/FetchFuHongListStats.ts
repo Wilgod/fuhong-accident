@@ -35,7 +35,7 @@ export async function getNewServiceUserAccident(searchCriteria: ISearchCriteria)
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime")
+            .select("CaseNumber", "AccidentTime","ServiceUserUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -71,7 +71,7 @@ export async function getDashboardServiceUserAccident(searchCriteria: ISearchCri
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime")
+            .select("CaseNumber", "AccidentTime","ServiceUserUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -107,7 +107,7 @@ export async function getNewOutsiderAccident(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime")
+            .select("CaseNumber", "AccidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -142,7 +142,7 @@ export async function getDashboardOutsiderAccident(searchCriteria: ISearchCriter
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime")
+            .select("CaseNumber", "AccidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -176,7 +176,7 @@ export async function getNewSpecialIncidentReportLicense(searchCriteria: ISearch
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items;
@@ -211,7 +211,7 @@ export async function getDashboardSpecialIncidentReportLicense(searchCriteria: I
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items;
@@ -246,7 +246,7 @@ export async function getNewSpecialIncidentReportAllowance(searchCriteria: ISear
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -282,7 +282,7 @@ export async function getDashboardSpecialIncidentReportAllowance(searchCriteria:
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
         return items
@@ -317,7 +317,7 @@ export async function getNewOtherIncidentReport(searchCriteria: ISearchCriteria)
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
 
@@ -352,7 +352,7 @@ export async function getDashboardOtherIncidentReport(searchCriteria: ISearchCri
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime")
+            .select("CaseNumber", "IncidentTime", "ServiceUnit")
             .filter(filterQuery)
             .getAll();
 
@@ -389,7 +389,7 @@ export async function getServiceUserStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor")
+            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserUnit", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor")
             .filter(filterQuery)
             .getAll();
         return items
@@ -458,7 +458,7 @@ export async function getLicenseStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime","UnusalIncident", "ResidentMissing", "Conflict", "MedicalIncident", "OtherIncident", "Other","RA_Body", "RA_Mental", "RA_Negligent", "RA_EmbezzleProperty", "RA_Abandoned", "RA_SexualAssault", "RA_Other")
+            .select("CaseNumber", "IncidentTime","ServiceUnit","UnusalIncident", "ResidentMissing", "Conflict", "MedicalIncident", "OtherIncident", "Other","RA_Body", "RA_Mental", "RA_Negligent", "RA_EmbezzleProperty", "RA_Abandoned", "RA_SexualAssault", "RA_Other")
             .filter(filterQuery)
             .getAll();
         return items
@@ -493,7 +493,7 @@ export async function getAllowanceStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "IncidentTime", "IncidentCategory", "Abusive_Body", "Abusive_Sexual", "Abusive_Mental", "Abusive_Negligent", "Abusive_Other", "Created")
+            .select("CaseNumber", "IncidentTime","ServiceUnit", "IncidentCategory", "Abusive_Body", "Abusive_Sexual", "Abusive_Mental", "Abusive_Negligent", "Abusive_Other", "Created")
             .filter(filterQuery)
             .getAll();
         console.log(items)
@@ -529,7 +529,7 @@ export async function getAccidentReportStats(searchCriteria: ISearchCriteria) {
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor","AccidentReportFormId")
+            .select("CaseNumber", "AccidentTime", "ServiceUserUnit", "ServiceUserAge", "ServiceUserGender", "Intelligence", "ASD", "ObserveEnvironmentFactor", "ObservePersonalFactor","AccidentReportFormId")
             .filter(filterQuery)
             .getAll();
 
@@ -592,7 +592,7 @@ export async function getAccidentReportStatsForOutsiders(searchCriteria: ISearch
         }
 
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("CaseNumber", "AccidentTime", "EnvSlipperyGround", "EnvUnevenGround", "EnvObstacleItems", "EnvInsufficientLight", "EnvNotEnoughSpace", "EnvAcousticStimulation", "EnvCollidedByOthers", "EnvHurtByOthers", "EnvImproperEquip", "EnvOther", "AccidentReportFormId")
+            .select("CaseNumber", "AccidentTime", "ServiceUnit","EnvSlipperyGround", "EnvUnevenGround", "EnvObstacleItems", "EnvInsufficientLight", "EnvNotEnoughSpace", "EnvAcousticStimulation", "EnvCollidedByOthers", "EnvHurtByOthers", "EnvImproperEquip", "EnvOther", "AccidentReportFormId")
             .filter(filterQuery)
             .getAll();
 

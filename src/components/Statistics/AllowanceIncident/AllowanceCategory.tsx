@@ -581,12 +581,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 
 
 
-function AllowanceCategory(siteCollectionUrl) {
+function AllowanceCategory(props) {
 
     const [groupBy, setGroupBy] = useState("NON");
     const [categoryDataset, setCategoryDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats();
+    const [serviceLocation] = useServiceLocation(props.siteCollectionUrl);
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useAllowanceStats(props.permission);
     console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -2385,9 +2385,24 @@ function AllowanceCategory(siteCollectionUrl) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
-                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
                         }
+                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          props.permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                    */}
                     </select>
                 </div>
                 <div className="col"></div>

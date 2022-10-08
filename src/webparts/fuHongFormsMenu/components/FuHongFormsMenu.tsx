@@ -429,7 +429,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       console.log(Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0);
       console.log("permissionList ", this.state.permissionList);
       console.log("ALL ", this.state.permissionList.indexOf("All") >=0);
-      return <div className={`${styles.navigationMenu}`}>
+      return <div className={`${styles.navigationMenu}`} style={{position:'absolute'}}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
           <div className="d-flex align-items center">
             <div style={{marginRight:'10px'}}>
@@ -511,57 +511,57 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         case 'OtherIncidentReport':
           return <FuHongOtherIncidentReportForm context={this.props.context} description={""}/>
         case 'CASE_SUMMARY':
-          return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'INSURANCE_EMAIL':
-          return <InsuranceEmailReportScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} />
+          return <InsuranceEmailReportScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'LOG':
-          return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'GENERAL':
-          return <General siteCollectionUrl={this.siteCollectionUrl}/>
+          return <General siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'SUI_AGE':
-          return <ServiceUserAccidentAge siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentAge siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'SUI_GENDER':
-          return <ServiceUserAccidentSex siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentSex siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SUI_INTELLIGENCE':
-          return <ServiceUserAccidentIntelligence siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentIntelligence siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SUI_ASD':
-          return <ServiceUserAccidentASD siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentASD siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SUI_NATURE':
-          return <ServiceUserAccidentNature siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SUI_ENV':
-          return <ServiceUserAccidentEnv siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentEnv siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SUI_PERSONAL':
-          return <ServiceUserAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
+          return <ServiceUserAccidentPersonal siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'PUI_NATURE':
-          return <OutsiderAccidentNature siteCollectionUrl={this.siteCollectionUrl} />
+          return <OutsiderAccidentNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'PUI_ENV':
-          return <OutsiderAccidentEnv siteCollectionUrl={this.siteCollectionUrl} />
+          return <OutsiderAccidentEnv siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'PUI_PERSONAL':
-          return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} />
+          return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SIH_CATEGORY':
-          return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl} />
+          return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SIH_NATURE':
-          return <LicenseNature siteCollectionUrl={this.siteCollectionUrl} />
+          return <LicenseNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SID_CATEGORY':
-          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} />
+          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'SID_NATURE':
-          return <AllowanceNature siteCollectionUrl={this.siteCollectionUrl} />
+          return <AllowanceNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
         case 'CS_SUI':
-          return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'CS_PUI':
-          return <OutsiderAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <OutsiderAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'CS_SIH':
-          return <LicenseIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <LicenseIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'CS_SID':
-          return <AllowanceCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <AllowanceCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case 'CS_OIN':
-          return <OtherIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <OtherIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
         // return <div>STAT</div>
         case "DASHBOARD":
-         return <Dashboard siteCollectionUrl={this.siteCollectionUrl}/>
+         return <Dashboard siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
         case "ADMIN":
             return <Admin context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
         case "HOME":

@@ -66,6 +66,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                     } else */
                     
                 }
+                console.log("sa['Stage']",sa['Stage']);
                 if (sa['Stage'] == '1') {
                     if (sa.Status === "PENDING_SM_APPROVE" && sa['SMId'] == spId) {
                         serviceUserAccidentData.push(sa);

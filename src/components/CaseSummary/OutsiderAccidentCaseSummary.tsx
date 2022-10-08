@@ -18,9 +18,10 @@ import * as FileSaver from 'file-saver';
 interface IOutsiderAccidentCaseSummary {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any;
 }
 
-function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAccidentCaseSummary) {
+function OutsiderAccidentCaseSummary({ context,siteCollectionUrl, permission }: IOutsiderAccidentCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
@@ -48,25 +49,39 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
     async function getAllData() {
         let allOutsiderUserAccident = await getAllOutsiderAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
+        let allDate = [];
         for (let sa of allOutsiderUserAccident) {
-            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
-            let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
-            sa['AccidentReportForm'] = getARF;
-            if (sa['Stage'] == '1') {
-                sa['Form'] = '外界人士意外填報表(一)';
-                sa['CurrentSM'] = sa['SM'];
-                sa['CurrentSD'] = sa['SD'];
-                sa['CurrentSPT'] = sa['SPT'];
-            } else if (sa['Stage'] == '2') {
-                sa['Form'] = '外界人士意外報告(二)';
-                sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
-                sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
-                sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+            let add = false;
+            if (permission.indexOf('All') >= 0) {
+                add = true;
+            } else {
+                for (let p of permission) {
+                    if (sa.ServiceUserUnit == p) {
+                        add = true;
+                    }
+                }
+            }
+            if (add) {
+                let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
+                sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
+                let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+                sa['AccidentReportForm'] = getARF;
+                if (sa['Stage'] == '1') {
+                    sa['Form'] = '外界人士意外填報表(一)';
+                    sa['CurrentSM'] = sa['SM'];
+                    sa['CurrentSD'] = sa['SD'];
+                    sa['CurrentSPT'] = sa['SPT'];
+                } else if (sa['Stage'] == '2') {
+                    sa['Form'] = '外界人士意外報告(二)';
+                    sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
+                    sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
+                    sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                }
+                allDate.push(sa);
             }
         }
-        setData(allOutsiderUserAccident);
-        setDisplayData(allOutsiderUserAccident)
+        setData(allDate);
+        setDisplayData(allDate)
     }
 
     const inputFieldHandler = (event) => {
@@ -77,14 +92,17 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
     function filter() {
         let filterData = data;
         if (selectedOptions.length > 0) {
-            let dataLists = [];
-            for (let option of selectedOptions) {
-                let newDataList = filterData.filter(item => { return item.ServiceLocation == option });
-                for (let dataList of newDataList) {
-                    dataLists.push(dataList);
+            if (selectedOptions[0] != 'ALL') {
+                let dataLists = [];
+                for (let option of selectedOptions) {
+                    let newDataList = filterData.filter(item => { return item.ServiceLocation == option });
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
                 }
+                filterData = dataLists;
             }
-            filterData = dataLists;
+            
         }
         if (startDate != null) {
             filterData = filterData.filter(item => {return new Date(item.AccidentTime).getTime() >= new Date(startDate).getTime()});
@@ -404,11 +422,26 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl }: IOutsiderAcc
                         setSelectedOptions(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col-4" >

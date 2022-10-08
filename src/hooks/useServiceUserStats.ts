@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 
 // Stats
-export function useServiceUserStats(): [any[], Date, Date,string[], Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
+export function useServiceUserStats(permission): [any[], Date, Date,string[], Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
     const [data, setData] = useState<any[]>([]);
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 2)));
     const [endDate, setEndDate] = useState(new Date());
@@ -15,7 +15,23 @@ export function useServiceUserStats(): [any[], Date, Date,string[], Dispatch<Set
             endDate: endDate,
             serviceUnits: serviceUnits
         }).then((res) => {
-            setData(res);
+            let allDate = [];
+            for (let r of res) {
+                let add = false;
+                if (permission.indexOf('All') >= 0) {
+                    add = true;
+                } else {
+                    for (let p of permission) {
+                        if (r.ServiceUserUnit == p) {
+                            add = true;
+                        }
+                    }
+                }
+                if (add) {
+                    allDate.push(r);
+                }
+            }
+            setData(allDate);
         }).catch(console.error)
     }, [startDate, endDate, serviceUnits]);
 
