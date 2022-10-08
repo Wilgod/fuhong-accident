@@ -97,7 +97,21 @@ const monthDiff = (d1: Date, d2: Date) => {
 }
 
 const envFactorFilter = (factor: string, dataset: IDataset): IDataset => {
-    let result = dataset;
+    let result = {
+        personalEmotionalInstability: 0,
+        personalHeartbroken: 0,
+        personalChoking: 0,
+        personalOther: 0,
+        personalTwitch: 0,
+        personalUnsteadyWalking: 0
+    }
+    result.personalEmotionalInstability = dataset.personalEmotionalInstability;
+    result.personalHeartbroken = dataset.personalHeartbroken;
+    result.personalChoking = dataset.personalChoking;
+    result.personalOther = dataset.personalOther;
+    result.personalTwitch = dataset.personalTwitch;
+    result.personalUnsteadyWalking = dataset.personalEmotionalInstability;
+    //let result = dataset;
     switch (factor) {
         case "PERSONAL_EMOTIONAL_INSTABILITY":
             result.personalEmotionalInstability += 1;
@@ -225,6 +239,7 @@ const financialChartParser = (result) =>{
     let personalUnsteadyWalking =['步履不穩'];
     let personalTwitch =['抽搐'];
     let personalOther =['其他'];
+
     result.map((item) => {
         dataResult.push(item.financialYear);
         personalEmotionalInstability.push(item.dataset['personalEmotionalInstability']);
@@ -511,12 +526,12 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
 const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
-
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
         if (d) {
 
             const currentFinicailYear = getDateFinancialYear(d);
+            console.log('currentFinicailYear',currentFinicailYear);
             if (m.has(currentFinicailYear)) {
 
                 let oldDataset = m.get(currentFinicailYear);
@@ -562,6 +577,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -588,7 +604,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
                     let arr = JSON.parse(item.ObservePersonalFactor);
                     if (Array.isArray(arr)) {
                         arr.forEach((factor) => {
-                            let newDataset = envFactorFilter(factor, initialDataset);
+                            let newDataset = envFactorFilter(factor, oldDataset);
                             m.set(year, newDataset);
                         })
                     }
@@ -612,9 +628,10 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         result.push(item);
     })
     let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
-    for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
+    /*for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
         const year =  d.getFullYear()
+        console.log('year',year);
         let m1 = new Map<string, IDataset>();
         const filterResult = result.filter(item => {return item.year == year});
         if (filterResult.length == 0) {
@@ -625,16 +642,16 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
             let item: ISampleSixDataset = { year: parseInt(key), dataset: value }
             result.push(item);
         })
-    }
+    }*/
     arraySort(result, 'year');
     return result;
 }
 
-function ServiceUserAccidentPersonal(siteCollectionUrl) {
+function ServiceUserAccidentPersonal(props) {
     const [groupBy, setGroupBy] = useState("NON");
     const [personalFactorDataset, setPersonalFactorDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats();
+    const [serviceLocation] = useServiceLocation(props.siteCollectionUrl);
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats(props.permission);
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -2207,6 +2224,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                         titleYear3 += ", "
                     }
                 })
+                debugger
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -2249,7 +2267,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{personalFactorDataset.personalEmotionalInstability}</td>
@@ -2259,7 +2277,7 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                             <td>{personalFactorDataset.personalTwitch}</td>
                                             <td>{personalFactorDataset.personalOther}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>
@@ -2363,12 +2381,12 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                                         return (
                                             <tr>
                                                 <th scope="row">{item.year}</th>
-                                                <td>{personalFactorDataset.personalEmotionalInstability}</td>
-                                                <td>{personalFactorDataset.personalHeartbroken}</td>
-                                                <td>{personalFactorDataset.personalChoking}</td>
-                                                <td>{personalFactorDataset.personalUnsteadyWalking}</td>
-                                                <td>{personalFactorDataset.personalTwitch}</td>
-                                                <td>{personalFactorDataset.personalOther}</td>
+                                                <td>{item.dataset.personalEmotionalInstability}</td>
+                                                <td>{item.dataset.personalHeartbroken}</td>
+                                                <td>{item.dataset.personalChoking}</td>
+                                                <td>{item.dataset.personalUnsteadyWalking}</td>
+                                                <td>{item.dataset.personalTwitch}</td>
+                                                <td>{item.dataset.personalOther}</td>
                                             </tr>
                                         )
                                     })}
@@ -2681,9 +2699,24 @@ function ServiceUserAccidentPersonal(siteCollectionUrl) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
-                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
                         }
+                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          props.permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                    */}
                     </select>
                 </div>
                 <div className="col"></div>

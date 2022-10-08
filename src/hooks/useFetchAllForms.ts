@@ -10,6 +10,7 @@ export interface ISearchCriteria {
     formStatus: string;
     expired: boolean;
     adminPermissionBoolean:boolean;
+    permissionList:any;
 }
 
 export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria) {
@@ -26,7 +27,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         let specialIncidentReportAllowance = [];
         let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
-
+        
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1 || searchCriteria.formTypes.indexOf("PUI") > -1) {
             accidentReportForm = await getAllAccidentReportForm();
             accidentFollowUpForm = await getAllAccidentFollowUpForm();
@@ -34,7 +35,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SIH") > -1 || searchCriteria.formTypes.indexOf("SID") > -1 || searchCriteria.formTypes.indexOf("OIN") > -1) {
             incidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         }
-        debugger
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
@@ -179,9 +179,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             for (let item of filterSpecialIncidentReporAllowance) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
-                if (item.Id == 50) {
-                    debugger
-                }
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';
@@ -252,11 +249,25 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             const d = new Date(item.AccidentTime || item.IncidentTime);
             return (d.getTime() <= searchCriteria.endDate.getTime() && d.getTime() >= searchCriteria.startDate.getTime())
         })
-
+        debugger;
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
             filterResult = filterResult.filter(item => {
                 return searchCriteria.serviceUnits.indexOf(item.ServiceLocation) >= 0
             })
+        }
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") >= 0) {
+            let filterServiceUnitResult = [];
+            if (searchCriteria.permissionList.indexOf('All') < 0) {
+                for (let p of searchCriteria.permissionList) {
+                    let rs = filterResult.filter(item => {return item.ServiceLocation.indexOf(p) >= 0})
+                    for (let r of rs) {
+                        filterServiceUnitResult.push(r);
+                    }
+                }
+                filterResult = filterServiceUnitResult;
+    
+            }
+            
         }
         if (searchCriteria.formStatus != 'ALL') {
             filterResult = filterResult.filter(item => {

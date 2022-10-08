@@ -12,15 +12,16 @@ import useServiceLocation from '../../hooks/useServiceLocation';
 interface ILogScreenProps {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any;
 }
 
-function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
+function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
-    const [log] = useLog();
-
+    const [log] = useLog(permission);
+    
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -29,6 +30,26 @@ function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
         }
         return result;
     }
+
+
+
+
+    useEffect(() => {
+        // Get stage oen form data
+        if (log.length > 0 && serviceLocation.length > 0) {
+            let dataLog = [];
+            for (let l of log) {
+                //console.log('l.ServiceUnit',l.ServiceUnit)
+                for (let location of serviceLocation) {
+                    if (l.ServiceUnit == location.su_Eng_name_display) {
+                        l['ServiceUnit'] = location.su_name_tc;
+                    }
+                }
+                dataLog.push(l);
+            }   
+            setData(dataLog);
+        }
+    }, [log, serviceLocation]);
     return (
         <div>
             <div className="row mb-3">
@@ -68,11 +89,27 @@ function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          permission.map((item) => {
+                            //debugger
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col" >
@@ -129,7 +166,7 @@ function LogScreen({ context,siteCollectionUrl }: ILogScreenProps) {
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${log.length} 筆記錄`}]
                 </div>
-                <BootstrapTable boot keyField='id' data={log || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
+                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )

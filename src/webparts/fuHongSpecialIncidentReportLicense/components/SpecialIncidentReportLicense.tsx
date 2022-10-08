@@ -1517,11 +1517,27 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 setNotifyStaff([formData.GuardianStaff]);
             }
             setServiceLocation(formData.ServiceLocation);
+            let police = formData.Police;
+            let policeInvestigate = formData.PoliceInvestigate;
+            if (formData.UnusalIncident == null) {
+                police = undefined;
+                policeInvestigate = undefined;
+            }
+            let found = form.found;
+            if (formData.residentMissing  == null) {
+                found = undefined;
+            }
+            let referSocialWorker = form.referSocialWorker;
+            let abuser_police = form.abuser_police;
+            if (formData.ra_body == null && formData.ra_mental && formData.ra_negligent && formData.ra_embezzleProperty && formData.ra_abandoned && formData.ra_sexualAssault && formData.ra_other) {
+                referSocialWorker = undefined;
+                abuser_police = undefined;
+            }
             setForm({
                 ...form,
                 abuser: formData.Abuser,
                 abuserDescription: formData.AbuserDescription,
-                abuser_police: formData.Abuser_Police,
+                abuser_police: abuser_police,
                 abuser_policeCaseNo: formData.Abuser_PoliceCaseNo,
                 abuser_policeDate: formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : null,
                 affectedAge: formData.AffectedAge,
@@ -1535,7 +1551,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 conflictDescription: formData.ConflictDescription,
                 conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
                 conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : null,
-                found: formData.Found,
+                found: found,
                 foundDate: formData.FoundDate ? new Date(formData.FoundDate) : null,
                 guardian: formData.Guardian,
                 guardianName: formData.GuardianName,
@@ -1556,9 +1572,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 other: formData.Other,
                 otherDescription: formData.OtherDescription,
                 otherIncident: formData.OtherIncident,
-                police: formData.Police,
+                police: police,
                 policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null,
-                policeInvestigate: formData.PoliceInvestigate,
+                policeInvestigate: policeInvestigate,
                 policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : null,
                 policeReportNumber: formData.PoliceReportNumber,
                 ra_abandoned: formData.RA_Abandoned,
@@ -1571,7 +1587,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ra_sexualAssault: formData.RA_SexualAssault,
                 referDate: formData.ReferDate ? new Date(formData.ReferDate) : null,
                 referServiceUnit: formData.ReferServiceUnit,
-                referSocialWorker: formData.ReferSocialWorker,
+                referSocialWorker: referSocialWorker,
                 residentAge: formData.ResidentAge,
                 residentGender: formData.ResidentGender,
                 residentMissing: formData.ResidentMissing,

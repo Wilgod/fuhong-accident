@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { getNewServiceUserAccident, getNewOutsiderAccident, getNewOtherIncidentReport, getNewSpecialIncidentReportAllowance, getNewSpecialIncidentReportLicense, ISearchCriteria } from '../api/FetchFuHongListStats';
 
 
-export default function useGeneralStats(): [any[], Date, Date,string[], Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
+export default function useGeneralStats(permission): [any[], Date, Date,string[], Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<Date>>, Dispatch<SetStateAction<string[]>>] {
     const [data, setData] = useState<any[]>([]);
     //const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 2)));
     const [startDate, setStartDate] = useState(new Date(new Date().getFullYear(),0,1));
@@ -22,7 +22,31 @@ export default function useGeneralStats(): [any[], Date, Date,string[], Dispatch
             let bTime = new Date(b.AccidentTime || b.IncidentTime).getTime();
             return aTime - bTime;
         });
-        setData(result);
+        
+        let allDate = [];
+        for (let r of result) {
+            let add = false;
+            if (permission.indexOf('All') >= 0) {
+                add = true;
+            } else {
+                for (let p of permission) {
+                    if (r.CaseNumber.indexOf('SUI') >=0) {
+                        if (r.ServiceUserUnit == p) {
+                            add = true;
+                        }
+                    } else {
+                        if (r.ServiceUnit == p) {
+                            add = true;
+                        }
+                    }
+                    
+                }
+            }
+            if (add) {
+                allDate.push(r);
+            }
+        }
+        setData(allDate);
     }
 
 

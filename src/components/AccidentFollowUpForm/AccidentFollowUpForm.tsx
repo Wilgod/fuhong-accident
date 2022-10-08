@@ -682,7 +682,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     useEffect(() => {
         if (parentFormData && parentFormData.ServiceUserUnit) {
-            debugger
             let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == parentFormData.ServiceUserUnit});
             if (ser.length > 0) {
                 console.log("ser[0].su_name_tc",ser[0].su_name_tc)

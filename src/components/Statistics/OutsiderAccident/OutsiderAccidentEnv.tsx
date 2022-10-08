@@ -574,6 +574,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
+    arraySort(result, 'financialYear');
     return result;
 }
 
@@ -628,11 +629,11 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
     return result;
 }
 
-function OutsiderAccidentEnv(siteCollectionUrl) {
+function OutsiderAccidentEnv(props) {
     const [groupBy, setGroupBy] = useState("NON");
     const [envFactorDataset, setEnvFactorDataset] = useState<IDataset>(initialDataset);
-    const [serivceLocation] = useServiceLocation(siteCollectionUrl.siteCollectionUrl);
-    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats();
+    const [serviceLocation] = useServiceLocation(props.siteCollectionUrl);
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useOutsidersAccidentReportStats(props.permission);
 
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -3178,7 +3179,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                             </tr>
                                         )
                                     })}
-                                    {
+                                    {/*
                                         <tr style={{ color: "red" }}>
                                             <th scope="row">總數</th>
                                             <td>{envFactorDataset.envSlipperyGround}</td>
@@ -3192,7 +3193,7 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                                             <td>{envFactorDataset.envImproperEquip}</td>
                                             <td>{envFactorDataset.envOther}</td>
                                         </tr>
-                                    }
+                                */}
                                 </tbody>
                             </table>
                         </div>
@@ -3682,9 +3683,24 @@ function OutsiderAccidentEnv(siteCollectionUrl) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
-                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
                         }
+                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          props.permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
+                    */}
                     </select>
                 </div>
                 <div className="col"></div>

@@ -130,7 +130,6 @@ export async function getAccessRight() {
 
 export async function getSMSDMapping(siteCollectionUrl,deptId) {
     try {
-        debugger
         const web = Web(siteCollectionUrl);
         const LIST_NAME = "SM SD Mapping";
         const items: any[] = await web.lists.getByTitle(LIST_NAME).items.filter(`Title eq '`+deptId+`'`).get()
@@ -294,7 +293,8 @@ export async function getServiceUserAccidentWithoutDarft() {
 export async function getAllServiceUserAccident() {
     try {
         const LIST_NAME = "Service User Accident";
-        let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
+        //let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
+        let filterQuery = `Status ne 'CLOSED'`;
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .select("*", "Reporter/Id", "Reporter/EMail", 'Reporter/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")

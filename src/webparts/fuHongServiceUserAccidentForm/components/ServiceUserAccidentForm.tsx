@@ -230,7 +230,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["ServiceUserNameCN"] = serviceUserNameCN;
         body["ServiceUserAge"] = serviceUserAge;
         body["ServiceUserGender"] = serviceUserGender;
-        body["ServiceUserId"] = serviceUserId.toString();
+        body["ServiceUserId"] = serviceUserId == null ? null : serviceUserId.toString();
         body["ServiceCategory"] = JSON.stringify(serviceCategory);
         body["Wheelchair"] = wheelchair;
         body["ASD"] = asd;
@@ -1144,7 +1144,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (data.ServiceUserUnit) {
                 setPatientServiceUnit(data.ServiceUserUnit);
             }
-
+            setMedicalArrangementDate(data.MedicalArrangementDate != null ? new Date(data.MedicalArrangementDate) : null);
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -1510,8 +1510,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         }
     }, [serviceUser, serviceUserRecordId]);
-    console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
-    console.log('serviceUnit',serviceUnit);
+    //console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
+    //console.log('serviceUnit',serviceUnit);
     return (
         <>
             {
@@ -1545,10 +1545,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 {permissionList.indexOf('All') < 0 && 
                                     permissionList.map((item) => {
                                         let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == item});
-                                        
-                                        if (serviceUserUnitList.length > 0) {
-                                            debugger
-                                        }
+
                                         if (ser.length > 0) {
                                             return <option value={ser[0].su_Eng_name_display} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
                                         }

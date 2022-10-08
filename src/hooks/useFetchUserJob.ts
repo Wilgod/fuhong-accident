@@ -12,7 +12,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         let allAccidentFollowUpForm = await getAllAccidentFollowUpForm();
         let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         let allSMSDMapping = await getAllSMSDMapping(siteCollectionUrl);
-        debugger
         let serviceUserAccidentData = [];
         for (let sa of allServiceUserAccident) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
@@ -67,6 +66,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                     } else */
                     
                 }
+                console.log("sa['Stage']",sa['Stage']);
                 if (sa['Stage'] == '1') {
                     if (sa.Status === "PENDING_SM_APPROVE" && sa['SMId'] == spId) {
                         serviceUserAccidentData.push(sa);
@@ -239,7 +239,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 sirl['CurrentSD'] = getIFF.length > 0 ? getIFF[0]['SD'] : null;
 
             }
-            debugger
             if (sirl.Status === "DRAFT") {
                 if (sirl.ReporterId === spId) {
                     otherIncidentData.push(sirl);

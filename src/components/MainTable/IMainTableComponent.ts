@@ -12,4 +12,5 @@ export interface IMainTableComponentProps {
     searchKeyword: string;
     adminPermissionBoolean:boolean;
     serviceUnitList:any;
+    permissionList:any;
 }

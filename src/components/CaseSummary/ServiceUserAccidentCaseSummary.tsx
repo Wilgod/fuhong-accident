@@ -18,10 +18,11 @@ import * as FileSaver from 'file-saver';
 interface IServiceUserAccidentCaseSummary {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any;
 }
 
 
-function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceUserAccidentCaseSummary) {
+function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission }: IServiceUserAccidentCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
@@ -47,29 +48,42 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
     }, [serviceLocation]);
     
     async function getAllData() {
-        debugger
         let allServiceUserAccident = await getAllServiceUserAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
+        let allDate = [];
         for (let sa of allServiceUserAccident) {
-            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceUserUnit});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
-            console.log('All CaseNumber', sa['CaseNumber'])
-            let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
-            sa['AccidentReportForm'] = getARF;
-            if (sa['Stage'] == '1') {
-                sa['Form'] = '服務使用者意外填報表(一)';
-                sa['CurrentSM'] = sa['SM'];
-                sa['CurrentSD'] = sa['SD'];
-                sa['CurrentSPT'] = sa['SPT'];
-            } else if (sa['Stage'] == '2') {
-                sa['Form'] = '服務使用者意外報告(二)';
-                sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
-                sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
-                sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+            let add = false;
+            if (permission.indexOf('All') >= 0) {
+                add = true;
+            } else {
+                for (let p of permission) {
+                    if (sa.ServiceUserUnit == p) {
+                        add = true;
+                    }
+                }
+            }
+            if (add) {
+                let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceUserUnit});
+                sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
+                console.log('All CaseNumber', sa['CaseNumber'])
+                let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+                sa['AccidentReportForm'] = getARF;
+                if (sa['Stage'] == '1') {
+                    sa['Form'] = '服務使用者意外填報表(一)';
+                    sa['CurrentSM'] = sa['SM'];
+                    sa['CurrentSD'] = sa['SD'];
+                    sa['CurrentSPT'] = sa['SPT'];
+                } else if (sa['Stage'] == '2') {
+                    sa['Form'] = '服務使用者意外報告(二)';
+                    sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
+                    sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
+                    sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                }
+                allDate.push(sa);
             }
         }
-        setData(allServiceUserAccident);
-        setDisplayData(allServiceUserAccident)
+        setData(allDate);
+        setDisplayData(allDate);
     }
 
     const inputFieldHandler = (event) => {
@@ -80,14 +94,16 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
     function filter() {
         let filterData = data;
         if (selectedOptions.length > 0) {
-            let dataLists = [];
-            for (let option of selectedOptions) {
-                let newDataList = filterData.filter(item => { return item.ServiceUserUnit == option });
-                for (let dataList of newDataList) {
-                    dataLists.push(dataList);
+            if (selectedOptions[0] != 'ALL') {
+                let dataLists = [];
+                for (let option of selectedOptions) {
+                    let newDataList = filterData.filter(item => { return item.ServiceUserUnit == option });
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
                 }
+                filterData = dataLists;
             }
-            filterData = dataLists;
         }
         if (startDate != null) {
             filterData = filterData.filter(item => {return new Date(item.AccidentTime).getTime() >= new Date(startDate).getTime()});
@@ -370,7 +386,6 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
         return ws;
       }
 
-      
     return (
         <div>
             <div className="row mb-3">
@@ -410,11 +425,27 @@ function ServiceUserAccidentCaseSummary({ context,siteCollectionUrl }: IServiceU
                         setSelectedOptions(selected);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          permission.map((item) => {
+                            //debugger
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col-4" >

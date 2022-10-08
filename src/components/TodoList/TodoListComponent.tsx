@@ -100,13 +100,18 @@ const columns = (context) => {
             text: '發生日期',
             headerStyle: {width:'120px'},
             formatter: (value, data) => {
-                let date = value;
-                if (data.AccidentTime) {
-                    date = data.AccidentTime;
+                if (value == null) {
+                    return <div></div>
                 } else {
-                    date = data.IncidentTime;
+                    let date = value;
+                    if (data.AccidentTime) {
+                        date = data.AccidentTime;
+                    } else {
+                        date = data.IncidentTime;
+                    }
+                    return <div>{moment(new Date(date)).format("YYYY/MM/DD")}</div>
                 }
-                return <div>{moment(new Date(date)).format("YYYY/MM/DD")}</div>
+                
             },
             sort: true,
             sortFunc: (a, b, order, dataField, rowA, rowB) => {

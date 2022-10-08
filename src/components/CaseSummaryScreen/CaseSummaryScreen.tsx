@@ -11,9 +11,10 @@ import useServiceLocation from '../../hooks/useServiceLocation';
 interface ICaseSummaryScreenProps {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any
 }
 
-function CaseSummaryScreen({ context,siteCollectionUrl }: ICaseSummaryScreenProps) {
+function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummaryScreenProps) {
 
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
@@ -27,7 +28,7 @@ function CaseSummaryScreen({ context,siteCollectionUrl }: ICaseSummaryScreenProp
         }
         return result;
     }
-
+    debugger
     return (
         <div>
             <div className="row mb-3">
@@ -67,11 +68,26 @@ function CaseSummaryScreen({ context,siteCollectionUrl }: ICaseSummaryScreenProp
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item}>{item}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 && 
+                          permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0]}>{ser[0]}</option>
+                              }
+                              
+                          })
+                      }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item}>{item}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col" >

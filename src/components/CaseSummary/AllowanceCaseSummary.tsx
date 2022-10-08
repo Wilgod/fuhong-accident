@@ -18,9 +18,10 @@ import * as FileSaver from 'file-saver';
 interface IAllowanceCaseSummary {
     context: WebPartContext;
     siteCollectionUrl:string;
+    permission:any;
 }
 
-function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSummary) {
+function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllowanceCaseSummary) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 1)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
@@ -48,46 +49,61 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
 
         let allSpecialIncidentReportLicense = await getAllSpecialIncidentReportAllowanceWithClosed();
         let allIncidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
+        let allDate = [];
         for (let sa of allSpecialIncidentReportLicense) {
-            let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
-            sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
-            let getARF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
-            let residentAbuse = "";
-            if (sa['Abusive_Body']) {
-                residentAbuse = "身體虐待"
+            let add = false;
+            if (permission.indexOf('All') >= 0) {
+                add = true;
+            } else {
+                for (let p of permission) {
+                    if (sa.ServiceUserUnit == p) {
+                        add = true;
+                    }
+                }
             }
-            if (sa['Abusive_Sexual']) {
-                if (residentAbuse != "") { residentAbuse += ","; } 
-                residentAbuse += "性侵犯"
-            }
-            if (sa['Abusive_Mental']) {
-                if (residentAbuse != "") { residentAbuse += ","; } 
-                residentAbuse += "精神虐待"
-            }
-            
-            if (sa['Abusive_Negligent']) {
-                if (residentAbuse != "") { residentAbuse += ","; } 
-                residentAbuse += "疏忽照顧"
-            }
-            if (sa['Abusive_Other']) {
-                if (residentAbuse != "") { residentAbuse += ","; } 
-                residentAbuse += "其他"
-            }
-            sa['ResidentAbuse'] = residentAbuse;
-            sa['AccidentReportForm'] = getARF;
-            if (sa['Stage'] == '1') {
-                sa['Form'] = '特別事故(牌照事務處)';
-                sa['CurrentSM'] = sa['SM'];
-                sa['CurrentSD'] = sa['SD'];
-            } else if (sa['Stage'] == '2') {
-                sa['Form'] = '事故跟進/結束報告';
-                sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
-                sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
-                sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+            if (add) {
+                let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceLocation});
+                sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
+                let getARF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+                let residentAbuse = "";
+                if (sa['Abusive_Body']) {
+                    residentAbuse = "身體虐待"
+                }
+                if (sa['Abusive_Sexual']) {
+                    if (residentAbuse != "") { residentAbuse += ","; } 
+                    residentAbuse += "性侵犯"
+                }
+                if (sa['Abusive_Mental']) {
+                    if (residentAbuse != "") { residentAbuse += ","; } 
+                    residentAbuse += "精神虐待"
+                }
+                
+                if (sa['Abusive_Negligent']) {
+                    if (residentAbuse != "") { residentAbuse += ","; } 
+                    residentAbuse += "疏忽照顧"
+                }
+                if (sa['Abusive_Other']) {
+                    if (residentAbuse != "") { residentAbuse += ","; } 
+                    residentAbuse += "其他"
+                }
+                sa['ResidentAbuse'] = residentAbuse;
+                sa['AccidentReportForm'] = getARF;
+                if (sa['Stage'] == '1') {
+                    sa['Form'] = '特別事故(牌照事務處)';
+                    sa['CurrentSM'] = sa['SM'];
+                    sa['CurrentSD'] = sa['SD'];
+                } else if (sa['Stage'] == '2') {
+                    sa['Form'] = '事故跟進/結束報告';
+                    sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
+                    sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
+                    sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                }
+                allDate.push(sa);
             }
         }
-        setData(allSpecialIncidentReportLicense);
-        setDisplayData(allSpecialIncidentReportLicense)
+            
+        setData(allDate);
+        setDisplayData(allDate)
     }
 
     const inputFieldHandler = (event) => {
@@ -98,14 +114,17 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
     function filter() {
         let filterData = data;
         if (selectedOptions.length > 0) {
-            let dataLists = [];
-            for (let option of selectedOptions) {
-                let newDataList = filterData.filter(item => { return item.ServiceLocation == option });
-                for (let dataList of newDataList) {
-                    dataLists.push(dataList);
+            if (selectedOptions[0] != 'ALL') {
+                let dataLists = [];
+                for (let option of selectedOptions) {
+                    let newDataList = filterData.filter(item => { return item.ServiceLocation == option });
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
                 }
+                filterData = dataLists;
             }
-            filterData = dataLists;
+            
         }
         if (startDate != null) {
             filterData = filterData.filter(item => {return new Date(item.IncidentTime).getTime() >= new Date(startDate).getTime()});
@@ -390,11 +409,26 @@ function AllowanceCaseSummary({ context,siteCollectionUrl }: IAllowanceCaseSumma
                         setSelectedOptions(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {
+                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
+                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
+                          permission.map((item) => {
+                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+
+                              if (ser.length > 0) {
+                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                              }
+                              
+                          })
+                        }
+                        {/*
+                            serviceLocation.map((item) => {
+                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                            })
+                        */}
                     </select>
                 </div>
                 <div className="col-4" >
