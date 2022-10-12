@@ -56,7 +56,7 @@ function OutsiderAccidentCaseSummary({ context,siteCollectionUrl, permission }: 
                 add = true;
             } else {
                 for (let p of permission) {
-                    if (sa.ServiceUserUnit == p) {
+                    if (sa.ServiceUnit == p) {
                         add = true;
                     }
                 }

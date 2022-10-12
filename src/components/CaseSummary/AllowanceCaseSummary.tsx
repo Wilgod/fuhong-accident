@@ -46,17 +46,16 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
         
     }, [serviceLocation]);
     async function getAllData() {
-
-        let allSpecialIncidentReportLicense = await getAllSpecialIncidentReportAllowanceWithClosed();
+        let allSpecialIncidentReportAllowance = await getAllSpecialIncidentReportAllowanceWithClosed();
         let allIncidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         let allDate = [];
-        for (let sa of allSpecialIncidentReportLicense) {
+        for (let sa of allSpecialIncidentReportAllowance) {
             let add = false;
             if (permission.indexOf('All') >= 0) {
                 add = true;
             } else {
                 for (let p of permission) {
-                    if (sa.ServiceUserUnit == p) {
+                    if (sa.ServiceUnit == p) {
                         add = true;
                     }
                 }
