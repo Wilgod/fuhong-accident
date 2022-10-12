@@ -170,6 +170,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         for (let oid of allOtherIncidentData) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == oid.ServiceUnit });
             let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == oid.CaseNumber && item.ParentFormId == oid.ID});
+            oid['AccidentTime'] = oid['IncidentTime'];
             if (oid.Status === "PENDING_SM_FILL_IN") {
                 oid['StatusTC'] = '尚待服務經理填表';
             } else if (oid.Status === "PENDING_SM_APPROVE") {
@@ -220,6 +221,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sirl.CaseNumber && item.ParentFormId == sirl.ID});
             sirl['ServiceUserNameCN'] = sirl['ResponsibleName']
             sirl['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
+            sirl['AccidentTime'] = sirl['IncidentTime'];
             if (sirl.Status === "PENDING_SM_FILL_IN") {
                 sirl['StatusTC'] = '尚待服務經理填表';
             } else if (sirl.Status === "PENDING_SM_APPROVE") {
@@ -266,6 +268,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         for (let sira of allSpecialIncidentReportAllowance) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sira.ServiceUnit });
             let getIFF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sira.CaseNumber && item.ParentFormId == sira.ID});
+            sira['AccidentTime'] = sira['IncidentTime'];
             sira['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             if (sira.Status === "PENDING_SM_FILL_IN") {
                 sira['StatusTC'] = '尚待服務經理填表';
