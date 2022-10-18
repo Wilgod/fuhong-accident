@@ -68,6 +68,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         conflictDescription: "",
         conflict_policeCaseNo: "",
         conflict_policeDate: null,
+        establishedCase:null,
         found: undefined,
         foundDate: null,
         notYetFoundDayCount: null,
@@ -99,6 +100,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         other: undefined,
         otherDescription: "",
         otherIncident: "",
+        otherIncidentOthersDescription:"",
         police: undefined,
         policeDatetime: null,
         policeInvestigate: undefined,
@@ -120,7 +122,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
         unusalIncident: "",
-        submitDate:null
+        submitDate:null,
     });
 
 
@@ -706,7 +708,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["referServiceUnit"]:"",
                 ["abuser_police"]:undefined,
                 ["abuser_policeDate"]:null,
-                ["abuser_policeCaseNo"]:""
+                ["abuser_policeCaseNo"]:"",
+                ["establishedCase"]:null
             });
         }
         
@@ -868,6 +871,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
 
         //(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱
+        body["EstablishedCase"] = form.establishedCase
         body["RA_Body"] = form.ra_body;
         body["RA_Mental"] = form.ra_mental;
         body["RA_Negligent"] = form.ra_negligent;
@@ -972,10 +976,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         //  {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
         body["OtherIncident"] = form.otherIncident
-        // if (form.otherIncident) {
-        // } else {
-        //     error["OtherIncident"] = true;
-        // }
+
+        if (form.otherIncident == "OTHER_INCIDENT_OTHERS") {
+            if (form.otherIncidentOthersDescription == "") {
+                error["OtherIncidentOthersDescription"] = true;
+            } else {
+                body["OtherIncidentOthersDescription"] = form.otherIncidentOthersDescription;
+            }
+        }
 
         //(7) 其他
         body["Other"] = form.other;
@@ -1817,7 +1825,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                     <div className="row">
                         <div className="col-12">
-                            <p className={`${styles.fieldTitle}`}>致 : 社會福利署殘疾人士院舍牌照事務處（傳真：2153 0071／查詢電話：2891 6379）</p>
+                            <p className={`${styles.fieldTitle}`}>致 : 社會福利署殘疾人士院舍牌照事務處 (註一)</p>
+                            <p className={`${styles.fieldTitle}`} style={{paddingLeft:'30px'}}> （傳真：2153 0071 及 電郵 : lorchdenq@swd.gov.hk）</p>
+                            <p className={`${styles.fieldTitle}`} style={{paddingLeft:'30px'}}> （查詢電話：2891 6379）</p>
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1905,13 +1915,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
                     <div className="form-row mb-2">
                         {/*(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷</label>
                         <div className={`col`}>
 
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={checkboxHandler}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院後死亡</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院救治／送院後死亡</label>
                             </div>
                             {
                                 form.unusalIncident === "UNUSAL_INCIDENT_GENERAL" &&
@@ -1924,12 +1934,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-suicide" value="UNUSAL_INCIDENT_SUICIDE" onChange={checkboxHandler}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-suicide">在院舍內自殺及送院後死亡</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-suicide">在院舍內自殺及送院救治／送院後死亡</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-other" value="UNUSAL_INCIDENT_OTHER" onChange={checkboxHandler}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-other">其他不尋常死亡／事故</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-other">其他不尋常死亡／受傷</label>
                             </div>
                             {
                                 form.unusalIncident === "UNUSAL_INCIDENT_OTHER" &&
@@ -1942,7 +1952,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-court" value="UNUSAL_INCIDENT_COURT" onChange={checkboxHandler}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-court">接獲死因裁判法庭要求出庭的傳票<br />(請夾附傳票副本並在附頁說明詳情)</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-court">收到死因裁判法庭要求出庭的傳票<br />(請夾附傳票副本並在附頁說明詳情)</label>
                             </div>
                             {
                                 form.unusalIncident === "UNUSAL_INCIDENT_COURT" &&
@@ -2007,7 +2017,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* 警方到院舍調查日期及時間 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1b) 警方到院舍調查日期及時間</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1b) 警方到院舍調查日期及時間 (如適用)</label>
                         <div className={`col`}>
                             <div className="form-check">
                                 <input className={"form-check-input"} type="checkbox" name="policeInvestigate" id="police-investigate-true" value={"true"} onChange={(e) => checkboxHandler1(e,true)} checked={form.policeInvestigate === true}
@@ -2130,7 +2140,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <hr/>
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3) 院舍內證實／懷疑有住客受虐待／被侵犯</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_body" id="resident-abuse-body" onChange={checkboxHandlerResidentAbuse} checked={form.ra_body === true} 
@@ -2174,10 +2184,26 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
-
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
-                        {/* (3a) 施虐者／懷疑施虐者的身份 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3a) 施虐者／懷疑施虐者的身份</label>
+                        {/* (3a)*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3a)</label>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-false" checked={form.establishedCase === false} onClick={() => setForm({ ...form, establishedCase: false })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-false">已確立個案</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-true" checked={form.establishedCase === true} onClick={() => setForm({ ...form, establishedCase: true })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-true">懷疑個案</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="form-row mb-2" style={{marginTop:'15px'}}>
+                        
+                        {/* (3b) 施虐者／懷疑施虐者的身份 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3b) 施虐者／懷疑施虐者／侵犯者的身份</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={checkboxHandler} checked={form.abuser === "ABUSER_STAFF"}
@@ -2208,8 +2234,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
 
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
-                        {/* (3b)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3b)</label>
+                        {/* (3c)*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })}
@@ -2240,8 +2266,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
 
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
-                        {/* (3c)*/}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
+                        {/* (3d)*/}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3d)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })}
@@ -2391,21 +2417,27 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" checked={form.otherIncident === "OTHER_INCIDENT_OTHER"}  onChange={checkboxHandler}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-other">水浸／山泥傾瀉／其他天災意外</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-other">水浸／山泥傾瀉／不明氣體／其他天災意外</label>
                             </div>
-                            {/* {
-                                form.otherIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-others" value="OTHER_INCIDENT_OTHERS" checked={form.otherIncident === "OTHER_INCIDENT_OTHERS"}  onChange={checkboxHandler}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-others">其他(例如:嚴重員工事故)，請註明</label>
+                            </div>
+                            {
+                                form.otherIncident === "OTHER_INCIDENT_OTHERS" &&
                                 <div className="">
-                                    <AutosizeTextarea placeholder="請註明" className="form-control" />
+                                    <AutosizeTextarea className={`form-control ${(error && error['OtherIncidentOthersDescription']) ? "is-invalid": ""}`} placeholder="請註明" value={form.otherIncidentOthersDescription} name="otherIncidentOthersDescription" onChange={inputFieldHandler}
+                                        disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
-                            } */}
+                            }
                         </div>
                     </div>
 
                     <hr/>
                     <div className="form-row mb-2" style={{marginTop:'15px'}}>
                         {/* (7) 其他 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(7) 其他</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(7) 其他 (例如 ： 嚴重資料外洩或可能引起傳媒關注的事故)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="other" id="other-incident-true" checked={form.other === true} onChange={(e) => checkboxHandler2(e,true)}
@@ -2475,7 +2507,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="notified" id="notified-true" value="NOTIFIED_TRUE" onClick={(event) => setForm({ ...form, guardian: true })} checked={form.guardian === true}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-true">已通知住客監護人／保證人／家人／親屬</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-true">已通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士（註３）（可填寫多於一名）</label>
                             </div>
                             {
                                 form.guardian === true &&
@@ -2539,7 +2571,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="notified" id="notified-false" value="NOTIFIED_FALSE" onClick={(event) => setForm({ ...form, guardian: false })} checked={form.guardian === false}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士</label>
                             </div>
                             {
                                 form.guardian === false &&
@@ -2577,6 +2609,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 dateFormat="yyyy/MM/dd"
                                 readOnly
                             />
+                        </div>
+                    </div>
+                    <div className="form-row" style={{fontSize:'16px', margin:'50px 0'}}>
+                        <div className="col-12">
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註1</p>
+                            <p>如屬社會福利署津助院舍， 請同時通知以下社會福利署單位：</p>
+                            <p>(1)津貼組(傳真:2575 5632 及 電郵:rehabenq@swd.gov.hk)</p>
+                            <p>(2)康復及醫務社會服務科 （傳真： 及 電郵：）</p>
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註2</p>
+                            <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱，喝罵，孤立，令他們長期陷於恐懼中，侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等</p>
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註3</p>
+                            <p>須在顧及個人私隱的前提下，向相關的住客／家屬／員工或其他相關人員通「報特別事故」的資料。</p>
                         </div>
                     </div>
                 </section>
@@ -2647,7 +2691,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
                     <div className="form-row mb-2">
                         {/* 住客病歷 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>住客病歷</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>住客病歷(如適用)</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={form.affectedMedicalRecord} name="affectedMedicalRecord" onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
@@ -2663,7 +2707,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
                     <div className="form-row mb-2">
                         {/* 院舍跟進行動／預防事故再次發生的建議或措施 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>院舍跟進行動／預防事故再次發生的建議或措施</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>院舍跟進行動（包括但不限於相關醫療安排，舉行多專業個案會議，為有關住客訂定照顧計劃，保護其他住客的措施，回應外界團體（例如關注組，區議會，立法會）等的關注或查詢）及／或預防事故再次發生的建議或措施</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={form.affectedFollowUp} name="affectedFollowUp" onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />

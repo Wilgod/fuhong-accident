@@ -85,6 +85,9 @@ export interface ISpecialIncidentReportLicenseStates {
     affectedDetail: string;
     affectedFollowUp: string;
     submitDate:Date;
+
+    establishedCase:boolean;
+    otherIncidentOthersDescription:string;
 }
 
 export interface IErrorFields {
