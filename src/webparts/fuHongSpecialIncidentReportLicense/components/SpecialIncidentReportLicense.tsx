@@ -286,6 +286,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["found"]:undefined,
                 ["notYetFoundDayCount"]:null,
                 ["medicalRecords"]:"",
+
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -323,11 +330,15 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             let foundDate = form.foundDate;
             let notYetFoundDayCount = form.notYetFoundDayCount;
             let medicalRecords = form.medicalRecords;
+            let missingPoliceDate = form.missingPoliceDate;
+            let missingPoliceReportNo = form.missingPoliceReportNo;
             if (inputValue == "") {
                 found = undefined;
                 foundDate = null;
                 notYetFoundDayCount = null;
                 medicalRecords = "";
+                missingPoliceDate = null,
+                missingPoliceReportNo = "";
             }
             setForm({ ...form,
                 [name]: inputValue,
@@ -342,10 +353,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["policeInvestigate"]: undefined,
                 //part 2
                 ["residentMissingReason"]: residentMissingReason,
+                ["missingPoliceDate"]:missingPoliceDate,
+                ["missingPoliceReportNo"]:missingPoliceReportNo,
                 ["foundDate"]:foundDate,
                 ["found"]:found,
                 ["notYetFoundDayCount"]:notYetFoundDayCount,
                 ["medicalRecords"]:medicalRecords,
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -356,7 +375,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 [name]: inputValue
             });
         } else if (name == 'conflict') {
+            let conflictDescription = form.conflictDescription;
+            let conflict_policeDate = form.conflict_policeDate;
+            let conflict_policeCaseNo = form.conflict_policeCaseNo;
             if (inputValue == "") {
+                conflictDescription = "";
+                conflict_policeDate = null;
+                conflict_policeCaseNo = ""
                 setDisabled1(false);
                 setDisabledEx1(true);
                 setDisabled2(false);
@@ -381,6 +406,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
             setForm({ ...form,
                 [name]: inputValue,
+                ["conflict_policeDate"]: null,
+                ["conflictDescription"]: "",
+                ["conflict_policeCaseNo"]: "",
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:""
@@ -415,6 +443,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:"",
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -449,6 +483,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:"",
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -483,6 +523,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:"",
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -517,6 +563,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:"",
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -576,6 +628,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["missingPoliceDate"]: null,
                 ["missingPoliceReportNo"]: "",
                 ["medicalRecords"]:"",
+                //part3
+                ['abuser'] :"",
+                ['abuserDescription'] :"",
+                ['referSocialWorker'] : undefined,
+                ['referDate']: null,
+                ['referServiceUnit']:"",
                 //part 4
                 ["conflict_policeDate"]:null,
                 ["conflict_policeCaseNo"]:""
@@ -709,7 +767,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 ["abuser_police"]:undefined,
                 ["abuser_policeDate"]:null,
                 ["abuser_policeCaseNo"]:"",
-                ["establishedCase"]:null
+                ["establishedCase"]:null,
+                ['abuserDescription'] :"",
+                
+
             });
         }
         
@@ -765,8 +826,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         //(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡
         if (form.unusalIncident) {
             body["UnusalIncident"] = form.unusalIncident;
+            body["Police"] = form.police;
+            body["PoliceInvestigate"] = form.policeInvestigate;
         } else {
-            //error["UnusalIncident"] = true;
+            body["UnusalIncident"] = "";
+            body["UnusalIncideintGeneral"] = "";
+            body["UnusalIncideintIncident"] = "";
+            body["PoliceDatetime"] = null;
+            body["PoliceReportNumber"] = "";
+            body["PoliceInvestigateDate"] = null;
+            body["Police"] = false;
+            body["PoliceInvestigate"] = false;
         }
 
         //在院舍內發生事故及送院後死亡
@@ -790,7 +860,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         
 
         //1a)  已報警求助
-        body["Police"] = form.police;
+        
         if (form.police === true) {
             if (form.policeDatetime) {
                 body["PoliceDatetime"] = form.policeDatetime.toISOString();
@@ -807,7 +877,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
 
         //(1b) 警方到院舍調查日期及時間
-        body["PoliceInvestigate"] = form.policeInvestigate;
+        
         if (form.policeInvestigate === true) {
             if (form.policeInvestigateDate) {
                 body["PoliceInvestigateDate"] = form.policeInvestigateDate.toISOString();
@@ -841,7 +911,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
             
         } else {
-            //error["ResidentMissing"] = true;
+            body["ResidentMissing"] = "";
+            body["ResidentMissingReason"] = "";
+            body["MissingPoliceDate"] = null;
+            body["MissingPoliceReportNo"] = "";
         }
         
 
@@ -850,23 +923,29 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         if (form.found === true) {
             if (form.foundDate) {
                 body["FoundDate"] = form.foundDate.toISOString();
+                body["NotYetFoundDayCount"] = null;
             } else {
                 error["FoundDate"] = true;
             }
         } else if (form.found === false) {
+            body["Found"] = false;
+            body["FoundDate"] = null;
             if (form.notYetFoundDayCount) {
                 body["NotYetFoundDayCount"] = form.notYetFoundDayCount;
             } else {
                 error["NotYetFoundDayCount"] = true;
             }
         } else {
-            //error["Found"] = true;
+            body["Found"] = false;
+            body["NotYetFoundDayCount"] = null;
+            body["FoundDate"] = null;
         }
 
         //(2b) 失蹤住客病歷
         if (form.medicalRecords) {
             body["MedicalRecords"] = form.medicalRecords;
         } else {
+            body["MedicalRecords"] = "";
             //error["MedicalRecords"] = true;
         }
 
@@ -888,6 +967,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
 
         // {/* (3a) 施虐者／懷疑施虐者的身份 */}
+        body["Abuser"] = form.abuser;
+        body["AbuserDescription"] = form.abuserDescription;
         if (form.abuser) {
             body["Abuser"] = form.abuser;
             if (form.abuser === "ABUSER_OTHER") {
@@ -897,12 +978,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     error["AbuserDescription"] = true;
                 }
             }
-        } else {
-            //error["Abuser"] = true;
         }
 
         // {/* (3b)*/}
-        form["ReferSocialWorker"] = form.referSocialWorker;
+        debugger
+        
         if (form.referSocialWorker) {
             if (form.referDate) {
                 body["ReferDate"] = form.referDate.toISOString();
@@ -913,7 +993,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["ReferServiceUnit"] = form.referServiceUnit;
             }
         } else if (form.referSocialWorker === undefined) {
-            //error["ReferSocialWorker"] = true;
+            body["ReferDate"] = form.referDate;
+            body["ReferServiceUnit"] = form.referServiceUnit;
+            body["ReferSocialWorker"] = false;
         }
 
         // {/* (3c)*/}
@@ -930,7 +1012,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["Abuser_PoliceCaseNo"] = true;
             }
         } else if (form.abuser_police === undefined) {
-            //error["Abuser_Police"] = true;
+            body["Abuser_Police"] = false;
         }
 
         //{/* (4) 院舍內有爭執事件以致需要報警求助 */}
@@ -954,7 +1036,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["Conflict_PoliceCaseNo"] = true;
             }
         } else {
-            //error["Conflict"] = true;
+            body["Conflict"] = "";
+            body["ConflictDescription"] = "";
+            body["Conflict_PoliceDate"] = null;
+            body["Conflict_PoliceCaseNo"] = "";
         }
         
         
@@ -971,12 +1056,16 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 }
             }
         } else {
-            //error["MedicalIncident"] = true;
+            body["MedicalIncident"] = "";
+            body["MI_Description"] = "";
         }
 
         //  {/* (6) 其他重大特別事故以致影響院舍日常運作 */}
         body["OtherIncident"] = form.otherIncident
-
+        if (form.otherIncident == '') {
+            body["OtherIncident"] = "";
+            body["OtherIncidentOthersDescription"] = "";
+        }
         if (form.otherIncident == "OTHER_INCIDENT_OTHERS") {
             if (form.otherIncidentOthersDescription == "") {
                 error["OtherIncidentOthersDescription"] = true;
@@ -994,7 +1083,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["OtherDescription"] = true;
             }
         } else if (form.other === undefined) {
-            //error["Other"] = true;
+            body["OtherDescription"] = "";
         }
 
         //住客及家屬情況
@@ -1531,15 +1620,53 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 police = undefined;
                 policeInvestigate = undefined;
             }
-            let found = form.found;
-            if (formData.residentMissing  == null) {
+            let found = formData.Found;
+            if (formData.ResidentMissing  == null) {
                 found = undefined;
             }
-            let referSocialWorker = form.referSocialWorker;
-            let abuser_police = form.abuser_police;
-            if (formData.ra_body == null && formData.ra_mental && formData.ra_negligent && formData.ra_embezzleProperty && formData.ra_abandoned && formData.ra_sexualAssault && formData.ra_other) {
+            let referSocialWorker = formData.ReferSocialWorker;
+            let abuser_police = formData.Abuser_Police;
+            let other = formData.Other ? true: undefined;
+            debugger
+            if (!formData.RA_Body && !formData.RA_Mental && !formData.RA_Negligent && !formData.RA_EmbezzleProperty && !formData.RA_Aabandoned && !formData.RA_SexualAssault && !formData.RA_Other) {
                 referSocialWorker = undefined;
                 abuser_police = undefined;
+            }
+            if (formData.Status == 'DRAFT') {
+                //debugger
+                if (formData.UnusalIncident == null && formData.ResidentMissing == null && formData.RA_Body == null && formData.RA_Mental == null && formData.RA_Negligent == null && formData.RA_EmbezzleProperty == null && formData.RA_Abandoned == null && formData.RA_Other == null &&
+                    formData.Conflict == null && formData.MedicalIncident == null && formData.OtherIncident == null && !formData.Other) {
+
+                } else {
+                    if (formData.UnusalIncident == null) {
+                        setDisabled1(true);
+                    } else {
+                        setDisabledEx1(false);
+                    }
+                    if (formData.ResidentMissing == null) {
+                        setDisabled2(true);
+                    } else {
+                        setDisabledEx2(false);
+                    }
+                    if (!formData.RA_Body && !formData.RA_Mental && !formData.RA_Negligent && !formData.RA_EmbezzleProperty && !formData.RA_Abandoned && !formData.RA_Other) {
+                        setDisabled3(true);
+                    } else {
+                        setDisabledEx3(false);
+                    }
+                    if (formData.Conflict == null) {
+                        setDisabled4(true);
+                    }
+                    if (formData.MedicalIncident == null) {
+                        setDisabled5(true);
+                    }
+                    if (formData.OtherIncident == null) {
+                        setDisabled6(true);
+                    }
+                    if (!formData.Other) {
+                        setDisabled7(true);
+                    }
+                }
+                
             }
             setForm({
                 ...form,
@@ -1559,6 +1686,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 conflictDescription: formData.ConflictDescription,
                 conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
                 conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : null,
+                establishedCase:formData.EstablishedCase,
                 found: found,
                 foundDate: formData.FoundDate ? new Date(formData.FoundDate) : null,
                 guardian: formData.Guardian,
@@ -1577,9 +1705,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : null,
                 missingPoliceReportNo: formData.MissingPoliceReportNo,
                 notYetFoundDayCount: formData.NotYetFoundDayCount,
-                other: formData.Other,
+                other: other,
                 otherDescription: formData.OtherDescription,
                 otherIncident: formData.OtherIncident,
+                otherIncidentOthersDescription: formData.OtherIncidentOthersDescription,
                 police: police,
                 policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null,
                 policeInvestigate: policeInvestigate,
@@ -2189,14 +2318,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3a)</label>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-false" checked={form.establishedCase === false} onClick={() => setForm({ ...form, establishedCase: false })}
-                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-false">已確立個案</label>
-                            </div>
-                            <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-true" checked={form.establishedCase === true} onClick={() => setForm({ ...form, establishedCase: true })}
                                     disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-true">懷疑個案</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-true">已確立個案</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-false" checked={form.establishedCase === false} onClick={() => setForm({ ...form, establishedCase: false })}
+                                    disabled={(!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-false">懷疑個案</label>
                             </div>
                         </div>
                     </div>

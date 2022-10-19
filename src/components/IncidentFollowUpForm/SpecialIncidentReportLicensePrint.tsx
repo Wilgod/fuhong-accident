@@ -57,6 +57,7 @@ interface ISpecialIncidentReportLicenseStates {
     ra_sexualAssault: boolean;
     ra_other: boolean;
     ra_otherDescription: string;
+    establishedCase:boolean;
     abuser: string;
     abuserDescription: string;
     referSocialWorker: boolean;
@@ -96,6 +97,7 @@ interface ISpecialIncidentReportLicenseStates {
     affectedMedicalRecord: string;
     affectedDetail: string;
     affectedFollowUp: string;
+    otherIncidentOthersDescription:string;
 
 }
 
@@ -133,6 +135,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         abuser_police: undefined,
         abuser_policeCaseNo: "",
         abuser_policeDate: new Date(),
+        establishedCase:undefined,
         affectedAge: 0,
         affectedDetail: "",
         affectedFollowUp: "",
@@ -196,7 +199,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         reporterJobTitle:"",
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
-        unusalIncident: ""
+        unusalIncident: "",
+        otherIncidentOthersDescription:""
     });
 
     useEffect(() => {
@@ -251,13 +255,42 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 setLoadSpNotifyStaff(true);
             }
 
+            let police = formData.Police;
+            let policeInvestigate = formData.PoliceInvestigate;
+            let policeDatetime = formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : new Date();
+            let policeInvestigateDate = formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date()
+            if (formData.UnusalIncident == null) {
+                police = undefined;
+                policeInvestigate = undefined;
+                policeDatetime = undefined;
+                policeInvestigateDate = undefined;
+            }
+            let found = formData.Found;
+            let foundDate = formData.FoundDate ? new Date(formData.FoundDate) : new Date();
+            if (formData.ResidentMissing  == null) {
+                found = undefined;
+                foundDate = undefined;
+            }
+
+            let referSocialWorker = formData.ReferSocialWorker;
+            let abuser_police = formData.Abuser_Police;
+            let abuser_policeCaseNo = formData.Abuser_PoliceCaseNo;
+            let abuser_policeDate = formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : new Date();
+            let other = formData.Other ? true: undefined;;
+            if (!formData.RA_Body && !formData.RA_Mental && !formData.RA_Negligent && !formData.RA_EmbezzleProperty && !formData.RA_Abandoned && !formData.RA_SexualAssault && !formData.RA_Other) {
+                referSocialWorker = undefined;
+                abuser_police = undefined;
+                abuser_policeCaseNo = undefined;
+                abuser_policeDate = undefined;
+            }
+            debugger
             setForm({
                 ...form,
                 abuser: formData.Abuser,
                 abuserDescription: formData.AbuserDescription,
-                abuser_police: formData.Abuser_Police,
-                abuser_policeCaseNo: formData.Abuser_PoliceCaseNo,
-                abuser_policeDate: formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : new Date(),
+                abuser_police: abuser_police,
+                abuser_policeCaseNo: abuser_policeCaseNo,
+                abuser_policeDate: abuser_policeDate,
                 affectedAge: formData.AffectedAge,
                 affectedDetail: formData.AffectedDetail,
                 affectedFollowUp: formData.AffectedFollowUp,
@@ -270,8 +303,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
                 conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : new Date(),
                 caseNumber:formData.CaseNumber,
-                found: formData.Found,
-                foundDate: formData.FoundDate ? new Date(formData.FoundDate) : new Date(),
+                establishedCase:formData.EstablishedCase,
+                found: found,
+                foundDate: foundDate,
                 guardian: formData.Guardian,
                 guardianName: formData.GuardianName,
                 guardianRelation: formData.GuardianRelation,
@@ -288,13 +322,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : new Date(),
                 missingPoliceReportNo: formData.MissingPoliceReportNo,
                 notYetFoundDayCount: formData.NotYetFoundDayCount,
-                other: formData.Other,
+                other: other,
                 otherDescription: formData.OtherDescription,
                 otherIncident: formData.OtherIncident,
-                police: formData.Police,
-                policeDatetime: formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : new Date(),
-                policeInvestigate: formData.PoliceInvestigate,
-                policeInvestigateDate: formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date(),
+                police: police,
+                policeDatetime: policeDatetime,
+                policeInvestigate: policeInvestigate,
+                policeInvestigateDate: policeInvestigateDate,
                 policeReportNumber: formData.PoliceReportNumber,
                 ra_abandoned: formData.RA_Abandoned,
                 ra_body: formData.RA_Body,
@@ -306,7 +340,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 ra_sexualAssault: formData.RA_SexualAssault,
                 referDate: formData.ReferDate ? new Date(formData.ReferDate) : new Date(),
                 referServiceUnit: formData.ReferServiceUnit,
-                referSocialWorker: formData.ReferSocialWorker,
+                referSocialWorker: referSocialWorker,
                 residentAge: formData.ResidentAge,
                 residentGender: formData.ResidentGender,
                 residentMissing: formData.ResidentMissing,
@@ -317,7 +351,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 reporterDate:formData.Created,
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
-                unusalIncident: formData.UnusalIncident
+                unusalIncident: formData.UnusalIncident,
+                otherIncidentOthersDescription:formData.OtherIncidentOthersDescription
             })
 
         
@@ -388,6 +423,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const windowPrint = async () => {
         window.print()
     }
+    console.log('form.referSocialWorker',form.referSocialWorker);
     return (
         <>
             <style media="print">
@@ -417,10 +453,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`} style={{fontWeight:'bold'}}>
-                        致：	社會福利署殘疾人士院舍牌照事務處
+                        致：	社會福利署殘疾人士院舍牌照事務處 (註一)
                         </div>
                         <div className={`col-12`} style={{paddingLeft:'40px', fontWeight:'bold'}}>
-                        （傳真：2153 0071／查詢電話：2891 6379）
+                        （傳真：2153 0071 及 電郵 : lorchdenq@swd.gov.hk）
+                        </div>
+                        <div className={`col-12`} style={{paddingLeft:'40px', fontWeight:'bold'}}>
+                        （查詢電話：2891 6379）
                         </div>
                         <div className={`col-12`} style={{paddingLeft:'40px'}}>
                         ［經辦人:<span className={styles.underline}>{form.responsibleName}</span>  （負責督察姓名）］
@@ -468,14 +507,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className={`form-row ${styles.box}`}>
                         <div className={`col-12`}>
-                        (1)	住客不尋常死亡／事故導致住客嚴重受傷或死亡
+                        (1)	住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷
                         </div>
                         <div className={`col-12`}>
                             <div className="form-row mb-3" style={{marginLeft:'30px'}}>
                                 <div className={`col-12`}>
                                     {form.unusalIncident == "UNUSAL_INCIDENT_GENERAL" && <span>&#9745;</span>}
                                     {form.unusalIncident != "UNUSAL_INCIDENT_GENERAL" && <span>&#9744;</span>}
-                                    在院舍內發生事故及送院後死亡
+                                    在院舍內發生事故及送院救治／送院後死亡
                                 </div>
                                 <div className={`col-12`}>
                                     <table>
@@ -492,7 +531,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {form.unusalIncident == "UNUSAL_INCIDENT_SUICIDE" && <span>&#9745;</span>}
                                     {form.unusalIncident != "UNUSAL_INCIDENT_SUICIDE" && <span>&#9744;</span>}
-                                    在院舍內自殺及送院後死亡
+                                    在院舍內自殺及送院救治／送院後死亡
                                 </div>
                                 <div className={`col-12`}>
                                     <table>
@@ -511,18 +550,20 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {form.unusalIncident == "UNUSAL_INCIDENT_COURT_CHECK" && <span>&#9745;</span>}
                                     {form.unusalIncident != "UNUSAL_INCIDENT_COURT_CHECK" && <span>&#9744;</span>}
-                                    接獲死因裁判法庭要求出庭的傳票(請夾附傳票副本並在附頁說明詳情)
+                                    收到死因裁判法庭要求出庭的傳票(請夾附傳票副本並在附頁說明詳情)
                                 </div>
                             </div>
                         </div>
                         <div className={`col-12`}>
                             (a) 
                             <span style={{marginLeft:'16px'}}>
-                                {!form.abuser_police && <span>&#9745;</span>}
-                                {form.abuser_police && <span>&#9744;</span>}
+                                {form.police != undefined && !form.police && <span>&#9745;</span>}
+                                {(form.police == undefined || form.police) && <span>&#9744;</span>}
+                                
                                 沒有 / 
-                                {form.abuser_police && <span>&#9745;</span>}
-                                {!form.abuser_police && <span>&#9744;</span>}
+                                {form.police != undefined && form.police && <span>&#9745;</span>}
+                                {form.police != undefined && !form.police && <span>&#9744;</span>}
+                                {form.police == undefined && <span>&#9744;</span>}
                                 已報警求助
                             </span>
                         </div>
@@ -531,11 +572,20 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td style={{width:'215px'}}>
                                         <span style={{marginLeft:'36px'}}>
-                                        報警日期及報案編號 : 
+                                        報警日期 : 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.policeDatetime != null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2)},
+                                    {form.policeDatetime != null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2)}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{width:'215px'}}>
+                                        <span style={{marginLeft:'36px'}}>
+                                        報案編號 : 
+                                        </span>
+                                    </td>
+                                    <td className={`${styles.underlineTable}`}>
                                     {form.policeReportNumber != null ? form.policeReportNumber : ''}
                                     </td>
                                 </tr>
@@ -606,8 +656,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'215px'}}>
                                         (a)
                                         <span style={{marginLeft:'16px'}}>
-                                            {!form.found && <span>&#9745;</span>}
-                                            {form.found && <span>&#9744;</span>}
+                                            {form.found && <span>&#9745;</span>}
+                                            {form.found != undefined && !form.found && <span>&#9744;</span>}
+                                            {form.found == undefined && <span>&#9744;</span>}
                                             已尋回（尋回日期
                                         </span>
                                     </td>
@@ -620,8 +671,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td>
                                         <span style={{marginLeft:'36px'}}>
-                                            {form.found && <span>&#9745;</span>}
-                                            {!form.found && <span>&#9744;</span>}
+                                            {form.found != undefined && !form.found && <span>&#9745;</span>}
+                                            {(form.found == undefined || form.found) && <span>&#9744;</span>}
+
                                             仍未尋回（由失蹤日計起至呈報日，已失蹤 <span className={`${styles.underline}`}>{form.notYetFoundDayCount != null ? form.notYetFoundDayCount : ''}</span>日）
                                         </span>
                                     </td>
@@ -632,8 +684,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'250px'}}>
                                         (b)
                                         <span style={{marginLeft:'16px'}}>
-                                            {!form.found && <span>&#9745;</span>}
-                                            {form.found && <span>&#9744;</span>}
                                             失蹤住客病歷（請註明 : 
                                         </span>
                                     </td>
@@ -646,7 +696,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className={`form-row ${styles.box}`} style={{borderTop:'unset'}}>
                         <div className={`col-12`}>
-                        (3)	院舍內證實／懷疑有住客受虐待／被侵犯私隱
+                        (3)	院舍內證實／懷疑有住客受虐待／被侵犯
                         </div>
                         <div className={`col-12`}>
                             <div className="form-row mb-3" style={{marginLeft:'30px'}}>
@@ -690,13 +740,32 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </div>
                             </div>
                         </div>
+                        <div className={`col-12`}  style={{marginLeft:'36px'}}>
+                        <table>
+                            <tr>
+                                <td style={{width:'215px'}}>
+                                    (a)
+                                    <span style={{marginLeft:'16px'}}>
+                                        {form.establishedCase && <span>&#9745;</span>}
+                                        {!form.establishedCase && <span>&#9744;</span>}
+                                        已確立個案 &nbsp;&nbsp;
+                                        {form.establishedCase != undefined && !form.establishedCase && <span>&#9745;</span>}
+                                        {form.establishedCase && <span>&#9744;</span>}
+                                        {form.establishedCase == undefined && <span>&#9744;</span>}
+                                        懷疑個案
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                            
+                        </div>
                         <div className={`col-12`}>
                             <table>
                                 <tr>
                                     <td style={{width:'215px'}}>
-                                        (a)
+                                        (b)
                                         <span style={{marginLeft:'16px'}}>
-                                            施虐者／懷疑施虐者的身份
+                                        施虐者／懷疑施虐者／侵犯者的身份
                                         </span>
                                     </td>
                                 </tr>
@@ -733,13 +802,15 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td style={{width:'215px'}}>
-                                        (b)
+                                        (c)
                                         <span style={{marginLeft:'16px'}}>
-                                            {!form.referSocialWorker && <span>&#9745;</span>}
+                                            {form.referSocialWorker != undefined && !form.referSocialWorker && <span>&#9745;</span>}
                                             {form.referSocialWorker && <span>&#9744;</span>}
+                                            {form.referSocialWorker == undefined && <span>&#9744;</span>}
                                             沒有 / &nbsp;&nbsp;
                                             {form.referSocialWorker && <span>&#9745;</span>}
-                                            {!form.referSocialWorker && <span>&#9744;</span>}
+                                            {form.referSocialWorker != undefined && !form.referSocialWorker && <span>&#9744;</span>}
+                                            {form.referSocialWorker == undefined && <span>&#9744;</span>}
                                             已轉介社工 &nbsp;&nbsp;
                                         </span>
                                     </td>
@@ -764,13 +835,15 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td style={{width:'215px'}}>
-                                        (c)
+                                        (d)
                                         <span style={{marginLeft:'16px'}}>
-                                            {!form.abuser_police && <span>&#9745;</span>}
+                                            {form.abuser_police != undefined && !form.abuser_police && <span>&#9745;</span>}
                                             {form.abuser_police && <span>&#9744;</span>}
+                                            {form.abuser_police == undefined && <span>&#9744;</span>}
                                             沒有 / &nbsp;&nbsp;
                                             {form.abuser_police && <span>&#9745;</span>}
-                                            {!form.abuser_police && <span>&#9744;</span>}
+                                            {form.abuser_police != undefined && !form.abuser_police && <span>&#9744;</span>}
+                                            {form.abuser_police == undefined && <span>&#9744;</span>}
                                             已報警求助 &nbsp;&nbsp;
                                         </span>
                                     </td>
@@ -888,12 +961,27 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             停止食水供應 &nbsp;&nbsp;
                             {form.otherIncident == "OTHER_INCIDENT_OTHER" && <span>&#9745;</span>}
                             {form.otherIncident != "OTHER_INCIDENT_OTHER" && <span>&#9744;</span>}
-                            水浸／山泥傾瀉／其他天災意外 &nbsp;&nbsp;
+                            水浸／山泥傾瀉／不明氣體／其他天災意外 &nbsp;&nbsp;
+                        </div>
+                        <div className={`col-12`}  style={{marginLeft:'36px'}}>
+                            {form.otherIncident == "OTHER_INCIDENT_OTHERS" && <span>&#9745;</span>}
+                            {form.otherIncident != "OTHER_INCIDENT_OTHERS" && <span>&#9744;</span>}
+                            其他(例如:嚴重員工事故)，請註明 
+                        </div>
+                        <div className={`col-12`}  style={{marginLeft:'36px'}}>
+                            <table>
+                                <tr>
+                                    <td className={`${styles.underlineTable}`} style={{width:'100%'}}>
+                                    {form.otherIncidentOthersDescription != null ? form.otherIncidentOthersDescription : ''}
+                                    </td>
+                                </tr>
+                            </table>
+                            
                         </div>
                     </div>
                     <div className={`form-row ${styles.box}`} style={{borderTop:'unset'}}>
                         <div className={`col-12`}>
-                        (7)	其他
+                        (7)	其他 (例如 ： 嚴重資料外洩或可能引起傳媒關注的事故)
                         </div>
                         <div className={`col-12`}>
                             <table>
@@ -906,7 +994,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.otherDescription != null ? form.otherDescription : ''}
+                                    {form.otherDescription != null ? form.otherDescription : <span>&nbsp;&nbsp;</span>}
                                     </td>
                                 </tr>
                             </table>
@@ -951,7 +1039,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {form.guardian && <span>&#9745;</span>}
                                     {!form.guardian && <span>&#9744;</span>}
-                                    已通知住客監護人／保證人／家人／親屬
+                                    已通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士（註３）（可填寫多於一名）
                                 </div>
                                 <div className={`col-12`}>
                                     <table style={{width:'630px'}}>
@@ -1004,7 +1092,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {!form.guardian && <span>&#9745;</span>}
                                     {form.guardian && <span>&#9744;</span>}
-                                    沒有通知住客監護人／保證人／家人／親屬
+                                    沒有通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士
                                 </div>
                                 <div className={`col-12`}>
                                     <table>
@@ -1058,6 +1146,18 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             </table>
                         </div>
                     </div>
+                    <div className="form-row mb-3" style={{fontSize:'18px', marginTop:'30px'}}>
+                        <div className={`col-12`}>
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註1</p>
+                            <p>如屬社會福利署津助院舍， 請同時通知以下社會福利署單位：</p>
+                            <p>(1)津貼組(傳真:2575 5632 及 電郵:rehabenq@swd.gov.hk)</p>
+                            <p>(2)康復及醫務社會服務科 （傳真： 及 電郵：）</p>
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註2</p>
+                            <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱，喝罵，孤立，令他們長期陷於恐懼中，侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等</p>
+                            <p style={{fontWeight:'bold',textDecoration:'underline'}}>註3</p>
+                            <p>須在顧及個人私隱的前提下，向相關的住客／家屬／員工或其他相關人員通「報特別事故」的資料。</p>
+                        </div>
+                    </div>
                     <div className={`${styles.pagebreak}`} ></div>
                     <div className="form-row mb-3">
                         <div className={`col-12 font-weight-bold ${styles.header}`}>
@@ -1109,7 +1209,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table style={{width:'780px'}}>
                                 <tr>
                                     <td style={{width:'160px'}}>
-                                    住客病歷 : 
+                                    住客病歷(如適用) : 
                                     </td>
                                     <td style={{borderBottom:'1px solid'}}>
                                     {form.affectedMedicalRecord}
@@ -1129,7 +1229,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
 
                     <div className="form-row" style={{fontSize:'18px'}}>
-                        <div className={`col-12`}>院舍跟進行動／預防事故再次發生的建議或措施</div>
+                        <div className={`col-12`}>院舍跟進行動（包括但不限於相關醫療安排，舉行多專業個案會議，為有關住客訂定照顧計劃，保護其他住客的措施，回應外界團體（例如關注組，區議會，立法會）等的關注或查詢）及／或預防事故再次發生的建議或措施</div>
                     </div>
                     <div className={`form-row mb-3 ${styles.box}`} style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
