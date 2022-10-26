@@ -170,9 +170,9 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_SUICIDE") {
                 ResidentAbuse = "在院舍內自殺及送院後死亡";
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_OTHER") {
-                ResidentAbuse = "其他不尋常死亡／事故";
+                ResidentAbuse = "其他不尋常死亡／受傷";
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_COURT") {
-                ResidentAbuse = "接獲死因裁判法庭要求出庭的傳票";
+                ResidentAbuse = "收到死因裁判法庭要求出庭的傳票";
             }
             
             exportList.push({
@@ -475,7 +475,7 @@ const column = [
     },
     {
         dataField: 'ResidentAbuse',
-        text: '虐待／被侵犯私隱性質',
+        text: '虐待／被侵犯性質',
         sort: true,
         headerStyle: {width: '80px'},
         //formatter: genderFormatter.bind(this)

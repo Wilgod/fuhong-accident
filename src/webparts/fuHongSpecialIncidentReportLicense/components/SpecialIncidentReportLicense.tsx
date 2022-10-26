@@ -1954,7 +1954,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                     <div className="row">
                         <div className="col-12">
-                            <p className={`${styles.fieldTitle}`}>致 : 社會福利署殘疾人士院舍牌照事務處 (註一)</p>
+                            <p className={`${styles.fieldTitle}`}>致 : 社會福利署殘疾人士院舍牌照事務處 (註1)</p>
                             <p className={`${styles.fieldTitle}`} style={{paddingLeft:'30px'}}> （傳真：2153 0071 及 電郵 : lorchdenq@swd.gov.hk）</p>
                             <p className={`${styles.fieldTitle}`} style={{paddingLeft:'30px'}}> （查詢電話：2891 6379）</p>
                         </div>

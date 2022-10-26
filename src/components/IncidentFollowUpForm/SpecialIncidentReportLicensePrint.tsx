@@ -453,7 +453,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`} style={{fontWeight:'bold'}}>
-                        致：	社會福利署殘疾人士院舍牌照事務處 (註一)
+                        致：	社會福利署殘疾人士院舍牌照事務處 (註1)
                         </div>
                         <div className={`col-12`} style={{paddingLeft:'40px', fontWeight:'bold'}}>
                         （傳真：2153 0071 及 電郵 : lorchdenq@swd.gov.hk）
@@ -597,7 +597,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'345px'}}>
                                         (b)
                                         <span style={{marginLeft:'16px'}}>
-                                            如適用，警方到院舍調查日期及時間 :
+                                            警方到院舍調查日期及時間 (如適用):
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
@@ -740,7 +740,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </div>
                             </div>
                         </div>
-                        <div className={`col-12`}  style={{marginLeft:'36px'}}>
+                        <div className={`col-12`}>
                         <table>
                             <tr>
                                 <td style={{width:'215px'}}>
@@ -765,7 +765,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'215px'}}>
                                         (b)
                                         <span style={{marginLeft:'16px'}}>
-                                        施虐者／懷疑施虐者／侵犯者的身份
+                                        施虐者／懷疑施虐者／侵犯者的身分
                                         </span>
                                     </td>
                                 </tr>
@@ -789,11 +789,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <span style={{marginLeft:'36px'}}>
                                         {form.abuser == "ABUSER_OTHER" && <span>&#9745;</span>}
                                         {form.abuser != "ABUSER_OTHER" && <span>&#9744;</span>}
-                                        其他請註明 : 
+                                        其他 (請註明 : 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.abuserDescription != null ? form.abuserDescription : ''}
+                                    {form.abuserDescription != null ? form.abuserDescription : ''})
                                     </td>
                                 </tr>
                             </table>
@@ -893,7 +893,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             訪客與訪客 &nbsp;&nbsp;
                             {form.conflict == "DISPUTE_POLICE_OTHER" && <span>&#9745;</span>}
                             {form.conflict != "DISPUTE_POLICE_OTHER" && <span>&#9744;</span>}
-                            其他 請註明 : <span className={`${styles.underline}`}>{form.conflictDescription != null ? form.conflictDescription : ''}</span>
+                            其他 (請註明 : <span className={`${styles.underline}`}>{form.conflictDescription != null ? form.conflictDescription : ''}</span>)
 
                         </div>
                         <div className={`col-12`}>
@@ -935,7 +935,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <div className={`col-12`}>
                                     {form.medicalIncident == "SERIOUS_MEDICAL_INCIDENT_OTHER" && <span>&#9745;</span>}
                                     {form.medicalIncident != "SERIOUS_MEDICAL_INCIDENT_OTHER" && <span>&#9744;</span>}
-                                    其他 請註明 : <span className={`${styles.underline}`}>{form.mi_description != null ? form.mi_description : ''}</span>
+                                    其他 (請註明 : <span className={`${styles.underline}`} style={{width:'500px'}}>{form.mi_description != null ? form.mi_description : ''}</span>)
                                 </div>
                             </div>
                         </div>
@@ -972,7 +972,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td className={`${styles.underlineTable}`} style={{width:'100%'}}>
-                                    {form.otherIncidentOthersDescription != null ? form.otherIncidentOthersDescription : ''}
+                                    {form.otherIncidentOthersDescription != null ? form.otherIncidentOthersDescription : <span>&nbsp;</span>}
                                     </td>
                                 </tr>
                             </table>
@@ -990,7 +990,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <span style={{marginLeft:'36px'}}>
                                         {form.other && <span>&#9745;</span>}
                                         {!form.other && <span>&#9744;</span>}
-                                        其他 請註明 : 
+                                        請註明 : 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
@@ -1001,7 +1001,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         </div>
                     </div>
                     <div className="form-row mb-3" style={{marginTop:'20px',fontSize:'18px'}}>
-                        <div className={`col-12`}>住客及家屬情況</div>
+                        <div className={`col-12`}>住客及家屬/相關員工情況</div>
                     </div>
                     <div className={`form-row ${styles.box}`}>
                         <div className={`col-12`}>
@@ -1114,16 +1114,16 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         <div className={`col-12`}>
                             <table>
                                 <tr>
-                                <td style={{width:'100px'}}>
-                                    填報人姓名 : 
+                                    <td style={{width:'100px'}}>
+                                    填報人簽署 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {reporter && reporter.displayName}
+                                        &nbsp;
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
-                                    填報人職位 : 
+                                    職位 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
@@ -1133,15 +1133,22 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td style={{width:'100px'}}>
-                                    填報日期 : 
+                                    姓名 : 
+                                    </td>
+                                    <td style={{width:'300px'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {reporter && reporter.displayName}
+                                        </div>
+                                    </td>
+                                    <td style={{width:'100px'}}>
+                                    日期 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                         </div>
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                 </tr>
                             </table>
                         </div>
@@ -1150,12 +1157,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         <div className={`col-12`}>
                             <p style={{fontWeight:'bold',textDecoration:'underline'}}>註1</p>
                             <p>如屬社會福利署津助院舍， 請同時通知以下社會福利署單位：</p>
-                            <p>(1)津貼組(傳真:2575 5632 及 電郵:rehabenq@swd.gov.hk)</p>
-                            <p>(2)康復及醫務社會服務科 （傳真： 及 電郵：）</p>
+                            <p>(1)津貼組(傳真:2575 5632 及 電郵:suenq@swd.gov.hk)</p>
+                            <p>(2)康復及醫務社會服務科 （傳真：2893 6983 及 電郵：rehabenq@swd.gov.hk）</p>
                             <p style={{fontWeight:'bold',textDecoration:'underline'}}>註2</p>
-                            <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱，喝罵，孤立，令他們長期陷於恐懼中，侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等</p>
+                            <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱、喝罵、孤立、令他們長期陷於恐懼中、侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等。</p>
                             <p style={{fontWeight:'bold',textDecoration:'underline'}}>註3</p>
-                            <p>須在顧及個人私隱的前提下，向相關的住客／家屬／員工或其他相關人員通「報特別事故」的資料。</p>
+                            <p>須在顧及個人私隱的前提下，向相關的住客／家屬／員工或其他相關人員通報「特別事故」的資料。</p>
                         </div>
                     </div>
                     <div className={`${styles.pagebreak}`} ></div>
