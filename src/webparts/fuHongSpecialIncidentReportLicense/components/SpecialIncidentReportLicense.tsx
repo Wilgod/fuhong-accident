@@ -839,7 +839,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["PoliceInvestigate"] = false;
         }
 
-        //在院舍內發生事故及送院後死亡
+        //在院舍內發生事故及送院救治／送院後死亡
         if (form.unusalIncident === "UNUSAL_INCIDENT_GENERAL") {
             if (form.unusalIncideintGeneral) {
                 body["UnusalIncideintGeneral"] = form.unusalIncideintGeneral;
@@ -849,7 +849,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
         
 
-        //其他不尋常死亡／事故
+        //其他不尋常死亡／受傷
         if (form.unusalIncident === "UNUSAL_INCIDENT_OTHER") {
             if (form.unusalIncideintIncident) {
                 body["UnusalIncideintIncident"] = form.unusalIncideintIncident;

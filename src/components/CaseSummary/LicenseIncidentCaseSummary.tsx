@@ -166,9 +166,9 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
                 // IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
             }
             if (results.ResidentAbuse == "UNUSAL_INCIDENT_GENERAL") {
-                ResidentAbuse = "在院舍內發生事故及送院後死亡";
+                ResidentAbuse = "在院舍內發生事故及送院救治／送院後死亡";
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_SUICIDE") {
-                ResidentAbuse = "在院舍內自殺及送院後死亡";
+                ResidentAbuse = "在院舍內自殺及送院救治／送院後死亡";
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_OTHER") {
                 ResidentAbuse = "其他不尋常死亡／受傷";
             } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_COURT") {
@@ -494,16 +494,16 @@ function dateFormatter(cell,rowIndex){
 function unusalIncidentFormatter(cell,rowIndex){
     let div = [];
     if (cell == "UNUSAL_INCIDENT_GENERAL") {
-        div.push(<div>在院舍內發生事故及送院後死亡</div>);
+        div.push(<div>在院舍內發生事故及送院救治／送院後死亡</div>);
     }
     if (cell == "UNUSAL_INCIDENT_SUICIDE") {
-        div.push(<div>在院舍內自殺及送院後死亡</div>);
+        div.push(<div>在院舍內自殺及送院救治／送院後死亡</div>);
     }
     if (cell == "UNUSAL_INCIDENT_OTHER") {
-        div.push(<div>其他不尋常死亡／事故</div>);
+        div.push(<div>其他不尋常死亡／受傷</div>);
     }
     if (cell == "UNUSAL_INCIDENT_COURT") {
-        div.push(<div>接獲死因裁判法庭要求出庭的傳票</div>);
+        div.push(<div>收到死因裁判法庭要求出庭的傳票</div>);
     }
     return div;
 }

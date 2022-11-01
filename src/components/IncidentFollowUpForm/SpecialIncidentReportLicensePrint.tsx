@@ -539,7 +539,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                             <td style={{width:'280px'}}>
                                             {form.unusalIncident == "UNUSAL_INCIDENT_OTHER" && <span>&#9745;</span>}
                                             {form.unusalIncident != "UNUSAL_INCIDENT_OTHER" && <span>&#9744;</span>}
-                                            其他不尋常死亡／事故，請說明 :
+                                            其他不尋常死亡／受傷，請說明 :
                                             </td>
                                             <td className={`${styles.underlineTable}`}>
                                             {form.unusalIncideintIncident != null ? form.unusalIncideintIncident : ''}

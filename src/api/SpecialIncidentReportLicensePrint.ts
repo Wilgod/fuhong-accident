@@ -356,22 +356,22 @@ export async function generate(form) {
                     </div>
                     <div style="margin-bottom:10px; margin-left:25px;">
                         `+UNUSAL_INCIDENT_GENERAL_CHECK+`
-                        在院舍內發生事故及送院後死亡
+                        在院舍內發生事故及送院救治／送院後死亡
                     </div>
                     <div style="margin-bottom:10px; margin-left:50px;">
                         請註明事件：<span style="text-decoration: underline;">`+unusalIncideintGeneral+`</span>
                     </div>
                     <div style="margin-bottom:10px; margin-left:25px;">
                         `+UNUSAL_INCIDENT_SUICIDE_CHECK+`
-                        在院舍內自殺及送院後死亡
+                        在院舍內自殺及送院救治／送院後死亡
                     </div>
                     <div style="margin-bottom:10px; margin-left:25px;">
                         `+UNUSAL_INCIDENT_OTHER_CHECK+`
-                        其他不尋常死亡／事故，請說明 :<span style="text-decoration: underline;">`+unusalIncideintIncident+`</span>
+                        其他不尋常死亡／受傷，請說明 :<span style="text-decoration: underline;">`+unusalIncideintIncident+`</span>
                     </div>
                     <div style="margin-bottom:10px; margin-left:25px;">
                         `+UNUSAL_INCIDENT_COURT_CHECK+`
-                        接獲死因裁判法庭要求出庭的傳票（請夾附傳票副本並在附頁說明詳情）
+                        收到死因裁判法庭要求出庭的傳票（請夾附傳票副本並在附頁說明詳情）
                     </div>
                     <div style="margin-bottom:10px;">
                     (a) `+policeFalse+` 沒有 / `+policeTrue+`已報警求助

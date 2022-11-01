@@ -839,7 +839,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
@@ -900,7 +900,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院救治／送院後死亡 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -912,7 +912,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 在院舍內發生事故及送院後死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -926,7 +926,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院救治／送院後死亡 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -939,7 +939,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 在院舍內發生事故及送院後死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -954,7 +954,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 在院舍內自殺及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
@@ -1015,7 +1015,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院救治／送院後死亡 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1027,7 +1027,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 在院舍內自殺及送院後死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -1041,7 +1041,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡 (每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院救治／送院後死亡 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1054,7 +1054,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 在院舍內自殺及送院後死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -1069,7 +1069,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 其他不尋常死亡／事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 其他不尋常死亡／受傷 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
@@ -1130,7 +1130,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1142,7 +1142,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 其他不尋常死亡／事故(每月總數)',
+                                        subtitle: '特別事故類別統計 - 其他不尋常死亡／受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -1156,7 +1156,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1169,7 +1169,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 其他不尋常死亡／事故(每月總數)',
+                                        subtitle: '特別事故類別統計 - 其他不尋常死亡／受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -1184,7 +1184,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
@@ -1245,7 +1245,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                特別事故統計 (牌照事務處) - 收到死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1257,7 +1257,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票(每月總數)',
+                                        subtitle: '特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票(每月總數)',
                                     },
                                 }}
                             />
@@ -1271,7 +1271,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                特別事故統計 (牌照事務處) - 收到死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1284,7 +1284,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票(每月總數)',
+                                        subtitle: '特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票(每月總數)',
                                     },
                                 }}
                             />
@@ -1320,7 +1320,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內發生事故及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
@@ -1380,7 +1380,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院救治／送院後死亡(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1392,7 +1392,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 在院舍內發生事故及送院後死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -1406,7 +1406,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院後死亡(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內發生事故及送院救治／送院後死亡(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1419,7 +1419,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 在院舍內發生事故及送院後死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 在院舍內發生事故及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
 
@@ -1435,7 +1435,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內自殺及送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
@@ -1495,7 +1495,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院救治／送院後死亡(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1507,7 +1507,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 在院舍內自殺及送院後死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
                             />
@@ -1521,7 +1521,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院後死亡(每月總數)
+                                特別事故統計 (牌照事務處) - 在院舍內自殺及送院救治／送院後死亡(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1534,7 +1534,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 在院舍內自殺及送院後死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 在院舍內自殺及送院救治／送院後死亡(每月總數)',
                                     },
                                 }}
 
@@ -1551,7 +1551,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他不尋常死亡／事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他不尋常死亡／受傷 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
@@ -1611,7 +1611,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1623,7 +1623,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 其他不尋常死亡／事故(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 其他不尋常死亡／受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -1637,7 +1637,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 其他不尋常死亡／事故 (每月總數)
+                                特別事故統計 (牌照事務處) - 其他不尋常死亡／受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1650,7 +1650,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 其他不尋常死亡／事故(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 其他不尋常死亡／受傷(每月總數)',
                                     },
                                 }}
 
@@ -1666,7 +1666,7 @@ function LicenseCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
@@ -1726,7 +1726,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                特別事故統計 (牌照事務處) - 收到死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1738,7 +1738,7 @@ function LicenseCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票(每月總數)',
                                     },
                                 }}
                             />
@@ -1752,7 +1752,7 @@ function LicenseCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (牌照事務處) - 接獲死因裁判法庭要求出庭的傳票 (每月總數)
+                                特別事故統計 (牌照事務處) - 收到死因裁判法庭要求出庭的傳票 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1765,7 +1765,7 @@ function LicenseCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 接獲死因裁判法庭要求出庭的傳票(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 收到死因裁判法庭要求出庭的傳票(每月總數)',
                                     },
                                 }}
 
