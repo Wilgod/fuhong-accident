@@ -448,7 +448,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className="form-row mb-3">
                         <div className={`col-12`}>
-                            注意：請在合適方格內加上「」號，並連同附頁／載有相關資料的自訂報告一併呈交
+                            注意：請在合適方格內加上「&#10003;」號，並連同附頁／載有相關資料的自訂報告一併呈交
                         </div>
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
@@ -572,14 +572,15 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td style={{width:'215px'}}>
                                         <span style={{marginLeft:'36px'}}>
-                                        報警日期 : 
+                                        報警日期及報案編號: 
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
                                     {form.policeDatetime != null && new Date(form.policeDatetime).getFullYear() + `-` +(`0`+(new Date(form.policeDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.policeDatetime).getDate()).slice(-2)}
+                                    &nbsp;&nbsp;{form.policeReportNumber != null ? form.policeReportNumber : ''}
                                     </td>
                                 </tr>
-                                <tr>
+                                {/*<tr>
                                     <td style={{width:'215px'}}>
                                         <span style={{marginLeft:'36px'}}>
                                         報案編號 : 
@@ -588,7 +589,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td className={`${styles.underlineTable}`}>
                                     {form.policeReportNumber != null ? form.policeReportNumber : ''}
                                     </td>
-                                </tr>
+                                </tr>*/}
                             </table>
                         </div>
                         <div className={`col-12`}>
@@ -706,7 +707,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     身體虐待 &nbsp;&nbsp;
                                     {form.ra_mental && <span>&#9745;</span>}
                                     {!form.ra_mental && <span>&#9744;</span>}
-                                    精神虐待 &nbsp;&nbsp;
+                                    精神虐待 (註2)&nbsp;&nbsp;
                                     {form.ra_negligent && <span>&#9745;</span>}
                                     {!form.ra_negligent && <span>&#9744;</span>}
                                     疏忽照顧 &nbsp;&nbsp;
@@ -729,11 +730,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                                 <span>
                                                 {form.ra_other && <span>&#9745;</span>}
                                                 {!form.ra_other && <span>&#9744;</span>}
-                                                其他請註明 : 
+                                                其他(請註明 : 
                                                 </span>
                                             </td>
                                             <td className={`${styles.underlineTable}`}>
-                                            {form.ra_otherDescription != null ? form.ra_otherDescription : ''}
+                                            {form.ra_otherDescription != null ? form.ra_otherDescription : ''})
                                             </td>
                                         </tr>
                                     </table>
@@ -942,7 +943,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
                     <div className={`form-row ${styles.box}`} style={{borderTop:'unset'}}>
                         <div className={`col-12`}>
-                        (6)	其他重大特別事故以致影響院舍日常運作
+                        (6)	其他重大特別事故以致影響院舍運作/住客
                         </div>
                         <div className={`col-12`}  style={{marginLeft:'36px'}}>
                             {form.otherIncident == "OTHER_INCIDENT_POWER_SUPPLY" && <span>&#9745;</span>}
@@ -1028,7 +1029,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'130px'}}>
                                     &nbsp;&nbsp;房及／或床號
                                     </td>
-                                    <td className={`${styles.underlineTable}`}  style={{width:'60px'}}>
+                                    <td className={`${styles.underlineTable}`}  style={{width:'150px'}}>
                                     {form.residentRoomNo != null ? form.residentRoomNo : ''}
                                     </td>
                                 </tr>
@@ -1157,7 +1158,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                         <div className={`col-12`}>
                             <p style={{fontWeight:'bold',textDecoration:'underline'}}>註1</p>
                             <p>如屬社會福利署津助院舍， 請同時通知以下社會福利署單位：</p>
-                            <p>(1)津貼組(傳真:2575 5632 及 電郵:suenq@swd.gov.hk)</p>
+                            <p>(1)津貼組(傳真:2575 5632 及 電郵:suenq@swd.gov.hk); 及</p>
                             <p>(2)康復及醫務社會服務科 （傳真：2893 6983 及 電郵：rehabenq@swd.gov.hk）</p>
                             <p style={{fontWeight:'bold',textDecoration:'underline'}}>註2</p>
                             <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱、喝罵、孤立、令他們長期陷於恐懼中、侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等。</p>
@@ -1186,13 +1187,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     事故發生日期 : 
                                     </td>
                                     <td style={{width:'240px', borderBottom:'1px solid'}}>
-                                        {form.incidentTime != null &&new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
+                                        {form.incidentTime != null && form.incidentTime != undefined && form.incidentTime != null &&new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2)}
                                     </td>
                                     <td style={{width:'140px'}}>
                                     &nbsp;&nbsp;事故發生時間 : 
                                     </td>
                                     <td style={{width:'240px',borderBottom:'1px solid'}}>
-                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {form.incidentTime != null && form.incidentTime != undefined ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
                                         {/*new Date(form.incidentTime).getHours() + `:` +(`0`+new Date(form.incidentTime).getMinutes()).slice(-2)} &nbsp;{new Date(form.incidentTime).getHours() > 12 ? 'pm' : 'am'*/}
                                     </td>
                                 </tr>
@@ -1236,7 +1237,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     </div>
 
                     <div className="form-row" style={{fontSize:'18px'}}>
-                        <div className={`col-12`}>院舍跟進行動（包括但不限於相關醫療安排，舉行多專業個案會議，為有關住客訂定照顧計劃，保護其他住客的措施，回應外界團體（例如關注組，區議會，立法會）等的關注或查詢）及／或預防事故再次發生的建議或措施</div>
+                        <div className={`col-12`}>院舍跟進行動（包括但不限於相關醫療安排，舉行多專業個案會議，為有關住客訂定照顧計劃，保護其他住客的措施，回應外界團體（例如關注組，區議會，立法會等）的關注或查詢）及／或預防事故再次發生的建議或措施</div>
                     </div>
                     <div className={`form-row mb-3 ${styles.box}`} style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
@@ -1248,15 +1249,14 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table>
                                 <tr>
                                     <td style={{width:'100px'}}>
-                                    填報人姓名 : 
+                                    填報人簽署 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
-                                        {reporter && reporter.displayName}
                                         </div>
                                     </td>
                                     <td style={{width:'100px'}}>
-                                    填報人職位 : 
+                                    &nbsp;&nbsp;職位 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
@@ -1265,17 +1265,23 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                 </tr>
                                 <tr>
-                                    
                                     <td style={{width:'100px'}}>
-                                    填報日期 : 
+                                    姓名 : 
+                                    </td>
+                                    <td style={{width:'300px'}}>
+                                        <div className={`${styles.underlineDiv}`}>
+                                        {reporter && reporter.displayName}
+                                        </div>
+                                    </td>
+                                    <td style={{width:'100px'}}>
+                                    &nbsp;&nbsp;日期 : 
                                     </td>
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
                                         </div>
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    
                                 </tr>
                             </table>
                         </div>

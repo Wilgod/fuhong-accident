@@ -92,7 +92,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const [accidentCategoryAbuseDetails, setAccidentCategoryAbuseDetails] = useState<IAccidentCategoryAbuseDetails>({
         status: "",
-        person: ""
+        person: "",
+        reason: ""
     });
     const [reporterPhone, setReporterPhone] = useState("");
     const [incidentTime, setIncidentTime] = useState(null);
@@ -166,7 +167,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const accidentCategoryHandler = () => {
         if (form.accidentCategory !== "ACCIDENT_CATEGORY_ABUSE") {
-            setAccidentCategoryAbuseDetails({ status: "", person: "" });
+            setAccidentCategoryAbuseDetails({ status: "", person: "", reason: "" });
         }
     }
 
@@ -219,6 +220,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE") {
             body["AbsuseDetailsStatus"] = accidentCategoryAbuseDetails.status;
             body["AbsuseDetailsPerson"] = accidentCategoryAbuseDetails.person;
+            body["AbsuseDetailsReason"] = accidentCategoryAbuseDetails.reason;
         }
 
         //事故被傳媒報導
@@ -452,7 +454,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 setGuardianDatetime(new Date(formData.GuardianDatetime));
             }
 
-            setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus });
+            setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus, reason: formData.AbsuseDetailsReson });
             setServiceLocation(formData.ServiceLocation)
             setReporterPhone(formData.ReporterPhone);
             setPoliceDatetime(new Date(formData.PoliceDatetime));
@@ -976,20 +978,33 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             {isPrintMode && <Header displayName="殘疾人士院舍特別事故報告" />}
 
             <div className="container-fluid px-4 pt-3">
-                <section className="mb-4">
+                <section className="mb-4" style={{fontSize:'16px'}}>
                     {/* <div className="row">
                         <div className="col-12 font-weight-bold">
                             <h5>報告資料</h5>
                         </div>
                     </div> */}
-                    <div className="row my-3">
+                    {/*<div className="row my-3">
                         <div className="col-12 fontweight-bold">
                             <span className={`font-weight-bold`} style={{ fontSize: 15, cursor: "help" }} title={footNoteOne}>( 特別事故<sup>1</sup> 發生後三個工作天內提交社會福利署津貼組及相關服務科 )</span>
                         </div>
+                </div>*/}
+                    <div className="row my-3" style={{textAlign:'center'}}>
+                        <div className="col-12 fontweight-bold">
+                            <span className={`font-weight-bold`} style={{ fontSize: 18, cursor: "help" }} title={footNoteOne}>【請於事件發生後的三個曆日(包括公眾假期)內，</span>
+                        </div>
+                        <div className="col-12 fontweight-bold">
+                            <span className={`font-weight-bold`} style={{ fontSize: 18, cursor: "help" }} title={footNoteOne}>呈交社會福利署 (1)津貼組 及 (2) 相關服務科】</span>
+                        </div>
                     </div>
-
-                    <hr className="my-3" />
-
+                    <div className="row my-3" style={{textAlign:'center'}}>
+                        <div className="col-12 fontweight-bold">
+                            <span className={`font-weight-bold`} style={{ fontSize: 18, cursor: "help" }} title={footNoteOne}>津助服務單位</span>
+                        </div>
+                        <div className="col-12 fontweight-bold">
+                            <span className={`font-weight-bold`} style={{ fontSize: 18, cursor: "help" }} title={footNoteOne}>特別事故報告</span>
+                        </div>
+                    </div>
                     <div className="form-row row">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>致部門</label>
                         <div className="col">
@@ -1013,10 +1028,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <div className="col" >
                             <div className="form-row" style={{ textDecoration: `${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "ALLOWANCE_SECTION" || !form.toDepartment ? "flex" : "none"}`}}>
                                 <div className="col-auto mr-auto">
-                                    津貼科
+                                    社會福利署津貼組 及
                                 </div>
                                 <div className="col-auto">
-                                    (傳真: 2575 5632)
+                                    (傳真: 2575 5632 及 電郵 : sueng@swd.gov.hk)
                                 </div>
                             </div>
                         </div>
@@ -1026,7 +1041,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>安老服務科</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2832 2936)</div>
+                            <div>(傳真: 2832 2936 及 電郵 : ebenq@swd.gov.hk)</div>
                         </div>
                     </div>
                     <div className="row" style={{ textDecoration: `${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "FAMILY_AND_CHILD_WELFARE_DIVISION" || !form.toDepartment ? "flex" : "none"}` }}>
@@ -1034,7 +1049,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>家庭及兒童福利科</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2833 5840)</div>
+                            <div>(傳真: 2833 5840 及 電郵 : fcwenq@swd.gov.hk)</div>
                         </div>
                     </div>
                     <div className="row" style={{ textDecoration: `${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION" || !form.toDepartment ? "flex" : "none"}` }}>
@@ -1042,7 +1057,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>康復及醫務社會服務科</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2893 6983)</div>
+                            <div>(傳真: 2893 6983 及 電郵 : rehabenq@swd.gov.hk)</div>
                         </div>
                     </div>
                     <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP" || form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "flex" : "none"}` }}>
@@ -1055,7 +1070,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>感化服務組</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2833 5861)</div>
+                            <div>(傳真: 2833 5861 及 電郵 : corenq@swd.gov.hk)</div>
                         </div>
                     </div>
                     <div className="row" style={{ textDecoration: `${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "none" : "line-through"}`, display:`${form.toDepartment === "YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION" || !form.toDepartment ? "flex" : "none"}` }}>
@@ -1063,11 +1078,23 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div>青年事務組</div>
                         </div>
                         <div className="col-auto">
-                            <div>(傳真: 2838 7021)</div>
+                            <div>(傳真: 2838 7021 及 電郵 : youthenq@swd.gov.hk)</div>
                         </div>
                     </div>
 
-                    <hr className="my-3" />
+
+                    <div className="row">
+                        <div className="col" >
+                            <div style={{margin:'15px 0'}}>「特別事故」包括:(1)服務使用者不尋常死亡 / 重複受傷，或其他事故導致服務使用者死亡 / 嚴重受傷; (2)服務使用者失踪以致需要報警求助; (3)
+                                已確立 / 懷疑有服務使用者被職員 / 其他服務使用者亡虐待 / 侵犯; (4)爭執以致有人身體受傷而需要報警求助; 
+                                (5)其他嚴重事故以致影響服務單位的日常運作超過24小時; 及 (6)可能引起公眾或傳媒關注的事故。
+                            </div>
+                            <div style={{margin:'15px 0'}}>
+                                如津助服務單位受法例規管，即安老院、殘疾人士院舍、幼兒中心或藥物倚賴者治療康復中心，請按有關要求向社會福利署牌照及規管科呈交特別事故報告，並將
+                                副本送交津貼組及相關服務科，無須另行填寫此表格。
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <section className="mb-5">
@@ -1157,18 +1184,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.accidentCategory === "ACCIDENT_CATEGORY_UNUSUAL_DEATH"} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-unusual-death">服務使用者不尋常死亡／嚴重受傷導致死亡</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-unusual-death">(1) 服務使用者不尋常死亡／重複受傷，或其他事故導致服務使用者死亡 / 嚴重受傷</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-missing" value="ACCIDENT_CATEGORY_MISSING" onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.accidentCategory === "ACCIDENT_CATEGORY_MISSING"}/>
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-missing">服務使用者失踪而需要報警求助</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-missing">(2) 服務使用者失踪以致需要報警求助</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-abuse" value="ACCIDENT_CATEGORY_ABUSE" onChange={radioButtonHandler} checked={form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE"}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-abuse" >
-                                    已
+                                    (3) *已
                                     <span className="pl-4">
                                         <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"}
                                             disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
@@ -1199,7 +1226,20 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     </span>
 
                                     &nbsp;
-                                    虐待
+
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-abuse" value="ACCIDENT_CATEGORY_REASON_ABUSE" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE"}
+                                            disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-abuse" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>虐待</label>
+                                    </span>
+                                    
+                                    ／
+                                    <span className="pl-4">
+                                        <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-violated" value="ACCIDENT_CATEGORY_REASON_VIOLATED" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED"}
+                                            disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-violated" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>侵犯</label>
+                                    </span>
+                                    
                                 </label>
                             </div>
                             {
@@ -1245,14 +1285,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-conflict">爭執以致有人身體受傷而需要報警求助</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-conflict">(4) 爭執以致有人身體受傷而需要報警求助</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-other">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</label>
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-other">(5) 其他嚴重事故以致影響服務單位的日常運作超過24小時</label>
                             </div>
-
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-media" value="ACCIDENT_CATEGORY_MEDIA" onChange={radioButtonHandler}
+                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-media">(6) 可能引起公眾或傳媒關注的事故</label>
+                            </div>
                         </div>
                     </div>
 
@@ -1273,7 +1317,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-2">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>特別事故描述</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>特別事故的詳情</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
@@ -1288,7 +1332,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className={`form-row mb-2`}>
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 服務使用者 (一)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 服務使用者 (第一位)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className={`col-12 col-md-4`}>
                             <div className="form-check form-check-inline">
@@ -1309,7 +1353,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(b) 服務使用者 (二，如有)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(b) 服務使用者 (第二位，如有)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
@@ -1330,7 +1374,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(c) 服務使用者 (三，如有)</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(c) 服務使用者 (第三位，如有)</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
@@ -1359,7 +1403,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className={`form-row mb-2`}>
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 職員 ( 一 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(a) 職員 (第一位 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`} >性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
@@ -1380,7 +1424,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(b) 職員 ( 二，如有 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(b) 職員 (第二位，如有 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
@@ -1401,7 +1445,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-2">
-                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(c) 職員 ( 三，如有 )</div>
+                        <div className={`col-12 ${styles.fieldTitle} ${styles.staffFieldLabel} mb-1`}>(c) 職員 (第三位，如有 )</div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
@@ -1563,7 +1607,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             {
                                 form.carePlan === true &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control ${(error &&error['CarePlanYesDescription'] ) ? "is-invalid": ""}`} placeholder="請註明，包括時間" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler}
+                                    <AutosizeTextarea className={`form-control ${(error &&error['CarePlanYesDescription'] ) ? "is-invalid": ""}`} placeholder="請註明，包括日期" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler}
                                         disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 </div>
                             }

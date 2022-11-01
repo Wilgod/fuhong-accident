@@ -17,6 +17,7 @@ export interface ISpecialIncidentReportAllowanceProps {
 export interface IAccidentCategoryAbuseDetails {
     status: string;
     person: string;
+    reason: string;
 }
 
 export interface ISpecialIncidentReportAllowanceStates {

@@ -159,9 +159,9 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
                 //IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
             }
             if (results.IncidentCategory == "ACCIDENT_CATEGORY_UNUSUAL_DEATH") {
-                IncidentCategory = "服務使用者不尋常死亡／嚴重受傷導致死亡";
+                IncidentCategory = "服務使用者不尋常死亡／嚴重受傷";
             } else if (results.IncidentCategory == "ACCIDENT_CATEGORY_MISSING") {
-                IncidentCategory = "服務使用者失踪而需要報警求助";
+                IncidentCategory = "服務使用者失踪以致需要報警求助";
             } else if (results.IncidentCategory == "ACCIDENT_CATEGORY_ABUSE") {
                 IncidentCategory = "已";
                 if (results.AbsuseDetailsStatus == 'ACCIDENT_CATEGORY_STATUS_ESTABLISH') {
@@ -177,11 +177,18 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
                 if (results.AbsuseDetailsPerson == 'ACCIDENT_CATEGORY_PERSON_OTHER') {
                     IncidentCategory += "其他服務使用者"
                 }
-                IncidentCategory += "虐待"
+                if (results.AbsuseDetailsPerson == 'ACCIDENT_CATEGORY_REASON_ABUSE') {
+                    IncidentCategory += "虐待"
+                }
+                if (results.AbsuseDetailsPerson == 'ACCIDENT_CATEGORY_REASON_VIOLATED') {
+                    IncidentCategory += "侵犯"
+                }
             } else if (results.IncidentCategory == "ACCIDENT_CATEGORY_CONFLICT") {
                 IncidentCategory = "爭執以致有人身體受傷而需要報警求助";
             } else if (results.IncidentCategory == "ACCIDENT_CATEGORY_OTHER") {
-                IncidentCategory = "其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注";
+                IncidentCategory = "其他嚴重事故以致影響服務單位的日常運作超過24小時";
+            } else if (results.IncidentCategory == "ACCIDENT_CATEGORY_MEDIA") {
+                IncidentCategory = "可能引起公眾或傳媒關注的事故";
             }
             
             exportList.push({
@@ -542,10 +549,10 @@ function dateFormatter(cell,rowIndex){
 function unusalIncidentFormatter(cell,rowIndex){
     let div = [];
     if (cell == "ACCIDENT_CATEGORY_UNUSUAL_DEATH") {
-        div.push(<div>服務使用者不尋常死亡／嚴重受傷導致死亡</div>);
+        div.push(<div>服務使用者不尋常死亡／嚴重受傷</div>);
     }
     if (cell == "ACCIDENT_CATEGORY_MISSING") {
-        div.push(<div>服務使用者失踪而需要報警求助</div>);
+        div.push(<div>服務使用者失踪以致需要報警求助</div>);
     }
     if (cell == "ACCIDENT_CATEGORY_ABUSE") {
         let word = '已'
@@ -571,7 +578,10 @@ function unusalIncidentFormatter(cell,rowIndex){
         div.push(<div>爭執以致有人身體受傷而需要報警求助</div>);
     }
     if (cell == "ACCIDENT_CATEGORY_OTHER") {
-        div.push(<div>其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</div>);
+        div.push(<div>其他嚴重事故以致影響服務單位的日常運作超過24小時</div>);
+    }
+    if (cell == "ACCIDENT_CATEGORY_MEDIA") {
+        div.push(<div>可能引起公眾或傳媒關注的事故</div>);
     }
     return div;
 }

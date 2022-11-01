@@ -19,6 +19,7 @@ interface IDataset {
     accidentCategoryAbuse: number;
     accidentCategoryConflict: number;
     accidentCategoryOther: number;
+    accidentCategoryMedia:number
 }
 
 const initialDataset: IDataset = {
@@ -26,7 +27,8 @@ const initialDataset: IDataset = {
     accidentCategoryAbuse: 0,
     accidentCategoryConflict: 0,
     accidentCategoryMissing: 0,
-    accidentCategoryOther: 0
+    accidentCategoryOther: 0,
+    accidentCategoryMedia:0
 }
 
 const initialDatasetMonth: IMonth = {
@@ -181,11 +183,12 @@ const normalChartParser = (result) =>{
 
 const financialChartParser = (result) =>{
     let dataResult = ['Year'];
-    let accidentCategoryUnusualDeath =['服務使用者不尋常死亡／嚴重受傷導致死亡'];
-    let accidentCategoryMissing =['服務使用者失踪而需要報警求助'];
-    let accidentCategoryAbuse =['已確立／懷疑有服務使用者被職員／其他服務使用者虐待'];
+    let accidentCategoryUnusualDeath =['服務使用者不尋常死亡／嚴重受傷'];
+    let accidentCategoryMissing =['服務使用者失踪以致需要報警求助'];
+    let accidentCategoryAbuse =['已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯/侵犯'];
     let accidentCategoryConflict =['爭執以致有人身體受傷而需要報警求助'];
-    let accidentCategoryOther =['其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注'];
+    let accidentCategoryOther =['其他嚴重事故以致影響服務單位的日常運作超過24小時'];
+    let accidentCategoryMedia=['可能引起公眾或傳媒關注的事故'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         accidentCategoryUnusualDeath.push(item.dataset['accidentCategoryUnusualDeath']);
@@ -193,6 +196,7 @@ const financialChartParser = (result) =>{
         accidentCategoryAbuse.push(item.dataset['accidentCategoryAbuse']);
         accidentCategoryConflict.push(item.dataset['accidentCategoryConflict']);
         accidentCategoryOther.push(item.dataset['accidentCategoryOther']);
+        accidentCategoryMedia.push(item.dataset['accidentCategorMedia']);
     });
     let data=[
         dataResult,
@@ -200,18 +204,20 @@ const financialChartParser = (result) =>{
         accidentCategoryMissing,
         accidentCategoryAbuse,
         accidentCategoryConflict,
-        accidentCategoryOther
+        accidentCategoryOther,
+        accidentCategoryMedia
     ];
     return data;
 }
 
 const yearChartParser = (result) =>{
     let dataResult = ['Year'];
-    let accidentCategoryUnusualDeath =['服務使用者不尋常死亡／嚴重受傷導致死亡'];
-    let accidentCategoryMissing =['服務使用者失踪而需要報警求助'];
-    let accidentCategoryAbuse =['已確立／懷疑有服務使用者被職員／其他服務使用者虐待'];
+    let accidentCategoryUnusualDeath =['服務使用者不尋常死亡／嚴重受傷'];
+    let accidentCategoryMissing =['服務使用者失踪以致需要報警求助'];
+    let accidentCategoryAbuse =['已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯'];
     let accidentCategoryConflict =['爭執以致有人身體受傷而需要報警求助'];
-    let accidentCategoryOther =['其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注'];
+    let accidentCategoryOther =['其他嚴重事故以致影響服務單位的日常運作超過24小時'];
+    let accidentCategoryMedia=['可能引起公眾或傳媒關注的事故'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         accidentCategoryUnusualDeath.push(item.dataset['accidentCategoryUnusualDeath']);
@@ -219,6 +225,7 @@ const yearChartParser = (result) =>{
         accidentCategoryAbuse.push(item.dataset['accidentCategoryAbuse']);
         accidentCategoryConflict.push(item.dataset['accidentCategoryConflict']);
         accidentCategoryOther.push(item.dataset['accidentCategoryOther']);
+        accidentCategoryMedia.push(item.dataset['accidentCategoryMedia']);
        
     });
     let data=[
@@ -227,7 +234,8 @@ const yearChartParser = (result) =>{
         accidentCategoryMissing,
         accidentCategoryAbuse,
         accidentCategoryConflict,
-        accidentCategoryOther
+        accidentCategoryOther,
+        accidentCategoryMedia
     ];
     return data;
 }
@@ -312,6 +320,9 @@ const categoryFilter = (type: string, dataset: IDataset): IDataset => {
             return result;
         case "ACCIDENT_CATEGORY_OTHER":
             result.accidentCategoryOther += 1;
+            return result;
+        case "ACCIDENT_CATEGORY_MEDIA":
+            result.accidentCategoryMedia += 1;
             return result;
         default: return result;
     }
@@ -608,15 +619,15 @@ function AllowanceCategory(props) {
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">服務使用者不尋常死亡／嚴重受傷導致死亡</th>
+                        <th scope="row">服務使用者不尋常死亡／嚴重受傷</th>
                         <th>{categoryDataset.accidentCategoryUnusualDeath}</th>
                     </tr>
                     <tr>
-                        <th scope="row">服務使用者失踪而需要報警求助</th>
+                        <th scope="row">服務使用者失踪以致需要報警求助</th>
                         <th>{categoryDataset.accidentCategoryMissing}</th>
                     </tr>
                     <tr>
-                        <th scope="row">已確立／懷疑有服務使用者被職員／其他服務使用者虐待</th>
+                        <th scope="row">已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯</th>
                         <th>{categoryDataset.accidentCategoryAbuse}</th>
                     </tr>
                     <tr>
@@ -624,8 +635,12 @@ function AllowanceCategory(props) {
                         <th>{categoryDataset.accidentCategoryConflict}</th>
                     </tr>
                     <tr>
-                        <th scope="row">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</th>
+                        <th scope="row">其他嚴重事故以致影響服務單位的日常運作超過24小時</th>
                         <th>{categoryDataset.accidentCategoryOther}</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">可能引起公眾或傳媒關注的事故</th>
+                        <th>{categoryDataset.accidentCategoryMedia}</th>
                     </tr>
                 </tbody>
             </table >
@@ -740,12 +755,12 @@ function AllowanceCategory(props) {
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">服務使用者不尋常死亡／嚴重受傷導致死亡</th>
-                                            <th scope="col">服務使用者失踪而需要報警求助</th>
-                                            <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待</th>
+                                            <th scope="col">服務使用者不尋常死亡／嚴重受傷</th>
+                                            <th scope="col">服務使用者失踪以致需要報警求助</th>
+                                            <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯</th>
                                             <th scope="col">爭執以致有人身體受傷而需要報警求助</th>
-                                            <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</th>
-
+                                            <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時</th>
+                                            <th scope="col">可能引起公眾或傳媒關注的事故</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -758,7 +773,7 @@ function AllowanceCategory(props) {
                                                     <td>{item.dataset.accidentCategoryAbuse}</td>
                                                     <td>{item.dataset.accidentCategoryConflict}</td>
                                                     <td>{item.dataset.accidentCategoryOther}</td>
-
+                                                    <td>{item.dataset.accidentCategoryMedia}</td>
                                                 </tr>
                                             )
                                         })}
@@ -770,6 +785,7 @@ function AllowanceCategory(props) {
                                                 <td>{categoryDataset.accidentCategoryAbuse}</td>
                                                 <td>{categoryDataset.accidentCategoryConflict}</td>
                                                 <td>{categoryDataset.accidentCategoryOther}</td>
+                                                <td>{categoryDataset.accidentCategoryMedia}</td>
                                             </tr>
                                         }
                                     </tbody>
@@ -792,6 +808,9 @@ function AllowanceCategory(props) {
 
                 let accidentCategoryOtherResult = sampleThreeParser(data.filter((item) => {return item.IncidentCategory == "ACCIDENT_CATEGORY_OTHER"}), startDate, endDate);
                 let accidentCategoryOtherMFChart = financialYearChartParser(accidentCategoryOtherResult);
+
+                let accidentCategoryMediaResult = sampleThreeParser(data.filter((item) => {return item.IncidentCategory == "ACCIDENT_CATEGORY_MEDIA"}), startDate, endDate);
+                let accidentCategoryMediaMFChart = financialYearChartParser(accidentCategoryMediaResult);
                 return <>
                     <div className="row">
                         <div className="col-1">
@@ -800,7 +819,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
@@ -861,7 +880,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 服務使用者不尋常死亡／嚴重受傷導致死亡 (每月總數)
+                                特別事故統計 (津貼科) - 服務使用者不尋常死亡／嚴重受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -873,7 +892,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -887,7 +906,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 服務使用者不尋常死亡／嚴重受傷導致死亡 (每月總數)
+                                特別事故統計 (津貼科) - 服務使用者不尋常死亡／嚴重受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -900,7 +919,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡(每月總數)',
+                                        subtitle: '特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -915,7 +934,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 服務使用者失踪而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 服務使用者失踪以致需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
@@ -976,7 +995,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 服務使用者失踪而需要報警求助 (每月總數)
+                                特別事故統計 (津貼科) - 服務使用者失踪以致需要報警求助 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -988,7 +1007,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 服務使用者失踪而需要報警求助(每月總數)',
+                                        subtitle: '特別事故類別統計 - 服務使用者失踪以致需要報警求助(每月總數)',
                                     },
                                 }}
                             />
@@ -1002,7 +1021,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 服務使用者失踪而需要報警求助 (每月總數)
+                                特別事故統計 (津貼科) - 服務使用者失踪以致需要報警求助 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1015,7 +1034,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 服務使用者失踪而需要報警求助(每月總數)',
+                                        subtitle: '特別事故類別統計 - 服務使用者失踪以致需要報警求助(每月總數)',
                                     },
                                 }}
                             />
@@ -1030,7 +1049,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
@@ -1091,7 +1110,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 (每月總數)
+                                特別事故統計 (津貼科) - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1103,7 +1122,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待(每月總數)',
+                                        subtitle: '特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -1117,7 +1136,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 (每月總數)
+                                特別事故統計 (津貼科) - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1130,7 +1149,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待(每月總數)',
+                                        subtitle: '特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -1260,7 +1279,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${title} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${title} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
@@ -1321,7 +1340,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 (每月總數)
+                                特別事故統計 (津貼科) - 其他嚴重事故以致影響服務單位的日常運作超過24小時 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1333,7 +1352,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注(每月總數)',
+                                        subtitle: '特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時(每月總數)',
                                     },
                                 }}
                             />
@@ -1347,7 +1366,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 (每月總數)
+                                特別事故統計 (津貼科) - 其他嚴重事故以致影響服務單位的日常運作超過24小時 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1355,12 +1374,67 @@ function AllowanceCategory(props) {
                                 height={'400px'}
                                 chartType="Bar"
                                 loader={<div>Loading Chart</div>}
-                                data={accidentCategoryConflictMFChart}
+                                data={accidentCategoryOtherMFChart}
                                 options={{
                                     // Material design options
                                     chart: {
                                         title: '財政年度',
-                                        subtitle: '特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注(每月總數)',
+                                        subtitle: '特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart6")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialLineChart6">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (津貼科) - 可能引起公眾或傳媒關注的事故 (每月總數)
+                                </div>
+                            </div>
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentCategoryMediaMFChart}
+                                options={{
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '特別事故類別統計 - 可能引起公眾或傳媒關注的事故(每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthFinancialBarChart5">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (津貼科) - 可能引起公眾或傳媒關注的事故 (每月總數)
+                                </div>
+                            </div>
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentCategoryMediaMFChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '財政年度',
+                                        subtitle: '特別事故類別統計 - 可能引起公眾或傳媒關注的事故(每月總數)',
                                     },
                                 }}
                             />
@@ -1384,6 +1458,9 @@ function AllowanceCategory(props) {
 
                 let accidentCategoryOtherMCResult = sampleFourParser(data.filter((item) => {return item.IncidentCategory == "ACCIDENT_CATEGORY_OTHER"}), startDate, endDate);
                 let accidentCategoryOtherMCChart = normalChartParser(accidentCategoryOtherMCResult);
+
+                let accidentCategoryMediaMCResult = sampleFourParser(data.filter((item) => {return item.IncidentCategory == "ACCIDENT_CATEGORY_MEDIA"}), startDate, endDate);
+                let accidentCategoryMediaMCChart = normalChartParser(accidentCategoryMediaMCResult);
                 accidentCategoryUnusualDeathMCResult.forEach((item, i) => {
                     titleYear2 += item.year
                     if (i !== accidentCategoryUnusualDeathMCResult.length - 1) {
@@ -1398,7 +1475,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
@@ -1458,7 +1535,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者不尋常死亡／嚴重受傷導致死亡 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者不尋常死亡／嚴重受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1470,7 +1547,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷(每月總數)',
                                     },
                                 }}
                             />
@@ -1484,7 +1561,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者不尋常死亡／嚴重受傷導致死亡 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者不尋常死亡／嚴重受傷 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1497,7 +1574,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷導致死亡(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 服務使用者不尋常死亡／嚴重受傷(每月總數)',
                                     },
                                 }}
 
@@ -1513,7 +1590,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者失踪而需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 服務使用者失踪以致需要報警求助 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
@@ -1573,7 +1650,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者失踪而需要報警求助 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者失踪以致需要報警求助 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1585,7 +1662,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 服務使用者失踪而需要報警求助(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 服務使用者失踪以致需要報警求助(每月總數)',
                                     },
                                 }}
                             />
@@ -1599,7 +1676,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者失踪而需要報警求助 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 服務使用者失踪以致需要報警求助 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1612,7 +1689,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 服務使用者失踪而需要報警求助(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 服務使用者失踪以致需要報警求助(每月總數)',
                                     },
                                 }}
 
@@ -1629,7 +1706,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
@@ -1689,7 +1766,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1701,7 +1778,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯(每月總數)',
                                     },
                                 }}
                             />
@@ -1715,7 +1792,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1728,7 +1805,7 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯(每月總數)',
                                     },
                                 }}
 
@@ -1859,7 +1936,7 @@ function AllowanceCategory(props) {
                             </h6>
                         </div>
                         <div className="col-12">
-                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
                         <div className="col-12" style={{margin:'5px 0'}}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
@@ -1919,7 +1996,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 其他嚴重事故以致影響服務單位的日常運作超過24小時 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1931,7 +2008,7 @@ function AllowanceCategory(props) {
                                 options={{
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時(每月總數)',
                                     },
                                 }}
                             />
@@ -1945,7 +2022,7 @@ function AllowanceCategory(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                特別事故統計 (津貼科) - 特別事故類別 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注 (每月總數)
+                                特別事故統計 (津貼科) - 特別事故類別 - 其他嚴重事故以致影響服務單位的日常運作超過24小時 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1958,7 +2035,126 @@ function AllowanceCategory(props) {
                                     // Material design options
                                     chart: {
                                         title: '日曆年度',
-                                        subtitle: ' - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注(每月總數)',
+                                        subtitle: ' - 特別事故類別統計 - 其他嚴重事故以致影響服務單位的日常運作超過24小時(每月總數)',
+                                    },
+                                }}
+
+                            />
+                        </div>
+                    </div>
+                    
+
+
+
+
+
+                    <div className="row">
+                        <div className="col-1">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
+                        <div className="col-12">
+                            <h6>{`${titleYear2} - 特別事故類別統計 - 可能引起公眾或傳媒關注的事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
+                        </div>
+                        <div className="col-12" style={{margin:'5px 0'}}>
+                                <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
+                            </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <table className="table" id="table12">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Jan</th>
+                                        <th scope="col">Feb</th>
+                                        <th scope="col">Mar</th>
+                                        <th scope="col">Apr</th>
+                                        <th scope="col">May</th>
+                                        <th scope="col">Jun</th>
+                                        <th scope="col">Jul</th>
+                                        <th scope="col">Aug</th>
+                                        <th scope="col">Sep</th>
+                                        <th scope="col">Oct</th>
+                                        <th scope="col">Nov</th>
+                                        <th scope="col">Dec</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accidentCategoryOtherMCResult.map((item) => {
+                                        return (
+                                            <tr>
+                                                <th scope="row">{item.year}</th>
+                                                <td>{item.dataset.jan}</td>
+                                                <td>{item.dataset.feb}</td>
+                                                <td>{item.dataset.mar}</td>
+                                                <td>{item.dataset.apr}</td>
+                                                <td>{item.dataset.may}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.jun}</td>
+                                                <td>{item.dataset.aug}</td>
+                                                <td>{item.dataset.sep}</td>
+                                                <td>{item.dataset.oct}</td>
+                                                <td>{item.dataset.nov}</td>
+                                                <td>{item.dataset.dec}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarLineChart5">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (津貼科) - 特別事故類別 - 可能引起公眾或傳媒關注的事故 (每月總數)
+                                </div>
+                            </div>
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Line"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentCategoryMediaMCChart}
+                                options={{
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 特別事故類別統計 - 可能引起公眾或傳媒關注的事故 (每月總數)',
+                                    },
+                                }}
+                            />
+                        </div>
+                        <div className="col-12">
+                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                        </div>
+                        <div className="col-12 byMonthCalendarBarChart5">
+                            <div className="text-center mb-2" style={{ fontSize: 16 }}>
+                                <div className="">
+                                    {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
+                                </div>
+                                <div className="">
+                                特別事故統計 (津貼科) - 特別事故類別 - 可能引起公眾或傳媒關注的事故 (每月總數)
+                                </div>
+                            </div>
+                            <Chart
+                                width={'100%'}
+                                height={'400px'}
+                                chartType="Bar"
+                                loader={<div>Loading Chart</div>}
+                                data={accidentCategoryMediaMCChart}
+                                options={{
+                                    // Material design options
+                                    chart: {
+                                        title: '日曆年度',
+                                        subtitle: ' - 特別事故類別統計 - 可能引起公眾或傳媒關注的事故 (每月總數)',
                                     },
                                 }}
 
@@ -1997,11 +2193,12 @@ function AllowanceCategory(props) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">服務使用者不尋常死亡／嚴重受傷導致死亡</th>
-                                        <th scope="col">服務使用者失踪而需要報警求助</th>
-                                        <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待</th>
+                                        <th scope="col">服務使用者不尋常死亡／嚴重受傷</th>
+                                        <th scope="col">服務使用者失踪以致需要報警求助</th>
+                                        <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯</th>
                                         <th scope="col">爭執以致有人身體受傷而需要報警求助</th>
-                                        <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</th>
+                                        <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時</th>
+                                        <th scope="col">可能引起公眾或傳媒關注的事故</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2014,6 +2211,7 @@ function AllowanceCategory(props) {
                                                 <td>{item.dataset.accidentCategoryAbuse}</td>
                                                 <td>{item.dataset.accidentCategoryConflict}</td>
                                                 <td>{item.dataset.accidentCategoryOther}</td>
+                                                <td>{item.dataset.accidentCategoryMedia}</td>
                                             </tr>
                                         )
                                     })}
@@ -2117,11 +2315,12 @@ function AllowanceCategory(props) {
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">服務使用者不尋常死亡／嚴重受傷導致死亡</th>
-                                        <th scope="col">服務使用者失踪而需要報警求助</th>
-                                        <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待</th>
+                                        <th scope="col">服務使用者不尋常死亡／嚴重受傷</th>
+                                        <th scope="col">服務使用者失踪以致需要報警求助</th>
+                                        <th scope="col">已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯</th>
                                         <th scope="col">爭執以致有人身體受傷而需要報警求助</th>
-                                        <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注</th>
+                                        <th scope="col">其他嚴重事故以致影響服務單位的日常運作超過24小時</th>
+                                        <th scope="col">可能引起公眾或傳媒關注的事故</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2134,6 +2333,7 @@ function AllowanceCategory(props) {
                                                 <td>{item.dataset.accidentCategoryAbuse}</td>
                                                 <td>{item.dataset.accidentCategoryConflict}</td>
                                                 <td>{item.dataset.accidentCategoryOther}</td>
+                                                <td>{item.dataset.accidentCategoryMedia}</td>
                                             </tr>
                                         )
                                     })}
@@ -2277,11 +2477,12 @@ function AllowanceCategory(props) {
                                         }}
                                         data={[
                                             ["事故類別", "數量"],
-                                            ["服務使用者不尋常死亡／嚴重受傷導致死亡", categoryDataset.accidentCategoryUnusualDeath],
-                                            ["服務使用者失踪而需要報警求助", categoryDataset.accidentCategoryMissing],
-                                            ["已確立／懷疑有服務使用者被職員／其他服務使用者虐待", categoryDataset.accidentCategoryAbuse],
+                                            ["服務使用者不尋常死亡／嚴重受傷", categoryDataset.accidentCategoryUnusualDeath],
+                                            ["服務使用者失踪以致需要報警求助", categoryDataset.accidentCategoryMissing],
+                                            ["已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯", categoryDataset.accidentCategoryAbuse],
                                             ["爭執以致有人身體受傷而需要報警求助", categoryDataset.accidentCategoryConflict],
-                                            ["其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注", categoryDataset.accidentCategoryOther],
+                                            ["其他嚴重事故以致影響服務單位的日常運作超過24小時", categoryDataset.accidentCategoryOther],
+                                            ["可能引起公眾或傳媒關注的事故", categoryDataset.accidentCategoryMedia],
                                         ]}
                                     />
                                 </div>
@@ -2316,7 +2517,7 @@ function AllowanceCategory(props) {
                                 chartType="ColumnChart"
                                 loader={<div>Loading Chart</div>}
                                 data={
-                                    [['月份', '服務使用者不尋常死亡／嚴重受傷導致死亡', '服務使用者失踪而需要報警求助', '已確立／懷疑有服務使用者被職員／其他服務使用者虐待', '爭執以致有人身體受傷而需要報警求助', '其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注'],
+                                    [['月份', '服務使用者不尋常死亡／嚴重受傷', '服務使用者失踪以致需要報警求助', '已確立／懷疑有服務使用者被職員／其他服務使用者虐待/侵犯', '爭執以致有人身體受傷而需要報警求助', '其他嚴重事故以致影響服務單位的日常運作超過24小時', '可能引起公眾或傳媒關注的事故'],
                                     ...sampleTwoParser(data, startDate, endDate).map((item) => {
                                         return [item.month, item.dataset.accidentCategoryUnusualDeath, item.dataset.accidentCategoryMissing, item.dataset.accidentCategoryAbuse, item.dataset.accidentCategoryConflict, item.dataset.accidentCategoryOther]
                                     })]

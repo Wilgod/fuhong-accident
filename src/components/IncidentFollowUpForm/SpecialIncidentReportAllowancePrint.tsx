@@ -34,6 +34,7 @@ interface ISpecialIncidentReportAllowanceStates {
     incidentCategory:string;
     absuseDetailsStatus:string;
     absuseDetailsPerson:string;
+    absuseDetailsReason:string;
     abusive_body: boolean,
     abusive_mental: boolean,
     abusive_negligent: boolean,
@@ -259,6 +260,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         incidentCategory:"",
         absuseDetailsStatus:"",
         absuseDetailsPerson:"",
+        absuseDetailsReason:"",
         medicalIncident: "",
         mi_description: "",
         missingPoliceDate: new Date(),
@@ -389,6 +391,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 incidentCategory:formData.IncidentCategory,
                 absuseDetailsStatus:formData.AbsuseDetailsStatus,
                 absuseDetailsPerson:formData.AbsuseDetailsPerson,
+                absuseDetailsReason:formData.AbsuseDetailsReason,
                 homesManagerName: formData.HomesManagerName,
                 homesManagerTel: formData.HomesManagerTel,
                 orgName: formData.OrgName,
@@ -629,12 +632,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9744;</span>}
-                                            服務使用者不尋常死亡／嚴重受傷導致死亡
+                                            服務使用者不尋常死亡／嚴重受傷
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_MISSING" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_MISSING" && <span>&#9744;</span>}
-                                            服務使用者失踪而需要報警求助
+                                            服務使用者失踪以致需要報警求助
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_ABUSE" && <span>&#9745;</span>}
@@ -645,6 +648,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                             有服務使用者被
                                             {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>職員</span>}
                                             {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>其他服務使用者</span>}
+                                            {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_ABUSE" && <span>虐待</span>}
+                                            {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_VIOLATED" && <span>侵犯</span>}
                                             虐待
                                         </div>
                                         <div style={{paddingLeft:'30px'}}>
@@ -685,7 +690,12 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_OTHER" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_OTHER" && <span>&#9744;</span>}
-                                            其他嚴重事故以致影響服務單位的日常運作超過24小時／引起傳媒關注
+                                            其他嚴重事故以致影響服務單位的日常運作超過24小時
+                                        </div>
+                                        <div>
+                                            {form.incidentCategory == "ACCIDENT_CATEGORY_MEDIA" && <span>&#9745;</span>}
+                                            {form.incidentCategory != "ACCIDENT_CATEGORY_MEDIA" && <span>&#9744;</span>}
+                                            可能引起公眾或傳媒關注的事故
                                         </div>
                                     </td>
                                 </tr>
