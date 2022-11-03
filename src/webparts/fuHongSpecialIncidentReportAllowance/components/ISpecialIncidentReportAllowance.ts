@@ -44,6 +44,10 @@ export interface ISpecialIncidentReportAllowanceStates {
     guardianDescription: string;
     guardianRelationship: string;
     guardianStaff: string;
+    otherRelatedParties:boolean;
+    otherRelatedPartiesRelationship:string;
+    otherRelatedPartiesStaff:string;
+    otherRelatedPartiesDescription:string;
     medicalArrangement: boolean;
     medicalArrangmentDetail: string;
     carePlan: boolean;

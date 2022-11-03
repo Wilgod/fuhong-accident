@@ -66,6 +66,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         guardianDescription: "",
         guardianRelationship: "",
         guardianStaff: "",
+        otherRelatedParties:undefined,
+        otherRelatedPartiesRelationship:"",
+        otherRelatedPartiesStaff:"",
+        otherRelatedPartiesDescription:"",
         medicalArrangement: undefined,
         medicalArrangmentDetail: "",
         carePlan: undefined,
@@ -112,7 +116,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const [policeDatetime, setPoliceDatetime] = useState(null);
     const [guardianDatetime, setGuardianDatetime] = useState(null);
-
+    const [otherRelatedPartiesDatetime, setOtherRelatedPartiesDatetime] = useState(null);
     const [openModel, setOpenModel] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
@@ -321,7 +325,29 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         } else if (form.guardian === undefined) {
             error["Guardian"] = true;
         }
+        body["OtherRelatedParties"] = form.otherRelatedParties;
+        if (form.otherRelatedParties === true) {
+            if (otherRelatedPartiesDatetime) {
+                body["OtherRelatedPartiesDatetime"] = otherRelatedPartiesDatetime.toISOString();
+            } else {
+                error["OtherRelatedPartiesDatetime"] = true;
+            }
+            if (form.otherRelatedPartiesRelationship) {
+                body["OtherRelatedPartiesRelationship"] = form.otherRelatedPartiesRelationship;
+            } else {
+                error["OtherRelatedPartiesRelationship"] = true;
+            }
 
+            if (form.otherRelatedPartiesStaff) {
+                body["OtherRelatedPartiesStaff"] = form.otherRelatedPartiesStaff;
+            } else {
+                error["OtherRelatedPartiesStaff"] = true;
+            }
+        } else if (form.otherRelatedParties === false) {
+            body["OtherRelatedPartiesDescription"] = form.guardianDescription;
+        } else if (form.guardian === undefined) {
+            error["OtherRelatedParties"] = true;
+        }
         //醫療安排
         body["MedicalArrangement"] = form.medicalArrangement;
         if (form.medicalArrangement === true) {
@@ -453,7 +479,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.GuardianDatetime) {
                 setGuardianDatetime(new Date(formData.GuardianDatetime));
             }
-
+            if (formData.OtherRelatedPartiesDatetime) {
+                setOtherRelatedPartiesDatetime(new Date(formData.OtherRelatedPartiesDatetime));
+            }
             setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus, reason: formData.AbsuseDetailsReson });
             setServiceLocation(formData.ServiceLocation)
             setReporterPhone(formData.ReporterPhone);
@@ -474,6 +502,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 guardianDescription: formData.GuardianDescription,
                 guardianRelationship: formData.GuardianRelationship,
                 guardianStaff: formData.GuardianStaff,
+                otherRelatedParties:formData.OtherRelatedParties,
+                otherRelatedPartiesRelationship:formData.OtherRelatedPartiesRelationship,
+                otherRelatedPartiesStaff:formData.OtherRelatedPartiesStaff,
+                otherRelatedPartiesDescription:formData.OtherRelatedPartiesDescription,
                 immediateFollowUp: formData.ImmediateFollowUp,
                 incidentDescription: formData.IncidentDescription,
                 incidentLocation: formData.IncidentLocation,
@@ -924,11 +956,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     // Find SD && SM
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
-            if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
+            /*if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
                 setHrDepartment("CHH");
                 setServiceUnit("CHH");
                 return;
-            }
+            }*/
 
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
@@ -1031,7 +1063,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     社會福利署津貼組 及
                                 </div>
                                 <div className="col-auto">
-                                    (傳真: 2575 5632 及 電郵 : sueng@swd.gov.hk)
+                                    (傳真: 2575 5632 及 電郵 : suenq@swd.gov.hk)
                                 </div>
                             </div>
                         </div>
@@ -1474,7 +1506,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(a) 報警處理</label>
                         <div className={`col ${(error &&error['Police'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true}
@@ -1519,7 +1551,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>通知家人 / 親屬 / 監護人 / 保證人</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(b) 通知家人 / 親屬 / 監護人 / 保證人</label>
                         <div className={`col ${(error &&error['Guardian'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-true" value="NOTIFY_FAMILY_TRUE" checked={form.guardian === true} onClick={() => setForm({ ...form, guardian: true })}
@@ -1569,7 +1601,57 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>醫療安排</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(c) 通知相關的服務使用者／員工／轉介社工／其他相關人士</label>
+                        <div className={`col ${(error &&error['OtherRelatedParties'] ) ? styles.divInvalid: ""}`}>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="notifyOtherRelatedParties" id="notify-otherrelatedparties-true" value="NOTIFY_OTHERRELATEDPARTIES_TRUE" checked={form.otherRelatedParties === true} onClick={() => setForm({ ...form, otherRelatedParties: true })}
+                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notify-otherrelatedparties-true">有</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="radio" name="notifyOtherRelatedParties" id="notify-otherrelatedparties-false" value="NOTIFY_OTHERRELATEDPARTIES_FALSE" checked={form.otherRelatedParties === false} onClick={() => setForm({ ...form, otherRelatedParties: false })}
+                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                <label className={`form-check-label ${styles.labelColor}`} htmlFor="notify-otherrelatedparties-false">沒有 {isPrintMode && <span>(請註明)</span>}</label>
+                            </div>
+                            {
+                                form.otherRelatedParties === true &&
+                                <>
+                                    <div>
+                                        <label className="form-label">通知日期和時間</label>
+                                        <DatePicker
+                                            className={`form-control ${(error &&error['OtherRelatedPartiesDatetime'] ) ? styles.divInvalid: ""}`}
+                                            selected={otherRelatedPartiesDatetime}
+                                            onChange={(date) => setOtherRelatedPartiesDatetime(date)}
+                                            showTimeSelect
+                                            timeFormat="p"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy/MM/dd h:mm aa"
+                                            readOnly={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">與服務使用者的關係</label>
+                                        <input type="text" className={`form-control ${(error &&error['OtherRelatedPartiesRelationship'] ) ? "is-invalid": ""}`} name="otherRelatedPartiesRelationship" value={form.otherRelatedPartiesRelationship} onChange={inputFieldHandler}
+                                            disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    </div>
+                                    <div>
+                                        <label className="form-label">負責職員姓名</label>
+                                        <input type="text" className={`form-control ${(error &&error['OtherRelatedPartiesStaff'] ) ? "is-invalid": ""}`} name="otherRelatedPartiesStaff" value={form.otherRelatedPartiesStaff} onChange={inputFieldHandler}
+                                            disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    </div>
+                                </>
+                            }
+                            {form.otherRelatedParties === false &&
+                                <div>
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="otherRelatedPartiesDescription" value={form.otherRelatedPartiesDescription} onChange={inputFieldHandler}
+                                        disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-row mb-4">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>(d) 醫療安排</label>
                         <div className={`col ${(error &&error['MedicalArrangement'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medical" id="medical-true" value="MEDICAL_TRUE" checked={form.medicalArrangement === true} onClick={() => setForm({ ...form, medicalArrangement: true })}
@@ -1592,7 +1674,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(e) 舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
                         <div className={`col ${(error &&error['CarePlan'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="meeting" id="meeting-true" value="MEETING_TRUE" onChange={() => setForm({ ...form, carePlan: true })} checked={form.carePlan === true}
@@ -1622,7 +1704,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(f) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
                         <div className={`col ${(error &&error['NeedResponse'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={() => setForm({ ...form, needResponse: true })} checked={form.needResponse === true}
@@ -1645,7 +1727,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(g) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="immediateFollowUp" value={form.immediateFollowUp} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
@@ -1653,7 +1735,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     </div>
 
                     <div className="form-row mb-4">
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>跟進計劃</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(h) 跟進計劃</label>
                         <div className="col">
                             <AutosizeTextarea className={`form-control ${(error &&error['FollowUpPlan'] ) ? styles.divInvalid: ""}`} name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />

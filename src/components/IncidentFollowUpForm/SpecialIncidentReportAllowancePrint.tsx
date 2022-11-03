@@ -123,6 +123,11 @@ interface ISpecialIncidentReportAllowanceStates {
     guardianStaffName:string;
     guardianStaffJobTitle:string;
     guardianDescription:string;
+    otherRelatedParties:boolean;
+    otherRelatedPartiesDatetime:Date;
+    otherRelatedPartiesRelationship:string;
+    otherRelatedPartiesStaff:string;
+    otherRelatedPartiesDescription:string;
     immediateFollowUp:string;
     followUpPlan:string;
     medicalArrangement:string;
@@ -239,6 +244,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         guardianStaffName: "",
         guardianStaffJobTitle:"",
         guardianDescription:"",
+        otherRelatedParties:undefined,
+        otherRelatedPartiesDatetime:null,
+        otherRelatedPartiesRelationship:"",
+        otherRelatedPartiesStaff:"",
+        otherRelatedPartiesDescription:"",
         medicalArrangement:"",
         medicalArrangmentDetail:"",
         carePlan:undefined,
@@ -376,6 +386,11 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 guardianDatetime: formData.GuarrdianDatetime ? new Date(formData.GuarrdianDatetime) : null,
                 guardianReason: formData.GuardianReason,
                 guardianDescription:formData.GuardianDescription,
+                otherRelatedParties:formData.OtherRelatedParties,
+                otherRelatedPartiesDatetime:formData.OtherRelatedPartiesDatetime,
+                otherRelatedPartiesRelationship:formData.OtherRelatedPartiesRelationship,
+                otherRelatedPartiesStaff:formData.OtherRelatedPartiesStaff,
+                otherRelatedPartiesDescription:formData.OtherRelatedPartiesDescription,
                 medicalArrangement:formData.MedicalArrangement,
                 medicalArrangmentDetail:formData.MedicalArrangmentDetail,
                 carePlan:formData.CarePlan,
@@ -524,13 +539,21 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 {index == 0 &&
                     <div>
                         <div className="form-row mb-3">
-                        <div className={`col-12 font-weight-bold ${styles.header}`}>
+                            <div className={`col-12 font-weight-bold`} style={{textAlign:'center', fontSize:'20px'}}>
+                            【請於事件發生後的三個曆日(包括公眾假期)內，
+                            </div>
+                            <div className={`col-12 font-weight-bold`}  style={{textAlign:'center', fontSize:'20px'}}>
+                            呈交社會福利署 (1)津貼組 及 (2) 相關服務科】
+                            </div>
+                        </div>
+                        <div className="form-row mb-3">
+                            <div className={`col-12 font-weight-bold`} style={{textAlign:'center', fontSize:'20px'}}>
+                            津助服務單位
+                            </div>
+                            <div className={`col-12 font-weight-bold`}  style={{textAlign:'center', fontSize:'20px'}}>
                             特別事故報告
+                            </div>
                         </div>
-                        <div className={`col-12 ${styles.header}`}>
-                        (特別事故發生後三個工作天內提交社會福利署津貼組及相關服務科)
-                        </div>
-                    </div>
                     <div className="form-row mb-3">
                         <div className={`col-12`}>
                             注意：請在合適方格內加上「&#10003;」號，並連同附頁／載有相關資料的自訂報告一併呈交
@@ -542,36 +565,48 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td style={{width:"100px"}}>致 :</td>
                                     <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{width:"200px"}}>津貼科</td>
-                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632)</td>
+                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632 及 電郵 : suenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*安老服務科</td>
-                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2832 2936)</td>
+                                    <td className={form.toDepartment != 'ELDERLY_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2832 2936 及 電郵 : ebenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*家庭及兒童福利科</td>
-                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2833 5840)</td>
+                                    <td className={form.toDepartment != 'FAMILY_AND_CHILD_WELFARE_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2833 5840 及 電郵 : fcwenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{width:"200px"}}>*康復及醫務社會服務科</td>
-                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2893 6983)</td>
+                                    <td className={form.toDepartment != 'REHABILITATION_AND_MEDICAL_SOCIAL_SERVICES_DIVISION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*(傳真: 2893 6983 及 電郵 : rehabenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td></td>
-                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*感化服務組	*(傳真: 2833 5861)</td>
+                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_BRANCH_PROBATION_SERVICE_GROUP' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*感化服務組	*(傳真: 2833 5861 及 電郵 : corenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td></td>
-                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*青年事務組	*(傳真: 2838 7021)</td>
+                                    <td className={form.toDepartment != 'YOUTH_AND_PROBATION_SERVICES_DIVISION_YOUTH_AFFAIRS_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>*青年事務組	*(傳真: 2838 7021 及 電郵 : youthenq@swd.gov.hk)</td>
                                 </tr>
                             </table>
                         </div>
                         
+                    </div>
+                    <div className="form-row" style={{fontSize:'18px'}}>
+                        <div className="col" >
+                            <div style={{margin:'15px 0'}}>「特別事故」包括:(1)服務使用者不尋常死亡 / 重複受傷，或其他事故導致服務使用者死亡 / 嚴重受傷; (2)服務使用者失踪以致需要報警求助; (3)
+                                已確立 / 懷疑有服務使用者被職員 / 其他服務使用者亡虐待 / 侵犯; (4)爭執以致有人身體受傷而需要報警求助; 
+                                (5)其他嚴重事故以致影響服務單位的日常運作超過24小時; 及 (6)可能引起公眾或傳媒關注的事故。
+                            </div>
+                            <div style={{margin:'15px 0'}}>
+                                如津助服務單位受法例規管，即安老院、殘疾人士院舍、幼兒中心或藥物倚賴者治療康復中心，請按有關要求向社會福利署牌照及規管科呈交特別事故報告，並將
+                                副本送交津貼組及相關服務科，無須另行填寫此表格。
+                            </div>
+                        </div>
                     </div>
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`} style={{fontWeight:'bold'}}>
@@ -614,7 +649,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 <tr>
                                     <td>(b)事故發生時間	:</td>
                                     <td style={{borderBottom:'1px solid'}}>
-                                        {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
+                                        {form.incidentTime != null ? moment(form.incidentTime).format("hh:mm"):''}
                                         {/*form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''*/}
                                     </td>
                                 </tr>
@@ -650,7 +685,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                             {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>其他服務使用者</span>}
                                             {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_ABUSE" && <span>虐待</span>}
                                             {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_VIOLATED" && <span>侵犯</span>}
-                                            虐待
                                         </div>
                                         <div style={{paddingLeft:'30px'}}>
                                             <div style={{marginTop:'10px'}}>
@@ -892,7 +926,59 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={4}>(c) 醫療安排</td>
+                                    <td colSpan={4}>(c) 通知相關的服務使用者／員工／轉介社工／其他相關人士</td>
+                                </tr>
+                                <tr>
+                                    <td style={{width:'50px'}}></td>
+                                    <td style={{width:'80px'}}>
+                                        {form.otherRelatedParties&& <span>&#9745;</span>}
+                                        {!form.otherRelatedParties && <span>&#9744;</span>}
+                                        有
+                                    </td>
+                                    <td style={{width:'170px'}}>
+                                    通知日期和時間:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.otherRelatedPartiesDatetime != null ? moment(form.otherRelatedPartiesDatetime).format("YYYY-MM-DD hh:mm"):''}
+                                    {/*form.guardianDatetime !=null && new Date(form.guardianDatetime).getFullYear() + `-` +(`0`+(new Date(form.guardianDatetime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.guardianDatetime).getDate()).slice(-2) + ` ` + (`0`+new Date(form.guardianDatetime).getHours()).slice(-2) + `:` + + (`0`+new Date(form.guardianDatetime).getMinutes()).slice(-2)*/}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        與服務使用者的關係:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                        {form.otherRelatedPartiesRelationship != null ? form.otherRelatedPartiesRelationship: ''}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        負責職員姓名:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.otherRelatedPartiesStaff != null ? form.otherRelatedPartiesStaff: ''}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        {!form.otherRelatedParties&& <span>&#9745;</span>}
+                                        {form.otherRelatedParties && <span>&#9744;</span>}
+                                        沒有
+                                    </td>
+                                    <td >
+                                    備註:
+                                    </td>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {form.otherRelatedPartiesDescription != null ? form.otherRelatedPartiesDescription: ''}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colSpan={4}>(d) 醫療安排</td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -919,7 +1005,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={4}>(d) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
+                                    <td colSpan={4}>(e) 舉行多專業個案會議／為有關服務使用者訂定照顧計劃</td>
                                 </tr>
                                 <tr>
                                     <td><div style={{width:'50px'}}></div></td>
@@ -942,7 +1028,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{borderBottom:'1px solid'}}>{form.carePlanNoDescription != null ? form.carePlanNoDescription: ''}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={4}>(e) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
+                                    <td colSpan={4}>(f) 需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -965,13 +1051,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={4}>(f)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
+                                    <td colSpan={4}>(g)) 已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={4} style={{borderBottom:'1px solid'}}>&nbsp;&nbsp;{form.immediateFollowUp != null ? form.immediateFollowUp: ''}</td>
                                 </tr>
                                 <tr>
-                                    <td colSpan={4}>(g)	跟進計劃</td>
+                                    <td colSpan={4}>(h)	跟進計劃</td>
                                 </tr>
                                 <tr>
                                     <td colSpan={4} style={{borderBottom:'1px solid'}}>&nbsp;&nbsp;{form.followUpPlan != null ? form.followUpPlan: ''}</td>
@@ -1001,13 +1087,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td style={{width:'140px'}}>
-                                    填報人職位 : 
+                                    職位 : 
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                     {reporterJobTitle}
                                     </td>
                                     <td style={{width:'140px'}}>
-                                    &nbsp;&nbsp;批簽人職位 : 
+                                    &nbsp;&nbsp;職位 : 
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                     {sdJobTitle}
