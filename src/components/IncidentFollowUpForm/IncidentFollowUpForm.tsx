@@ -642,6 +642,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             if (Array.isArray(parentFormData.FollowUpFormsId) && parentFormData.FollowUpFormsId.length > 0) {
                 getAllIncidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((getAllIncidentFollowUpFormByCaseNumberRes) => {
                     if (Array.isArray(getAllIncidentFollowUpFormByCaseNumberRes) && getAllIncidentFollowUpFormByCaseNumberRes.length > 0) {
+                        debugger
                         setIncidentFollowUpFormList(getAllIncidentFollowUpFormByCaseNumberRes);
                         setSelectedIncidentFollowUpFormId(getAllIncidentFollowUpFormByCaseNumberRes[0].Id);
                     }

@@ -524,6 +524,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const windowPrint = async () => {
         window.print()
     }
+    
     return (
         <>
             <style media="print">
@@ -564,8 +565,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table style={{width:'800'}}>
                                 <tr>
                                     <td style={{width:"100px"}}>致 :</td>
-                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{width:"200px"}}>津貼科</td>
-                                    <td className={form.toDepartment != 'ALLOWANCE_SECTION' && styles.deleteLine} style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632 及 電郵 : suenq@swd.gov.hk)</td>
+                                    <td style={{width:"200px"}}>津貼科</td>
+                                    <td style={{textAlign:"right",width:"500px"}}>(傳真: 2575 5632 及 電郵 : suenq@swd.gov.hk)</td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -667,22 +668,25 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_UNUSUAL_DEATH" && <span>&#9744;</span>}
-                                            服務使用者不尋常死亡／嚴重受傷
+                                            (1) 服務使用者不尋常死亡／重複受傷，或其他事故導致服務使用者死亡 / 嚴重受傷
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_MISSING" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_MISSING" && <span>&#9744;</span>}
-                                            服務使用者失踪以致需要報警求助
+                                            (2) 服務使用者失踪以致需要報警求助
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_ABUSE" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_ABUSE" && <span>&#9744;</span>}
-                                            *已
+                                            (3)已
+                                            {form.absuseDetailsStatus == "" && "確立 / 懷疑"}
                                             {form.absuseDetailsStatus == "ACCIDENT_CATEGORY_STATUS_ESTABLISH" && <span>確立</span>}
                                             {form.absuseDetailsStatus == "ACCIDENT_CATEGORY_STATUS_DOUBT" && <span>懷疑</span>}
                                             有服務使用者被
+                                            {form.absuseDetailsPerson == "" && "職員 / 其他服務使用者"}
                                             {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>職員</span>}
                                             {form.absuseDetailsPerson == "ACCIDENT_CATEGORY_PERSON_STAFF" && <span>其他服務使用者</span>}
+                                            {form.absuseDetailsReason == "" && "虐待 / 侵犯"}
                                             {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_ABUSE" && <span>虐待</span>}
                                             {form.absuseDetailsReason == "ACCIDENT_CATEGORY_REASON_VIOLATED" && <span>侵犯</span>}
                                         </div>
@@ -719,17 +723,17 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         <div style={{marginTop:'20px'}}>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_CONFLICT" && <span>&#9744;</span>}
-                                            爭執以致有人身體受傷而需要報警求助
+                                            (4) 爭執以致有人身體受傷而需要報警求助
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_OTHER" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_OTHER" && <span>&#9744;</span>}
-                                            其他嚴重事故以致影響服務單位的日常運作超過24小時
+                                            (5) 其他嚴重事故以致影響服務單位的日常運作超過24小時
                                         </div>
                                         <div>
                                             {form.incidentCategory == "ACCIDENT_CATEGORY_MEDIA" && <span>&#9745;</span>}
                                             {form.incidentCategory != "ACCIDENT_CATEGORY_MEDIA" && <span>&#9744;</span>}
-                                            可能引起公眾或傳媒關注的事故
+                                            (6) 可能引起公眾或傳媒關注的事故
                                         </div>
                                     </td>
                                 </tr>
@@ -737,15 +741,17 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td>(e))事故被傳媒報導 :</td>
                                     <td>{formData != null && formData.mediaReports != null && formData.mediaReports&& <span>&#9745;</span>}
                                         {formData != null && formData.mediaReports != null && !formData.mediaReports && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
                                         是&nbsp;&nbsp;
                                         {formData != null && formData.mediaReports != null && !formData.mediaReports&& <span>&#9745;</span>}
                                         {formData != null && formData.mediaReports != null && formData.mediaReports && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
                                         否&nbsp;&nbsp;
                                     </td>
 
                                 </tr>
                                 <tr>
-                                    <td>(f)特別事故的描述:</td>
+                                    <td>(f)特別事故的詳情:</td>
                                     <td style={{borderBottom:'1px solid'}}>
                                     {form.incidentDescription != null ? form.incidentDescription:"" }
                                     </td>
@@ -825,6 +831,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{borderBottom:'1px solid'}}>{form.staffPositionThree}</td>
                                 </tr>
                             </table>
+                        </div>
+                        <div className={`col-12`} style={{marginTop:'20px'}}>
+                        包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員
                         </div>
                         <div className={`col-12`} style={{fontWeight:'bold', fontSize:'20px', marginTop:'20px'}}>
                             跟進行動
@@ -1073,13 +1082,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             <table style={{width:'780px'}}>
                                 <tr>
                                     <td style={{width:'140px'}}>
-                                    填報人姓名 : 
+                                    擬備人員/姓名 : 
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                         {reporterName}
                                     </td>
                                     <td style={{width:'140px'}}>
-                                    &nbsp;&nbsp;批簽人姓名 : 
+                                    &nbsp;&nbsp;批簽人員/姓名 : 
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                     {sdName}
@@ -1097,6 +1106,19 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                     {sdJobTitle}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{width:'140px'}}>
+                                    電話 : 
+                                    </td>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
+
+                                    </td>
+                                    <td style={{width:'140px'}}>
+                                    &nbsp;&nbsp;電話 : 
+                                    </td>
+                                    <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
                                     </td>
                                 </tr>
                                 <tr>

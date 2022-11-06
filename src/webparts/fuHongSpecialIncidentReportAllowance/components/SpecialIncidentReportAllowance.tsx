@@ -1497,6 +1497,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>
+                    <div className="form-row mb-2">
+                        <div className={`col-12 mb-1`}>
+                        包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員
+                        </div>
+                    </div>
                 </section>
 
                 <section className="mb-5">
