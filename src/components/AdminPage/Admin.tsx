@@ -205,6 +205,10 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 				}
 			}
 			if (addItem) {
+
+                if (item[position] == null) {
+                    debugger
+                }
 				groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
 			} else {
 				for(let i=0; i< groupBy.length; i++) {
@@ -396,7 +400,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 oir['Form'] = '事故跟進/結束報告';
                 oir['CurrentSM'] = getIFUF.length > 0 ? getIFUF[0]['SM'] : null;
                 oir['CurrentSD'] = getIFUF.length > 0 ? getIFUF[0]['SD'] : null;
-                debugger
+                
             }
         }
         for (let sirl of allSpecialIncidentReportLicense) {
@@ -409,6 +413,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 sirl['Form'] = '事故跟進/結束報告';
                 sirl['CurrentSM'] = getIFUF.length > 0 ? getIFUF[0]['SM'] : null;
                 sirl['CurrentSD'] = getIFUF.length > 0 ? getIFUF[0]['SD'] : null;
+                
             }
         }
         for (let sira of allSpecialIncidentReportAllowance) {
@@ -422,6 +427,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 sira['Form'] = '事故跟進/結束報告';
                 sira['CurrentSM'] = getIFUF.length > 0 ? getIFUF[0]['SM'] : null;
                 sira['CurrentSD'] = getIFUF.length > 0 ? getIFUF[0]['SD'] : null;
+                
             }
         }
         setServiceUserAccident(allServiceUserAccident);
