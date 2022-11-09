@@ -197,6 +197,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
             
 			let addItem = true;
 			for(let groupItem of groupBy) {
+                if (item[position] == null) {
+                    debugger
+                }
 				if (groupItem.key == item[position].Title) {
 					addItem = false;
 				}
@@ -393,6 +396,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 oir['Form'] = '事故跟進/結束報告';
                 oir['CurrentSM'] = getIFUF.length > 0 ? getIFUF[0]['SM'] : null;
                 oir['CurrentSD'] = getIFUF.length > 0 ? getIFUF[0]['SD'] : null;
+                debugger
             }
         }
         for (let sirl of allSpecialIncidentReportLicense) {

@@ -1108,10 +1108,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         // //殘疾人士院舍特別事故報告 (附頁)
         body["AffectedName"] = form.affectedName;
         debugger
-        if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
+        if (form.affectedIdCardNo == null || form.affectedIdCardNo =='') {
             error["AffectedIdCardNo"] = true;
-        }
-        if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
+        } else if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
+            error["AffectedIdCardNo"] = true;
+        } else if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
             let mNumber = form.affectedIdCardNo.substr(1,6);
             if (mNumber.search(/[^0-9]+/) == -1) {
                 if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {

@@ -1006,7 +1006,7 @@ export async function getIncidentFollowUpFormById(id: number) {
 export async function getAllIncidentFollowUpForm() {
     try {
         const LIST_NAME = "Incident Follow Up Form";
-        let filterQuery = `Status ne 'DRAFT' and Status ne 'CLOSED'`;
+        let filterQuery = `Status ne 'CLOSED'`;
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
             .filter(filterQuery)
             .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
