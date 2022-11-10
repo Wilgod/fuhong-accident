@@ -333,6 +333,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             /*if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
             }*/
+            debugger
             setForm({
                 ...form,
                 toDepartment:formData.ToDepartment,
@@ -398,8 +399,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 carePlanNoDescription:formData.CarePlanNoDescription,
                 needResponse:formData.NeedResponse,
                 needResponseDetail:formData.NeedResponseDetail,
-                immediateFollowUp:formData.immediateFollowUp,
-                followUpPlan:formData.followUpPlan,
+                immediateFollowUp:formData.ImmediateFollowUp,
+                followUpPlan:formData.FollowUpPlan,
                 insuranceCaseNo: formData.InsuranceCaseNo,
                 incidentTime:formData.IncidentTime,
                 incidentLocation:formData.IncidentLocation,
@@ -524,7 +525,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const windowPrint = async () => {
         window.print()
     }
-    
+    console.log('form.mediaReports',form.mediaReports);
     return (
         <>
             <style media="print">
@@ -739,13 +740,13 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                                 <tr>
                                     <td>(e))事故被傳媒報導 :</td>
-                                    <td>{formData != null && formData.mediaReports != null && formData.mediaReports&& <span>&#9745;</span>}
-                                        {formData != null && formData.mediaReports != null && !formData.mediaReports && <span>&#9744;</span>}
-                                        {formData == null && <span>&#9744;</span>}
+                                    <td>{form != null && form.mediaReports != null && form.mediaReports&& <span>&#9745;</span>}
+                                        {form != null && form.mediaReports != null && !form.mediaReports && <span>&#9744;</span>}
+                                        {form == null && <span>&#9744;</span>}
                                         是&nbsp;&nbsp;
-                                        {formData != null && formData.mediaReports != null && !formData.mediaReports&& <span>&#9745;</span>}
-                                        {formData != null && formData.mediaReports != null && formData.mediaReports && <span>&#9744;</span>}
-                                        {formData == null && <span>&#9744;</span>}
+                                        {form != null && form.mediaReports != null && !form.mediaReports&& <span>&#9745;</span>}
+                                        {form != null && form.mediaReports != null && form.mediaReports && <span>&#9744;</span>}
+                                        {form == null && <span>&#9744;</span>}
                                         否&nbsp;&nbsp;
                                     </td>
 

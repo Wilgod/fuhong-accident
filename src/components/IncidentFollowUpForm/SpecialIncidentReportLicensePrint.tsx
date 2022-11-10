@@ -257,8 +257,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
             let police = formData.Police;
             let policeInvestigate = formData.PoliceInvestigate;
-            let policeDatetime = formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : new Date();
-            let policeInvestigateDate = formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : new Date()
+            let policeDatetime = formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null;
+            let policeInvestigateDate = formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : null
             if (formData.UnusalIncident == null) {
                 police = undefined;
                 policeInvestigate = undefined;
@@ -266,7 +266,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 policeInvestigateDate = undefined;
             }
             let found = formData.Found;
-            let foundDate = formData.FoundDate ? new Date(formData.FoundDate) : new Date();
+            let foundDate = formData.FoundDate ? new Date(formData.FoundDate) : null;
             if (formData.ResidentMissing  == null) {
                 found = undefined;
                 foundDate = undefined;
@@ -275,7 +275,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             let referSocialWorker = formData.ReferSocialWorker;
             let abuser_police = formData.Abuser_Police;
             let abuser_policeCaseNo = formData.Abuser_PoliceCaseNo;
-            let abuser_policeDate = formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : new Date();
+            let abuser_policeDate = formData.Abuser_PoliceDate ? new Date(formData.Abuser_PoliceDate) : null;
             let other = formData.Other ? true: undefined;;
             if (!formData.RA_Body && !formData.RA_Mental && !formData.RA_Negligent && !formData.RA_EmbezzleProperty && !formData.RA_Abandoned && !formData.RA_SexualAssault && !formData.RA_Other) {
                 referSocialWorker = undefined;
@@ -301,7 +301,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 conflict: formData.Conflict,
                 conflictDescription: formData.ConflictDescription,
                 conflict_policeCaseNo: formData.Conflict_PoliceCaseNo,
-                conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : new Date(),
+                conflict_policeDate: formData.Conflict_PoliceDate ? new Date(formData.Conflict_PoliceDate) : null,
                 caseNumber:formData.CaseNumber,
                 establishedCase:formData.EstablishedCase,
                 found: found,
@@ -309,7 +309,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 guardian: formData.Guardian,
                 guardianName: formData.GuardianName,
                 guardianRelation: formData.GuardianRelation,
-                guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : new Date(),
+                guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : null,
                 guardianReason: formData.GuardianReason,
                 insuranceCaseNo: formData.InsuranceCaseNo,
                 incidentTime:formData.IncidentTime,
@@ -319,7 +319,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 medicalIncident: formData.MedicalIncident,
                 medicalRecords: formData.MedicalRecords,
                 mi_description: formData.MI_Description,
-                missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : new Date(),
+                missingPoliceDate: formData.MissingPoliceDate ? new Date(formData.MissingPoliceDate) : null,
                 missingPoliceReportNo: formData.MissingPoliceReportNo,
                 notYetFoundDayCount: formData.NotYetFoundDayCount,
                 other: other,
@@ -338,7 +338,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 ra_other: formData.RA_Other,
                 ra_otherDescription: formData.RA_OtherDescription,
                 ra_sexualAssault: formData.RA_SexualAssault,
-                referDate: formData.ReferDate ? new Date(formData.ReferDate) : new Date(),
+                referDate: formData.ReferDate ? new Date(formData.ReferDate) : null,
                 referServiceUnit: formData.ReferServiceUnit,
                 referSocialWorker: referSocialWorker,
                 residentAge: formData.ResidentAge,
@@ -423,7 +423,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const windowPrint = async () => {
         window.print()
     }
-    console.log('form.referSocialWorker',form.referSocialWorker);
+    console.log('form.guardian',form.guardian);
     return (
         <>
             <style media="print">
@@ -646,7 +646,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.missingPoliceReportNo != null ? form.missingPoliceReportNo : ''}
+                                    {form.missingPoliceDate != null ? new Date(form.missingPoliceDate).getFullYear() + `-` +(`0`+(new Date(form.missingPoliceDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.missingPoliceDate).getDate()).slice(-2) : ''}
+                                     ,   {form.missingPoliceReportNo != null ? form.missingPoliceReportNo : ''}
                                     </td>
                                 </tr>
                             </table>
@@ -860,7 +861,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
-                                    {form.abuser_policeCaseNo != null ? form.abuser_policeCaseNo : ''}
+                                        {form.abuser_policeDate != null ? new Date(form.abuser_policeDate).getFullYear() + `-` +(`0`+(new Date(form.abuser_policeDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.abuser_policeDate).getDate()).slice(-2) : ''},
+                                        {form.abuser_policeCaseNo != null ? form.abuser_policeCaseNo : ''}
                                     </td>
                                 </tr>
                             </table>
@@ -906,6 +908,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                         </span>
                                     </td>
                                     <td className={`${styles.underlineTable}`}>
+                                    {form.conflict_policeDate != null ? new Date(form.conflict_policeDate).getFullYear() + `-` +(`0`+(new Date(form.conflict_policeDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.conflict_policeDate).getDate()).slice(-2) : ''},
                                     {form.conflict_policeCaseNo != null ? form.conflict_policeCaseNo : ''}
                                     </td>
                                 </tr>
@@ -1091,7 +1094,8 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </table>
                                 </div>
                                 <div className={`col-12`}>
-                                    {!form.guardian && <span>&#9745;</span>}
+                                    {form.guardian == null && <span>&#9744;</span>}
+                                    {form.guardian != null && !form.guardian && <span>&#9745;</span>}
                                     {form.guardian && <span>&#9744;</span>}
                                     沒有通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士
                                 </div>
