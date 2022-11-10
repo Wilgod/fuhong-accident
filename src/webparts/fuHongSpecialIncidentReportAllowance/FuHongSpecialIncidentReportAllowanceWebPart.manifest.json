@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //prod
-  "id": "b6846f84-39e3-45f2-953d-3cae439bc6c8",
+  //"id": "b6846f84-39e3-45f2-953d-3cae439bc6c8",
   //uat
-  //"id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
+  "id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
   "alias": "FuHongSpecialIncidentReportAllowanceWebP",
   "componentType": "WebPart",
 
@@ -21,9 +21,9 @@
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
     //prod
-    "title": { "default": "Fu Hong Special Incident Report Allowance Prod" },
+    //"title": { "default": "Fu Hong Special Incident Report Allowance Prod" },
     //uat
-    //"title": { "default": "fuHongSpecialIncidentReportAllowance" },
+    "title": { "default": "fuHongSpecialIncidentReportAllowance" },
     "description": { "default": "Fu Hong Speical Incident Report Allowance Section Form 25" },
     "officeFabricIconFontName": "Page",
     "properties": {

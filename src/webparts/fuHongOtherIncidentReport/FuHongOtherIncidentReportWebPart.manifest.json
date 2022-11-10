@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //prod
-  "id": "76220743-5ea5-5a5f-8348-132275663dbe",
+  //"id": "76220743-5ea5-5a5f-8348-132275663dbe",
   //uat
-  //"id": "76110741-5ea5-4a5f-8248-130274663dbe",
+  "id": "76110741-5ea5-4a5f-8248-130274663dbe",
   "alias": "FuHongOtherIncidentReportWebPart",
   "componentType": "WebPart",
 
@@ -22,9 +22,9 @@
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
     //prod
-    "title": { "default": "Fu Hong Other Incident Report Prod" },
+    //"title": { "default": "Fu Hong Other Incident Report Prod" },
     //uat
-    //"title": { "default": "fuHongOtherIncidentReport" },
+    "title": { "default": "fuHongOtherIncidentReport" },
     "description": { "default": "Fu Hong Other Incident Report Form 23" },
     "officeFabricIconFontName": "Page",
     "properties": {
