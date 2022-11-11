@@ -1818,13 +1818,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         // }
         if (userInfo != null && userInfo != '') {
             if (formInitial(currentUserRole, formStatus)) {
-                if (departmentList.length == 1) {
+                //if (departmentList.length == 1) {
                     if (userInfo && userInfo.hr_deptid) {
                         setHrDepartment(userInfo.hr_deptid);
                         setServiceUnit(userInfo.hr_deptid);
                         setServiceLocation(userInfo.hr_location);
                     }
-                }
+                //}
                 
             }
         }
@@ -1846,6 +1846,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     useEffect(() => {
         if (formInitial(currentUserRole, formStatus)) {
             if (Array.isArray(departments) && departments.length) {
+                debugger
                 const dept = departments[0];
                 if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
                     setSMEmail(dept.hr_deptmgr);

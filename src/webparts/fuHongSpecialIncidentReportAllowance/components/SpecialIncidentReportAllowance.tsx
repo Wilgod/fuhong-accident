@@ -961,7 +961,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 setServiceUnit("CHH");
                 return;
             }*/
-
+            debugger
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
