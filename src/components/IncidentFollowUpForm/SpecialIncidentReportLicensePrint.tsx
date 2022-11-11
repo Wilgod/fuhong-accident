@@ -134,7 +134,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         abuserDescription: "",
         abuser_police: undefined,
         abuser_policeCaseNo: "",
-        abuser_policeDate: new Date(),
+        abuser_policeDate: null,
         establishedCase:undefined,
         affectedAge: 0,
         affectedDetail: "",
@@ -146,10 +146,10 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         conflict: "",
         conflictDescription: "",
         conflict_policeCaseNo: "",
-        conflict_policeDate: new Date(),
+        conflict_policeDate: null,
         caseNumber:"",
         found: undefined,
-        foundDate: new Date(),
+        foundDate: null,
         notYetFoundDayCount: 0,
         medicalRecords: "",
         ra_body: false,
@@ -163,7 +163,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         guardian: undefined,
         guardianName: "",
         guardianRelation: "",
-        guardianDate: new Date(),
+        guardianDate: null,
         guardianReason: "",
         guardianStaffName: "",
         guardianStaffJobTitle:"",
@@ -171,20 +171,20 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         homesName: "",
         homesManagerTel: "",
         insuranceCaseNo: "",
-        incidentTime:"",
+        incidentTime:null,
         medicalIncident: "",
         mi_description: "",
-        missingPoliceDate: new Date(),
+        missingPoliceDate: null,
         missingPoliceReportNo: "",
         other: undefined,
         otherDescription: "",
         otherIncident: "",
         police: undefined,
-        policeDatetime: new Date(),
+        policeDatetime: null,
         policeInvestigate: undefined,
-        policeInvestigateDate: new Date(),
+        policeInvestigateDate: null,
         policeReportNumber: "",
-        referDate: new Date(),
+        referDate: null,
         referServiceUnit: "",
         referSocialWorker: undefined,
         residentAge: 0,
@@ -195,7 +195,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         residentRoomNo: "",
         responsibleName: "",
         reporterName:"",
-        reporterDate: new Date(),
+        reporterDate: null,
         reporterJobTitle:"",
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
@@ -258,6 +258,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             let police = formData.Police;
             let policeInvestigate = formData.PoliceInvestigate;
             let policeDatetime = formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null;
+            debugger
             let policeInvestigateDate = formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : null
             if (formData.UnusalIncident == null) {
                 police = undefined;
@@ -423,7 +424,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
     const windowPrint = async () => {
         window.print()
     }
-    console.log('form.guardian',form.guardian);
+    console.log('form.policeDatetime',form.policeDatetime);
     return (
         <>
             <style media="print">
@@ -1283,7 +1284,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     <td style={{width:'300px'}}>
                                         <div className={`${styles.underlineDiv}`}>
                                         {form.reporterDate != null && new Date(form.reporterDate).getFullYear() + `-` +(`0`+(new Date(form.reporterDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.reporterDate).getDate()).slice(-2)}
+                                        {form.reporterDate == null && <span>&nbsp;&nbsp;</span> }
                                         </div>
+                                    
                                     </td>
                                     
                                 </tr>

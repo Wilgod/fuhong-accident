@@ -1109,7 +1109,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         body["AffectedName"] = form.affectedName;
         debugger
         if (form.affectedIdCardNo == null || form.affectedIdCardNo =='') {
-            error["AffectedIdCardNo"] = true;
+            //error["AffectedIdCardNo"] = true;
         } else if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
             error["AffectedIdCardNo"] = true;
         } else if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
