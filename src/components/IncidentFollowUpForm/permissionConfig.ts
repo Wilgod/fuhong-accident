@@ -1,8 +1,8 @@
 import { Role } from "../../utils/RoleParser";
 
 //Stage 2 / Initial Form
-export const initialForm = (currentUserRole: Role, parentStatus: string, stage: string, status): boolean => {
-    if (stage === "2" && parentStatus === "PENDING_SM_FILL_IN" && !status) {
+export const initialForm = (context:any, currentUserRole: Role, parentStatus: string, stage: string, status, formTwentySixData:any): boolean => {
+    if (stage === "2" && parentStatus === "PENDING_SM_FILL_IN" && !status && formTwentySixData.SM.EMail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;

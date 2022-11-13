@@ -28,7 +28,7 @@ interface IServiceUserAccidentFormPrintProps {
 export default function ServiceUserAccidentFormPrint({ index,  formData, formTwentyData, formTwentyOneDataPrint, formTwentyOneDataSelected, siteCollectionUrl, permissionList, serviceUnitList, backToForm}: IServiceUserAccidentFormPrintProps ) {
     console.log('index :', index);
     let EstimatedPart2CompletionDate = null;
-    if (formData.SubmitDate != null) {
+    if (formData != null && formData.SubmitDate != null) {
         let SubmitDate = new Date(formData.SubmitDate);
         EstimatedPart2CompletionDate = SubmitDate.setMonth(SubmitDate.getMonth() + 1);
     }
@@ -41,12 +41,15 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             followUpActions = JSON.parse(formTwentyOneData[0].FollowUpActions);
         }
     }
-    console.log('formData.InjuredArea',formData.InjuredArea);
+    //console.log('formData.InjuredArea',formData.InjuredArea);
     let ServiceUserUnit = "";
-    let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceUserUnit});
-    if (ser.length > 0) {
-        ServiceUserUnit = ser[0].su_name_tc
+    if (formData != null) {
+        let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceUserUnit});
+        if (ser.length > 0) {
+            ServiceUserUnit = ser[0].su_name_tc;
+        }
     }
+    
 
     useEffect( () => {
         window.print();
@@ -76,42 +79,49 @@ return <>
                         <table>
                             <tr>
                                 <td>服務使用者姓名: (英文)</td>
-                                <td>{formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
+                                <td>{formData != null && formData.ServiceUserNameEN != null ? formData.ServiceUserNameEN : ''}</td>
                                 <td>服務使用者姓名: (中文)</td>
-                                <td>{formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
+                                <td>{formData != null && formData.ServiceUserNameCN != null ? formData.ServiceUserNameCN : ''}</td>
                             </tr>
                             <tr>
-                                <td>年齡: {formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
+                                <td>年齡: {formData != null && formData.ServiceUserAge != null ? formData.ServiceUserAge : ''}</td>
                                 <td>性別:
-                                    {formData.ServiceUserGender == "male" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "male" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceUserGender == "male" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceUserGender != "male" && <span>&#9744;</span>}
                                     男&nbsp;&nbsp;
-                                    {formData.ServiceUserGender == "female" && <span>&#9745;</span>}
-                                    {formData.ServiceUserGender != "female" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceUserGender == "female" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceUserGender != "female" && <span>&#9744;</span>}
                                     女
                                 </td>
                                 <td>服務使用者檔案號碼</td>
-                                <td>{formData.ServiceUserId != null ? formData.ServiceUserId : ''}</td>
+                                <td>{formData != null && formData.ServiceUserId != null ? formData.ServiceUserId : ''}</td>
                             </tr>
                             <tr>
                                 {/*<td>接受服務類別</td>
                                 <td>{formData.ServiceCategory != null ? formData.ServiceCategory : ''}</td>*/}
                                 <td>接受服務類別</td>
                                 <td>
-                                    {formData.ServiceCategory == "住宿服務" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "住宿服務" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory == "住宿服務" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != "住宿服務" && <span>&#9744;</span>}
                                     住宿服務&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "日間訓練服務" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "日間訓練服務" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory == "日間訓練服務" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != "日間訓練服務" && <span>&#9744;</span>}
                                     日間訓練服務&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "社區支援服務" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "社區支援服務" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory == "社區支援服務" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != "社區支援服務" && <span>&#9744;</span>}
                                     社區支援服務&nbsp;&nbsp;
-                                    {formData.ServiceCategory == "自閉症及發展障礙支援服務" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "自閉症及發展障礙支援服務" && <span>&#9744;</span>}
-                                    自閉症及發展障礙支援服務
-                                    {formData.ServiceCategory == "職業康復及發展服務" && <span>&#9745;</span>}
-                                    {formData.ServiceCategory != "職業康復及發展服務" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory == "自閉症及發展障礙支援服務" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != "自閉症及發展障礙支援服務" && <span>&#9744;</span>}
+                                    自閉症及發展障礙支援服務&nbsp;&nbsp;
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory == "職業康復及發展服務" && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != "職業康復及發展服務" && <span>&#9744;</span>}
                                     職業康復及發展服務
                                 </td>
                                 <td> </td>
@@ -120,20 +130,22 @@ return <>
                             <tr>
                                 <td>意外發生日期及時間</td>
                                 <td>
-                                    {formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
+                                    {formData != null && formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
                                     {/*formData.AccidentTime != null && new Date(formData.AccidentTime).getFullYear() + `-` +(`0`+(new Date(formData.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.AccidentTime).getMinutes()).slice(-2)*/}
                                 </td>
                                 <td>地點</td>
-                                <td>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                                <td>{formData != null && formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
                             </tr>
                             <tr>
                                 <td>是否使用輪椅</td>
                                 <td>
-                                    {formData.Wheelchair && <span>&#9745;</span>}
-                                    {!formData.Wheelchair && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.Wheelchair && <span>&#9745;</span>}
+                                    {formData != null && !formData.Wheelchair && <span>&#9744;</span>}
                                     是&nbsp;&nbsp;
-                                    {!formData.Wheelchair && <span>&#9745;</span>}
-                                    {formData.Wheelchair && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && !formData.Wheelchair && <span>&#9745;</span>}
+                                    {formData != null && formData.Wheelchair && <span>&#9744;</span>}
                                     否
                                     </td>
                                 <td></td>
@@ -142,20 +154,21 @@ return <>
                             <tr>
                                 <td>智力障礙程度</td>
                                 <td>
-                                
-                                    {formData.Intelligence == "MILD"&& "輕度"}
-                                    {formData.Intelligence == "MODERATE"&& "中度"}
-                                    {formData.Intelligence == "SEVERE"&& "嚴重"}
-                                    {formData.Intelligence == "EXTREME_SEVERE"&& "極度嚴重"}
-                                    {formData.Intelligence == "UNKNOWN"&& "不知"}
+                                    {formData != null && formData.Intelligence == "MILD"&& "輕度"}
+                                    {formData != null && formData.Intelligence == "MODERATE"&& "中度"}
+                                    {formData != null && formData.Intelligence == "SEVERE"&& "嚴重"}
+                                    {formData != null && formData.Intelligence == "EXTREME_SEVERE"&& "極度嚴重"}
+                                    {formData != null && formData.Intelligence == "UNKNOWN"&& "不知"}
                                     </td>
                                 <td>自閉症譜系障礙 (ASD)</td>
                                 <td>
-                                    {formData.ASD && <span>&#9745;</span>}
-                                    {!formData.ASD && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ASD && <span>&#9745;</span>}
+                                    {formData != null && !formData.ASD && <span>&#9744;</span>}
                                     是&nbsp;&nbsp;
-                                    {!formData.ASD && <span>&#9745;</span>}
-                                    {formData.ASD && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && !formData.ASD && <span>&#9745;</span>}
+                                    {formData != null && formData.ASD && <span>&#9744;</span>}
                                     否
                                 </td>
                             </tr>
@@ -176,23 +189,29 @@ return <>
                             1.1服務使用者意外時情況
                             </td>
                             <td style={{width:'450px'}}>
-                                {formData.Circumstance == "SCENARIO_SLEEPING"  && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_SLEEPING" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_SLEEPING"  && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_SLEEPING" && <span>&#9744;</span>}
                                 睡覺&nbsp;&nbsp;
-                                {formData.Circumstance == "SCENARIO_DINNING" && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_DINNING" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_DINNING" && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_DINNING" && <span>&#9744;</span>}
                                 進食&nbsp;&nbsp;
-                                {formData.Circumstance == "SCENARIO_WASHING" && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_WASHING" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_WASHING" && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_WASHING" && <span>&#9744;</span>}
                                 梳洗&nbsp;&nbsp;
-                                {formData.Circumstance == "SCENARIO_TOLIET" && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_TOLIET" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_TOLIET" && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_TOLIET" && <span>&#9744;</span>}
                                 如廁&nbsp;&nbsp;
-                                {formData.Circumstance == "SCENARIO_BATHING" && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_BATHING" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_BATHING" && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_BATHING" && <span>&#9744;</span>}
                                 洗澡&nbsp;&nbsp;
-                                {formData.Circumstance == "SCENARIO_WALKING" && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_WALKING" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_WALKING" && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_WALKING" && <span>&#9744;</span>}
                                 步行期間&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -202,15 +221,17 @@ return <>
                             <td style={{width:'300px'}}>
                             </td>
                             <td style={{width:'410px'}}>
-                                    {formData.Circumstance == "SCENARIO_INSIDE_ACTIVITY"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_INSIDE_ACTIVITY" && <span>&#9744;</span>}
-                                    參與服務單位內活動
-                                    {formData.Circumstance == "SCENARIO_OUTSIDE_ACTIVITY"  && <span>&#9745;</span>}
-                                    {formData.Circumstance != "SCENARIO_OUTSIDE_ACTIVITY" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.Circumstance == "SCENARIO_INSIDE_ACTIVITY"  && <span>&#9745;</span>}
+                                    {formData != null && formData.Circumstance != "SCENARIO_INSIDE_ACTIVITY" && <span>&#9744;</span>}
+                                    參與服務單位內活動&nbsp;&nbsp;
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.Circumstance == "SCENARIO_OUTSIDE_ACTIVITY"  && <span>&#9745;</span>}
+                                    {formData != null && formData.Circumstance != "SCENARIO_OUTSIDE_ACTIVITY" && <span>&#9744;</span>}
                                     外出活動期間 請註明地點 :
                             </td>
                             <td style={{borderBottom:'1px solid',width:'240px'}}>
-                                {formData.CircumstanceLocation != null ? formData.CircumstanceLocation : ''}
+                                {formData != null && formData.CircumstanceLocation != null ? formData.CircumstanceLocation : ''}
                             </td>
                         </tr>
                     </table>
@@ -219,12 +240,13 @@ return <>
                             <td style={{width:'300px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.Circumstance == "SCENARIO_OTHER"  && <span>&#9745;</span>}
-                                {formData.Circumstance != "SCENARIO_OTHER" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.Circumstance == "SCENARIO_OTHER"  && <span>&#9745;</span>}
+                                {formData != null && formData.Circumstance != "SCENARIO_OTHER" && <span>&#9744;</span>}
                                 其他 請註明 :&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'510px'}}>
-                            {formData.CircumstanceOtherRemark != null ? formData.CircumstanceOtherRemark : ''}
+                            {formData != null && formData.CircumstanceOtherRemark != null ? formData.CircumstanceOtherRemark : ''}
                             </td>
                         </tr>
                     </table>
@@ -234,20 +256,25 @@ return <>
                             1.2 服務使用者受傷部位<span style={{fontSize:'14px'}}>（如有受傷，可選擇多項）</span>
                             </td>
                             <td>
-                                {formData.InjuredArea.indexOf("INJURY_HEAD") > -1  && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_HEAD") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_HEAD") > -1  && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_HEAD") == -1 && <span>&#9744;</span>}
                                 頭部&nbsp;&nbsp;
-                                {formData.InjuredArea.indexOf("INJURY_NECK") > -1 && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_NECK") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_NECK") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_NECK") == -1 && <span>&#9744;</span>}
                                 頸部&nbsp;&nbsp;
-                                {formData.InjuredArea.indexOf("INJURY_BODY") > -1 && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_BODY") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_BODY") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_BODY") == -1 && <span>&#9744;</span>}
                                 軀幹&nbsp;&nbsp;
-                                {formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") > -1 && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") == -1 && <span>&#9744;</span>}
                                 上肢&nbsp;&nbsp;
-                                {formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") > -1 && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") == -1 && <span>&#9744;</span>}
                                 下肢&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -257,12 +284,13 @@ return <>
                             <td style={{width:'380px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.InjuredArea.indexOf("INJURY_OTHER") > -1  && <span>&#9745;</span>}
-                                {formData.InjuredArea.indexOf("INJURY_OTHER") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea.indexOf("INJURY_OTHER") == -1 && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'430px'}}>
-                            {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                            {formData != null && formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
                             </td>
                         </tr>
                     </table>
@@ -272,25 +300,31 @@ return <>
                             1.3 服務使用者意外後有否身體不適／受傷：<div style={{fontSize:'14px'}}>可選擇多項</div>
                             </td>
                             <td style={{width:'80px'}}>
-                                {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9745;</span>}
+                                {formData != null && formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9744;</span>}
                                 是&nbsp;&nbsp;
                             </td>
                             <td>
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BLEEDING") == -1) && <span>&#9744;</span>}
                                 流血&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_BRUISE") == -1) && <span>&#9744;</span>}
                                 瘀腫&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_FRACTURE") == -1) && <span>&#9744;</span>}
                                 骨折&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_DIZZY") == -1) && <span>&#9744;</span>}
                                 暈眩&nbsp;&nbsp;
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_SHOCK") == -1) && <span>&#9744;</span>}
                                 休克/失去知覺&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -302,12 +336,13 @@ return <>
                             <td style={{width:'80px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                {formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") > -1  && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") == -1 && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjuredChoices != null && formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData != null && (formData.UnwellAfterInjuredChoices == null || formData.UnwellAfterInjuredChoices.indexOf("UNCOMFORTABLE_OTHER") == -1) && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'350px'}}>
-                            {formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
+                            {formData != null && formData.InjuredAreaOtherRemark != null ? formData.InjuredAreaOtherRemark : ''}
                             </td>
                         </tr>
                     </table>
@@ -321,7 +356,7 @@ return <>
                             受傷情況 : 
                             </td>
                             <td style={{borderBottom:'1px solid',width:'400px'}}>
-                            {formData.UnwellAfterInjuredDescription != null ? formData.UnwellAfterInjuredDescription : ''}
+                            {formData != null && formData.UnwellAfterInjuredDescription != null ? formData.UnwellAfterInjuredDescription : ''}
                             </td>
                         </tr>
                     </table>
@@ -330,8 +365,9 @@ return <>
                             <td style={{width:'380px'}}>
                             </td>
                             <td style={{width:'80px'}}>
-                                {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9745;</span>}
-                                {formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_FALSE' && <span>&#9745;</span>}
+                                {formData != null && formData.UnwellAfterInjured == 'SERVICE_USER_UNCOMFORT_TRUE' && <span>&#9744;</span>}
                                 否&nbsp;&nbsp;
                             </td>
                             <td></td>
@@ -344,25 +380,30 @@ return <>
                             1.4 服務使用者有否出現不安全的行為：<div style={{fontSize:'14px'}}>可選擇多項</div>
                             </td>
                             <td style={{width:'80px'}}>
-                                {formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_TRUE' && <span>&#9745;</span>}
-                                {formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_FALSE' && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_TRUE' && <span>&#9745;</span>}
+                                {formData != null && formData.UnsafeBehaviors == 'BEHAVIOR_SWITCH_FALSE' && <span>&#9744;</span>}
                                 是&nbsp;&nbsp;
                             </td>
                             <td>
                                 <div>
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHERS") > -1  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHERS") == -1)) && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHERS") > -1  && <span>&#9745;</span>}
+                                    {formData != null && (formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHERS") == -1)) && <span>&#9744;</span>}
                                     傷害他人的動作&nbsp;&nbsp;
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_SELF") > -1  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_SELF") == -1)) && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_SELF") > -1  && <span>&#9745;</span>}
+                                    {formData != null && (formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_SELF") == -1)) && <span>&#9744;</span>}
                                     傷害自已的動作&nbsp;&nbsp;
                                 </div>
                                 <div>
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_GETOFF") > -1  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_GETOFF") == -1)) && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_GETOFF") > -1  && <span>&#9745;</span>}
+                                    {formData != null && (formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_GETOFF") == -1)) && <span>&#9744;</span>}
                                     除去身上的醫療器材&nbsp;&nbsp;
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_REJECT") > -1  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_REJECT") == -1)) && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_REJECT") > -1  && <span>&#9745;</span>}
+                                    {formData != null && (formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_REJECT") == -1)) && <span>&#9744;</span>}
                                     拒絕使用輔助器材&nbsp;&nbsp;
                                 </div>
                             </td>
@@ -375,13 +416,14 @@ return <>
                             <td style={{width:'80px'}}>
                             </td>
                             <td style={{width:'140px'}}>
-                                    {formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") > -1  && <span>&#9745;</span>}
-                                    {(formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") == -1)) && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") > -1  && <span>&#9745;</span>}
+                                    {formData != null && (formData.UnsafeBehaviorsChoices == null || (formData.UnsafeBehaviorsChoices != null && formData.UnsafeBehaviorsChoices.indexOf("BEHAVIOR_OTHER") == -1)) && <span>&#9744;</span>}
                                     其他 請註明&nbsp;&nbsp;
                                     
                             </td>
                             <td style={{borderBottom:'1px solid',width:'350px'}}>
-                                {formData.UnsafeBehaviorsOther != null ? formData.UnsafeBehaviorsOther : ''}
+                                {formData != null && formData.UnsafeBehaviorsOther != null ? formData.UnsafeBehaviorsOther : ''}
                             </td>
                         </tr>
                     </table>
@@ -390,8 +432,9 @@ return <>
                             <td style={{width:'380px'}}>
                             </td>
                             <td style={{width:'80px'}}>
-                                {formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_FALSE" && <span>&#9745;</span>}
-                                {formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_TRUE" && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_FALSE" && <span>&#9745;</span>}
+                                {formData != null && formData.UnsafeBehaviors == "BEHAVIOR_SWITCH_TRUE" && <span>&#9744;</span>}
                                 否&nbsp;&nbsp;
                             </td>
                             <td></td>
@@ -408,13 +451,15 @@ return <>
                                 相片
                             </td>
                             <td style={{verticalAlign:'top', width:'200px'}}>
-                                {formData.PhotoRecord && <span>&#9745;</span>}
-                                {!formData.PhotoRecord && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.PhotoRecord && <span>&#9745;</span>}
+                                {formData != null && !formData.PhotoRecord && <span>&#9744;</span>}
                                 有 (上載相片)
                             </td>
                             <td style={{verticalAlign:'top', width:'200px'}}>
-                                {!formData.PhotoRecord && <span>&#9745;</span>}
-                                {formData.PhotoRecord && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && !formData.PhotoRecord && <span>&#9745;</span>}
+                                {formData != null && formData.PhotoRecord && <span>&#9744;</span>}
                                 未能提供
                             </td>
                         </tr>
@@ -423,13 +468,15 @@ return <>
                             CCTV記錄
                             </td>
                             <td style={{verticalAlign:'top'}}>
-                                {formData.CctvRecord && <span>&#9745;</span>}
-                                {!formData.CctvRecord && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && formData.CctvRecord && <span>&#9745;</span>}
+                                {formData != null && !formData.CctvRecord && <span>&#9744;</span>}
                                 有(註: 三個工作天內交總辦事處) 
                             </td>
                             <td style={{verticalAlign:'top'}}>
-                                {!formData.CctvRecord && <span>&#9745;</span>}
-                                {formData.CctvRecord && <span>&#9744;</span>}
+                                {formData == null && <span>&#9744;</span>}
+                                {formData != null && !formData.CctvRecord && <span>&#9745;</span>}
+                                {formData != null && formData.CctvRecord && <span>&#9744;</span>}
                                 未能提供
                             </td>
                         </tr>
@@ -452,72 +499,88 @@ return <>
                             <tr>
                                 <td>
                                     <div>
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_SLIPPERY_GROUND") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_SLIPPERY_GROUND") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_SLIPPERY_GROUND") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_SLIPPERY_GROUND") == -1)) && <span>&#9744;</span>}
                                         1 地面濕滑&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_UNEVEN_GROUND") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_UNEVEN_GROUND") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_UNEVEN_GROUND") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_UNEVEN_GROUND") == -1)) && <span>&#9744;</span>}
                                         2 地面不平&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OBSTACLE_ITEMS") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OBSTACLE_ITEMS") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OBSTACLE_ITEMS") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OBSTACLE_ITEMS") == -1)) && <span>&#9744;</span>}
                                         3 障礙物品&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_INSUFFICIENT_LIGHT") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_INSUFFICIENT_LIGHT") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_INSUFFICIENT_LIGHT") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_INSUFFICIENT_LIGHT") == -1)) && <span>&#9744;</span>}
                                         4 光線不足&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_NOT_ENOUGH_SPACE") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_NOT_ENOUGH_SPACE") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_NOT_ENOUGH_SPACE") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_NOT_ENOUGH_SPACE") == -1)) && <span>&#9744;</span>}
                                         5 空間不足&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_ACOUSTIC_STIMULATION") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_ACOUSTIC_STIMULATION") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_ACOUSTIC_STIMULATION") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_ACOUSTIC_STIMULATION") == -1)) && <span>&#9744;</span>}
                                         6 聲響刺激&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_COLLIDED_BY_OTHERS") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_COLLIDED_BY_OTHERS") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_COLLIDED_BY_OTHERS") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_COLLIDED_BY_OTHERS") == -1)) && <span>&#9744;</span>}
                                         7 被別人碰撞&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_HURT_BY_OTHERS") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_HURT_BY_OTHERS") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_HURT_BY_OTHERS") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_HURT_BY_OTHERS") == -1)) && <span>&#9744;</span>}
                                         8 被別人傷害&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_IMPROPER_USE_OF_ASSISTIVE_EQUIPMENT") == -1)) && <span>&#9744;</span>}
                                         9 輔助器材使用不當 (如輪椅／便椅未上鎖)&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObserveEnvironmentFactor == null || (formData.ObserveEnvironmentFactor != null && formData.ObserveEnvironmentFactor.indexOf("ENV_OTHER") == -1)) && <span>&#9744;</span>}
                                         10 其他 (請註明&nbsp;&nbsp;
-                                        {formData.ObserveEnvironmentFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObserveEnvironmentFactorOther}</span> : '____________________'})
+                                        {formData != null && formData.ObserveEnvironmentFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObserveEnvironmentFactorOther}</span> : '____________________'})
                                     </div>
                                 </td>
                                 <td>
                                     <div>
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_EMOTIONAL_INSTABILITY") == -1)) && <span>&#9744;</span>}
                                         1 情緒不穩&nbsp;&nbsp;
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_HEARTBROKEN") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_HEARTBROKEN") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_HEARTBROKEN") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_HEARTBROKEN") == -1)) && <span>&#9744;</span>}
                                         2 心急致傷&nbsp;&nbsp;
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_CHOKING") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_CHOKING") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_CHOKING") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_CHOKING") == -1)) && <span>&#9744;</span>}
                                         3 進食時哽塞&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_UNSTEADY_WALKING") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_UNSTEADY_WALKING") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_UNSTEADY_WALKING") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_UNSTEADY_WALKING") == -1)) && <span>&#9744;</span>}
                                         4 步履不穩&nbsp;&nbsp;
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_TWITCH") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_TWITCH") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_TWITCH") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_TWITCH") == -1)) && <span>&#9744;</span>}
                                         5 抽搐&nbsp;&nbsp;
                                     </div>
                                     <div>
-                                        {formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") > -1  && <span>&#9745;</span>}
-                                        {(formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") == -1)) && <span>&#9744;</span>}
+                                        {formData == null && <span>&#9744;</span>}
+                                        {formData != null && formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") > -1  && <span>&#9745;</span>}
+                                        {formData != null && (formData.ObservePersonalFactor == null || (formData.ObservePersonalFactor != null && formData.ObservePersonalFactor.indexOf("PERSONAL_OTHER") == -1)) && <span>&#9744;</span>}
                                         6 其他個人因素 (請註明 :&nbsp;&nbsp;
-                                        {formData.ObservePersonalFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObservePersonalFactorOther}</span> : '____________________'})
+                                        {formData != null && formData.ObservePersonalFactorOther != null ? <span style={{borderBottom:'1px solid'}}>{formData.ObservePersonalFactorOther}</span> : '____________________'})
                                     </div>
                                 </td>
                             </tr>
@@ -532,7 +595,7 @@ return <>
                         <table style={{width:'950px'}}>
                             <tr>
                                 <td style={{verticalAlign:'bottom', width:'380px'}}>(請註明事發地點附近之員工當時執行的職務)</td>
-                                <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData.AccidentDetail != null ? formData.AccidentDetail : ''}</td>
+                                <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData != null && formData.AccidentDetail != null ? formData.AccidentDetail : ''}</td>
                             </tr>
                         </table>
                     </div>
@@ -545,7 +608,7 @@ return <>
                         <table style={{width:'950px'}}>
                             <tr>
                                 <td style={{verticalAlign:'top', width:'230px'}}>3.1 服務單位即時治療/處理</td>
-                                <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
+                                <td style={{verticalAlign:'top', borderBottom:'1px solid'}}>{formData != null && formData.TreatmentAfterAccident != null ? formData.TreatmentAfterAccident : ''}</td>
                             </tr>
                         </table>
                     </div>
@@ -554,24 +617,27 @@ return <>
                             <tr>
                                 <td style={{width:'130px'}}>3.2 就診安排</td>
                                 <td style={{width:'330px'}}>
-                                    {formData.MedicalArrangement == "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9745;</span>}
-                                    {formData.MedicalArrangement != "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.MedicalArrangement == "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9745;</span>}
+                                    {formData != null && formData.MedicalArrangement != "ARRANGEMENT_DOCTOR_VISIT" && <span>&#9744;</span>}
                                     醫生到診&nbsp;&nbsp;
-                                    {formData.MedicalArrangement == "ARRANGEMENT_OUTPATIENT" && <span>&#9745;</span>}
-                                    {formData.MedicalArrangement != "ARRANGEMENT_OUTPATIENT" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.MedicalArrangement == "ARRANGEMENT_OUTPATIENT" && <span>&#9745;</span>}
+                                    {formData != null && formData.MedicalArrangement != "ARRANGEMENT_OUTPATIENT" && <span>&#9744;</span>}
                                     門診&nbsp;&nbsp;
-                                    {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9745;</span>}
-                                    {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9745;</span>}
+                                    {formData != null && formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_DEPARTMENT" && <span>&#9744;</span>}
                                     急症室&nbsp;&nbsp;醫院名稱 :
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'200px'}}>
-                                    {formData.MedicalArrangementHospital != null ? formData.MedicalArrangementHospital : ''}
+                                    {formData != null && formData.MedicalArrangementHospital != null ? formData.MedicalArrangementHospital : ''}
                                 </td>
                                 <td style={{width:'90px'}}>
                                 &nbsp;&nbsp;到達時間
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'200px'}}>
-                                    {formData.MedicalArrangementDate != null && moment(formData.MedicalArrangementDate).format("YYYY-MM-DD hh:mm")}
+                                    {formData != null && formData.MedicalArrangementDate != null && moment(formData.MedicalArrangementDate).format("YYYY-MM-DD hh:mm")}
                                     {/*formData.MedicalArrangementDate != null && new Date(formData.MedicalArrangementDate).getFullYear() + `-` +(`0`+(new Date(formData.MedicalArrangementDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.MedicalArrangementDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.MedicalArrangementDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.MedicalArrangementDate).getMinutes()).slice(-2)*/}
                                 </td>
                             </tr>
@@ -581,7 +647,7 @@ return <>
                                 <td style={{width:'130px'}}></td>
                                 <td style={{width:'210px'}}>提供予服務使用者的治療</td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formData.MedicalArrangementTreatment != null ? formData.MedicalArrangementTreatment : ''}
+                                {formData != null && formData.MedicalArrangementTreatment != null ? formData.MedicalArrangementTreatment : ''}
                                 </td>
                             </tr>
                         </table>
@@ -591,21 +657,25 @@ return <>
                             <tr>
                                 <td style={{width:'200px'}}>3.3 是否在醫院留醫</td>
                                 <td style={{width:'150px'}}>
-                                    {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9745;</span>}
-                                    {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.StayInHospital == "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9745;</span>}
+                                    {formData != null && formData.StayInHospital != "IS_STAY_IN_HOSPITAL_TRUE" && <span>&#9744;</span>}
                                     是&nbsp;&nbsp; 醫院名稱：
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                    {formData.StayInHospitalName != null ? formData.StayInHospitalName : ''}&nbsp;&nbsp;
+                                    {formData != null && formData.StayInHospitalName != null ? formData.StayInHospitalName : ''}&nbsp;&nbsp;
                                 </td>
                                 <td style={{width:'100px'}}>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;{formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
-                                    {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.StayInHospital == "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9745;</span>}
+                                    {formData != null && formData.StayInHospital != "IS_STAY_IN_HOSPITAL_FALSE" && <span>&#9744;</span>}
                                     否
                                 </td>
                                 <td style={{width:'100px'}}>
-                                    {formData.StayInHospital == "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9745;</span>}
-                                    {formData.StayInHospital != "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.StayInHospital == "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9745;</span>}
+                                    {formData != null && formData.StayInHospital != "IS_STAY_IN_HOSPITAL_NOT_APPLICABLE" && <span>&#9744;</span>}
                                     不適用
                                 </td>
                             </tr>
@@ -619,15 +689,16 @@ return <>
                             <tr>
                                 <td style={{fontWeight:'bold', width:'120px'}}>4.	報警處理</td>
                                 <td style={{width:'100px'}}>
-                                    {formData.CalledPolice && <span>&#9745;</span>}
-                                    {!formData.CalledPolice && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.CalledPolice && <span>&#9745;</span>}
+                                    {formData != null && !formData.CalledPolice && <span>&#9744;</span>}
                                     需要
                                 </td>
                                 <td style={{width:'100px'}}>
                                     日期及時間
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                    {formData.CalledPoliceDate != null ? formData.CalledPoliceDate : ''}
+                                    {formData != null && formData.CalledPoliceDate != null ? formData.CalledPoliceDate : ''}
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -639,20 +710,21 @@ return <>
                                     報案編號
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                    {formData.CalledPoliceReportNumber != null ? formData.CalledPoliceReportNumber : ''}
+                                    {formData != null && formData.CalledPoliceReportNumber != null ? formData.CalledPoliceReportNumber : ''}
                                 </td>
                                 <td style={{width:'80px'}}>
                                 &nbsp;&nbsp;警署
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                    {formData.CalledPoliceStation != null ? formData.CalledPoliceStation : ''}
+                                    {formData != null && formData.CalledPoliceStation != null ? formData.CalledPoliceStation : ''}
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
-                                    {!formData.CalledPolice && <span>&#9745;</span>}
-                                    {formData.CalledPolice && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && !formData.CalledPolice && <span>&#9745;</span>}
+                                    {formData != null && formData.CalledPolice && <span>&#9744;</span>}
                                     不需要
                                 </td>
                                 <td></td>
@@ -669,18 +741,20 @@ return <>
                             <tr>
                                 <td style={{verticalAlign:'top',fontWeight:'bold', width:'250px'}}>5. 意外後中心即時應變措施</td>
                                 <td style={{verticalAlign:'top', width:'100px'}}>
-                                    {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9745;</span>}
-                                    {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9745;</span>}
+                                    {formData != null && formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9744;</span>}
                                     沒有
                                 </td>
                                 <td style={{verticalAlign:'top', width:'50px'}}>
-                                    {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9745;</span>}
-                                    {formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9744;</span>}
+                                    {formData == null && <span>&#9744;</span>}
+                                    {formData != null && formData.ContingencyMeasure == "CONTINGENCY_MEASURE_TRUE" && <span>&#9745;</span>}
+                                    {formData != null && formData.ContingencyMeasure == "CONTINGENCY_MEASURE_FALSE" && <span>&#9744;</span>}
                                     有 
                                     
                                 </td>
                                 <td style={{verticalAlign:'top', borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContingencyMeasureRemark != null ? formData.ContingencyMeasureRemark : ''}
+                                {formData != null && formData.ContingencyMeasureRemark != null ? formData.ContingencyMeasureRemark : ''}
                                 </td>
                             </tr>
                         </table>
@@ -698,14 +772,14 @@ return <>
                                     6.1通知家屬日期及時間
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContactFamilyDate != null && moment(formData.ContactFamilyDate).format("YYYY-MM-DD hh:mm")}
+                                {formData != null && formData.ContactFamilyDate != null && moment(formData.ContactFamilyDate).format("YYYY-MM-DD hh:mm")}
                                 {/*formData.ContactFamilyDate != null && new Date(formData.ContactFamilyDate).getFullYear() + `-` +(`0`+(new Date(formData.ContactFamilyDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.ContactFamilyDate).getDate()).slice(-2) + ` ` + (`0`+new Date(formData.ContactFamilyDate).getHours()).slice(-2) + `:` + + (`0`+new Date(formData.ContactFamilyDate).getMinutes()).slice(-2)*/}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;與服務使用者關係
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContactFamilyRelationship != null ? formData.ContactFamilyRelationship : ''}
+                                {formData != null && formData.ContactFamilyRelationship != null ? formData.ContactFamilyRelationship : ''}
                                 </td>
                             </tr>
                             <tr>
@@ -713,7 +787,7 @@ return <>
                                 6.2 家屬姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContactFamilyName != null ? formData.ContactFamilyName : ''}
+                                {formData != null && formData.ContactFamilyName != null ? formData.ContactFamilyName : ''}
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -723,17 +797,17 @@ return <>
                                 6.3 負責通知家屬的職員姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.ContactStaff != null ? formData.ContactStaff.displayName : ''}
+                                {formData != null && formData.ContactStaff != null ? formData.ContactStaff.displayName : ''}
                                 </td>
                                 <td style={{width:'200px'}}>&nbsp;&nbsp;&nbsp;&nbsp;職位</td>
-                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData.ContactStaff != null  ? formData.ContactStaff.jobTitle : ''}</td>
+                                <td style={{borderBottom:'1px solid', width:'250px'}}>{formData != null && formData.ContactStaff != null  ? formData.ContactStaff.jobTitle : ''}</td>
                             </tr>
                             <tr>
                                 <td style={{width:'250px'}}>
                                 6.4 服務使用者經診治後情况
                                 </td>
                                 <td colSpan={3} style={{borderBottom:'1px solid'}}>
-                                {formData.AfterTreatmentDescription != null ? formData.AfterTreatmentDescription : ''}
+                                {formData != null && formData.AfterTreatmentDescription != null ? formData.AfterTreatmentDescription : ''}
                                 </td>
                             </tr>
                         </table>
@@ -747,13 +821,13 @@ return <>
                                 填報人姓名及職級
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.Reporter.displayName}&nbsp;&nbsp;{formData.Reporter.jobTitle}
+                                {formData != null && formData.Reporter.displayName}&nbsp;&nbsp;{formData != null && formData.Reporter.jobTitle}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.Created != null && new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2)}
+                                {formData != null && formData.Created != null && new Date(formData.Created).getFullYear() + `-` +(`0`+(new Date(formData.Created).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.Created).getDate()).slice(-2)}
                                 </td>
                             </tr>
                         </table>
@@ -763,13 +837,13 @@ return <>
                                 高級服務經理/服務經理姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.SM != null && formData.SM.Title}
+                                {formData != null && formData.SM != null && formData.SM.Title}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.SMDate != null && new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2)}
+                                {formData != null && formData.SMDate != null && new Date(formData.SMDate).getFullYear() + `-` +(`0`+(new Date(formData.SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SMDate).getDate()).slice(-2)}
                                 
                                 </td>
                             </tr>
@@ -787,7 +861,7 @@ return <>
                                 交由 :
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;填寫「意外報告 (二)」
+                                {formData != null && formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;填寫「意外報告 (二)」
                                 </td>
                             </tr>
                         </table>
@@ -799,7 +873,7 @@ return <>
                             評語 :
                             </td>
                             <td style={{borderBottom:'1px solid'}}>
-                            {formTwentyData != null && formData.SPTComment != null ? formData.SPTComment : ''}
+                            {formData != null && formTwentyData != null && formData.SPTComment != null ? formData.SPTComment : ''}
                             </td>
                         </tr>
                     </table>
@@ -814,13 +888,13 @@ return <>
                                 高級物理治療師姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.SPT.Title}
+                                {formData != null && formData.SPT.Title}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;日期
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData.SPTDate != null && new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2)}
+                                {formData != null && formData.SPTDate != null && new Date(formData.SPTDate).getFullYear() + `-` +(`0`+(new Date(formData.SPTDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formData.SPTDate).getDate()).slice(-2)}
                                 
                                 </td>
                             </tr>

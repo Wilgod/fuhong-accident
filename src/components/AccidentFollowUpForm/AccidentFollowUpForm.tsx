@@ -17,6 +17,7 @@ import { createAccidentFollowUpRepotForm, updateAccidentFollowUpRepotFormById, u
 import { addMonths,addDays } from '../../utils/DateUtils';
 import { stageThreePendingSdApprove, stageThreePendingSdApproveForSpt, stageThreePendingSmFillIn } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { ConsoleListener } from '@pnp/pnpjs';
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 import { notifyOutsiderAccident, notifyServiceUserAccident,notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 const formTypeParser = (formType: string, additonalString: string) => {
@@ -29,7 +30,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, siteCollectionUrl, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(null); // 高級服務經理
     const [sdDate, setSdDate] = useState(null); // 服務總監
     const [sptDate, setSptDate] = useState(null); // 高級物理治療師
@@ -50,6 +51,9 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
 
     const [serviceUserUnit, setServiceUserUnit] = useState("");
+    const [accidentSMbackup, setAccidentSMbackup] = useState("");
+    const [jobCode, setJobCoe] = useState("");
+    const [canSaveDraft, setCanSaveDraft] = useState(false);
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: undefined,
     });
@@ -667,6 +671,28 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     }
 
     useEffect(() => {
+        if (accidentSMbackup != '') {
+            debugger
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,context.pageContext.legacyPageContext.userEmail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    setJobCoe(userInfosRes[0].hr_jobcode);
+                    let accidentSMbackupList = accidentSMbackup.split(';');
+                    debugger
+                    for (let acc of accidentSMbackupList) {
+                        if (acc.trim() == userInfosRes[0].hr_jobcode) {
+                            setCanSaveDraft(true);
+                        }
+                    }
+                }
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
+        }
+    },[accidentSMbackup]);
+
+    useEffect(() => {
         // Get stage oen form data
         if (parentFormData) {
             if (parentFormData && parentFormData.ServiceUserUnit) {
@@ -686,6 +712,8 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (ser.length > 0) {
                 console.log("ser[0].su_name_tc",ser[0].su_name_tc)
                 setServiceUserUnit(ser[0].su_name_tc);
+                setAccidentSMbackup(ser[0].Accident_SM_backup);
+                debugger
             }
         }
     }, []);
@@ -793,7 +821,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 disabled={
                                     followUpActions.length >= 5 ||
                                     completed ||
-                                    (!stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))}>
+                                    (!canSaveDraft && !stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))}>
                                 新增意外跟進行動
                             </button>
                         }
@@ -829,7 +857,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 setFollowUpActions(arr);
                                             }}
                                                 value={item.action}
-                                                disabled={completed || (!stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                                disabled={completed || (!canSaveDraft && !stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                         </div>
                                     </div>
                                     <div className="form-row mb-2">
@@ -842,7 +870,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 actionItem.date = new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
-                                                readOnly={completed || (!stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))}
+                                                readOnly={completed  || (!canSaveDraft && !stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))}
                                             />
                                             {/* <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler}
                                             disabled={completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} /> */}
@@ -858,7 +886,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 actionItem.remark = event.target.value;
                                                 setFollowUpActions(arr);
                                             }} value={item.remark}
-                                                disabled={completed || (!stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                                disabled={completed || (!canSaveDraft && !stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) && !stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                         </div>
                                     </div>
                                 </div>)
@@ -1033,7 +1061,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     <button className="btn btn-warning" onClick={(event => sptCommentUpdate())}>提交</button>
                                 }
                                 {
-                                    stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData) &&
+                                    (canSaveDraft || stageThreePendingSmFillIn(context,currentUserRole, formStatus, formStage,formTwentyOneData)) &&
                                     <button className="btn btn-success" onClick={(event => draftHandler(event))}>草稿</button>
                                 }
                             </>

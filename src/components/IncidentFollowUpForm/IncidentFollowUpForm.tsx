@@ -15,7 +15,7 @@ import { addBusinessDays, addMonths, addDays } from '../../utils/DateUtils';
 import { faPager } from '@fortawesome/free-solid-svg-icons';
 import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense, notifyIncidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
-
+import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
     styles: any;
@@ -24,7 +24,7 @@ interface IIncidentFollowUpFormProps {
     currentUserRole: Role;
     parentFormData: any;
     isPrintMode: any;
-    siteCollectionUrl:String;
+    siteCollectionUrl:string;
     formTwentySixData:any;
     workflow:string;
     changeFormTwentySixDataSelected:any;
@@ -69,6 +69,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const [formStage, setFormStage] = useState("");
     const [completed, setCompleted] = useState(false);
     const [incidentFollowUpFormList, setIncidentFollowUpFormList] = useState([]);
+    const [accidentSMbackup, setAccidentSMbackup] = useState("");
+    const [canSaveDraft, setCanSaveDraft] = useState(false);
     const [selectedIncidentFollowUpFormId, setSelectedIncidentFollowUpFormId] = useState<number>(null);
     const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
         action: "",
@@ -702,12 +704,42 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     }
 
     useEffect(() => {
+        if (accidentSMbackup != '') {
+            debugger
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,context.pageContext.legacyPageContext.userEmail).then((userInfosRes) => {
+                
+                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    let accidentSMbackupList = accidentSMbackup.split(';');
+                    for (let acc of accidentSMbackupList) {
+                        if (acc.trim() == userInfosRes[0].hr_jobcode) {
+                            setCanSaveDraft(true);
+                        }
+                    }
+                }
+            }).catch((err) => {
+                console.error('getUserInfoByEmailInUserInfoAD error')
+                console.error(err)
+            });
+        }
+    },[accidentSMbackup]);
+
+    useEffect(() => {
         loadData()
     }, [parentFormData]);
 
     useEffect(() => {
         updateState();
     }, [selectedIncidentFollowUpFormId]);
+
+    useEffect(() => {
+        if (parentFormData && parentFormData.ServiceUnit) {
+            let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == parentFormData.ServiceUnit});
+            if (ser.length > 0) {
+                setAccidentSMbackup(ser[0].Accident_SM_backup);
+                debugger
+            }
+        }
+    }, []);
     console.log('formTwentySixData :', formTwentySixData);
     return (
         <>
@@ -784,7 +816,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 disabled={
                                     followUpActions.length >= 5 ||
                                     completed ||
-                                    (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "" , formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}>
+                                    (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "" , formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}>
                                 新增事故跟進行動
                             </button>
                         }
@@ -824,7 +856,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 setFollowUpActions(arr);
                                             }}
                                                 value={item.action}
-                                                disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                                disabled={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context,currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -839,7 +871,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 actionItem.date = new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
-                                                readOnly={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                                readOnly={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context,currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -853,7 +885,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 actionItem.remark = event.target.value;
                                                 setFollowUpActions(arr);
                                             }} value={item.remark}
-                                                disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                                disabled={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context,currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -870,13 +902,13 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" onClick={() => setForm({ ...form, incidentFollowUpContinue: true })} checked={form.incidentFollowUpContinue === true}
-                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context,currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" onClick={() => setForm({ ...form, incidentFollowUpContinue: false })} checked={form.incidentFollowUpContinue === false}
-                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus))}
+                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context,currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
@@ -991,11 +1023,11 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                 }
                                 {
                                     pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) &&
-                                    !initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus) &&
+                                    !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData) &&
                                     <button className="btn btn-success" onClick={smSaveHandler}>儲存</button>
                                 }
                                 {
-                                    initialForm(currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus) &&
+                                    (canSaveDraft || initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData)) &&
                                     <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                                 }
                             </>

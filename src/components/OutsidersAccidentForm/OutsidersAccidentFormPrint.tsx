@@ -33,7 +33,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
     const [investigatorJobTitle, setInvestigatorJobTitle] = useState("");
     const [serviceUserUnit, setServiceUserUnit] = useState("");
     let EstimatedPart2CompletionDate = null;
-    if (formData.SubmitDate != null) {
+    if (formData != null && formData.SubmitDate != null) {
         let SubmitDate = new Date(formData.SubmitDate);
         EstimatedPart2CompletionDate = SubmitDate.setMonth(SubmitDate.getMonth() + 1);
     }

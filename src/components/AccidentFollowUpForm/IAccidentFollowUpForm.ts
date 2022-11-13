@@ -10,6 +10,7 @@ export interface IAccidentFollowUpFormProps {
     parentFormData: any;
     formSubmittedHandler(): void;
     isPrintMode: boolean;
+    siteCollectionUrl:any;
     formTwentyData:any;
     formTwentyOneData:any;
     workflow:string;
