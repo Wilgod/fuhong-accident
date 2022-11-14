@@ -139,8 +139,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     const [notifyStaff, setNotifyStaff, notifyStaffPicker] = useUserInfoAD();
     const [spNotifyStaff, setNotifyStaffEmail] = useSharePointGroup();
-    const [extraFile, setExtraFile] = useState<FileList>(null);
-    const [subpoenaFile, setSubpoenaFile] = useState<FileList>(null);
+    //const [extraFile, setExtraFile] = useState<FileList>(null);
+    const [extraFile, setExtraFile] = useState([]);
+    const [subpoenaFile, setSubpoenaFile] = useState([]);
     const [uploadedExtraFile, setUploadedExtraFile] = useState([]);
     const [uploadedSubpoenaFile, setUploadedSubpoenaFile] = useState([]);
 
@@ -163,22 +164,58 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [disabled5, setDisabled5] = useState(false);
     const [disabled6, setDisabled6] = useState(false);
     const [disabled7, setDisabled7] = useState(false);
+
+    const incomingfile1 = (event) => {
+        //const filename = event.target.files[0].name;
+        let fileContent = [];
+        for (let file of event.target.files) {
+            fileContent.push(file)
+        }
+        debugger
+        setExtraFile(fileContent);
+        //setFile(event.target.files[0]);
+        //setUploadButton(false);
+	}
+    
+    const incomingfile2 = (event) => {
+        //const filename = event.target.files[0].name;
+        let fileContent = [];
+        for (let file of event.target.files) {
+            fileContent.push(file)
+        }
+        debugger
+        setSubpoenaFile(fileContent);
+        //setFile(event.target.files[0]);
+        //setUploadButton(false);
+	}
     const uploadFile = async (id: number) => {
         try {
             let att: IAttachmentFileInfo[] = [];
             if (extraFile && extraFile.length > 0) {
-                att = [...att, {
+                for (let f of extraFile) {
+                    att.push({
+                        "name": `EXTRA-${f.name}`,
+                        "content": f
+                    })
+                }
+                /*att = [...att, {
                     "name": `EXTRA-${extraFile[0].name}`,
                     "content": extraFile[0]
-                }];
+                }];*/
             }
 
             if (form.unusalIncident === "UNUSAL_INCIDENT_COURT" && subpoenaFile && subpoenaFile.length > 0) {
+                for (let f of subpoenaFile) {
+                    att.push({
+                        "name": `SUBPOENA-${f.name}`,
+                        "content": f
+                    })
+                }
                 // att = [...att, ...attachmentsFilesFormatParser(subpoenaFile, "SUBPOENA")];
-                att = [...att, {
+                /*att = [...att, {
                     "name": `SUBPOENA-${subpoenaFile[0].name}`,
                     "content": subpoenaFile[0]
-                }];
+                }];*/
             }
 
             await updateSpecialIncidentReportLicenseAttachmentById(id, att);
@@ -1906,6 +1943,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     console.log('formInitial',!formInitial(currentUserRole, formStatus));
     console.log('disabled1',disabled1);
     console.log('final',!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus) && disabled1);
+    console.log('extraFile',extraFile);
+    
     return (
         <>
 
@@ -1930,17 +1969,21 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                         <div className="mb-1 text-secondary font-weight-bold">若有相關資料/自訂報告，請於此上載</div>
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
-                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => { setExtraFile(event.target.files) }}
-                                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                                <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={incomingfile1} //onChange={(event) => { setExtraFile }}
+                                                    disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} multiple/>
                                                 <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                             </div>
-                                            {
-                                                extraFile && extraFile.length > 0 &&
-                                                <div className="input-group-append">
-                                                    <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setExtraFile(null)}>清除</button>
-                                                </div>
-                                            }
                                         </div>
+                                        {extraFile.length > 0 &&
+                                            <>
+                                                {extraFile.map(item => {
+                                                    return <div>{item.name}</div>
+                                                })}
+                                                <div className="input-group-append">
+                                                    <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setExtraFile([])}>清除</button>
+                                                </div>
+                                            </>
+                                        }
                                         {uploadedExtraFile.length > 0 &&
                                             <aside>
                                                 <h6>已上傳檔案</h6>
@@ -2090,11 +2133,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <div className="input-group mb-2">
                                         <div className="custom-file">
-                                            <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={(event) => { setSubpoenaFile(event.target.files) }}
+                                            <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={incomingfile2} multiple// onChange={(event) => { setSubpoenaFile(event.target.files) }}
                                                 disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                             <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                         </div>
-                                        {
+                                        {/*
                                             subpoenaFile && subpoenaFile.length > 0 &&
                                             <div className="input-group-append">
                                                 <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile(null)}
@@ -2102,8 +2145,20 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                                     清除
                                                 </button>
                                             </div>
-                                        }
+                                        */}
                                     </div>
+                                    {subpoenaFile.length > 0 &&
+                                            <>
+                                                {subpoenaFile.map(item => {
+                                                    return <div>{item.name}</div>
+                                                })}
+                                                <div className="input-group-append">
+                                                    <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile([])}
+                                                        disabled={!pendingSmApprove(context,currentUserRole, formStatus, formStage, spSmInfo) && formInitial(currentUserRole, formStatus)}>
+                                                        清除</button>
+                                                </div>
+                                            </>
+                                        }
                                     {uploadedSubpoenaFile.length > 0 &&
                                         <aside>
                                             <h6>已上傳檔案</h6>

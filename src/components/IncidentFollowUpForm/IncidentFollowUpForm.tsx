@@ -25,6 +25,7 @@ interface IIncidentFollowUpFormProps {
     parentFormData: any;
     isPrintMode: any;
     siteCollectionUrl:string;
+    permissionList:any;
     formTwentySixData:any;
     workflow:string;
     changeFormTwentySixDataSelected:any;
@@ -51,7 +52,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,formTwentySixData, workflow, changeFormTwentySixDataSelected, serviceUnitList, print }: IIncidentFollowUpFormProps) {
+export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode,siteCollectionUrl,permissionList, formTwentySixData, workflow, changeFormTwentySixDataSelected, serviceUnitList, print }: IIncidentFollowUpFormProps) {
 
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,
@@ -710,11 +711,15 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     let accidentSMbackupList = accidentSMbackup.split(';');
-                    for (let acc of accidentSMbackupList) {
-                        if (acc.trim() == userInfosRes[0].hr_jobcode) {
-                            setCanSaveDraft(true);
+                    let per = permissionList.filter(item => {return item == parentFormData.ServiceUnit})
+                    if (per.length > 0) {
+                        for (let acc of accidentSMbackupList) {
+                            if (acc.trim() == userInfosRes[0].hr_jobcode) {
+                                setCanSaveDraft(true);
+                            }
                         }
                     }
+                    
                 }
             }).catch((err) => {
                 console.error('getUserInfoByEmailInUserInfoAD error')

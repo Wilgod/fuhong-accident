@@ -11,6 +11,7 @@ export interface IAccidentFollowUpFormProps {
     formSubmittedHandler(): void;
     isPrintMode: boolean;
     siteCollectionUrl:any;
+    permissionList:any;
     formTwentyData:any;
     formTwentyOneData:any;
     workflow:string;

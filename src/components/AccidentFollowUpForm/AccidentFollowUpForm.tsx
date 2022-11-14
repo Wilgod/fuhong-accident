@@ -30,7 +30,7 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
-export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, siteCollectionUrl, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
+export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(null); // 高級服務經理
     const [sdDate, setSdDate] = useState(null); // 服務總監
     const [sptDate, setSptDate] = useState(null); // 高級物理治療師
@@ -49,7 +49,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
     const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); //[服務總監]
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
-
+    const [serviceUserUnitEn, setServiceUserUnitEn] = useState("");
     const [serviceUserUnit, setServiceUserUnit] = useState("");
     const [accidentSMbackup, setAccidentSMbackup] = useState("");
     const [jobCode, setJobCoe] = useState("");
@@ -678,10 +678,14 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                     setJobCoe(userInfosRes[0].hr_jobcode);
                     let accidentSMbackupList = accidentSMbackup.split(';');
+                    console.log('permissionList',permissionList)
+                    let per = permissionList.filter(item => {return item == serviceUserUnitEn})
                     debugger
-                    for (let acc of accidentSMbackupList) {
-                        if (acc.trim() == userInfosRes[0].hr_jobcode) {
-                            setCanSaveDraft(true);
+                    if (per.length > 0) {
+                        for (let acc of accidentSMbackupList) {
+                            if (acc.trim() == userInfosRes[0].hr_jobcode) {
+                                setCanSaveDraft(true);
+                            }
                         }
                     }
                 }
@@ -712,6 +716,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             if (ser.length > 0) {
                 console.log("ser[0].su_name_tc",ser[0].su_name_tc)
                 setServiceUserUnit(ser[0].su_name_tc);
+                setServiceUserUnitEn(ser[0].su_Eng_name_display);
                 setAccidentSMbackup(ser[0].Accident_SM_backup);
                 debugger
             }
