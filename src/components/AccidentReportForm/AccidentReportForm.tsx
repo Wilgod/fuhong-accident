@@ -289,6 +289,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
                     // Create Accident Follow Up Report Form
                     const accidentFollowUpReportFormBody = {
+                        "InvestigatorId":parentFormData.InvestigatorId,
                         "SPTId": parentFormData.SPTId,
                         "SMId": serviceManager.Id,
                         "SDId": parentFormData.SDId,

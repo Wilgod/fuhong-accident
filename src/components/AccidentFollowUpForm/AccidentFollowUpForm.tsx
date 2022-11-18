@@ -458,6 +458,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             createAccidentFollowUpRepotForm({
                 "CaseNumber": parentFormData.CaseNumber,
                 "ParentFormId": parentFormData.Id,
+                "InvestigatorId": formTwentyOneData.InvestigatorId,
                 "SPTId": formTwentyOneData.SPTId,
                 "SDId": formTwentyOneData.SDId,
                 "SMId": formTwentyOneData.SMId,
