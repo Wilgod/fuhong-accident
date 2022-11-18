@@ -420,8 +420,8 @@ export async function getAllAccidentFollowUpForm() {
     try {
         const LIST_NAME = "Accident Follow Up Form";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title')
-            .expand("Author", "SM", "SPT", "SD")
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "SD/Id", "SD/EMail", 'SD/Title', "Investigator/Id", "Investigator/EMail", 'Investigator/Title')
+            .expand("Author", "SM", "SPT", "SD","Investigator")
             .getAll();
 
         return item;

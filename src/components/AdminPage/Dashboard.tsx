@@ -304,7 +304,7 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                 }
             }
             let notif = await notifyUpdate(context, workflow, serviceUnit, item.groupby, sPhysicalTherapy);
-        } else if (item.groupby == 'Investigator') {
+        } else if (item.groupby == 'CurrentInvestigator') {
             if (investigatorPickerInfo.length >0) {
                 for (let selected of selectedItem) {
                     if (selected.stage == '2') {
@@ -314,9 +314,20 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                                 "InvestigatorId": investigatorPickerInfo[0].id
                             });
                         }
-                        await updateServiceUserAccidentById(selected.Id, {
+                        /*await updateServiceUserAccidentById(selected.Id, {
                             "InvestigatorId": investigatorPickerInfo[0].id
-                        });
+                        });*/
+                    } else if (selected.stage == '3') {
+                        const afur = item.child.filter(item => item.Id == selected.Id);
+                        if (afur.length > 0 ) {
+                            let idList = afur[0].AccidentFollowUpFormId
+                            await updateAccidentFollowUpRepotFormById(afur[0].AccidentFollowUpFormId[idList.length - 1], {
+                                "InvestigatorId": investigatorPickerInfo[0].id
+                            });
+                        }
+                        /*await updateServiceUserAccidentById(selected.Id, {
+                            "InvestigatorId": investigatorPickerInfo[0].id
+                        });*/
                     }
                 }
                 let notif = await notifyInvestigatorUpdate(context, workflow, serviceUnit, item.groupby, investigator);
@@ -359,8 +370,9 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                   </div>
                   <div style={{ marginTop: '15px', overflowX: 'hidden' }}>
                       {position == 'SM' && '更改高級服務經理'}
-                      {position == 'SD' && '更改服務總監 '}
-                      {position == 'SPT' && '更改高級物理治療師 '}
+                      {position == 'SD' && '更改服務總監'}
+                      {position == 'SPT' && '更改高級物理治療師'}
+                      {position == 'Investigator' && '更改調查員'}
                   </div>
                   <div className="form-row mb-2">
 
@@ -390,7 +402,7 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                                     }
                                 </select>
                             }
-                            {item.groupby == 'Investigator' && 
+                            {item.groupby == 'CurrentInvestigator' && 
                             <PeoplePicker
                                 context={context}
                                 titleText=""
