@@ -142,6 +142,8 @@ interface IOtherIncidentReportPrintStates {
     sdDate:Date;
     sdName:string;
     sdJobTitle:string;
+    sdComment:string;
+    smComment:string;
 
 }
 
@@ -294,7 +296,9 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
         unusalIncident: "",
         sdDate:null,
         sdName:"",
-        sdJobTitle:""
+        sdJobTitle:"",
+        sdComment:"",
+        smComment:""
     });
 
     useEffect(() => {
@@ -448,7 +452,9 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
                 unusalIncident: formData.UnusalIncident,
-                sdDate: formData.SDDate ? new Date(formData.SDDate) : null
+                sdDate: formData.SDDate ? new Date(formData.SDDate) : null,
+                sdComment: formData.SDComment,
+                smComment: formData.SMComment
             })
 
         
@@ -831,7 +837,40 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             </div>
                         </div>
 
-
+                        <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                    <div className={`col-12`} style={{marginTop:'20px'}}>
+                    此欄由高級服務經理/服務經理填寫
+                    </div>
+                    <div className={`col-12`}>
+                        <table style={{width:'950px'}}>
+                            <tr>
+                                <td style={{width:'60px'}}>
+                                評語 :
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {form != null && form.smComment != null ? form.smComment : ''}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                    <div className={`col-12`} style={{marginTop:'20px'}}>
+                    此欄由服務總監填寫
+                    </div>
+                    <div className={`col-12`}>
+                        <table style={{width:'950px'}}>
+                            <tr>
+                                <td style={{width:'60px'}}>
+                                評語 :
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {form != null && form.sdComment != null ? form.sdComment : ''}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
 
                     <div className="form-row mb-3" style={{fontSize:'18px', marginTop:'30px'}}>
                         <div className={`col-12`}>
@@ -975,7 +1014,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                     </div>
                     <div className="form-row" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'870px',margin:'20px 0 20px'}}>
                                 <tr>
                                     <td  style={{width:'250px'}}>
                                     高級服務經理/服務經理姓名
@@ -1005,7 +1044,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             </table>
                         </div>
                         <div className={`col-12`}>
-                            <table style={{width:'870px',margin:'40px 0 20px'}}>
+                            <table style={{width:'870px',margin:'20px 0 20px'}}>
                                 <tr>
                                     <td  style={{width:'250px'}}>
                                     服務總監姓名
@@ -1018,6 +1057,18 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div className={`col-12`}>
+                            評語
+                        </div>
+                        <div className={`col-12`}>
+                            <table>
+                                <tr>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SDComment != null ? formTwentySixDataPrint[0].SDComment : ''}
                                     </td>
                                 </tr>
                             </table>

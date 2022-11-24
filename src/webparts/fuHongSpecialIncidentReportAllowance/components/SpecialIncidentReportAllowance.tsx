@@ -395,9 +395,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         } else {
             error['FollowUpPlan'] = true;
         }
-
+        body["ReporterPhone"] = reporterPhone;
         
-
+        
 
 
         return [body, error];

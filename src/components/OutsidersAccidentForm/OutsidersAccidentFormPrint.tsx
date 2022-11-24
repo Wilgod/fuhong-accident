@@ -483,7 +483,40 @@ return <>
                         </table>
                     </div>
                 </div>
-                
+                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                    <div className={`col-12`} style={{marginTop:'20px'}}>
+                    此欄由高級服務經理/服務經理填寫
+                    </div>
+                    <div className={`col-12`}>
+                        <table style={{width:'950px'}}>
+                            <tr>
+                                <td style={{width:'60px'}}>
+                                評語 :
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formTwentyData != null && formData.SMComment != null ? formData.SMComment : ''}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                    <div className={`col-12`} style={{marginTop:'20px'}}>
+                    此欄由服務總監填寫
+                    </div>
+                    <div className={`col-12`}>
+                        <table style={{width:'950px'}}>
+                            <tr>
+                                <td style={{width:'60px'}}>
+                                評語 :
+                                </td>
+                                <td style={{borderBottom:'1px solid'}}>
+                                {formTwentyData != null && formData.SDComment != null ? formData.SDComment : ''}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
                         <table style={{width:'900px'}}>
@@ -517,11 +550,12 @@ return <>
                             </tr>
                         </table>
                     </div>
-                    <div className={`col-12`} style={{fontWeight:'bold', marginTop:'15px'}}>
-                    [此欄由高級物理治療師填寫]
-                    </div>
+                    
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
+                    <div className={`col-12`} style={{ marginTop:'15px'}}>
+                    此欄由高級物理治療師填寫
+                    </div>
                     <div className={`col-12`}>
                     交由 : <span style={{borderBottom:'1px solid',display: 'inline-block', width:'150px'}}>{formData.Investigator != null ? formData.Investigator.Title : ''}&nbsp;</span>填寫「意外報告 (二)」
                     </div>
@@ -835,7 +869,21 @@ return <>
                 </div>
                 <div className="form-row" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table style={{width:'780px',margin:'80px 0 20px'}}>
+                        高級服務經理/服務經理評語
+                    </div>
+                    <div className={`col-12`}>
+                        <table style={{width:'780px'}}>
+                            <tr>
+                                <td style={{borderBottom:'1px solid'}}>
+                                &nbsp;&nbsp;{formTwentyData != null && formTwentyData.SMComment != null ? formTwentyData.SMComment : ''}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div className="form-row" style={{fontSize:'18px'}}>
+                    <div className={`col-12`}>
+                        <table style={{width:'780px',margin:'20px 0 20px'}}>
                             <tr>
                                 <td  style={{width:'180px'}}>
                                 調查員姓名及職級
@@ -864,8 +912,8 @@ return <>
                             </tr>
                         </table>
                     </div>
-                    <div className={`col-12`} style={{margin:'80px 0 20px'}}>
-                        <table  style={{width:'780px',margin:'80px 0 20px'}}>
+                    <div className={`col-12`} style={{margin:'20px 0 20px'}}>
+                        <table  style={{width:'780px',margin:'20px 0 20px'}}>
                             <tr>
                                 <td  style={{width:'180px'}}>
                                 高級物理治療師簽署
@@ -1011,6 +1059,18 @@ return <>
                             </td>
                             <td style={{width:'250px',borderBottom:'1px solid'}}>
                             {formTwentyOneData != null && formTwentyOneData[0].SDDate != null && new Date(formTwentyOneData[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentyOneData[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentyOneData[0].SDDate).getDate()).slice(-2)}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div className={`col-12`}>
+                    評語
+                </div>
+                <div className={`col-12`}>
+                    <table style={{width:'780px'}}>
+                        <tr>
+                            <td style={{borderBottom:'1px solid'}}>
+                            &nbsp;&nbsp;{formTwentyOneData != null && formTwentyOneData[0].SDComment != null ? formTwentyOneData[0].SDComment : ''}
                             </td>
                         </tr>
                     </table>
