@@ -62,6 +62,12 @@ interface IFuHongServiceUserAccidentFormState {
   cmsUserWorkflow:string;
 }
 
+interface UserInfo {
+	userId: string;
+	userEmail: string;
+	userDisplayName: string;
+}
+
 export default class FuHongServiceUserAccidentForm extends React.Component<IFuHongServiceUserAccidentFormProps, IFuHongServiceUserAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.split('/sites/')[1].split('/')[0];
 	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
@@ -108,8 +114,17 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     }
   }
 
+  private getCurrentUser(): UserInfo {
+		return {
+			userId: this.props.context.pageContext.legacyPageContext.userId,
+			userEmail: this.props.context.pageContext.user.email,
+			//userEmail:'cholam.chan@fuhong.org',
+			userDisplayName: this.props.context.pageContext.user.displayName
+		};
+	}
+
   private initialState = async () => {
-    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
     const cmsUserWorkflow = await getCMSUserWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
@@ -119,62 +134,62 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   public componentDidMount() {
     this.initialState().then((lists)=> {
-      getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
         if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
         }
         this.initialDataByFormId().then((data) => {
           if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.Investigator.EMail === this.getCurrentUser().userEmail) {
               this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
   
           if (data) {
             if (data.Stage == '1' && data.SM && data.SM.EMail) {
-              if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SM.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail || data.SM.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || 
-                data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail ||
+                this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail || 
+                data.SM.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
             if ((data.Stage == '1' && data.SD && data.SD.EMail) || data.Stage == '2') {
-              if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SD.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail || data.SD.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
               }
             }
             if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
-              if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SPT.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail ||
+                data.SPT.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail ||
+                this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail ||
+                data.SPT.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             }
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
-              if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (item.Admin && item.Admin.EMail === this.getCurrentUser().userEmail) {
                 console.log(Role.ADMIN === 4)
                 this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'] });
               }
