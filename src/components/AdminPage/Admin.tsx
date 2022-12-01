@@ -419,7 +419,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 oir['Form'] = '事故跟進/結束報告';
                 oir['CurrentSM'] = getIFUF.length > 0 ? getIFUF[0]['SM'] : null;
                 oir['CurrentSD'] = getIFUF.length > 0 ? getIFUF[0]['SD'] : null;
-                
+            }
+            if (oir['CaseNumber'] == 'OIN-2223YCH025') {
+                debugger
             }
         }
         for (let sirl of allSpecialIncidentReportLicense) {
