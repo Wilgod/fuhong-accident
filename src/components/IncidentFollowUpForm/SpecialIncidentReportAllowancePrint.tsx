@@ -112,6 +112,7 @@ interface ISpecialIncidentReportAllowanceStates {
     reporterName:string;
     reporterJobTitle:string;
     reporterDate:Date;
+    reporterPhone:string;
     guardian: boolean;
     guardianName: string;
     guardianRelation: string;
@@ -296,6 +297,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
         responsibleName: "",
         reporterName:"",
         reporterDate: new Date(),
+        reporterPhone:"",
         reporterJobTitle:"",
         unusalIncideintGeneral: "",
         unusalIncideintIncident: "",
@@ -447,6 +449,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 residentName: formData.ResidentName,
                 residentRoomNo: formData.ResidentRoomNo,
                 responsibleName: formData.ResponsibleName,
+                reporterPhone:formData.ReporterPhone,
                 reporterDate:formData.Created,
                 unusalIncideintGeneral: formData.UnusalIncideintGeneral,
                 unusalIncideintIncident: formData.UnusalIncideintIncident,
@@ -1114,7 +1117,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     電話 : 
                                     </td>
                                     <td style={{width:'250px', verticalAlign:'bottom',borderBottom:'1px solid'}}>
-
+                                        {form.reporterPhone != null ? form.reporterPhone: ''}
                                     </td>
                                     <td style={{width:'140px'}}>
                                     &nbsp;&nbsp;電話 : 

@@ -986,7 +986,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                 if (dept && dept.su_name_tc) {
                     setSuTcName(dept.su_name_tc ? `扶康會${dept.su_name_tc}` : "");
-                    setReportAddress(dept.su_name_tc ? `扶康會${dept.su_name_tc}` : "");
+                    setReportAddress(dept.su_name_tc ? `扶康會${dept.su_address_tc}` : "");
                 }
                 setReportOrg("扶康會");
 
