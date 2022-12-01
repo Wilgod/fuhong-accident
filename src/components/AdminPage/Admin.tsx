@@ -153,70 +153,73 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function groupByPosition(list, position, type) {
         let groupBy = [];
         list.map(function(item) {
-            if (position == 'CurrentSM') {
-                if (item.Stage =='1') {
-                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
-                        return; 
+            if (item['Status'] != 'DRAFT') {
+                if (position == 'CurrentSM') {
+                    if (item.Stage =='1') {
+                        if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE') {
+                            return; 
+                        }
+                    } else if (item.Stage =='2') {
+                        if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
+                            return; 
+                        }
+                    } else if (item.Stage =='3') {
+                        if (item.Status !='PENDING_SM_FILL_IN') {
+                            return;
+                        }
                     }
-                } else if (item.Stage =='2') {
-                    if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
-                        return; 
+                } else if (position == 'CurrentSD') {
+                    if (item.Stage =='1') {
+                        if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
+                            return; 
+                        }
+                    } else if (item.Stage =='2') {
+                        if (type == 'ServiceUserAccident' || type == 'OutsiderAccident') {
+                            return;
+                        }
                     }
-                } else if (item.Stage =='3') {
-                    if (item.Status !='PENDING_SM_FILL_IN') {
+                } else if (position == 'CurrentSPT') {
+                    if (item.Stage =='1') {
+                        if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
+                            return; 
+                        }
+                    } else if (item.Stage =='2') {
                         return;
                     }
-                }
-            } else if (position == 'CurrentSD') {
-                if (item.Stage =='1') {
-                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
+                } else if (position == 'CurrentInvestigator') {
+                    if (item.Stage =='1') {
                         return; 
-                    }
-                } else if (item.Stage =='2') {
-                    if (type == 'ServiceUserAccident' || type == 'OutsiderAccident') {
-                        return;
+                    } else if (item.Stage =='2') {
+                        if (item.Status !='PENDING_INVESTIGATE') {
+                            return; 
+                        }
                     }
                 }
-            } else if (position == 'CurrentSPT') {
-                if (item.Stage =='1') {
-                    if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
-                        return; 
+                
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (item[position] == null) {
+                        debugger
                     }
-                } else if (item.Stage =='2') {
-                    return;
+                    if (groupItem.key == item[position].Title) {
+                        addItem = false;
+                    }
                 }
-            } else if (position == 'Investigator') {
-                if (item.Stage =='1' || item.Stage =='3') {
-                    return; 
-                } else if (item.Stage =='2') {
-                    if (item.Status !='PENDING_INVESTIGATE') {
-                        return; 
+                if (addItem) {
+    
+                    if (item[position] == null) {
+                        debugger
+                    }
+                    groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item[position].Title) {
+                            groupBy[i].child.push(item);
+                        }
                     }
                 }
             }
             
-			let addItem = true;
-			for(let groupItem of groupBy) {
-                if (item[position] == null) {
-                    debugger
-                }
-				if (groupItem.key == item[position].Title) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-
-                if (item[position] == null) {
-                    debugger
-                }
-				groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item[position].Title) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
 		  
         })
         return groupBy;
@@ -345,6 +348,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         for (let sa of allServiceUserAccident) {
             console.log('All CaseNumber', sa['CaseNumber'])
+            if (sa['CaseNumber'] == 'SUI-2223COATC100') {
+                debugger
+            }
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             sa['AccidentReportForm'] = getARF;
@@ -359,11 +365,18 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
                 sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
                 sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                sa['CurrentInvestigator'] = getARF.length > 0 ? getARF[0]['Investigator'] : null;
             } else if (sa['Stage'] == '3') {
                 sa['Form'] = '事故跟進/結束報告(三)';
                 sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
                 sa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
                 sa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
+                if (getAFUF.length > 0 && getAFUF[0]['Investigator'] == null) {
+                    sa['CurrentInvestigator'] = getARF.length > 0 ? getARF[0]['Investigator'] : null;
+                } else if (getAFUF.length > 0) {
+                    sa['CurrentInvestigator'] = getAFUF.length > 0 ? getAFUF[0]['Investigator'] : null;
+                }
+                
             }
         }
         for (let oa of allOutsiderAccident) {
@@ -382,11 +395,17 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 oa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
                 oa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
                 oa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
+                oa['CurrentInvestigator'] = getARF.length > 0 ? getARF[0]['Investigator'] : null;
             } else if (oa['Stage'] == '3') {
                 oa['Form'] = '事故跟進/結束報告(三)';
                 oa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
                 oa['CurrentSD'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SD'] : null;
                 oa['CurrentSPT'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SPT'] : null;
+                if (getAFUF.length > 0 && getAFUF[0]['Investigator'] == null) {
+                    oa['CurrentInvestigator'] = getARF.length > 0 ? getARF[0]['Investigator'] : null;
+                } else if (getAFUF.length > 0) {
+                    oa['CurrentInvestigator'] = getAFUF.length > 0 ? getAFUF[0]['Investigator'] : null;
+                }
             }
         }
 
@@ -454,7 +473,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','ServiceUserAccident');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','ServiceUserAccident');
                 groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'CurrentSPT','ServiceUserAccident');
-                groupByList[i].childInv = groupByPosition(groupByList[i].child, 'Investigator','ServiceUserAccident');
+                groupByList[i].childInv = groupByPosition(groupByList[i].child, 'CurrentInvestigator','ServiceUserAccident');
             }
             setGroupServiceUserAccidentByServiceUserList(groupByList);
         }
@@ -468,7 +487,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','OutsiderAccident');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','OutsiderAccident');
                 groupByList[i].childSPT = groupByPosition(groupByList[i].child, 'CurrentSPT','OutsiderAccident');
-                groupByList[i].childInv = groupByPosition(groupByList[i].child, 'Investigator','OutsiderAccident');
+                groupByList[i].childInv = groupByPosition(groupByList[i].child, 'CurrentInvestigator','OutsiderAccident');
             }
             setGroupOutsiderAccidentByServiceUserList(groupByList);
         }
