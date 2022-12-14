@@ -825,7 +825,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         let body = {};
         let error = {};
         body["ServiceUnit"] = serviceUnit
-        body["ReporterId"] = CURRENT_USER.id;
+        
         //經辦人 (負責督察姓名)
         if (form.responsibleName) {
             body["ResponsibleName"] = form.responsibleName;
@@ -1192,7 +1192,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const submitHandler = (event) => {
         event.preventDefault();
         const [body, error] = dataFactory();
-        body['SubmitDate'] = new Date().toISOString()
+        body['SubmitDate'] = new Date().toISOString();
+        body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {

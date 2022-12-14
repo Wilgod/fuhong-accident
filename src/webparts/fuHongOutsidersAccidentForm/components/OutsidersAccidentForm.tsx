@@ -198,7 +198,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         const body = {};
         const error = {};
 
-        body["ReporterId"] = CURRENT_USER.id;
+        
         if (serviceUnit) {
             body["ServiceUnit"] = serviceUnit
         } else {
@@ -410,6 +410,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const submitHandler = (event) => {
         event.preventDefault();
         const [body, error] = dataFactory("SUBMIT");
+        body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {

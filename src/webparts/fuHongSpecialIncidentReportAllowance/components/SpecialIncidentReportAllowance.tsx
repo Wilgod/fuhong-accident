@@ -188,7 +188,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         body["OrgPhone"] = reportPhone;
         body["OrgAddress"] = reportAddress;
         body["OrgSUName"] = suTcName;
-        body["ReporterId"] = CURRENT_USER.id;
+        
         
 
         //致部門
@@ -544,6 +544,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         event.preventDefault();
         const [body, error] = dataFactory();
         body["SubmitDate"] = new Date().toISOString();
+        body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
         debugger

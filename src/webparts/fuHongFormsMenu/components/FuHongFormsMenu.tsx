@@ -720,7 +720,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           )
       }
     }
-
+    console.log('this.state.permissionList.length : ' + this.state.permissionList.length);
+    console.log('loading : ' + this.state.loading);
     return (
       <div className={styles.fuHongFormsMenu} >
         <div className={styles.container} >

@@ -594,7 +594,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             error["SPTId"] = true;
         }
 
-        body["ReporterId"] = CURRENT_USER.id;
+        
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
             body["SMApproved"] = true;
             body["Status"] = "PENDING_SPT_APPROVE";
@@ -751,6 +751,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }).catch(console.error);
         } else {
             let [body, error] = dataFactory("SUBMIT");
+            body["ReporterId"] = CURRENT_USER.id;
             console.log(error);
             if (Object.keys(error).length > 0) {
                 alert("提交錯誤");
