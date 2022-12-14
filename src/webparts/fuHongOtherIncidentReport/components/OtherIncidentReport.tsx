@@ -149,7 +149,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         let body = {};
         let error = {};
 
-        body["ReporterId"] = CURRENT_USER.id;
+        
         
         //服務單位
         if (serviceUnit) {
@@ -332,7 +332,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory()
+        const [body, error] = dataFactory();
+        body["ReporterId"] = CURRENT_USER.id;
         body["SubmitDate"] = new Date().toISOString();
         console.log(body);
         console.log(error);
