@@ -194,9 +194,14 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
          console.log('item.JobCode : ' + item.JobCode + ', hr_jobcode : ' + user[0].hr_jobcode);
          console.log('item.DeptId : ' + item.DeptId + ', user[0].hr_deptid : ' + user[0].hr_deptid);
          console.log('item.AllServiceUser : ' + item.AllServiceUser);
-        if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid && item.AllServiceUser) {
-            console.log('111 : ');
+         if (item.JobCode == 'CLK-C' && user[0].hr_jobcode == 'CLK-C') {
+            //debugger
+         }
+        if (item.JobCode == user[0].hr_jobcode && item.AllServiceUser) {
             dept.push('All');
+        } else if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid) {
+            console.log('111 : ');
+            dept.push(getSMSD[0].su_Eng_name_display);
         } else if (item.JobCode == user[0].hr_jobcode && (item.DeptId == null || item.DeptId == '')&& (!item.CMS || item.CMS == undefined)) {
             console.log('444 : ');
             if (getSMSD.length > 0) {
