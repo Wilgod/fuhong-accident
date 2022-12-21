@@ -113,10 +113,12 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
           }
           
-          
           if (formTwentySixDataPrint.length > 0) {
-            formTwentySixData = formTwentySixDataPrint[0];
-            formTwentySixDataSelected = formTwentySixData.Id
+            let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('SIH-') >= 0});
+            if (filterTSdata.length > 0) {
+              formTwentySixData = filterTSdata[0];
+              formTwentySixDataSelected = formTwentySixData.Id;
+            }
           }
           if (data && data.Investigator && data.Investigator.EMail) {
             if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {

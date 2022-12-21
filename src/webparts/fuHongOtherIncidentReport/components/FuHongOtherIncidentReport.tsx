@@ -123,8 +123,12 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
             debugger
             if (formTwentySixDataPrint.length > 0) {
-              formTwentySixData = formTwentySixDataPrint[0];
-              formTwentySixDataSelected = formTwentySixData.Id;
+              let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('OIN-') >= 0});
+              if (filterTSdata.length > 0) {
+                formTwentySixData = filterTSdata[0];
+                formTwentySixDataSelected = formTwentySixData.Id;
+              }
+              
             }
             
           }
