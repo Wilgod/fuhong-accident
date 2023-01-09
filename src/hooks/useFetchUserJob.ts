@@ -215,6 +215,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             
         }
         const allSpecialIncidentReportLicense = await getSpecialIncidentReportLicenseBySPId(spId);
+        debugger
         let specialIncidentReportLicense = [];
         for (let sirl of allSpecialIncidentReportLicense) {
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sirl.ServiceUnit });

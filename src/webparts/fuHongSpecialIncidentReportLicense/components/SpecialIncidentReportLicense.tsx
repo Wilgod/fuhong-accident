@@ -8,7 +8,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { IErrorFields, ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 import { inputProperties } from 'office-ui-fabric-react';
-import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, getSpecialIncidentReportLicenseAllAttachmentById, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, getSpecialIncidentReportLicenseAllAttachmentById, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById, deleteSpecialIncidentReportLicense } from '../../../api/PostFuHongList';
 import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
@@ -1152,7 +1152,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         } else if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
             let mNumber = form.affectedIdCardNo.substr(1,6);
             if (mNumber.search(/[^0-9]+/) == -1) {
-                if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
+                if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(9) != ')') {
                     error["AffectedIdCardNo"] = true;
                 } else {
                     body["AffectedIdCardNo"] = form.affectedIdCardNo;
@@ -1169,7 +1169,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
                     let mNumber = form.affectedIdCardNo.substr(2,6);
                     if (mNumber.search(/[^0-9]+/) == -1) {
-                        if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
+                        if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(10) != ')') {
                             error["AffectedIdCardNo"] = true;
                         } else {
                             body["AffectedIdCardNo"] = form.affectedIdCardNo;
@@ -1319,6 +1319,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory()
+        body["ReporterId"] = CURRENT_USER.id;
         let error = {};
         if (form.affectedIdCardNo != null && form.affectedIdCardNo !='') {
             if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
@@ -1327,7 +1328,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
                 let mNumber = form.affectedIdCardNo.substr(1,6);
                 if (mNumber.search(/[^0-9]+/) == -1) {
-                    if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(8).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(9) != ')') {
+                    if (form.affectedIdCardNo.charAt(7) != '(' || form.affectedIdCardNo.charAt(9) != ')') {
                         error["AffectedIdCardNo"] = true;
                     } else {
                         body["AffectedIdCardNo"] = form.affectedIdCardNo;
@@ -1344,7 +1345,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
                         let mNumber = form.affectedIdCardNo.substr(2,6);
                         if (mNumber.search(/[^0-9]+/) == -1) {
-                            if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(9).search(/[^0-9]+/) != -1 || form.affectedIdCardNo.charAt(10) != ')') {
+                            if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(10) != ')') {
                                 error["AffectedIdCardNo"] = true;
                             } else {
                                 body["AffectedIdCardNo"] = form.affectedIdCardNo;
@@ -1388,6 +1389,22 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     }
 
+    const deleteHandler = () => {
+        deleteSpecialIncidentReportLicense(formData.Id).then(async (res) => {
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "刪除",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SIH",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(牌照事務處)"
+            }).catch(console.error);
+
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+    
     const cancelHandler = () => {
         //implement 
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
@@ -3063,6 +3080,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
 
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
+                        }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>
                         {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && sendInsuranceEmail &&

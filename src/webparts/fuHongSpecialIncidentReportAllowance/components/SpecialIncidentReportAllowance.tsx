@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
-import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance, deleteSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
 import { IAccidentCategoryAbuseDetails, IErrorFields, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
 import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -692,7 +692,21 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         }
     }
 
+    const deleteHandler = () => {
+        deleteSpecialIncidentReportAllowance(formData.Id).then(async (res) => {
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "刪除",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SID",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "特別事故報告(津貼科)"
+            }).catch(console.error);
 
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
     const cancelHandler = () => {
         //implement 
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
@@ -1944,7 +1958,10 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
                         }
-
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
+                        }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>
                         {formStage == '2' && adminUpdateInsuranceNumber(currentUserRole, formStatus) && sendInsuranceEmail &&

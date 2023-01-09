@@ -14,7 +14,7 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById,updateInsuranceNumber } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById,updateInsuranceNumber, deleteOutsiderAccidentFormById } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
@@ -666,6 +666,22 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     // const adminSubmitHanlder = (event) => {
     //     event.preventDefault();
     // }
+
+    const deleteHandler = () => {
+        deleteOutsiderAccidentFormById(formData.Id).then(async (res) => {
+            postLog({
+                AccidentTime: formData.AccidentTime,
+                Action: "刪除",
+                CaseNumber: formData.CaseNumber,
+                FormType: "PUI",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "外界人士意外填報表(一)"
+            }).catch(console.error);
+
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
 
     const draftHandler = (event) => {
         event.preventDefault();
@@ -1831,6 +1847,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {
                             formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        }
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
                         }
                         <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>

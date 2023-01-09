@@ -17,7 +17,7 @@ import "@pnp/sp/items";
 import { IItem } from "@pnp/sp/items";
 import { IItemAddResult } from "@pnp/sp/items";
 import { FormFlow, getServiceUserAccident, getServiceUserAccidentById, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
-import { createAccidentReportForm, createServiceUserAccident, getServiceUserAccidentAllAttachmentById, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById, updateInsuranceNumber } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createServiceUserAccident, getServiceUserAccidentAllAttachmentById, updateServiceUserAccidentAttachmentById, updateServiceUserAccidentById, updateInsuranceNumber, deleteServiceUserAccidentById } from '../../../api/PostFuHongList';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
 import { IServiceUserAccidentFormStates, IErrorFields, IServiceUserAccidentFormProps } from './IFuHOngServiceUserAccidentForm';
 import { IUser } from '../../../interface/IUser';
@@ -612,6 +612,22 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         return [body, error];
     }
 
+    const deleteHandler = () => {
+        deleteServiceUserAccidentById(formData.Id).then(async (res) => {
+            postLog({
+                AccidentTime: formData.AccidentTime,
+                Action: "刪除",
+                CaseNumber: formData.CaseNumber,
+                FormType: "SUI",
+                Report: "服務使用者意外填報表(一)",
+                ServiceUnit: formData.ServiceLocation,
+                RecordId: formData.Id
+            }).catch(console.error);
+
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
@@ -675,6 +691,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }).catch(console.error);
         }
     }
+
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -2732,6 +2749,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             {
                                 formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                                 <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                            }
+                            {
+                                formInitial(currentUserRole, formStatus) &&
+                                <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
                             }
                             <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
                             <button className="btn btn-warning" onClick={()=> print()}>打印</button>

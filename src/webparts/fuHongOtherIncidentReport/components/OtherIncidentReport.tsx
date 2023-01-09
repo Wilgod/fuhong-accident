@@ -9,7 +9,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import {getUserInfoByEmailInUserInfoAD,getAllServiceUnit } from '../../../api/FetchUser';
 import { IErrorFields, IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHongOtherIncidentReport';
-import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport, deleteOtherIncidentReport } from '../../../api/PostFuHongList';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -476,6 +476,22 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         }
     }
 
+    const deleteHandler = () => {
+        deleteOtherIncidentReport(formData.Id).then(async (res) => {
+            postLog({
+                AccidentTime: incidentTime.toISOString(),
+                Action: "刪除",
+                CaseNumber: formData.CaseNumber,
+                FormType: "OIN",
+                RecordId: formData.Id,
+                ServiceUnit: serviceLocation,
+                Report: "其他事故呈報表"
+            }).catch(console.error);
+
+            formSubmittedHandler();
+        }).catch(console.error);
+    }
+    
     const cancelHandler = () => {
         //implement 
         const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx`;
@@ -1516,6 +1532,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {
                             formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
                             <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                        }
+                        {
+                            formInitial(currentUserRole, formStatus) &&
+                            <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
                         }
                         <button className="btn btn-secondary" onClick={cancelHandler}>取消</button>
                         <button className="btn btn-warning" onClick={()=> print()}>打印</button>

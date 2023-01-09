@@ -97,6 +97,17 @@ export async function updateServiceUserAccidentById(id: number, body: any) {
         throw new Error("updateServiceUserAccidentById failed");
     }
 }
+//delete
+export async function deleteServiceUserAccidentById(id: number) {
+    try {
+        const LIST_NAME = "Service User Accident";
+        await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).delete();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("deleteServiceUserAccidentById failed");
+    }
+}
 
 // form 20
 export async function createAccidentReportForm(body: any) {
@@ -171,7 +182,17 @@ export async function updateOutsiderAccidentFormById(id: number, body: any) {
         throw new Error("updateServiceUserAccidentById failed");
     }
 }
-
+//delete
+export async function deleteOutsiderAccidentFormById(id: number) {
+    try {
+        const LIST_NAME = "Outsider Accident Form";
+        await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).delete();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("deleteOutsiderAccidentFormById failed");
+    }
+}
 //Form 23
 //Create
 export async function createOtherIncidentReport(body: any) {
@@ -196,7 +217,17 @@ export async function updateOtherIncidentReport(id: number, body: any) {
         throw new Error("updateOtherIncidentReport failed");
     }
 }
-
+//delete
+export async function deleteOtherIncidentReport(id: number) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).delete();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("deleteOtherIncidentReport failed");
+    }
+}
 //Form 24
 //Create
 export async function createSpecialIncidentReportLicense(body: any) {
@@ -219,6 +250,18 @@ export async function updateSpecialIncidentReportLicense(id: number, body: any) 
     } catch (err) {
         console.error(err);
         throw new Error("updateSpecialIncidentReportLicense failed");
+    }
+}
+
+//delete
+export async function deleteSpecialIncidentReportLicense(id: number) {
+    try {
+        const LIST_NAME = "Special Incident Report License";
+        await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).delete();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("deleteSpecialIncidentReportLicense failed");
     }
 }
 
@@ -247,6 +290,17 @@ export async function updateSpecialIncidentReportAllowance(id: number, body: any
     }
 }
 
+//delete
+export async function deleteSpecialIncidentReportAllowance(id: number) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).delete();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("deleteSpecialIncidentReportAllowance failed");
+    }
+} 
 //Form 26
 //Create
 export async function createIncidentFollowUpForm(body: any) {
