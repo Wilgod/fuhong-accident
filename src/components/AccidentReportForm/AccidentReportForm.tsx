@@ -438,7 +438,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
 
         // Get Accident report form
-        debugger
         if (parentFormData && parentFormData.AccidentReportFormId) {
             getAccidentReportFormById(parentFormData.AccidentReportFormId).then((formTwentyData) => {
                 //收到「意外填報表」日期
@@ -453,7 +452,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 if (formTwentyData.SPT && formTwentyData.SPT.EMail) {
                     setSPhysicalTherapyEmail(formTwentyData.SPT.EMail)
                 }
-                debugger
                 if (formTwentyData.SM && formTwentyData.SM.EMail) {
                     setServiceManagerEmail(formTwentyData.SM.EMail);
                 }

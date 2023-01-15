@@ -673,7 +673,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     useEffect(() => {
         if (accidentSMbackup != '') {
-            debugger
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl,context.pageContext.legacyPageContext.userEmail).then((userInfosRes) => {
                 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
@@ -681,7 +680,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     let accidentSMbackupList = accidentSMbackup.split(';');
                     console.log('permissionList',permissionList)
                     let per = permissionList.filter(item => {return item == serviceUserUnitEn})
-                    debugger
                     if (per.length > 0) {
                         for (let acc of accidentSMbackupList) {
                             if (acc.trim() == userInfosRes[0].hr_jobcode) {

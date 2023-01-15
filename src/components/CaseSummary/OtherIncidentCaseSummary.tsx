@@ -40,14 +40,12 @@ function OtherIncidentCaseSummary({ context, siteCollectionUrl, permission }: IO
     }
     let lineBreakColumnIndex = "";
     useEffect(() => {
-        debugger
         if (Array.isArray(serviceLocation) && serviceLocation.length > 0) {
             getAllData();
         }
         
     }, [serviceLocation]);
     async function getAllData() {
-        debugger
         let allSpecialIncidentReportLicense = await getAllOtherIncidentReportWithClosed();
         let allIncidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         let allDate = [];

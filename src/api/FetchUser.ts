@@ -49,7 +49,6 @@ export async function getDepartmentBySuEngNameDisplay(shortName: string, siteCol
         const LIST_NAME = "SM SD Mapping";
         const URL = siteCollectionUrl;
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`su_Eng_name_display eq '${shortName}'`).top(1).orderBy("Modified", false).get();
-        debugger
         return result;
     } catch (err) {
         console.error(err);
@@ -92,8 +91,10 @@ export async function getUserAdByGraph(email: string) {
         const matchingUser = await graph.users.getById(email)();
         return matchingUser;
     } catch (err) {
+        console.log(email + " not in AD")
         console.error(err);
-        throw new Error("Get User AD By Graph error");
+        return null;
+        //throw new Error("Get User AD By Graph error");
     }
 }
 

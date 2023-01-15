@@ -62,7 +62,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [policeDate, setPoliceDate] = useState(null);
     const [contactFamilyDate, setContactFamilyDate] = useState(null);
     const [contactStaff, setContactStaff, contactStaffPickerInfo] = useUserInfoAD();//負責通知家屬的職員姓名
+    const [contactStaffLeave, setContactStaffLeave] = useState(null);//負責通知家屬的職員姓名已離職
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
+    const [reporterLeave, setReporterLeave] = useState(null); // 填報人姓名
     // const [serviceManager, setServiceManagerEmail, serviceManagerEmail] = useSharePointGroup(); //[此欄由高級服務經理/服務經理填寫]
     // const [serviceDirector, setServiceDirectorEmail, serviceDirectorEmail] = useSharePointGroup(); // [此欄由服務總監填寫]
     const [sPhysicalTherapy, setSPhysicalTherapyEmail, sPhysicalTherapyEmail] = useSharePointGroup(); // [此欄由高級物理治療師填寫]
@@ -241,7 +243,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             error["ServiceUser"] = true;
         }
-        debugger
         //填寫人服務單位
         body["ServiceUnit"] = serviceUnit;
 
@@ -523,7 +524,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         //通知家屬日期和時間
-        debugger
         if (contactFamilyDate) {
             body["ContactFamilyDate"] = contactFamilyDate.toISOString();
         } else {
@@ -1090,7 +1090,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     async function send() {
         let values: any = {};
         let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
-        debugger
         values['Title'] = "-";
         values['ServiceUnit'] = serviceLocation;
         values['RecordId'] = formId;
@@ -1130,7 +1129,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     async function getInsuranceRecord(formData) {
         const LIST_NAME = "Insurance EMail Records";
         const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'SUI' and RecordId eq '`+formData.Id+`'`).get();
-        debugger
         if (result.length > 0) {
             setSendInsuranceEmail(false);
         }
@@ -1139,7 +1137,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const loadData = async (data: any) => {
         
         if (data) {
-            debugger
             setServiceUserNameCN(data.ServiceUserNameCN);
             setServiceUserNameEN(data.ServiceUserNameEN);
             setServiceUserAge(data.ServiceUserAge);
@@ -1200,7 +1197,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 scenarioOutsideActivityRemark: data.CircumstanceLocation,
                 serviceCategory: JSON.parse(data.ServiceCategory) || []
             });
-            debugger
             if (data.CctvRecordReceiveDate) {
                 setCctvRecordReceiveDate(new Date(data.CctvRecordReceiveDate));
             }
@@ -1224,14 +1220,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
             // Service Unit
             setServiceUnit(data.ServiceUnit);
-            debugger
             changeCMSUser(data.ServiceUserUnit, false);
             //Service User
             setServiceUserRecordId(data.ServiceUser);
 
             //Contact Family Staff
+            
             if (data.ContactFamilyStaff && data.ContactFamilyStaff.EMail) {
+                debugger
                 setContactStaff([{ secondaryText: data.ContactFamilyStaff.EMail, id: data.ContactFamilyStaff.Id }]);
+                setContactStaffLeave(data.ContactStaff)
             }
 
             if (data.ContactFamilyDate) {
@@ -1241,7 +1239,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             if (data.Reporter) {
                 setReporter([{ secondaryText: data.Reporter.mail, id: data.Reporter }]);
             }
-
+            if (data.ReporterLeave) {
+                setReporterLeave(data.ReporterLeave)
+            }
             if (data.Created) {
                 setReportedDate(new Date(data.Created));
             }
@@ -1267,7 +1267,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setInvestigator([{ secondaryText: data.Investigator.EMail, id: data.Investigator.Id }]);
             }
 
-            debugger
             if (data.Attachments) {
                 getServiceUserAccidentAllAttachmentById(data.Id).then((attchementsRes) => {
                     let injuryAttachments = [];
@@ -1312,7 +1311,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
 
     async function changeCMSUser(value, clean) {
-        debugger
         
         setLoadingService(true);
         if (clean) {
@@ -1368,7 +1366,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
         
         setLoadingService(false);
-        debugger
+
     }
 
     async function getCMSUserDetail(value) {
@@ -1385,7 +1383,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             "Autismspectrum":user.cr98a_autismspectrum, //自閉症譜系
             "Wheelchairtypes":user.cr98a_wheelchairtypes, //輪椅
         })*/
-        debugger
+
         let selectUser = cmsUserList.filter(item => {return item.ServiceNumber == value});
         if (selectUser.length > 0) {
             setServiceUserNameEN(selectUser[0].NameEN);
@@ -1504,7 +1502,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setIntelligence(formData.Intelligence);
             setAsd(formData.ASD);
         } else if (serviceUserRecordId === -1) {
-            debugger
             setServiceUserNameCN("");
             setServiceUserNameEN("");
             setServiceUserAge(0);
@@ -1530,6 +1527,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }, [serviceUser, serviceUserRecordId]);
     //console.log('setUploadedCctvPhoto',setUploadedCctvPhoto.length);
     //console.log('serviceUnit',serviceUnit);
+    
+    console.log('contactStaff',contactStaff);
     return (
         <>
             {
@@ -2440,7 +2439,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <div className="col-12 col-xl-4">
                             {
                                 formId && (!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)) ?
-                                    <input type="text" className="form-control" value={(contactStaff && contactStaff.displayName) || ""} disabled={true} />
+                                    <input type="text" className="form-control" value={(contactStaff ? contactStaff.displayName : contactStaffLeave ? contactStaffLeave.displayName : "")} disabled={true} />
                                     :
                                     <PeoplePicker
                                         context={context}
@@ -2482,7 +2481,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <div className="col-12 col-xl-4">
                             {
                                 formId && (!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)) ?
-                                    <input type="text" className="form-control" value={(reporter && reporter.displayName) || ""} disabled={true} />
+                                    <input type="text" className="form-control" value={(reporter ? reporter.displayName : reporterLeave ? reporterLeave.displayName : "")} disabled={true} />
                                     :
                                     // <PeoplePicker
                                     //     context={context}

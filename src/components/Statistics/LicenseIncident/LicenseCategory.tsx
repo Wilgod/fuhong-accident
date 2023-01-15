@@ -198,7 +198,7 @@ const financialChartParser = (result) =>{
     let residentAbuse =['虐待／被侵犯'];
     let conflict =['爭執事件'];
     let medicalIncident =['嚴重醫療／藥物事故'];
-    let otherIncident =['其他特別事故'];
+    let otherIncident =['影響運作事故'];
     let other =['其他'];
     result.map((item) => {
         dataResult.push(item.financialYear);
@@ -230,7 +230,7 @@ const yearChartParser = (result) =>{
     let residentAbuse =['虐待／被侵犯'];
     let conflict =['爭執事件'];
     let medicalIncident =['嚴重醫療／藥物事故'];
-    let otherIncident =['其他特別事故'];
+    let otherIncident =['影響運作事故'];
     let other =['其他'];
 
     result.map((item) => {
@@ -676,7 +676,7 @@ function LicenseCategory(props) {
                         <th>{categoryDataset.medicalIncident}</th>
                     </tr>
                     <tr>
-                        <th scope="row">其他特別事故</th>
+                        <th scope="row">影響運作事故</th>
                         <th>{categoryDataset.otherIncident}</th>
                     </tr>
                     <tr>
@@ -783,7 +783,7 @@ function LicenseCategory(props) {
                                             <th scope="col">虐待／被侵犯</th>
                                             <th scope="col">爭執事件</th>
                                             <th scope="col">嚴重醫療／藥物事故</th>
-                                            <th scope="col">其他特別事故</th>
+                                            <th scope="col">影響運作事故</th>
                                             <th scope="col">其他</th>
                                         </tr>
                                     </thead>
@@ -1810,7 +1810,7 @@ function LicenseCategory(props) {
                                         <th scope="col">虐待／被侵犯</th>
                                         <th scope="col">爭執事件</th>
                                         <th scope="col">嚴重醫療／藥物事故</th>
-                                        <th scope="col">其他特別事故</th>
+                                        <th scope="col">影響運作事故</th>
                                         <th scope="col">其他</th>
                                     </tr>
                                 </thead>
@@ -1936,7 +1936,7 @@ function LicenseCategory(props) {
                                         <th scope="col">虐待／被侵犯</th>
                                         <th scope="col">爭執事件</th>
                                         <th scope="col">嚴重醫療／藥物事故</th>
-                                        <th scope="col">其他特別事故</th>
+                                        <th scope="col">影響運作事故</th>
                                         <th scope="col">其他</th>
                                     </tr>
                                 </thead>
@@ -2052,7 +2052,7 @@ function LicenseCategory(props) {
                                             ["虐待／被侵犯", categoryDataset.residentAbuse],
                                             ["爭執事件", categoryDataset.conflict],
                                             ["嚴重醫療／藥物事故", categoryDataset.medicalIncident],
-                                            ["其他特別事故", categoryDataset.otherIncident],
+                                            ["影響運作事故", categoryDataset.otherIncident],
                                             ["其他", categoryDataset.other]
                                         ]}
                                     />
@@ -2096,7 +2096,7 @@ function LicenseCategory(props) {
                                             ["虐待／被侵犯", categoryDataset.residentAbuse],
                                             ["爭執事件", categoryDataset.conflict],
                                             ["嚴重醫療／藥物事故", categoryDataset.medicalIncident],
-                                            ["其他特別事故", categoryDataset.otherIncident],
+                                            ["影響運作事故", categoryDataset.otherIncident],
                                             ["其他", categoryDataset.other]
                                         ]}
                                     />
@@ -2131,7 +2131,7 @@ function LicenseCategory(props) {
                                 chartType="ColumnChart"
                                 loader={<div>Loading Chart</div>}
                                 data={
-                                    [['月份', '不尋常受傷/死亡', '失蹤', '虐待／被侵犯', '爭執事件', '嚴重醫療／藥物事故', '其他特別事故', '其他',],
+                                    [['月份', '不尋常受傷/死亡', '失蹤', '虐待／被侵犯', '爭執事件', '嚴重醫療／藥物事故', '影響運作事故', '其他',],
                                     ...sampleTwoParser(data, startDate, endDate).map((item) => {
                                         return [item.month, item.dataset.unusalIncident, item.dataset.residentMissing, item.dataset.residentAbuse, item.dataset.conflict, item.dataset.medicalIncident, item.dataset.otherIncident, item.dataset.other]
                                     })]
