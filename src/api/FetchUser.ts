@@ -7,7 +7,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { graph } from "@pnp/graph";
 import "@pnp/graph/users";
-import { getAccessRight,getSMSDMapping,getAllSMSDMapping } from './FetchFuHongList';
+import { getAccessRight,getAdminRight,getSMSDMapping,getAllSMSDMapping } from './FetchFuHongList';
 import { IContextInfo } from "@pnp/sp/sites";
 import arraySort from 'array-sort';
 export async function getUserInfoByEmail(email: string) {
@@ -188,37 +188,45 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
     let dept = [];
     if (user.length > 0) {
       let access = await getAccessRight();
+      let adminList = await getAdminRight();
       console.log('user hr_jobcode1 : ' +  user[0].hr_jobcode);
       console.log('user access : ' +  access);
-      let getSMSD = await getSMSDMapping(siteCollectionUrl, user[0].hr_deptid);
-      access.forEach(async(item) => {
-         console.log('item.JobCode : ' + item.JobCode + ', hr_jobcode : ' + user[0].hr_jobcode);
-         console.log('item.DeptId : ' + item.DeptId + ', user[0].hr_deptid : ' + user[0].hr_deptid);
-         console.log('item.AllServiceUser : ' + item.AllServiceUser);
-         if (item.JobCode == 'CLK-C' && user[0].hr_jobcode == 'CLK-C') {
-            //debugger
-         }
-        if (item.JobCode == user[0].hr_jobcode && item.AllServiceUser) {
-            dept.push('All');
-        } else if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid) {
-            console.log('111 : ');
-            dept.push(getSMSD[0].su_Eng_name_display);
-        } else if (item.JobCode == user[0].hr_jobcode && (item.DeptId == null || item.DeptId == '')&& (!item.CMS || item.CMS == undefined)) {
-            console.log('444 : ');
-            if (getSMSD.length > 0) {
-            console.log('222 : ' +  getSMSD[0].su_Eng_name_display);
-            dept.push(getSMSD[0].su_Eng_name_display);
-          }
-        } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
-          let groups = user[0].Group == null ? [] :user[0].Group.split(',')
-          for (let group of groups) {
-            if (group.indexOf('_CMS_SU_') >=0 ) {
-                console.log('333 : ');
-              dept.push(group.trim().replace('_CMS_SU_', ''));
+      let admin = adminList.filter(a => {return a.Admin.EMail.toLowerCase() == userEmail.toLowerCase()});
+      debugger
+      if (admin.length > 0) {
+        dept.push('All');
+      } else {
+        let getSMSD = await getSMSDMapping(siteCollectionUrl, user[0].hr_deptid);
+        access.forEach(async(item) => {
+            console.log('item.JobCode : ' + item.JobCode + ', hr_jobcode : ' + user[0].hr_jobcode);
+            console.log('item.DeptId : ' + item.DeptId + ', user[0].hr_deptid : ' + user[0].hr_deptid);
+            console.log('item.AllServiceUser : ' + item.AllServiceUser);
+            if (item.JobCode == 'CLK-C' && user[0].hr_jobcode == 'CLK-C') {
+                //debugger
             }
-          }
-        }
-      })
+            if (item.JobCode == user[0].hr_jobcode && item.AllServiceUser) {
+                dept.push('All');
+            } else if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid) {
+                console.log('111 : ');
+                dept.push(getSMSD[0].su_Eng_name_display);
+            } else if (item.JobCode == user[0].hr_jobcode && (item.DeptId == null || item.DeptId == '')&& (!item.CMS || item.CMS == undefined)) {
+                console.log('444 : ');
+                if (getSMSD.length > 0) {
+                console.log('222 : ' +  getSMSD[0].su_Eng_name_display);
+                dept.push(getSMSD[0].su_Eng_name_display);
+            }
+            } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
+            let groups = user[0].Group == null ? [] :user[0].Group.split(',')
+            for (let group of groups) {
+                if (group.indexOf('_CMS_SU_') >=0 ) {
+                    console.log('333 : ');
+                dept.push(group.trim().replace('_CMS_SU_', ''));
+                }
+            }
+            }
+        })
+      }
+      
       return dept;
     } else {
       return dept;
