@@ -28,10 +28,13 @@ const formTypeParser = (formType: string, additonalString: string) => {
         default: return "";
     }
 }
-
+interface IErrorFields {
+    
+}
 export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow, serviceUnitList, print }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
+    const [error, setError] = useState<IErrorFields>({});
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
         accidentNatureFall: false,
         accidentNatureChok: false,
@@ -110,7 +113,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 // Error handling
             }
         }
-
+        if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther) {
+            error["accidentalNature"] = true;
+        }
         body["EnvFactorSlipperyGround"] = form.envFactorSlipperyGround;
         body["EnvFactorUnevenGround"] = form.envFactorUnevenGround;
         body["EnvFactorObstacleItems"] = form.envFactorObstacleItems;
@@ -128,7 +133,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 //Error handling
             }
         }
-
+        if (!form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
+            && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther) {
+            error["envFactor"] = true;
+        }
         body["PersonalFactorEmotional"] = form.personalFactorEmotional;
         body["PersonalFactorImpatient"] = form.personalFactorImpatient;
         body["PersonalFactorChok"] = form.personalFactorChok;
@@ -142,26 +150,28 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 //error handling
             }
         }
-
+        if (!form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
+            error["personalFactor"] = true;
+        }
         //AccidentalDiscovery 意外發現之經過
         if (form.accidentalDiscovery) {
             body["AccidentalDiscovery"] = form.accidentalDiscovery;
         } else {
-            // error handling 
+            error["AccidentalDiscovery"] = true;
         }
 
         //AccidentCauseFactor 可能引致意外之因素
         if (form.accidentCauseFactor) {
             body["AccidentCauseFactor"] = form.accidentCauseFactor;
         } else {
-            // error handling
+            error["AccidentCauseFactor"] = true;
         }
 
         //Suggestion 建議 
         if (form.suggestion) {
             body["Suggestion"] = form.suggestion;
         } else {
-            //error handling
+            error["Suggestion"] = true;
         }
 
 
@@ -206,44 +216,49 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             } else {
                 // Investigator 
                 const [body, error] = dataFactory();
-
-                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
-                    if (formType === "SERVICE_USER") {
-                        updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateServiceUserAccidentResponse) => {
-                            console.log(updateServiceUserAccidentResponse)
-                            // Trigger notification workflow;
-
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交至高級物理治療師",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "SUI",
-                                RecordId: parentFormData.Id,
-                                Report: "服務使用者意外報告(二)",
-                                ServiceUnit: parentFormData.ServiceLocation,
+                if (Object.keys(error).length > 0) {
+                    alert("提交錯誤");
+                    setError(error);
+                } else {
+                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                        if (formType === "SERVICE_USER") {
+                            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateServiceUserAccidentResponse) => {
+                                console.log(updateServiceUserAccidentResponse)
+                                // Trigger notification workflow;
+    
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交至高級物理治療師",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "SUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "服務使用者意外報告(二)",
+                                    ServiceUnit: parentFormData.ServiceLocation,
+                                }).catch(console.error);
+    
+                                formSubmittedHandler();
+                            }).catch(console.error)
+                        } else {
+                            updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateOutsiderAccidentResponse) => {
+                                console.log(updateOutsiderAccidentResponse);
+    
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交至高級物理治療師",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "PUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "外界人士意外報告(二)",
+                                    ServiceUnit: parentFormData.ServiceLocation,
+                                }).catch(console.error);
+    
+                                formSubmittedHandler();
                             }).catch(console.error);
-
-                            formSubmittedHandler();
-                        }).catch(console.error)
-                    } else {
-                        updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateOutsiderAccidentResponse) => {
-                            console.log(updateOutsiderAccidentResponse);
-
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交至高級物理治療師",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "PUI",
-                                RecordId: parentFormData.Id,
-                                Report: "外界人士意外報告(二)",
-                                ServiceUnit: parentFormData.ServiceLocation,
-                            }).catch(console.error);
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                    notifyServiceUserAccident(context, parentFormData.Id, 2, workflow);
-                }).catch(console.error);
+                        }
+                        notifyServiceUserAccident(context, parentFormData.Id, 2, workflow);
+                    }).catch(console.error);
+                }
+                
 
             }
         }
@@ -653,7 +668,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         {/* 意外性質*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外性質</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['accidentalNature'] ) ? styles.divInvalid: ""}`}>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
                                 <input className="form-check-input" type="checkbox" name="accidentNatureFall" id="accidental-nature-fall" checked={form.accidentNatureFall} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-fall">跌倒</label>
@@ -686,7 +701,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-4">
                         {/* 環境因素 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外成因</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['envFactor'] ) ? styles.divInvalid: ""}`}>
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactorSlipperyGround" id="env-slippery-ground" checked={form.envFactorSlipperyGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
@@ -739,7 +754,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}></label>
-                        <div className="col">
+                        <div className={`col ${(error && error['personalFactor'] ) ? styles.divInvalid: ""}`}>
                             <div>個人因素</div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactorEmotional" id="PERSONAL-EMOTIONAL-INSTABILITY" checked={form.personalFactorEmotional} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
@@ -777,21 +792,21 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發現之經過</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['AccidentalDiscovery'] ) ? "is-invalid": ""}`} name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>可能引致意外之因素</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['AccidentCauseFactor'] ) ? "is-invalid": ""}`} name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>建議</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['Suggestion'] ) ? "is-invalid": ""}`} name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 

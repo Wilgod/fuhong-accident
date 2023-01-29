@@ -117,6 +117,17 @@ export async function getUserInfo(siteCollectionUrl, email) {
     }
 }
 
+export async function getAdminRight() {
+    try {
+        const LIST_NAME = "Admin";
+        const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items.select('*', 'Admin/EMail').expand('Admin').getAll();
+        return items;
+    } catch (err) {
+        console.log(err);
+        throw new Error("getAdmin error")
+    }
+}
+
 export async function getAccessRight() {
     try {
         const LIST_NAME = "Access Rights";

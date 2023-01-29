@@ -847,7 +847,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     "SDPhone": sdPhoneNo
                 }).then((res) => {
                     console.log(res);
-                    notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
+                    debugger
+                    notifySpecialIncidentAllowance(context, formData.Id, 2,speicalIncidentReportWorkflow);
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "批准",

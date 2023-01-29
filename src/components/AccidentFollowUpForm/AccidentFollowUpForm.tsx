@@ -30,6 +30,9 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 
+interface IErrorFields {
+    
+}
 export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
     const [smDate, setSmDate] = useState(null); // 高級服務經理
     const [sdDate, setSdDate] = useState(null); // 服務總監
@@ -54,6 +57,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const [accidentSMbackup, setAccidentSMbackup] = useState("");
     const [jobCode, setJobCoe] = useState("");
     const [canSaveDraft, setCanSaveDraft] = useState(false);
+    const [error, setError] = useState<IErrorFields>({});
     const [form, setForm] = useState<IAccidentFollowUpFormStates>({
         accidentalFollowUpContinue: undefined,
     });
@@ -82,10 +86,14 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const dataFactory = () => {
         let body = {};
-        let error = {};
-
+        let error1 = {};
+        debugger
         body["FollowUpActions"] = JSON.stringify(followUpActions);
-
+        let emptyFollowUpActions = followUpActions.filter((item) => item.action == '');
+        for (let i=0; i < emptyFollowUpActions.length; i++) {
+            error1["FollowUpActions" + i] = true;
+        }
+        //if ()
         // if (form.followUpMeasures) {
         //     body["FollowUpMeasures"] = form.followUpMeasures;
         // } else {
@@ -110,7 +118,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             // error handling
         }
 
-        return [body, error];
+        return [body, error1];
     }
     //For SM only
     const smSubmitHandler = (event) => {
@@ -120,40 +128,97 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             sptCommentUpdate();
         } else {
             const [body, error] = dataFactory();
-            if (form.accidentalFollowUpContinue) {
-                let title = "";
-                if (parentFormData.AccidentFollowUpFormId) {
-                    title = `事故跟進/結束報告 - 第${parentFormData.AccidentFollowUpFormId.length + 1}篇`;
-                } else {
-                    title = `事故跟進/結束報告 - 第1篇`;
-                }
-
-                // Create a new follow up Form
-                /*createAccidentFollowUpRepotForm({
-                    "CaseNumber": parentFormData.CaseNumber,
-                    "ParentFormId": parentFormData.Id,
-                    "SPTId": parentFormData.SPTId,
-                    "SDId": parentFormData.SDId,
-                    "SMId": parentFormData.SMId,
-                    "Title": title
-                }).then((createServiceUserAccidentRes) => {
-                    console.log(createServiceUserAccidentRes);
-                    // Update current Form
+            if (Object.keys(error).length > 0) {
+                alert("提交錯誤");
+                setError(error);
+            } else {
+                if (form.accidentalFollowUpContinue) {
+                    let title = "";
+                    if (parentFormData.AccidentFollowUpFormId) {
+                        title = `事故跟進/結束報告 - 第${parentFormData.AccidentFollowUpFormId.length + 1}篇`;
+                    } else {
+                        title = `事故跟進/結束報告 - 第1篇`;
+                    }
+    
+                    // Create a new follow up Form
+                    /*createAccidentFollowUpRepotForm({
+                        "CaseNumber": parentFormData.CaseNumber,
+                        "ParentFormId": parentFormData.Id,
+                        "SPTId": parentFormData.SPTId,
+                        "SDId": parentFormData.SDId,
+                        "SMId": parentFormData.SMId,
+                        "Title": title
+                    }).then((createServiceUserAccidentRes) => {
+                        console.log(createServiceUserAccidentRes);
+                        // Update current Form
+                        updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
+                            ...body,
+                            "SMDate": new Date().toISOString(),
+                            "Completed": true
+                        }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+                            // Update parent form
+                            if (formType === "SERVICE_USER") {
+                                updateServiceUserAccidentById(parentFormData.Id, {
+                                    "AccidentFollowUpFormId": {
+                                        results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
+                                    },
+                                    "NextDeadline": addMonths(new Date(), 6),
+                                }).then((updateServiceUserAccidentByIdRes) => {
+                                    console.log(updateServiceUserAccidentByIdRes);
+    
+                                    postLog({
+                                        AccidentTime: parentFormData.AccidentTime,
+                                        Action: "提交",
+                                        CaseNumber: parentFormData.CaseNumber,
+                                        FormType: "SUI",
+                                        RecordId: parentFormData.Id,
+                                        Report: "事故跟進/結束報告(三)",
+                                        ServiceUnit: parentFormData.ServiceLocation
+                                    }).catch(console.error)
+    
+                                    formSubmittedHandler();
+                                }).catch(console.error);
+                            } else if (formType === "OUTSIDERS") {
+                                updateOutsiderAccidentFormById(parentFormData.Id, {
+                                    "AccidentFollowUpFormId": {
+                                        results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
+                                    },
+                                    "NextDeadline": addMonths(new Date(), 6),
+                                }).then((res) => {
+                                    console.log(res);
+    
+                                    postLog({
+                                        AccidentTime: parentFormData.AccidentTime,
+                                        Action: "提交",
+                                        CaseNumber: parentFormData.CaseNumber,
+                                        FormType: "PUI",
+                                        RecordId: parentFormData.Id,
+                                        Report: "事故跟進/結束報告(三)",
+                                        ServiceUnit: parentFormData.ServiceLocation
+                                    }).catch(console.error)
+    
+                                    formSubmittedHandler();
+                                }).catch(console.error);
+                            }
+                        }).catch(console.error);
+                    }).catch(console.error);*/
                     updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
                         ...body,
                         "SMDate": new Date().toISOString(),
-                        "Completed": true
+                        //"Completed": true
                     }).then((updateAccidentFollowUpRepotFormByIdRes) => {
                         // Update parent form
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, {
-                                "AccidentFollowUpFormId": {
+                                /*"AccidentFollowUpFormId": {
                                     results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
-                                },
+                                },*/
+                                "Status": "PENDING_SD_APPROVE",
                                 "NextDeadline": addMonths(new Date(), 6),
+                                "ReminderDate": null,
                             }).then((updateServiceUserAccidentByIdRes) => {
                                 console.log(updateServiceUserAccidentByIdRes);
-
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
                                     Action: "提交",
@@ -163,18 +228,19 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     Report: "事故跟進/結束報告(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
                                 }).catch(console.error)
-
+    
                                 formSubmittedHandler();
                             }).catch(console.error);
                         } else if (formType === "OUTSIDERS") {
                             updateOutsiderAccidentFormById(parentFormData.Id, {
-                                "AccidentFollowUpFormId": {
+                                /*"AccidentFollowUpFormId": {
                                     results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
-                                },
+                                },*/
+                                "Status": "PENDING_SD_APPROVE",
                                 "NextDeadline": addMonths(new Date(), 6),
                             }).then((res) => {
                                 console.log(res);
-
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
                                     Action: "提交",
@@ -184,108 +250,56 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     Report: "事故跟進/結束報告(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
                                 }).catch(console.error)
-
+    
                                 formSubmittedHandler();
                             }).catch(console.error);
                         }
                     }).catch(console.error);
-                }).catch(console.error);*/
-                updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
-                    ...body,
-                    "SMDate": new Date().toISOString(),
-                    //"Completed": true
-                }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-                    // Update parent form
-                    if (formType === "SERVICE_USER") {
-                        updateServiceUserAccidentById(parentFormData.Id, {
-                            /*"AccidentFollowUpFormId": {
-                                results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
-                            },*/
-                            "Status": "PENDING_SD_APPROVE",
-                            "NextDeadline": addMonths(new Date(), 6),
-                            "ReminderDate": null,
-                        }).then((updateServiceUserAccidentByIdRes) => {
-                            console.log(updateServiceUserAccidentByIdRes);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "SUI",
-                                RecordId: parentFormData.Id,
-                                Report: "事故跟進/結束報告(三)",
-                                ServiceUnit: parentFormData.ServiceLocation
-                            }).catch(console.error)
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    } else if (formType === "OUTSIDERS") {
-                        updateOutsiderAccidentFormById(parentFormData.Id, {
-                            /*"AccidentFollowUpFormId": {
-                                results: [...parentFormData.AccidentFollowUpFormId, createServiceUserAccidentRes.data.Id]
-                            },*/
-                            "Status": "PENDING_SD_APPROVE",
-                            "NextDeadline": addMonths(new Date(), 6),
-                        }).then((res) => {
-                            console.log(res);
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "PUI",
-                                RecordId: parentFormData.Id,
-                                Report: "事故跟進/結束報告(三)",
-                                ServiceUnit: parentFormData.ServiceLocation
-                            }).catch(console.error)
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
-            } else {
-                // Update current form
-                updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
-                    ...body,
-                    "SMDate": new Date().toISOString(),
-                }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-                    if (formType === "SERVICE_USER") {
-                        updateServiceUserAccidentById(parentFormData.Id, {
-                            "Status": "PENDING_SD_APPROVE"
-                        }).then((updateServiceUserAccidentByIdRes) => {
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "SUI",
-                                RecordId: parentFormData.Id,
-                                Report: "事故跟進/結束報告(三)",
-                                ServiceUnit: parentFormData.ServiceLocation
-                            }).catch(console.error)
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    } else if (formType === "OUTSIDERS") {
-                        updateOutsiderAccidentFormById(parentFormData.Id, {
-                            "Status": "PENDING_SD_APPROVE"
-                        }).then((updateAccidentFollowUpRepotFormByIdRes) => {
-                            notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
-                            postLog({
-                                AccidentTime: parentFormData.AccidentTime,
-                                Action: "提交",
-                                CaseNumber: parentFormData.CaseNumber,
-                                FormType: "PUI",
-                                RecordId: parentFormData.Id,
-                                Report: "事故跟進/結束報告(三)",
-                                ServiceUnit: parentFormData.ServiceLocation
-                            }).catch(console.error)
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
+                } else {
+                    // Update current form
+                    updateAccidentFollowUpRepotFormById(selectedAccidentFollowUpFormId, {
+                        ...body,
+                        "SMDate": new Date().toISOString(),
+                    }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+                        if (formType === "SERVICE_USER") {
+                            updateServiceUserAccidentById(parentFormData.Id, {
+                                "Status": "PENDING_SD_APPROVE"
+                            }).then((updateServiceUserAccidentByIdRes) => {
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "SUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "事故跟進/結束報告(三)",
+                                    ServiceUnit: parentFormData.ServiceLocation
+                                }).catch(console.error)
+    
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        } else if (formType === "OUTSIDERS") {
+                            updateOutsiderAccidentFormById(parentFormData.Id, {
+                                "Status": "PENDING_SD_APPROVE"
+                            }).then((updateAccidentFollowUpRepotFormByIdRes) => {
+                                notifyServiceUserAccident(context, parentFormData.Id, 3, workflow);
+                                postLog({
+                                    AccidentTime: parentFormData.AccidentTime,
+                                    Action: "提交",
+                                    CaseNumber: parentFormData.CaseNumber,
+                                    FormType: "PUI",
+                                    RecordId: parentFormData.Id,
+                                    Report: "事故跟進/結束報告(三)",
+                                    ServiceUnit: parentFormData.ServiceLocation
+                                }).catch(console.error)
+    
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        }
+                    }).catch(console.error);
+                }
             }
+            
 
 
             // Form 21 SM's part done, and send it to sd and spt.
@@ -854,7 +868,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                         {/* 意外報告的跟進措施 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                                         <div className="col">
-                                            <AutosizeTextarea className="form-control" name="followUpMeasures" onChange={(event) => {
+                                            <AutosizeTextarea className={`form-control ${(error && error['FollowUpActions'+index] ) ? "is-invalid": ""}`} name="followUpMeasures" onChange={(event) => {
                                                 let arr = [...followUpActions];
                                                 let actionItem = arr[index];
                                                 actionItem.action = event.target.value;
