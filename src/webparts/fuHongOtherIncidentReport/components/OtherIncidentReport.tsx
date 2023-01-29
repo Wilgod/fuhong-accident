@@ -564,7 +564,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         Report: "其他事故呈報表"
                     })
 
-                    notifyOtherIncident(context, formData.Id, 1,workflow);
+                    notifyOtherIncident(context, formData.Id, 2,workflow);
                     formSubmittedHandler();
                 });
             }).catch(console.error);
