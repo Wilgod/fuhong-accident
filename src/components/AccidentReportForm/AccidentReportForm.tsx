@@ -113,9 +113,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 // Error handling
             }
         }
-        if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther) {
+        if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther &&
+            !form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
+            && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther) {
             error["accidentalNature"] = true;
+            error["envFactor"] = true;
         }
+        /*if () {
+            error["envFactor"] = true;
+        }*/
         body["EnvFactorSlipperyGround"] = form.envFactorSlipperyGround;
         body["EnvFactorUnevenGround"] = form.envFactorUnevenGround;
         body["EnvFactorObstacleItems"] = form.envFactorObstacleItems;
@@ -133,10 +139,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 //Error handling
             }
         }
-        if (!form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
-            && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther) {
-            error["envFactor"] = true;
-        }
+        
         body["PersonalFactorEmotional"] = form.personalFactorEmotional;
         body["PersonalFactorImpatient"] = form.personalFactorImpatient;
         body["PersonalFactorChok"] = form.personalFactorChok;
