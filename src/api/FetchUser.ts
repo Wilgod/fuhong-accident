@@ -192,7 +192,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
       console.log('user hr_jobcode1 : ' +  user[0].hr_jobcode);
       console.log('user access : ' +  access);
       let admin = adminList.filter(a => {return a.Admin.EMail.toLowerCase() == userEmail.toLowerCase()});
-      debugger
+      
       if (admin.length > 0) {
         dept.push('All');
       } else {
@@ -202,7 +202,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
             console.log('item.DeptId : ' + item.DeptId + ', user[0].hr_deptid : ' + user[0].hr_deptid);
             console.log('item.AllServiceUser : ' + item.AllServiceUser);
             if (item.JobCode == 'CLK-C' && user[0].hr_jobcode == 'CLK-C') {
-                //debugger
+                //
             }
             if (item.JobCode == user[0].hr_jobcode && item.AllServiceUser) {
                 dept.push('All');

@@ -27,20 +27,20 @@ const initialDataset: IDataset = {
     unknown: 0
 }
 
-const financialYearChartParser = (result) =>{
+const financialYearChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         jan.push(item.dataset['jan']);
@@ -56,7 +56,7 @@ const financialYearChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         apr,
         may,
@@ -70,25 +70,25 @@ const financialYearChartParser = (result) =>{
         jan,
         feb,
         mar
-        
+
     ];
     return data;
 }
 
-const normalChartParser = (result) =>{
+const normalChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         jan.push(item.dataset['jan']);
@@ -104,7 +104,7 @@ const normalChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         jan,
         feb,
@@ -225,13 +225,13 @@ const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMon
     }
 }
 
-const financialChartParser = (result) =>{
+const financialChartParser = (result) => {
     let dataResult = ['Year'];
-    let mild =['MILD'];
-    let moderate =['MODERATE'];
-    let severe =['SEVERE'];
-    let extremeSevere =['EXTREME_SEVERE'];
-    let unknown =['UNKNOWN'];
+    let mild = ['MILD'];
+    let moderate = ['MODERATE'];
+    let severe = ['SEVERE'];
+    let extremeSevere = ['EXTREME_SEVERE'];
+    let unknown = ['UNKNOWN'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         mild.push(item.dataset['mild']);
@@ -240,7 +240,7 @@ const financialChartParser = (result) =>{
         extremeSevere.push(item.dataset['extremeSevere']);
         unknown.push(item.dataset['unknown']);
     });
-    let data=[
+    let data = [
         dataResult,
         mild,
         moderate,
@@ -251,13 +251,13 @@ const financialChartParser = (result) =>{
     return data;
 }
 
-const yearChartParser = (result) =>{
+const yearChartParser = (result) => {
     let dataResult = ['Year'];
-    let mild =['MILD'];
-    let moderate =['MODERATE'];
-    let severe =['SEVERE'];
-    let extremeSevere =['EXTREME_SEVERE'];
-    let unknown =['UNKNOWN'];
+    let mild = ['MILD'];
+    let moderate = ['MODERATE'];
+    let severe = ['SEVERE'];
+    let extremeSevere = ['EXTREME_SEVERE'];
+    let unknown = ['UNKNOWN'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         mild.push(item.dataset['mild']);
@@ -266,7 +266,7 @@ const yearChartParser = (result) =>{
         extremeSevere.push(item.dataset['extremeSevere']);
         unknown.push(item.dataset['unknown']);
     });
-    let data=[
+    let data = [
         dataResult,
         mild,
         moderate,
@@ -343,10 +343,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         let calYear;
         if (currentMonth - i < 0) {
             if (i > 12) {
-                let moreYear = Math.floor(i/12);
+                let moreYear = Math.floor(i / 12);
                 let remainMonth = i % 12;
                 if (currentMonth - remainMonth < 0) {
-                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calMonth = 12 - (remainMonth - currentMonth);
                     calYear = currentYear - (moreYear + 1);
                 } else {
                     calMonth = currentMonth - remainMonth
@@ -360,7 +360,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             calMonth = currentMonth - i
             calYear = currentYear;
         }
-        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
+        const d = moment(new Date(calYear, calMonth, 1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
 
@@ -381,14 +381,14 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy: parseInt(key.substr(3, 4) + key.substr(0, 2)) }
         result.push(item);
     })
     arraySort(result, 'mmyyyy');
     return result;
 }
 
-const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate: Date, endDate: Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -411,11 +411,11 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(financialYear, newDataset);
@@ -425,7 +425,7 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -461,11 +461,11 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(year.toString(), newDataset);
@@ -475,7 +475,7 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result
 }
@@ -505,12 +505,12 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(financialYear, initialDataset);
@@ -520,7 +520,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -558,12 +558,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(year.toString(), initialDataset);
@@ -642,7 +642,7 @@ function ServiceUserAccidentIntelligence(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 智力障礙程度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
                             </div>
                         </div>
@@ -665,7 +665,7 @@ function ServiceUserAccidentIntelligence(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 服務使用者意外 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
                             </div>
                         </div>
@@ -712,19 +712,19 @@ function ServiceUserAccidentIntelligence(props) {
                     </>
                 )
             case "BY_MONTH_FINANCIAL":
-                let mildMFResult = sampleThreeParser(data.filter((item) => {return item.Intelligence == 'MILD'}), startDate, endDate);
+                let mildMFResult = sampleThreeParser(data.filter((item) => { return item.Intelligence == 'MILD' }), startDate, endDate);
                 let mildMFChart = financialYearChartParser(mildMFResult);
 
-                let moderateMFResult = sampleThreeParser(data.filter((item) => {return item.Intelligence == 'MODERATE'}), startDate, endDate);
+                let moderateMFResult = sampleThreeParser(data.filter((item) => { return item.Intelligence == 'MODERATE' }), startDate, endDate);
                 let moderateMFChart = financialYearChartParser(moderateMFResult);
 
-                let severeMFResult = sampleThreeParser(data.filter((item) => {return item.Intelligence == 'SEVERE'}), startDate, endDate);
+                let severeMFResult = sampleThreeParser(data.filter((item) => { return item.Intelligence == 'SEVERE' }), startDate, endDate);
                 let severeMFChart = financialYearChartParser(severeMFResult);
 
-                let extremeSevereMFResult = sampleThreeParser(data.filter((item) => {return item.Intelligence == 'EXTREME_SEVERE'}), startDate, endDate);
+                let extremeSevereMFResult = sampleThreeParser(data.filter((item) => { return item.Intelligence == 'EXTREME_SEVERE' }), startDate, endDate);
                 let extremeSevereMFChart = financialYearChartParser(extremeSevereMFResult);
 
-                let unknownMFResult = sampleThreeParser(data.filter((item) => {return item.Intelligence == 'UNKNOWN'}), startDate, endDate);
+                let unknownMFResult = sampleThreeParser(data.filter((item) => { return item.Intelligence == 'UNKNOWN' }), startDate, endDate);
                 let unknownMFChart = financialYearChartParser(unknownMFResult);
                 return <>
                     <div className="row">
@@ -736,9 +736,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`服務使用者意外 - 智力障礙程度統計 - 輕度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -787,7 +787,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -795,7 +795,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 輕度(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -813,7 +813,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -821,7 +821,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -840,7 +840,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
 
                     <div className="row">
@@ -852,9 +852,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`服務使用者意外 - 智力障礙程度統計 - 中度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -903,7 +903,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -911,7 +911,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -929,7 +929,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -937,7 +937,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 中度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -956,7 +956,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -967,9 +967,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`服務使用者意外 - 智力障礙程度統計 - 嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1018,7 +1018,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1026,7 +1026,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1044,7 +1044,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1052,7 +1052,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 嚴重(每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 嚴重(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1071,7 +1071,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1082,9 +1082,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`服務使用者意外 - 智力障礙程度統計 - 極度嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1133,7 +1133,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1141,7 +1141,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1159,7 +1159,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1167,7 +1167,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 極度嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1186,7 +1186,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1197,9 +1197,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`服務使用者意外 - 智力障礙程度統計 - 不知 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1248,7 +1248,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1256,7 +1256,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 不知 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 不知 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1274,7 +1274,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1282,7 +1282,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 不知(每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 不知(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1304,19 +1304,19 @@ function ServiceUserAccidentIntelligence(props) {
                 </>
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let mildMCResult = sampleFourParser(data.filter((item) => {return item.Intelligence == 'MILD'}), startDate, endDate);
+                let mildMCResult = sampleFourParser(data.filter((item) => { return item.Intelligence == 'MILD' }), startDate, endDate);
                 let mildMCChart = normalChartParser(mildMCResult);
 
-                let moderateMCResult = sampleFourParser(data.filter((item) => {return item.Intelligence == 'MODERATE'}), startDate, endDate);
+                let moderateMCResult = sampleFourParser(data.filter((item) => { return item.Intelligence == 'MODERATE' }), startDate, endDate);
                 let moderateMCChart = normalChartParser(moderateMCResult);
 
-                let severeMCResult = sampleFourParser(data.filter((item) => {return item.Intelligence == 'SEVERE'}), startDate, endDate);
+                let severeMCResult = sampleFourParser(data.filter((item) => { return item.Intelligence == 'SEVERE' }), startDate, endDate);
                 let severeMCChart = normalChartParser(severeMCResult);
 
-                let extremeSevereMCResult = sampleFourParser(data.filter((item) => {return item.Intelligence == 'EXTREME_SEVERE'}), startDate, endDate);
+                let extremeSevereMCResult = sampleFourParser(data.filter((item) => { return item.Intelligence == 'EXTREME_SEVERE' }), startDate, endDate);
                 let extremeSevereMCChart = normalChartParser(extremeSevereMCResult);
 
-                let unknownMCResult = sampleFourParser(data.filter((item) => {return item.Intelligence == 'UNKNOWN'}), startDate, endDate);
+                let unknownMCResult = sampleFourParser(data.filter((item) => { return item.Intelligence == 'UNKNOWN' }), startDate, endDate);
                 let unknownMCChart = normalChartParser(unknownMCResult);
 
                 mildMCResult.forEach((item, i) => {
@@ -1335,9 +1335,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 輕度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1385,7 +1385,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1393,7 +1393,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1411,7 +1411,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1419,7 +1419,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 輕度 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1438,7 +1438,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1449,9 +1449,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 中度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1499,7 +1499,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1507,7 +1507,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1525,7 +1525,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1533,7 +1533,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1552,7 +1552,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1563,9 +1563,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1613,7 +1613,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1621,7 +1621,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1639,7 +1639,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1647,7 +1647,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 嚴重 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1666,7 +1666,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1677,9 +1677,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 極度嚴重 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1727,7 +1727,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>   
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1735,7 +1735,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 - 極度嚴重(每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1753,7 +1753,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1761,7 +1761,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1780,7 +1780,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
                         <div className="col-1">
@@ -1791,9 +1791,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2}年 服務使用者意外 - 智力障礙程度統計 - 不知 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1841,7 +1841,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1849,7 +1849,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1867,7 +1867,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1915,9 +1915,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear3} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1952,7 +1952,7 @@ function ServiceUserAccidentIntelligence(props) {
 
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1960,7 +1960,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每年總數)
+                                    智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1978,7 +1978,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1986,7 +1986,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                智力障礙程度統計 (每年總數)
+                                    智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2026,9 +2026,9 @@ function ServiceUserAccidentIntelligence(props) {
                         <div className="col-12">
                             <h6>{`${titleYear4} - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table14')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table14')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -2062,7 +2062,7 @@ function ServiceUserAccidentIntelligence(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2070,7 +2070,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每年總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2088,7 +2088,7 @@ function ServiceUserAccidentIntelligence(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2096,7 +2096,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每年總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2128,8 +2128,8 @@ function ServiceUserAccidentIntelligence(props) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button> 
-                                
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonBarChart")}>下載圖表</button>
+
                                 <div className="nonBarChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -2157,14 +2157,14 @@ function ServiceUserAccidentIntelligence(props) {
                                 </div>
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="nonPieChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
                                         <div className="">
-                                        服務使用者意外 - 智力障礙程度統計
+                                            服務使用者意外 - 智力障礙程度統計
                                         </div>
                                     </div>
                                     <Chart
@@ -2176,14 +2176,14 @@ function ServiceUserAccidentIntelligence(props) {
                                             legend: {
                                                 position: 'labeled',
                                                 textStyle: {
-                                                  fontName: 'monospace',
-                                                  fontSize: 9
+                                                    fontName: 'monospace',
+                                                    fontSize: 9
                                                 }
-                                              },
-                                              pieSliceTextStyle: {
+                                            },
+                                            pieSliceTextStyle: {
                                                 fontSize: 8
-                                              },
-                                              sliceVisibilityThreshold: 0
+                                            },
+                                            sliceVisibilityThreshold: 0
 
                                         }}
                                         data={
@@ -2210,15 +2210,15 @@ function ServiceUserAccidentIntelligence(props) {
                 return (
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthBarChart")}>下載圖表</button>
                         </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
+                        <div className="col-12 byMonthBarChart" style={{ overflow: 'auto' }}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 智力障礙程度統計 (每月總數)
+                                    服務使用者意外 - 智力障礙程度統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -2230,12 +2230,12 @@ function ServiceUserAccidentIntelligence(props) {
                                 ...sampleTwoParser(data, startDate, endDate).map((item) => {
                                     return [item.month, item.dataset.mild, item.dataset.moderate, item.dataset.severe, item.dataset.extremeSevere, item.dataset.unknown]
                                 })]
-                            }
+                                }
 
                             />
                         </div>
                     </div>
-                    
+
                 )
             default:
                 console.log("default");
@@ -2245,17 +2245,17 @@ function ServiceUserAccidentIntelligence(props) {
     const changeGroupHandler = (event) => {
         const value = event.target.value;
         if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_MONTH_CALENDAR') {
             setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         }
         setGroupBy(value);
     }
@@ -2294,14 +2294,14 @@ function ServiceUserAccidentIntelligence(props) {
         }
     }, [groupBy, data])
 
-    const downloadScreenshot = async(className) => {
-        
-        let chart = (document.querySelector("."+className) as HTMLElement);
+    const downloadScreenshot = async (className) => {
+
+        let chart = (document.querySelector("." + className) as HTMLElement);
         const canvas = await html2canvas(chart);
         const dataURL = canvas.toDataURL('image/png');
         downloadjs(dataURL, 'download.png', 'image/png');
     }
-    
+
     return (
         <div>
             <div className="row mb-3">
@@ -2311,8 +2311,8 @@ function ServiceUserAccidentIntelligence(props) {
             </div>
 
             <div className="row">
-                <div className="col">
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -2330,8 +2330,8 @@ function ServiceUserAccidentIntelligence(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         日期分組
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -2346,8 +2346,8 @@ function ServiceUserAccidentIntelligence(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -2358,20 +2358,20 @@ function ServiceUserAccidentIntelligence(props) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {props.permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          props.permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {props.permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            props.permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
 
                         {/*

@@ -1,3 +1,5 @@
 @media print {
-    .notPrintable {display: none;}
+  .notPrintable {
+    display: none;
   }
+}

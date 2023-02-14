@@ -13,9 +13,9 @@ import useServiceUser from '../../hooks/useServiceUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
 import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
-import { addBusinessDays, addMonths,addDays } from '../../utils/DateUtils';
+import { addBusinessDays, addMonths, addDays } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
-import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment,notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
+import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 
 
@@ -29,9 +29,9 @@ const formTypeParser = (formType: string, additonalString: string) => {
     }
 }
 interface IErrorFields {
-    
+
 }
-export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData,workflow, serviceUnitList, print }: IAccidentFollowUpRepotFormProps) {
+export default function AccidentFollowUpRepotForm({ context, styles, formType, parentFormData, currentUserRole, formSubmittedHandler, isPrintMode, formTwentyData, workflow, serviceUnitList, print }: IAccidentFollowUpRepotFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>({});
@@ -95,7 +95,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
 
-    
+
     const dataFactory = () => {
         let body = {};
         let error: IAccidentFollowUpReportFormError = {};
@@ -139,7 +139,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 //Error handling
             }
         }
-        
+
         body["PersonalFactorEmotional"] = form.personalFactorEmotional;
         body["PersonalFactorImpatient"] = form.personalFactorImpatient;
         body["PersonalFactorChok"] = form.personalFactorChok;
@@ -185,7 +185,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const submitHandler = () => {
         if (parentFormData.AccidentReportFormId) {
 
-            if (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData)) {
+            if (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage, sptDate, formTwentyData)) {
                 // SM
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
@@ -213,7 +213,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             ServiceUnit: parentFormData.ServiceLocation,
                         }).catch(console.error);
                     }
-                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2,workflow);
+                    notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 2, workflow);
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
@@ -225,10 +225,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 } else {
                     updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                         if (formType === "SERVICE_USER") {
-                            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateServiceUserAccidentResponse) => {
+                            updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate": null }).then((updateServiceUserAccidentResponse) => {
                                 console.log(updateServiceUserAccidentResponse)
                                 // Trigger notification workflow;
-    
+
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
                                     Action: "提交至高級物理治療師",
@@ -238,13 +238,13 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                     Report: "服務使用者意外報告(二)",
                                     ServiceUnit: parentFormData.ServiceLocation,
                                 }).catch(console.error);
-    
+
                                 formSubmittedHandler();
                             }).catch(console.error)
                         } else {
-                            updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate":null }).then((updateOutsiderAccidentResponse) => {
+                            updateOutsiderAccidentFormById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate": null }).then((updateOutsiderAccidentResponse) => {
                                 console.log(updateOutsiderAccidentResponse);
-    
+
                                 postLog({
                                     AccidentTime: parentFormData.AccidentTime,
                                     Action: "提交至高級物理治療師",
@@ -254,14 +254,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                                     Report: "外界人士意外報告(二)",
                                     ServiceUnit: parentFormData.ServiceLocation,
                                 }).catch(console.error);
-    
+
                                 formSubmittedHandler();
                             }).catch(console.error);
                         }
                         notifyServiceUserAccident(context, parentFormData.Id, 2, workflow);
                     }).catch(console.error);
                 }
-                
+
 
             }
         }
@@ -307,7 +307,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, accidentReportFormBody).then((accidentReportForm) => {
                     // Create Accident Follow Up Report Form
                     const accidentFollowUpReportFormBody = {
-                        "InvestigatorId":parentFormData.InvestigatorId,
+                        "InvestigatorId": parentFormData.InvestigatorId,
                         "SPTId": parentFormData.SPTId,
                         "SMId": serviceManager.Id,
                         "SDId": parentFormData.SDId,
@@ -525,16 +525,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }, [parentFormData]);
 
-    
+
     let ServiceUserUnit = "";
     if (parentFormData && parentFormData.ServiceUserUnit) {
-        let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == parentFormData.ServiceUserUnit});
+        let ser = serviceUnitList.filter(o => { return o.su_Eng_name_display == parentFormData.ServiceUserUnit });
         if (ser.length > 0) {
             ServiceUserUnit = ser[0].su_name_tc
         }
     }
-    
-    
+
+
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -671,7 +671,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         {/* 意外性質*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外性質</label>
-                        <div className={`col ${(error && error['accidentalNature'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['accidentalNature']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline mr-0 mr-md-3">
                                 <input className="form-check-input" type="checkbox" name="accidentNatureFall" id="accidental-nature-fall" checked={form.accidentNatureFall} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accidental-nature-fall">跌倒</label>
@@ -704,7 +704,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-4">
                         {/* 環境因素 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外成因</label>
-                        <div className={`col ${(error && error['envFactor'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['envFactor']) ? styles.divInvalid : ""}`}>
                             <div>環境因素</div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="envFactorSlipperyGround" id="env-slippery-ground" checked={form.envFactorSlipperyGround} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
@@ -757,7 +757,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}></label>
-                        <div className={`col ${(error && error['personalFactor'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['personalFactor']) ? styles.divInvalid : ""}`}>
                             <div>個人因素</div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="personalFactorEmotional" id="PERSONAL-EMOTIONAL-INSTABILITY" checked={form.personalFactorEmotional} onClick={checkboxBoolHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
@@ -795,21 +795,21 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發現之經過</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${(error && error['AccidentalDiscovery'] ) ? "is-invalid": ""}`} name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['AccidentalDiscovery']) ? "is-invalid" : ""}`} name="accidentalDiscovery" value={form.accidentalDiscovery} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>可能引致意外之因素</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${(error && error['AccidentCauseFactor'] ) ? "is-invalid": ""}`} name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['AccidentCauseFactor']) ? "is-invalid" : ""}`} name="accidentCauseFactor" value={form.accidentCauseFactor} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 
                     <div className="form-row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>建議</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${(error && error['Suggestion'] ) ? "is-invalid": ""}`} name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['Suggestion']) ? "is-invalid" : ""}`} name={"suggestion"} value={form.suggestion} onChange={textFieldHandler} disabled={!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                         </div>
                     </div>
 
@@ -872,7 +872,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             </select> */}
                             {/*<input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.SM ? `${parentFormData.SM.Title}` : ""}`} />*/}
                             <input type="text" className="form-control" readOnly value={`${serviceManager && serviceManager.Title ? `${serviceManager.Title}` : ""}`} />
-                            
+
                         </div>
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
@@ -882,7 +882,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" value={smComment} onChange={(event) => setSmComment(event.target.value)} disabled={!stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage, sptDate, formTwentyData)} />
                         </div>
                     </div>
 
@@ -935,12 +935,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     </div>
                     {
                         stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData) &&
-                        <div className="form-group row mt-3 mb-2">
-                            <div className="col-12">
-                                <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3" onClick={() => sptApproveHandler()}>批准</button>
-                                    <button className="btn btn-danger mr-3" onClick={() => sptRejectHandler()}>拒絕</button>
-                                </div>
+                        <div className="form-group row justify-content-center mt-3 mb-2">
+                            <div className="col-md-2 col-4 mb-2">
+                                <button className="btn btn-warning w-100" onClick={() => sptApproveHandler()}>批准</button>
+                            </div>
+                            <div className="col-md-2 col-4 mb-2">
+                                <button className="btn btn-danger w-100" onClick={() => sptRejectHandler()}>拒絕</button>
                             </div>
                         </div>
                     }
@@ -949,18 +949,26 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 <hr className="my-4" />
 
                 <section className="py-3">
-                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                    <div className="row">
                         {
-                            (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage,sptDate, formTwentyData) || pendingInvestigate(context, investigator, formStatus, formStage))
+                            (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage, sptDate, formTwentyData) || pendingInvestigate(context, investigator, formStatus, formStage))
                             &&
-                            <button className="btn btn-warning" onClick={() => submitHandler()}>提交</button>
+                            <div className='col-md-2 col-4 mb-2'>
+                                <button className="btn btn-warning w-100" onClick={() => submitHandler()}>提交</button>
+                            </div>
                         }
                         {
                             pendingInvestigate(context, investigator, formStatus, formStage) &&
-                            <button className="btn btn-success" onClick={() => draftHandler()}>草稿</button>
+                            <div className='col-md-2 col-4 mb-2'>
+                                <button className="btn btn-success w-100" onClick={() => draftHandler()}>草稿</button>
+                            </div>
                         }
-                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
-                        <button className="btn btn-warning mr-3" onClick={()=> print()}>打印</button>
+                        <div className='col-md-2 col-4 mb-2'>
+                            <button className="btn btn-secondary w-100" onClick={() => cancelHandler()}>取消</button>
+                        </div>
+                        <div className='col-md-2 col-4 mb-2'>
+                            <button className="btn btn-warning w-100" onClick={() => print()}>打印</button>
+                        </div>
                     </div>
                 </section>
             </div >

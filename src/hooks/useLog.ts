@@ -21,7 +21,7 @@ export default function useLog(permission): [any[], string, Dispatch<SetStateAct
             startDate,
             status
         }).then((res) => {
-            debugger
+            
             let add = false;
             let allDate = [];
             for (let r of res) {

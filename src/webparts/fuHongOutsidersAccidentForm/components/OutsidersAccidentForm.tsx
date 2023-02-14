@@ -14,11 +14,11 @@ import { IOutsidersAccidentFormStates, IErrorFields } from './IFuHongOutsidersAc
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useServiceUnit from '../../../hooks/useServiceUnits';
-import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById,updateInsuranceNumber, deleteOutsiderAccidentFormById } from '../../../api/PostFuHongList';
+import { createAccidentReportForm, createOutsiderAccidentForm, getOutsidersAccidentAllAttachmentById, updateOutsiderAccidentFormById, updateOutsidersAccidentFormAttachmentById, updateInsuranceNumber, deleteOutsiderAccidentFormById } from '../../../api/PostFuHongList';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { caseNumberFactory } from '../../../utils/CaseNumberParser';
-import { FormFlow, getOutsiderAccidentById,getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
+import { FormFlow, getOutsiderAccidentById, getInsuranceEMailRecords } from '../../../api/FetchFuHongList';
 import { Role } from '../../../utils/RoleParser';
 import useSharePointGroup from '../../../hooks/useSharePointGroup';
 import useSPT from '../../../hooks/useSPT';
@@ -51,13 +51,13 @@ interface IOutsidersAccidentFormProps {
     formSubmittedHandler(): void;
     formData: any;
     isPrintMode: boolean;
-    siteCollectionUrl:string;
-    permissionList:any;
-    workflow:string;
-    print:any;
+    siteCollectionUrl: string;
+    permissionList: any;
+    workflow: string;
+    print: any;
 }
 
-export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode,siteCollectionUrl, permissionList, workflow, print }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, permissionList, workflow, print }: IOutsidersAccidentFormProps) {
     const [error, setError] = useState<IErrorFields>();
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -80,7 +80,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [userInfo, setCurrentUserEmail, spUserInfo] = useUserInfo(siteCollectionUrl);
     const [sdInfo, setSDEmail, spSdInfo] = useUserInfo(siteCollectionUrl);
     const [smInfo, setSMEmail, spSmInfo] = useUserInfo(siteCollectionUrl);
-    const {departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
+    const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [sptList] = useSPT(siteCollectionUrl);
     const [familyContactDate, setFamilyContactDate] = useState(null);
     const [selectedPhotoRecordFiles, setSelectedPhotoRecordFiles] = useState([]);
@@ -198,7 +198,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         const body = {};
         const error = {};
 
-        
+
         if (serviceUnit) {
             body["ServiceUnit"] = serviceUnit
         } else {
@@ -247,7 +247,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
             error["AccidentTime"] = true;
         }
-        
+
         if (form.accidentLocation) {
             body["AccidentLocation"] = form.accidentLocation;
         } else {
@@ -316,7 +316,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             } else {
                 error["CctvRecordReceiveDate"] = true;
             }
-            
+
         } else if (form.cctvRecord === undefined) {
             error["CctvRecord"] = true;
         }
@@ -341,7 +341,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 } else {
                     error["HospitalLeaveTime"] = true;
                 }
-                
+
             }
         } else {
             error["MedicalArrangement"] = true;
@@ -418,17 +418,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
             if (currentUserRole === Role.ADMIN) {
                 if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
-                    getInsuranceEMailRecords(formData.CaseNumber,"PUI",formId).then((res1) => {
+                    getInsuranceEMailRecords(formData.CaseNumber, "PUI", formId).then((res1) => {
                         if (res1.length > 0) {
-                            updateInsuranceNumber(res1[0].Id,form.insuranceCaseNo);
+                            updateInsuranceNumber(res1[0].Id, form.insuranceCaseNo);
                             updateOutsiderAccidentFormById(formId, {
                                 "InsuranceCaseNo": form.insuranceCaseNo,
-                                "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                                "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                             }).then((res) => {
                                 // Update form to stage 1-2
                                 // Trigger notification workflow
                                 console.log(res);
-                
+
                                 postLog({
                                     AccidentTime: accidentTime.toISOString(),
                                     Action: "更新",
@@ -438,7 +438,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     ServiceUnit: serviceLocation,
                                     RecordId: formData.Id
                                 }).catch(console.error);
-                
+
                                 formSubmittedHandler();
                             }).catch(console.error);
                         } else {
@@ -447,12 +447,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     })
                 } else if (form.cctvRecord) {
                     updateOutsiderAccidentFormById(formId, {
-                        "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                        "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                     }).then((res) => {
                         // Update form to stage 1-2
                         // Trigger notification workflow
                         console.log(res);
-        
+
                         postLog({
                             AccidentTime: accidentTime.toISOString(),
                             Action: "更新",
@@ -462,18 +462,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             ServiceUnit: serviceLocation,
                             RecordId: formData.Id
                         }).catch(console.error);
-        
+
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
                 updateOutsiderAccidentFormById(formId, {
                     "InsuranceCaseNo": form.insuranceCaseNo,
-                    "CctvRecordReceiveDate" : cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                 }).then((res) => {
                     // Update form to stage 1-2
                     // Trigger notification workflow
                     console.log(res);
-    
+
                     postLog({
                         AccidentTime: accidentTime.toISOString(),
                         Action: "更新",
@@ -483,10 +483,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         ServiceUnit: serviceLocation,
                         RecordId: formData.Id
                     }).catch(console.error);
-    
+
                     formSubmittedHandler();
                 }).catch(console.error);
-            } else if (pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)) {
+            } else if (pendingSptApproveForSD(context, currentUserRole, formStatus, formStage, sptDate, sdInfo)) {
                 updateOutsiderAccidentFormById(formId, {
                     "SDComment": sdComment,
                     "SDDate": new Date().toISOString(),
@@ -504,14 +504,14 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         ServiceUnit: serviceLocation,
                         RecordId: formData.Id
                     }).catch(console.error);
-    
+
                     formSubmittedHandler();
                     notifyOutsiderAccident(context, formData.Id, 1, workflow);
                 }).catch(console.error);
             } else {
-    
+
                 if (formStatus === "SM_VOID") {
-    
+
                     updateOutsiderAccidentFormById(formData.Id, {
                         ...body,
                         "Status": "PENDING_SM_APPROVE"
@@ -522,7 +522,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
                             att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
                         }
-    
+
                         if (att.length > 0) {
                             await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                 if (updateOutsidersAccidentFormAttachmentByIdRes) {
@@ -539,12 +539,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             ServiceUnit: serviceLocation,
                             RecordId: formData.Id
                         }).catch(console.error);
-    
+
                         notifyOutsiderAccident(context, formData.Id, 1, workflow);
                         formSubmittedHandler();
                     })
                 } else {
-    
+
                     // Draft update havent implement
                     caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber);
@@ -554,7 +554,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             "ServiceLocation": serviceLocation,
                             "Status": "PENDING_SM_APPROVE"
                         }
-    
+
                         if (CURRENT_USER.email === spSmInfo.Email) {
                             extraBody["SMApproved"] = true;
                             extraBody["SMComment"] = smComment;
@@ -562,7 +562,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
                             extraBody["Status"] = "PENDING_SPT_APPROVE";
                         }
-    
+
                         if (formStatus === "DRAFT") {
                             updateOutsiderAccidentFormById(formData.Id, {
                                 ...body,
@@ -574,7 +574,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
                                     att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
                                 }
-    
+
                                 if (att.length > 0) {
                                     await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                         if (updateOutsidersAccidentFormAttachmentByIdRes) {
@@ -583,7 +583,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }).catch(console.error);
                                 }
                                 if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
-                                    
+
                                     postLog({
                                         AccidentTime: accidentTime.toISOString(),
                                         Action: "提交",
@@ -604,8 +604,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         RecordId: formData.Id
                                     }).catch(console.error);
                                 }
-    
-                                notifyOutsiderAccident(context, formData.Id, 1,workflow);
+
+                                notifyOutsiderAccident(context, formData.Id, 1, workflow);
                                 formSubmittedHandler();
                             })
                         } else {
@@ -620,7 +620,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
                                         att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
                                     }
-    
+
                                     if (att.length > 0) {
                                         await updateOutsidersAccidentFormAttachmentById(createOutsiderAccidentFormRes.data.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
                                             if (updateOutsidersAccidentFormAttachmentByIdRes) {
@@ -649,8 +649,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                             RecordId: createOutsiderAccidentFormRes.data.Id
                                         }).catch(console.error);
                                     }
-    
-                                    notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1,workflow);
+
+                                    notifyOutsiderAccident(context, createOutsiderAccidentFormRes.data.Id, 1, workflow);
                                     formSubmittedHandler();
                                 }
                             }).catch(console.error);
@@ -659,7 +659,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 }
             }
         }
-        
+
     }
 
 
@@ -895,7 +895,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
     async function send() {
         let values: any = {};
-        let emailBodyHtml = emailBody.replace(/\n/g,'<br/>');
+        let emailBodyHtml = emailBody.replace(/\n/g, '<br/>');
         values['Title'] = "-";
         values['ServiceUnit'] = formData.ServiceLocation;
         values['RecordId'] = formId;
@@ -905,10 +905,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         values['EmailTo'] = emailTo;
         values['EmailCC'] = emailCc;
         values['EmailBody'] = emailBodyHtml;
-        debugger
+
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Insurance EMail Records").items.add(values);
         const item: IItem = sp.web.lists.getByTitle("Insurance EMail Records").items.getById(addItem.data.Id);
-        await item.attachmentFiles.add(encodeURIComponent(filename) , file);
+        await item.attachmentFiles.add(encodeURIComponent(filename), file);
         setOpenModel(false);
     }
 
@@ -924,21 +924,21 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         const addItem: IItemAddResult = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle("Outsider Accident Form").items.getById(formId).update(values)
         alert('CCTV日期已更新')
     }*/
-    
+
     const incomingfile = (event) => {
         const filename = event.target.files[0].name;
         setFilename(filename);
         setFile(event.target.files[0]);
         setUploadButton(false);
-	}
+    }
 
     async function getInsuranceRecord(formData) {
         const LIST_NAME = "Insurance EMail Records";
-        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'PUI' and RecordId eq '`+formData.Id+`'`).get();
+        const result = await Web(context.pageContext.web.absoluteUrl).lists.getByTitle(LIST_NAME).items.filter(`FormType eq 'PUI' and RecordId eq '` + formData.Id + `'`).get();
         if (result.length > 0) {
             setSendInsuranceEmail(false);
         }
-            
+
     }
 
     const loadData = async (data: any) => {
@@ -981,7 +981,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             if (data.CctvRecordReceiveDate) {
                 setCctvRecordReceiveDate(new Date(data.CctvRecordReceiveDate));
             }
-        
+
             if (data.SPT) {
                 /*setTimeout(() => {
                     setSPhysicalTherapyEmail(data.SPT.EMail);
@@ -1105,8 +1105,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             setTimeout(() => {
                 loadData(formData);
                 getInsuranceRecord(formData);
-            },1000);
-            
+            }, 1000);
+
         } else {
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
@@ -1146,17 +1146,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             const dept = departments[0];
             if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
                 if (!formData) {
-                    debugger
+
                     setSMEmail(dept.hr_deptmgr);
                 }
-                
+
             }
 
             if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
                 if (!formData) {
                     setSDEmail(dept.hr_sd);
                 }
-                
+
             }
         }
     }, [departments]);
@@ -1197,22 +1197,22 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 })}
                             </select> */}
                             {/*<input type="text" className="form-control" value={serviceUnit || ""} disabled />*/}
-                            <select className={`custom-select ${(error && error['ServiceUnit'] ) ? "is-invalid": ""}`} value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
+                            <select className={`custom-select ${(error && error['ServiceUnit']) ? "is-invalid" : ""}`} value={patientServiceUnit} onChange={(event) => { setPatientServiceUnit(event.target.value) }}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             >
                                 <option value={""} ></option>
-                                {permissionList.indexOf('All') >=0 &&
+                                {permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
                                         return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
-                                {permissionList.indexOf('All') < 0 && 
+                                {permissionList.indexOf('All') < 0 &&
                                     permissionList.map((item) => {
-                                        let ser = serviceUserUnitList.filter(o => {return o.su_Eng_name_display == item});
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
                                         if (ser.length > 0) {
                                             return <option value={ser[0].su_Eng_name_display} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
                                         }
-                                        
+
                                     })
                                 }
                             </select>
@@ -1235,12 +1235,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 服務使用者姓名 (中文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (中文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control ${(error && error['ServiceUserNameTC'] ) ? "is-invalid": ""}`} name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ServiceUserNameTC']) ? "is-invalid" : ""}`} name="serviceUserNameTC" value={form.serviceUserNameTC} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>姓名 (英文)</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control ${(error && error['ServiceUserNameEN'] ) ? "is-invalid": ""}`} name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="text" className={`form-control ${(error && error['ServiceUserNameEN']) ? "is-invalid" : ""}`} name="serviceUserNameEN" value={form.serviceUserNameEN} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                     </div>
 
@@ -1248,11 +1248,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 年齡*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className={`form-control ${(error && error['ServiceUserAge'] ) ? "is-invalid": ""}`} name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                            <input type="number" className={`form-control ${(error && error['ServiceUserAge']) ? "is-invalid" : ""}`} name="ServiceUserAge" value={form.serviceUserAge} onChange={(evnet) => setForm({ ...form, serviceUserAge: +evnet.target.value })} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
-                        <div className={`col-12 col-md-4 d-flex align-items-center ${(error && error['ServiceUserGender'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col-12 col-md-4 d-flex align-items-center ${(error && error['ServiceUserGender']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" id="gender-male" onClick={() => setForm({ ...form, serviceUserGender: "male" })} checked={form.serviceUserGender === "male"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
@@ -1268,7 +1268,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         {/* 身份*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份</label>
                         <div className="col-12 col-md-4">
-                            <select className={`form-control ${(error && error['ServiceUserIdentity'] ) ? "is-invalid": ""}`} name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
+                            <select className={`form-control ${(error && error['ServiceUserIdentity']) ? "is-invalid" : ""}`} name="serviceUserIdentity" value={form.serviceUserIdentity} onChange={selectionHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
                                 <option value="">請選擇</option>
                                 <option value="visitor">訪客</option>
                                 <option value="family">家屬</option>
@@ -1279,7 +1279,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             {
                                 form.serviceUserIdentity === "others" &&
                                 <div className="mt-2">
-                                    <input type="text" className={`form-control ${(error && error['ServiceUserIdentityOther'] ) ? "is-invalid": ""}`} placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                    <input type="text" className={`form-control ${(error && error['ServiceUserIdentityOther']) ? "is-invalid" : ""}`} placeholder="請註明" name="serviceUserIdentityOther" value={form.serviceUserIdentityOther} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 </div>
                             }
                         </div>
@@ -1287,7 +1287,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外發生日期和時間</label>
                         <div className="col-12 col-md-4">
                             <DatePicker
-                                className={`form-control ${(error && error['AccidentTime'] ) ? "is-invalid": ""}`}
+                                className={`form-control ${(error && error['AccidentTime']) ? "is-invalid" : ""}`}
                                 selected={accidentTime}
                                 onChange={(date) => setAccidentTime(date)}
                                 showTimeSelect
@@ -1302,7 +1302,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                     <div className="form-row mb-2">
                         {/* 地點 */}
-                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0 ${(error && error['AccidentLocation'] ) ? "is-invalid": ""}`}>地點</label>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0 ${(error && error['AccidentLocation']) ? "is-invalid" : ""}`}>地點</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="accidentLocation" value={form.accidentLocation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                         </div>
@@ -1368,7 +1368,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 {
                                     form.envOther &&
                                     <div className="">
-                                        <AutosizeTextarea className={`form-control ${(error && error['EnvOtherDescription'] ) ? "is-invalid": ""}`} placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <AutosizeTextarea className={`form-control ${(error && error['EnvOtherDescription']) ? "is-invalid" : ""}`} placeholder="請註明" name={"envOtherDescription"} value={form.envOtherDescription} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 }
                             </div>
@@ -1392,7 +1392,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(2.3)  意外事件有否證人證人目擊事故發生經過? */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外事件有否證人目擊事故發生經過?</label>
-                        <div className={`col ${(error && error['Witness'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['Witness']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="witness" id="witness-true" value="witness-true" onClick={() => setForm({ ...form, witness: true })} checked={form.witness === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="witness-true">有</label>
@@ -1406,11 +1406,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div>
                                         <label className="form-label">證人姓名</label>
-                                        <input type="text" className={`form-control ${(error && error['WitnessName'] ) ? "is-invalid": ""}`} name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['WitnessName']) ? "is-invalid" : ""}`} name="witnessName" value={form.witnessName} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div>
                                         <label className="form-label">聯絡電話</label>
-                                        <input type="text" className={`form-control ${(error && error['WitnessPhone'] ) ? "is-invalid": ""}`} name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['WitnessPhone']) ? "is-invalid" : ""}`} name="witnessPhone" value={form.witnessPhone} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
@@ -1420,7 +1420,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(2.4)  相片及CCTV紀錄*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>相片及CCTV紀錄</label>
-                        <div className={`col ${(error && error['PhotoRecord'] ) ? "is-invalid": ""}`}>
+                        <div className={`col ${(error && error['PhotoRecord']) ? "is-invalid" : ""}`}>
                             <div className={styles.buttonLabel}>相片</div>
                             <div className="pl-2">
                                 <div className="form-check">
@@ -1447,7 +1447,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 </div>
                             </div>
                             <div className={`${styles.buttonLabel} mt-3`}>CCTV紀錄</div>
-                            <div className={`pl-2 ${(error && error['CctvRecord'] ) ? "is-invalid": ""}`}>
+                            <div className={`pl-2 ${(error && error['CctvRecord']) ? "is-invalid" : ""}`}>
                                 <div className="form-check">
                                     <input className="form-check-input" type="radio" name="cctv" id="cctv-true" value="CCTV_TRUE" onClick={() => setForm({ ...form, cctvRecord: true })} checked={form.cctvRecord === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     <label className={`form-check-label ${styles.labelColor}`} htmlFor="cctv-true">有 (註: 三個工作天內交總辦事處)</label>
@@ -1461,7 +1461,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="row no-gutters">
                                         <label className={`col-form-label ${styles.fieldTitle} mr-0 mr-md-2`}>收到日期</label>
                                         <div className="col">
-                                            <DatePicker className={`form-control ${(error && error['CctvRecordReceiveDate'] ) ? "is-invalid": ""}`} dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={currentUserRole !== Role.ADMIN} />
+                                            <DatePicker className={`form-control ${(error && error['CctvRecordReceiveDate']) ? "is-invalid" : ""}`} dateFormat="yyyy/MM/dd" selected={cctvRecordReceiveDate} onChange={(date) => setCctvRecordReceiveDate(date)} readOnly={currentUserRole !== Role.ADMIN} />
                                         </div>
                                     </div>
                                 }
@@ -1479,7 +1479,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/*(3.1)  就診安排*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>就診安排</label>
-                        <div className={`col ${(error && error['MedicalArrangement'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['MedicalArrangement']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="medicalArrangement" id="ARRANGEMENT_DOCTOR_VISIT" value="ARRANGEMENT_DOCTOR_VISIT" onClick={radioButtonHandler} checked={form.medicalArrangement === "ARRANGEMENT_DOCTOR_VISIT"} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="ARRANGEMENT_DOCTOR_VISIT">醫生到診</label>
@@ -1501,12 +1501,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 <>
                                     <div className="">
                                         <label className="form-label">醫院名稱</label>
-                                        <input type="text" className={`form-control ${(error && error['MedicalArrangementHospital'] ) ? "is-invalid": ""}`} value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['MedicalArrangementHospital']) ? "is-invalid" : ""}`} value={form.medicalArrangementHospital} name="medicalArrangementHospital" onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                     <div className="">
                                         <label className="form-label">到達時間</label>
                                         <DatePicker
-                                            className={`form-control ${(error && error['HospitalArriveTime'] ) ? "is-invalid": ""}`}
+                                            className={`form-control ${(error && error['HospitalArriveTime']) ? "is-invalid" : ""}`}
                                             selected={hospitalArriveTime}
                                             onChange={(date) => setHospitalArriveTime(date)}
                                             showTimeSelect
@@ -1519,7 +1519,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div className="">
                                         <label className="form-label">離開時間</label>
                                         <DatePicker
-                                            className={`form-control ${(error && error['HospitalLeaveTime'] ) ? "is-invalid": ""}`}
+                                            className={`form-control ${(error && error['HospitalLeaveTime']) ? "is-invalid" : ""}`}
                                             selected={hospitalLeaveTime}
                                             onChange={(date) => setHospitalLeaveTime(date)}
                                             showTimeSelect
@@ -1538,7 +1538,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/* (3.2) 報警處理 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
-                        <div className={`col ${(error && error['Police'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['Police']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="police" id="police-true" value="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">有</label>
@@ -1553,7 +1553,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div>
                                         <label className="form-label">日期和時間</label>
                                         <DatePicker
-                                            className={`form-control ${(error && error['PoliceDatetime'] ) ? "is-invalid": ""}`}
+                                            className={`form-control ${(error && error['PoliceDatetime']) ? "is-invalid" : ""}`}
                                             selected={policeDatetime}
                                             onChange={(date) => setPoliceDatetime(date)}
                                             showTimeSelect
@@ -1565,7 +1565,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     </div>
                                     <div>
                                         <label className="form-label">警署名稱</label>
-                                        <input type="text" className={`form-control ${(error && error['PoliceStation'] ) ? "is-invalid": ""}`} name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['PoliceStation']) ? "is-invalid" : ""}`} name="policeStation" value={form.policeStation} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
@@ -1575,7 +1575,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-4">
                         {/* (3.3) 家屬聯絡 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>家屬聯絡</label>
-                        <div className={`col ${(error && error['FamilyContact'] ) ? styles.divInvalid: ""}`}>
+                        <div className={`col ${(error && error['FamilyContact']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="familyContact" id="family-true" value="family-true" onClick={() => setForm({ ...form, familyContact: true })} checked={form.familyContact === true} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="family-true">有</label>
@@ -1590,7 +1590,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     <div>
                                         <label className="form-label">通知家屬日期及時間</label>
                                         <DatePicker
-                                            className={`form-control ${(error && error['FamilyContactDate'] ) ? "is-invalid": ""}`}
+                                            className={`form-control ${(error && error['FamilyContactDate']) ? "is-invalid" : ""}`}
                                             selected={familyContactDate}
                                             onChange={(date) => setFamilyContactDate(date)}
                                             showTimeSelect
@@ -1602,7 +1602,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     </div>
                                     <div>
                                         <label className="form-label">與傷者關係</label>
-                                        <input type="text" className={`form-control ${(error && error['FamilyRelationship'] ) ? "is-invalid": ""}`} name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                        <input type="text" className={`form-control ${(error && error['FamilyRelationship']) ? "is-invalid" : ""}`} name="familyRelationship" value={form.familyRelationship} onChange={inputFieldHandler} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                     </div>
                                 </>
                             }
@@ -1745,7 +1745,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSptApproveForSD(context, currentUserRole, formStatus, formStage, sptDate, sdInfo)} />
                         </div>
                     </div>
                     {/* <div className="form-row row mb-2">
@@ -1770,7 +1770,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         <div className="col-12 col-md-4">
                             <select className={`custom-select  `} value={sPhysicalTherapyEmail} onChange={(event) => setSPhysicalTherapyEmail(event.target.value)}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}>
-                                    <option value={""} ></option>
+                                <option value={""} ></option>
                                 {
                                     sptList.map((spt) => {
                                         return <option value={spt.Email}>{spt.Name}</option>
@@ -1819,12 +1819,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     </div>
                     {
                         pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail) &&
-                        <div className="form-row mb-2">
-                            <div className="col-12">
-                                <div className="d-flex justify-content-center">
-                                    <button className="btn btn-warning mr-3" onClick={sptApproveHandler}>批准</button>
-                                    <button className="btn btn-danger mr-3" onClick={sptRejectHandler}>拒絕</button>
-                                </div>
+                        <div className="form-row justify-content-center mb-2">
+                            <div className="col-md-2 col-4">
+                                <button className="btn btn-warning w-100" onClick={sptApproveHandler}>批准</button>
+                            </div>
+                            <div className="col-md-2 col-4">
+                                <button className="btn btn-danger w-100" onClick={sptRejectHandler}>拒絕</button>
                             </div>
                         </div>
                     }
@@ -1835,66 +1835,80 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
 
                 <section className="py-3">
-                    <div className="d-flex justify-content-center" style={{ gap: 10 }}>
+                    <div className="row">
                         {
                             (
                                 formInitial(currentUserRole, formStatus) ||
-                                pendingSptApproveForSD(context,currentUserRole, formStatus, formStage, sptDate,sdInfo) ||
+                                pendingSptApproveForSD(context, currentUserRole, formStatus, formStage, sptDate, sdInfo) ||
                                 currentUserRole === Role.ADMIN)
                             &&
-                            <button className="btn btn-warning" onClick={submitHandler}>提交</button>
+                            <div className="col-md-2 col-4 mb-2">
+                                <button className="btn btn-warning w-100" onClick={submitHandler}>提交</button>
+                            </div>
                         }
                         {
                             formInitial(currentUserRole, formStatus) && formStatus !== "SM_VOID" &&
-                            <button className="btn btn-success" onClick={draftHandler}>草稿</button>
+                            <div className="col-md-2 col-4 mb-2">
+                                <button className="btn btn-success w-100" onClick={draftHandler}>草稿</button>
+                            </div>
                         }
                         {
                             formInitial(currentUserRole, formStatus) &&
-                            <button className="btn btn-danger" onClick={deleteHandler}>刪除</button>
+                            <div className="col-md-2 col-4 mb-2">
+                                <button className="btn btn-danger w-100" onClick={deleteHandler}>刪除</button>
+                            </div>
                         }
-                        <button className="btn btn-secondary" onClick={() => cancelHandler()}>取消</button>
-                        <button className="btn btn-warning" onClick={()=> print()}>打印</button>
+                        <div className="col-md-2 col-4 mb-2">
+                            <button className="btn btn-secondary w-100" onClick={() => cancelHandler()}>取消</button>
+                        </div>
+                        <div className="col-md-2 col-4 mb-2">
+                            <button className="btn btn-warning w-100" onClick={() => print()}>打印</button>
+                        </div>
                         {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && sendInsuranceEmail &&
                             <>
-                            <button className="btn btn-secondary" onClick={() => setOpenModel(true)}>發送保險</button>
+                                <div className="col-md-2 col-4 mb-2">
+                                    <button className="btn btn-secondary w-100" onClick={() => setOpenModel(true)}>發送保險</button>
+                                </div>
                             </>
                         }
                         {(formStage == '2' || formStage == '3') && currentUserRole === Role.ADMIN && !sendInsuranceEmail &&
-                                <>
-                                <button className="btn btn-secondary" disabled>發送保險(已發送)</button>
-                                </>
-                            }
+                            <>
+                                <div className="col-md-2 col-4 mb-2">
+                                    <button className="btn btn-secondary w-100" disabled>發送保險(已發送)</button>
+                                </div>
+                            </>
+                        }
                     </div>
                 </section>
-                {openModel && 
+                {openModel &&
 
-                    <Modal dialogClassName="formModal" show={openModel}  size="lg" backdrop="static">
-                    <Modal.Header>
-                    <div style={{height:'15px'}}>
-                        <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false) } />
-                    </div>
-                    </Modal.Header>
+                    <Modal dialogClassName="formModal" show={openModel} size="lg" backdrop="static">
+                        <Modal.Header>
+                            <div style={{ height: '15px' }}>
+                                <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenModel(false)} />
+                            </div>
+                        </Modal.Header>
 
-                    <Modal.Body>
-                        <div className="row" style={{padding:'15px'}}>
-                            <div className="col-12" >
-                                <input type="file" onChange={incomingfile} className="custom-file-input"/>
-                                <label className="custom-file-label">{filename}</label>
+                        <Modal.Body>
+                            <div className="row" style={{ padding: '15px' }}>
+                                <div className="col-12" >
+                                    <input type="file" onChange={incomingfile} className="custom-file-input" />
+                                    <label className="custom-file-label">{filename}</label>
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo} />
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <textarea className={`form-control`} style={{ minHeight: '400px' }} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler} />
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
+                                </div>
                             </div>
-                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
-                            <input type="text" onChange={emailToChangeHandler} className={`form-control`} value={emailTo}/>
-                            </div>
-                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
-                                <textarea className={`form-control`} style={{minHeight:'400px'}} value={emailBody} id="emailBody" onChange={emailBodyChangeHandler}/>
-                            </div>
-                            <div className="col-12" style={{padding:'0', margin:'10px 0'}}>
-                            <button className="btn btn-warning mr-3" disabled={uploadButton} onClick={() => send()}>發送</button>
-                            </div>
-                        </div>
-                    </Modal.Body>
+                        </Modal.Body>
                     </Modal>
 
-                    }
+                }
             </div>
         </>
     )

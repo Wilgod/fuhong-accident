@@ -104,7 +104,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
-    debugger
+    
     return [PermissionList,outsiderAccidentWorkflow.Url,serviceUnitList]
     //this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow.Url,serviceUnitList:serviceUnitList });
   }
@@ -172,7 +172,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
               }
             })
           }).catch(console.error)
-          debugger
+          
           this.setState({ permissionList: lists[0], loading:false, outsiderAccidentWorkflow:lists[1], serviceUnitList:lists[2] });
 
           this.checkRole();// Testing Only 

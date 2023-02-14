@@ -202,10 +202,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         let calYear;
         if (currentMonth - i < 0) {
             if (i > 12) {
-                let moreYear = Math.floor(i/12);
+                let moreYear = Math.floor(i / 12);
                 let remainMonth = i % 12;
                 if (currentMonth - remainMonth < 0) {
-                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calMonth = 12 - (remainMonth - currentMonth);
                     calYear = currentYear - (moreYear + 1);
                 } else {
                     calMonth = currentMonth - remainMonth
@@ -219,10 +219,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             calMonth = currentMonth - i
             calYear = currentYear;
         }
-        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
+        const d = moment(new Date(calYear, calMonth, 1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
-    
+
     data.forEach((item) => {
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
             const formType: string = item.CaseNumber.split("-")[0];
@@ -240,27 +240,27 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy: parseInt(key.substr(3, 4) + key.substr(0, 2)) }
         result.push(item);
     })
     arraySort(result, 'mmyyyy');
     return result;
 }
 
-const financialYearChartParser = (result) =>{
+const financialYearChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         jan.push(item.dataset['jan']);
@@ -276,7 +276,7 @@ const financialYearChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         apr,
         may,
@@ -290,26 +290,26 @@ const financialYearChartParser = (result) =>{
         jan,
         feb,
         mar
-        
+
     ];
     return data;
 }
 
 
-const normalChartParser = (result) =>{
+const normalChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         jan.push(item.dataset['jan']);
@@ -325,7 +325,7 @@ const normalChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         jan,
         feb,
@@ -343,13 +343,13 @@ const normalChartParser = (result) =>{
     return data;
 }
 
-const financialChartParser = (result) =>{
+const financialChartParser = (result) => {
     let dataResult = ['Year'];
-    let sui =['SUI'];
-    let pui =['PUI'];
-    let sih =['SIH'];
-    let sid =['SID'];
-    let oin =['OIN'];
+    let sui = ['SUI'];
+    let pui = ['PUI'];
+    let sih = ['SIH'];
+    let sid = ['SID'];
+    let oin = ['OIN'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         sui.push(item.dataset['sui']);
@@ -358,7 +358,7 @@ const financialChartParser = (result) =>{
         sid.push(item.dataset['sid']);
         oin.push(item.dataset['oin']);
     });
-    let data=[
+    let data = [
         dataResult,
         sui,
         pui,
@@ -369,13 +369,13 @@ const financialChartParser = (result) =>{
     return data;
 }
 
-const nyChartParser = (result) =>{
+const nyChartParser = (result) => {
     let dataResult = ['Year'];
-    let sui =['SUI'];
-    let pui =['PUI'];
-    let sih =['SIH'];
-    let sid =['SID'];
-    let oin =['OIN'];
+    let sui = ['SUI'];
+    let pui = ['PUI'];
+    let sih = ['SIH'];
+    let sid = ['SID'];
+    let oin = ['OIN'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         sui.push(item.dataset['sui']);
@@ -384,7 +384,7 @@ const nyChartParser = (result) =>{
         sid.push(item.dataset['sid']);
         oin.push(item.dataset['oin']);
     });
-    let data=[
+    let data = [
         dataResult,
         sui,
         pui,
@@ -396,24 +396,24 @@ const nyChartParser = (result) =>{
 }
 
 
-const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate: Date, endDate: Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
-        if((d.getTime() <= endDate.getTime() && d.getTime() >= startDate.getTime()))
-        if (d) {
-            const currentFinicailYear = getDateFinancialYear(d);
-            if (m.has(currentFinicailYear)) {
-                let oldDataset = m.get(currentFinicailYear);
-                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
-                m.set(currentFinicailYear, newDataset);
-            } else {
-                let newDataset = monthFilter(d.getMonth() + 1);
-                m.set(currentFinicailYear, newDataset);
+        if ((d.getTime() <= endDate.getTime() && d.getTime() >= startDate.getTime()))
+            if (d) {
+                const currentFinicailYear = getDateFinancialYear(d);
+                if (m.has(currentFinicailYear)) {
+                    let oldDataset = m.get(currentFinicailYear);
+                    let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
+                    m.set(currentFinicailYear, newDataset);
+                } else {
+                    let newDataset = monthFilter(d.getMonth() + 1);
+                    m.set(currentFinicailYear, newDataset);
+                }
             }
-        }
     });
 
     m.forEach((value, key) => {
@@ -421,11 +421,11 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(financialYear, newDataset);
@@ -435,7 +435,7 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -471,11 +471,11 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(year.toString(), newDataset);
@@ -485,7 +485,7 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result
 }
@@ -515,12 +515,12 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(financialYear, initialDataset);
@@ -530,7 +530,7 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -566,12 +566,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(year.toString(), initialDataset);
@@ -581,7 +581,7 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result;
 }
@@ -607,7 +607,7 @@ function General(props) {
         setGroupBy("");
         setTimeout(() => {
             setGroupBy(oldGroupBy);
-        },500);
+        }, 500);
     }
     const changeStaticsComponentByEndDate = (e) => {
         setEndDate(e);
@@ -615,7 +615,7 @@ function General(props) {
         setGroupBy("");
         setTimeout(() => {
             setGroupBy(oldGroupBy);
-        },500);
+        }, 500);
     }
     const byMonthTableComponent = () => {
         return (
@@ -655,17 +655,17 @@ function General(props) {
     const changeGroupHandler = (event) => {
         const value = event.target.value;
         if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_MONTH_CALENDAR') {
             setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         }
         setGroupBy(value);
     }
@@ -704,23 +704,23 @@ function General(props) {
     }, [groupBy, data])
 
 
-    const downloadScreenshot = async(className) => {
-        
-        let chart = (document.querySelector("."+className) as HTMLElement);
+    const downloadScreenshot = async (className) => {
+
+        let chart = (document.querySelector("." + className) as HTMLElement);
         const canvas = await html2canvas(chart);
         const dataURL = canvas.toDataURL('image/png');
         downloadjs(dataURL, 'download.png', 'image/png');
     }
 
 
-      
+
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
-        
-        
+
+
         switch (groupBy) {
             case "NON":
-                console.log('serviceUnits',serviceUnits)
+                console.log('serviceUnits', serviceUnits)
                 return (
                     <React.Fragment>
                         <div className="row">
@@ -732,7 +732,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
                             </div>
                         </div>
@@ -756,7 +756,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 新發生意外或事故 (每月總數)  - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
                             </div>
                         </div>
@@ -805,7 +805,7 @@ function General(props) {
             case "BY_MONTH_FINANCIAL":
                 let SUIResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate);
                 let SUIFYChart = financialYearChartParser(SUIResult);
-                
+
                 let PUIResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate);
                 let PUIFYChart = financialYearChartParser(PUIResult);
 
@@ -831,7 +831,7 @@ function General(props) {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
                             </div>
                             <div className="col-12">
@@ -879,7 +879,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialLineChart1">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -905,7 +905,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialBarChart1">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -933,7 +933,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -943,7 +943,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
                             </div>
                         </div>
@@ -993,7 +993,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialLineChart2">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1019,7 +1019,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialBarChart2">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1046,7 +1046,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1056,7 +1056,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
                             </div>
                         </div>
@@ -1106,7 +1106,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialLineChart3">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1132,7 +1132,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialBarChart3">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1159,7 +1159,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1169,7 +1169,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
                             </div>
                         </div>
@@ -1219,7 +1219,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialLineChart4">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1245,7 +1245,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialBarChart4">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1272,7 +1272,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1282,7 +1282,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
                             </div>
                         </div>
@@ -1332,7 +1332,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialLineChart5">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1358,7 +1358,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthFinancialBarChart5">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1422,7 +1422,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
                             </div>
                         </div>
@@ -1472,7 +1472,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarLineChart1">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1498,7 +1498,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarBarChart1">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1525,7 +1525,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1535,7 +1535,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (外界人士意外每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
                             </div>
                         </div>
@@ -1585,7 +1585,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarLineChart2">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1611,7 +1611,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarBarChart2">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1647,7 +1647,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(牌照事務處)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
                             </div>
                         </div>
@@ -1695,10 +1695,10 @@ function General(props) {
                                 </table>
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarLineChart3">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1724,7 +1724,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarBarChart3">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1751,7 +1751,7 @@ function General(props) {
                                 />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div className="row">
                             <div className="col-1">
                                 <h6 style={{ fontWeight: 600 }}>
@@ -1761,7 +1761,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
                             </div>
                         </div>
@@ -1811,7 +1811,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarLineChart4">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1837,7 +1837,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarBarChart4">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1873,7 +1873,7 @@ function General(props) {
                             <div className="col-12">
                                 <h6>{`${titleYear2}年 - 日曆年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
                             </div>
                         </div>
@@ -1923,7 +1923,7 @@ function General(props) {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarLineChart5">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1949,7 +1949,7 @@ function General(props) {
                                 />
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
                             </div>
                             <div className="col-12 byMonthCalendarBarChart5">
                                 <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1998,9 +1998,9 @@ function General(props) {
                         <div className="col-12">
                             <h6>{`${titleYear3}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -2034,7 +2034,7 @@ function General(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2042,7 +2042,7 @@ function General(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數  (每年總數)
+                                    新發生意外或事故總數  (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2060,7 +2060,7 @@ function General(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2068,7 +2068,7 @@ function General(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數  (每年總數)
+                                    新發生意外或事故總數  (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2111,9 +2111,9 @@ function General(props) {
                         <div className="col-12">
                             <h6>{`${titleYear4}年 - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table14')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table14')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -2147,7 +2147,7 @@ function General(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2155,7 +2155,7 @@ function General(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數  (每年總數)
+                                    新發生意外或事故總數  (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2173,7 +2173,7 @@ function General(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2181,7 +2181,7 @@ function General(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                新發生意外或事故總數  (每年總數)
+                                    新發生意外或事故總數  (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2213,7 +2213,7 @@ function General(props) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonBarChart")}>下載圖表</button>
                                 <div className="nonBarChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -2241,7 +2241,7 @@ function General(props) {
                                 </div>
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="nonPieChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -2260,14 +2260,14 @@ function General(props) {
                                             legend: {
                                                 position: 'labeled',
                                                 textStyle: {
-                                                  fontName: 'monospace',
-                                                  fontSize: 9
+                                                    fontName: 'monospace',
+                                                    fontSize: 9
                                                 }
-                                              },
-                                              pieSliceTextStyle: {
+                                            },
+                                            pieSliceTextStyle: {
                                                 fontSize: 8
-                                              },
-                                              sliceVisibilityThreshold: 0
+                                            },
+                                            sliceVisibilityThreshold: 0
 
                                         }}
                                         data={
@@ -2295,9 +2295,9 @@ function General(props) {
 
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthBarChart")}>下載圖表</button>
                         </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
+                        <div className="col-12 byMonthBarChart" style={{ overflow: 'auto' }}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2333,8 +2333,8 @@ function General(props) {
                 </div>
             </div>
             <div className="row">
-                <div className="col">
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -2352,8 +2352,8 @@ function General(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         日期分組
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -2368,8 +2368,8 @@ function General(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -2379,20 +2379,20 @@ function General(props) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {props.permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          props.permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {props.permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            props.permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)

@@ -336,7 +336,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 setLoadNotifyStaff(true);
                 setLoadSpNotifyStaff(true);
             }
-            debugger
+            
             let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceLocation});
             if (ser.length > 0) {
                 setServiceUserUnit(ser[0].su_name_tc);

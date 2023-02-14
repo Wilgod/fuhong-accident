@@ -249,7 +249,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             const d = new Date(item.AccidentTime || item.IncidentTime);
             return (d.getTime() <= searchCriteria.endDate.getTime() && d.getTime() >= searchCriteria.startDate.getTime())
         })
-        debugger;
+        ;
         if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") === -1) {
             filterResult = filterResult.filter(item => {
                 return searchCriteria.serviceUnits.indexOf(item.ServiceLocation) >= 0

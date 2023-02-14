@@ -107,10 +107,10 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
           let formTwentySixData :any = [];
           let formTwentySixDataPrint :any = [];
           let formTwentySixDataSelected = null;
-          debugger
+          
           if (data) {
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
-            debugger
+            
             if (formTwentySixDataPrint.length > 0) {
               let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('SID-') >= 0});
               if (filterTSdata.length > 0) {

@@ -28,7 +28,7 @@ function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummar
         }
         return result;
     }
-    debugger
+    
     return (
         <div>
             <div className="row mb-3">

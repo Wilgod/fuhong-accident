@@ -258,7 +258,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             let police = formData.Police;
             let policeInvestigate = formData.PoliceInvestigate;
             let policeDatetime = formData.PoliceDatetime ? new Date(formData.PoliceDatetime) : null;
-            debugger
+            
             let policeInvestigateDate = formData.PoliceInvestigateDate ? new Date(formData.PoliceInvestigateDate) : null
             if (formData.UnusalIncident == null) {
                 police = undefined;
@@ -284,7 +284,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 abuser_policeCaseNo = undefined;
                 abuser_policeDate = undefined;
             }
-            debugger
+            
             setForm({
                 ...form,
                 abuser: formData.Abuser,
@@ -412,7 +412,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     useEffect(() => {
         if (loadReporter && loadNotifyStaff && loadSpNotifyStaff) {
-            debugger
+            
             setTimeout(
                 windowPrint
             ,500)

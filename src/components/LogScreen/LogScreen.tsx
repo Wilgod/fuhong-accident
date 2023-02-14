@@ -11,17 +11,17 @@ import useLog from '../../hooks/useLog';
 import useServiceLocation from '../../hooks/useServiceLocation';
 interface ILogScreenProps {
     context: WebPartContext;
-    siteCollectionUrl:string;
-    permission:any;
+    siteCollectionUrl: string;
+    permission: any;
 }
 
-function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
+function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
     const [log] = useLog(permission);
-    
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -46,7 +46,7 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                     }
                 }
                 dataLog.push(l);
-            }   
+            }
             setData(dataLog);
         }
     }, [log, serviceLocation]);
@@ -58,8 +58,8 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                 </div>
             </div>
             <div className="row">
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -77,8 +77,8 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -89,21 +89,21 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          permission.map((item) => {
-                            //debugger
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            permission.map((item) => {
+                                //
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serviceLocation.map((item) => {
@@ -112,8 +112,8 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                         */}
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         意外/事故
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
@@ -128,8 +128,8 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                         <option value="OIN">其他事故</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         顯示狀態
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
@@ -140,8 +140,8 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                         <option value="ALL">所有狀態</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         過期未交報告
                     </div>
                     <div className="form-check">
@@ -150,15 +150,15 @@ function LogScreen({ context,siteCollectionUrl, permission }: ILogScreenProps) {
                 </div>
             </div>
             <div className="mb-3">
-                <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }} >
+                <div style={{ fontSize: "1.05rem", fontWeight: 600 }} >
                     關鍵字
                 </div>
                 <div className="row">
-                    <div className="col-10">
+                    <div className="col-md-10 col-12 mt-1">
                         <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" />
                     </div>
-                    <div className="col">
-                        <button type="button" className="btn btn-primary" >搜尋</button>
+                    <div className="col-md-2 col-12 mt-1">
+                        <button type="button" className="btn btn-primary w-100" >搜尋</button>
                     </div>
                 </div>
             </div>
@@ -285,11 +285,11 @@ const columns = (context) => {
                     const [caseType] = data.CaseNumber.split("-");
                     //formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
                     let navPage = caseNumberToSitePageParser(caseType)
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    formLink = path + `Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else if (data && data.Title) {
                     //formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
                     let navPage = caseNumberToSitePageParser(data.Title.toUpperCase())
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    formLink = path + `Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else {
                     return null;
                 }

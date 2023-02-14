@@ -321,7 +321,7 @@ const categoryFilter = (unusalIncident: string,residentMissing:string, ra:boolea
     let result = dataset;
     console.log('residentMissing:',residentMissing)
     if (residentMissing == 'RESIDENT_MISSING_INSIDE') {
-        debugger
+        // debugger
     }
     if (unusalIncident == "UNUSAL_INCIDENT_GENERAL" || unusalIncident == "UNUSAL_INCIDENT_SUICIDE" || unusalIncident == "UNUSAL_INCIDENT_OTHER" || unusalIncident == "UNUSAL_INCIDENT_COURT") {
         result.unusalIncident += 1;
@@ -354,7 +354,7 @@ const categoryFilter = (unusalIncident: string,residentMissing:string, ra:boolea
 
 const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
-    debugger
+    // debugger
     serviceUserAge.forEach((item) => {
         let ra = false;
         if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {
@@ -2154,8 +2154,8 @@ function LicenseCategory(props) {
             </div>
 
             <div className="row">
-                <div className="col">
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -2173,8 +2173,8 @@ function LicenseCategory(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         日期分組
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -2192,8 +2192,8 @@ function LicenseCategory(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>

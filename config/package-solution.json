@@ -1,15 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    //prod
+    //UAT
+    // "name": "Fu Hong Accident Uat",
+    // "id": "cf8f397d-36a7-47b1-8a3d-7ef61ba8f95a",
+    //Prod
     "name": "Fu Hong Accident Prod",
     "id": "cf9f497d-46a7-47b2-8a4d-7ef63ba8f96a",
-    //uat
-    //"name": "Fu Hong Accident Uat",
-    //"id": "cf8f397d-36a7-47b1-8a3d-7ef61ba8f95a",
     "version": "1.0.0.264",
-
-
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {
@@ -35,9 +33,7 @@
     ]
   },
   "paths": {
-    //prod
-    "zippedPackage": "solution/fu-hong-accident-prod.sppkg"
-    //uat
     //"zippedPackage": "solution/fu-hong-accident.sppkg"
+    "zippedPackage": "solution/fu-hong-accident-prod.sppkg"
   }
 }

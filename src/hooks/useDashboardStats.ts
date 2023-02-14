@@ -23,7 +23,7 @@ export default function useDashboardStats(permission): [any[], Date, Date,string
 
     const initialState = async () => {
         
-        //debugger;
+        //;
         const searchCriteria: ISearchCriteria = { startDate, endDate, serviceUnits };
         const serviceUserAccident = await getDashboardServiceUserAccident(searchCriteria, startDate, endDate);
         const outsiderAccident = await getDashboardOutsiderAccident(searchCriteria, startDate, endDate);
