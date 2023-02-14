@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //uat
-  //"id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
+  //// "id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
   //prod
   "id": "b6846f84-39e3-45f2-953d-3cae439bc6c8",
   "alias": "FuHongSpecialIncidentReportAllowanceWebP",
@@ -23,8 +23,8 @@
         "default": "Other"
       },
       "title": {
-        // "default": "fuHongSpecialIncidentReportAllowance"
-        "default": "Fu Hong Special Incident Report Allowance Prod"
+        "default": "fuHongSpecialIncidentReportAllowance"
+        // "default": "Fu Hong Special Incident Report Allowance Prod"
       },
       "description": {
         "default": "Fu Hong Speical Incident Report Allowance Section Form 25"

@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //uat
-  //"id": "de1c45c6-6d2a-4a8b-85ed-748cbb0b4485",
+  "id": "de1c45c6-6d2a-4a8b-85ed-748cbb0b4485",
   //prod
-  "id": "de3c55c6-6d3a-5a8b-86ed-738cbb0b5585",
+  // "id": "de3c55c6-6d3a-5a8b-86ed-738cbb0b5585",
   "alias": "FuHongSpecialIncidentReportLicenseWebPar",
   "componentType": "WebPart",
   // The "*" signifies that the version should be taken from the package.json
@@ -24,8 +24,8 @@
         "default": "Other"
       },
       "title": {
-        // "default": "fuHongSpecialIncidentReportLicense"
-        "default": "Fu Hong Special Incident Report License Prod"
+        "default": "fuHongSpecialIncidentReportLicense"
+        // "default": "Fu Hong Special Incident Report License Prod"
       },
       "description": {
         "default": "Fu Hong Special Incident Report Licensing Authority Form 24"
