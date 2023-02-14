@@ -1,33 +1,38 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  //prod
-  //"id": "b6846f84-39e3-45f2-953d-3cae439bc6c8",
   //uat
-  "id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
+  //"id": "b6826f84-39e1-45f1-951d-3cae139bc5c8",
+  //prod
+  "id": "b6846f84-39e3-45f2-953d-3cae439bc6c8",
   "alias": "FuHongSpecialIncidentReportAllowanceWebP",
   "componentType": "WebPart",
-
   // The "*" signifies that the version should be taken from the package.json
   "version": "*",
   "manifestVersion": 2,
-
   // If true, the component can only be installed on sites where Custom Script is allowed.
   // Components that allow authors to embed arbitrary script code should set this to true.
   // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
   "requiresCustomScript": false,
-  "supportedHosts": ["SharePointWebPart"],
-
-  "preconfiguredEntries": [{
-    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
-    "group": { "default": "Other" },
-    //prod
-    //"title": { "default": "Fu Hong Special Incident Report Allowance Prod" },
-    //uat
-    "title": { "default": "fuHongSpecialIncidentReportAllowance" },
-    "description": { "default": "Fu Hong Speical Incident Report Allowance Section Form 25" },
-    "officeFabricIconFontName": "Page",
-    "properties": {
-      "description": "fuHongSpecialIncidentReportAllowance"
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+      "group": {
+        "default": "Other"
+      },
+      "title": {
+        // "default": "fuHongSpecialIncidentReportAllowance"
+        "default": "Fu Hong Special Incident Report Allowance Prod"
+      },
+      "description": {
+        "default": "Fu Hong Speical Incident Report Allowance Section Form 25"
+      },
+      "officeFabricIconFontName": "Page",
+      "properties": {
+        "description": "fuHongSpecialIncidentReportAllowance"
+      }
     }
-  }]
+  ]
 }

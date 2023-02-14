@@ -3685,8 +3685,8 @@ function ServiceUserAccidentEnv(props) {
             </div>
 
             <div className="row">
-                <div className="col">
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -3704,8 +3704,8 @@ function ServiceUserAccidentEnv(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         日期分組
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -3720,8 +3720,8 @@ function ServiceUserAccidentEnv(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>

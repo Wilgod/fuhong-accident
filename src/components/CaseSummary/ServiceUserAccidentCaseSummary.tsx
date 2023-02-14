@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import useServiceLocation from '../../hooks/useServiceLocation';
-import {getAllServiceUserAccidentWithClosed, getAllAccidentReportForm} from '../../api/FetchFuHongList';
+import { getAllServiceUserAccidentWithClosed, getAllAccidentReportForm } from '../../api/FetchFuHongList';
 import './Summary.css';
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -17,8 +17,8 @@ import * as XLSXStyle from 'xlsx-style';
 import * as FileSaver from 'file-saver';
 interface IServiceUserAccidentCaseSummary {
     context: WebPartContext;
-    siteCollectionUrl:string;
-    permission:any;
+    siteCollectionUrl: string;
+    permission: any;
 }
 
 
@@ -44,9 +44,9 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
         if (Array.isArray(serviceLocation) && serviceLocation.length > 0) {
             getAllData();
         }
-        
+
     }, [serviceLocation]);
-    
+
     async function getAllData() {
         let allServiceUserAccident = await getAllServiceUserAccidentWithClosed();
         let allAccidentReportForm = await getAllAccidentReportForm();
@@ -63,10 +63,10 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                 }
             }
             if (add) {
-                let unit = serviceLocation.filter(o => {return o.su_Eng_name_display == sa.ServiceUserUnit});
+                let unit = serviceLocation.filter(o => { return o.su_Eng_name_display == sa.ServiceUserUnit });
                 sa['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 console.log('All CaseNumber', sa['CaseNumber'])
-                let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
+                let getARF = allAccidentReportForm.filter(item => { return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID });
                 sa['AccidentReportForm'] = getARF;
                 if (sa['Stage'] == '1') {
                     sa['Form'] = '服務使用者意外填報表(一)';
@@ -106,17 +106,17 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
             }
         }
         if (startDate != null) {
-            filterData = filterData.filter(item => {return new Date(item.AccidentTime).getTime() >= new Date(startDate).getTime()});
+            filterData = filterData.filter(item => { return new Date(item.AccidentTime).getTime() >= new Date(startDate).getTime() });
         }
         if (endDate != null) {
-            filterData = filterData.filter(item => {return new Date(item.AccidentTime).getTime() <= new Date(endDate).getTime()});
+            filterData = filterData.filter(item => { return new Date(item.AccidentTime).getTime() <= new Date(endDate).getTime() });
         }
 
         if (status != '' && status != 'ALL') {
             if (status == 'Apply') {
-                filterData = filterData.filter(item => {return item.Stage == '1'});
+                filterData = filterData.filter(item => { return item.Stage == '1' });
             } else if (status == 'Confirm') {
-                filterData = filterData.filter(item => {return item.Stage == '2' || item.Stage == '3'});
+                filterData = filterData.filter(item => { return item.Stage == '2' || item.Stage == '3' });
             }
         }
         /*if (status != '' && status != 'ALL') {
@@ -128,13 +128,13 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
             
         }*/
         filterData = filterData.filter(item => {
-            console.log('item.ServiceUserNameCN : ',item.ServiceUserNameCN);
-            return ((item.ServiceUserNameCN != null &&item.ServiceUserNameCN.indexOf(keyword) >= 0) || 
-            (item.ServiceUserNameEN != null && item.ServiceUserNameEN.indexOf(keyword) >= 0) || 
-            (item.CaseNumber != null && item.CaseNumber.indexOf(keyword) >= 0) || 
-            (item.InsuranceCaseNo != null && item.InsuranceCaseNo.indexOf(keyword) >= 0))
+            console.log('item.ServiceUserNameCN : ', item.ServiceUserNameCN);
+            return ((item.ServiceUserNameCN != null && item.ServiceUserNameCN.indexOf(keyword) >= 0) ||
+                (item.ServiceUserNameEN != null && item.ServiceUserNameEN.indexOf(keyword) >= 0) ||
+                (item.CaseNumber != null && item.CaseNumber.indexOf(keyword) >= 0) ||
+                (item.InsuranceCaseNo != null && item.InsuranceCaseNo.indexOf(keyword) >= 0))
         });
-        
+
         setDisplayData(filterData);
     }
 
@@ -146,7 +146,7 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
             let AccidentDetail = '';
             let AccidentCauseFactor = '';
             let Suggestion = '';
-            if (results.AccidentTime != undefined &&results.AccidentTime != null) {
+            if (results.AccidentTime != undefined && results.AccidentTime != null) {
                 AccidentTime = moment(results.AccidentTime).format("YYYY-MM-DD hh:mm");
                 //AccidentTime = new Date(results.AccidentTime).getFullYear() + `-` +(`0`+(new Date(results.AccidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.AccidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.AccidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.AccidentTime).getMinutes()).slice(-2)
             }
@@ -204,8 +204,8 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                 AccidentNature: AccidentNature,
                 AccidentDetail: AccidentDetail,
                 AccidentCauseFactor: AccidentCauseFactor,
-                Suggestion:Suggestion
-                
+                Suggestion: Suggestion
+
             })
         }
         let resultMax = flattenArray(exportList)[1];
@@ -213,50 +213,50 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
         let ws = {};
         let col = 0; //A
         let row = 2;
-        
-        for (let i= 0; i<exportList.length; i++) {
-            ws["A"+ (i+row)] = { t: 's', v: exportList[i].ServiceLocation, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["B"+ (i+row)] = { t: 's', v: exportList[i].AccidentTime, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["C"+ (i+row)] = { t: 's', v: exportList[i].ServiceUserGender, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["D"+ (i+row)] = { t: 's', v: exportList[i].ServiceUserAge, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["E"+ (i+row)] = { t: 's', v: exportList[i].AccidentLocation, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["F"+ (i+row)] = { t: 's', v: exportList[i].AccidentNature, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["G"+ (i+row)] = { t: 's', v: exportList[i].AccidentDetail, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["H"+ (i+row)] = { t: 's', v: exportList[i].AccidentCauseFactor, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
-            ws["I"+ (i+row)] = { t: 's', v: exportList[i].Suggestion, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'} } };
+
+        for (let i = 0; i < exportList.length; i++) {
+            ws["A" + (i + row)] = { t: 's', v: exportList[i].ServiceLocation, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["B" + (i + row)] = { t: 's', v: exportList[i].AccidentTime, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["C" + (i + row)] = { t: 's', v: exportList[i].ServiceUserGender, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["D" + (i + row)] = { t: 's', v: exportList[i].ServiceUserAge, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["E" + (i + row)] = { t: 's', v: exportList[i].AccidentLocation, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["F" + (i + row)] = { t: 's', v: exportList[i].AccidentNature, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["G" + (i + row)] = { t: 's', v: exportList[i].AccidentDetail, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["H" + (i + row)] = { t: 's', v: exportList[i].AccidentCauseFactor, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["I" + (i + row)] = { t: 's', v: exportList[i].Suggestion, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
         }
-        XLSX.utils.sheet_add_json(ws, flattenedResult, {origin:"A3"});
-        ws = styleArray(ws,col,row,exportList,resultMax);
-        ws["A1"] = { t: 's', v: "扶康會", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true }  } };
-        ws["A2"] = { t: 's', v: "服務使用者意外報告 ", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, font: { bold: true }  } };
-        ws["A3"] = { t: 's', v: "服務單位", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["B3"] = { t: 's', v: "意外日期及時間", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["C3"] = { t: 's', v: "性別", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["D3"] = { t: 's', v: "年齡", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["E3"] = { t: 's', v: "地點", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["F3"] = { t: 's', v: "意外性質", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["G3"] = { t: 's', v: "意外詳情", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["H3"] = { t: 's', v: "成因", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
-        ws["I3"] = { t: 's', v: "跟進工作及報告建議", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}, border: { top : { style: 'thick', color: { rgb: "000000" } },bottom: { style: 'thick', color: { rgb: "000000" } },screenLeft : { style: 'thick', color: { rgb: "000000" } },right : { style: 'thick', color: { rgb: "000000" } } } } };
+        XLSX.utils.sheet_add_json(ws, flattenedResult, { origin: "A3" });
+        ws = styleArray(ws, col, row, exportList, resultMax);
+        ws["A1"] = { t: 's', v: "扶康會", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true } } };
+        ws["A2"] = { t: 's', v: "服務使用者意外報告 ", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true } } };
+        ws["A3"] = { t: 's', v: "服務單位", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["B3"] = { t: 's', v: "意外日期及時間", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["C3"] = { t: 's', v: "性別", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["D3"] = { t: 's', v: "年齡", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["E3"] = { t: 's', v: "地點", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["F3"] = { t: 's', v: "意外性質", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["G3"] = { t: 's', v: "意外詳情", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["H3"] = { t: 's', v: "成因", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
+        ws["I3"] = { t: 's', v: "跟進工作及報告建議", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
         ws = convertMessageWithLineBreak(ws);
         ws["!merges"] = [
-			{ s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },
-			{ s: { r: 1, c: 0 }, e: { r: 1, c: 9 } }
+            { s: { r: 0, c: 0 }, e: { r: 0, c: 9 } },
+            { s: { r: 1, c: 0 }, e: { r: 1, c: 9 } }
         ]
         var wscols = [
-            {wch:10},
-            {wch:20},
-            {wch:10},
-            {wch:10},
-            {wch:30},
-            {wch:50},
-            {wch:50},
-            {wch:50},
-            {wch:50}
+            { wch: 10 },
+            { wch: 20 },
+            { wch: 10 },
+            { wch: 10 },
+            { wch: 30 },
+            { wch: 50 },
+            { wch: 50 },
+            { wch: 50 },
+            { wch: 50 }
         ];
         ws['!cols'] = wscols;
         let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws,"Dashboard");
+        XLSX.utils.book_append_sheet(wb, ws, "Dashboard");
         const excelBuffer: any = XLSXStyle.write(wb, { bookType: 'xlsx', type: 'buffer' });
         saveAsExcelFile(excelBuffer, "Dashboard");
     }
@@ -265,12 +265,12 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
         const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         const EXCEL_EXTENSION = '.xlsx';
         const data: Blob = new Blob([buffer], {
-          type: EXCEL_TYPE
+            type: EXCEL_TYPE
         });
-        FileSaver.saveAs(data, fileName+EXCEL_EXTENSION);
+        FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
     }
 
-    function flattenArray(src){
+    function flattenArray(src) {
         let flattenResult = [];
         let attributeLayer = [];
         var maxLayer = 0;
@@ -279,112 +279,112 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
         var masterLayer = "";
         var currentLayer = 1;
         var maxChildren = 0;
-        let maxLayerSet:boolean = false;
+        let maxLayerSet: boolean = false;
         //var attributeLayer: Map<any, any> = new Map<any, any>();
         var t = [];
-        let flatten = function(arr,master,index){
-          if(arr!=null && arr.constructor.name === "Object"){
-            ++currentLayer;
-            ++tempMaxLayer;
-            Object.keys(arr).map(item=>{
-              flatten(arr[item],master,index);
+        let flatten = function (arr, master, index) {
+            if (arr != null && arr.constructor.name === "Object") {
+                ++currentLayer;
+                ++tempMaxLayer;
+                Object.keys(arr).map(item => {
+                    flatten(arr[item], master, index);
+                });
+                ++maxChildren;
+                ++totalCol;
+                t[master + totalCol] = arr.Title == null ? "" : arr.Title;
+            } else if (master.indexOf("@") == -1) {
+                ++maxChildren;
+                ++totalCol;
+                t[master + totalCol] = arr == null ? "" : arr;
+            }
+        };
+        for (let result in src) {
+            t = [];
+            totalCol = 0;
+            Object.keys(src[result]).map(item => {
+                maxLayer = tempMaxLayer > maxLayer ? tempMaxLayer : maxLayer;
+                currentLayer = 1;
+                maxChildren = 0;
+                flatten(src[result][item], item, 0);
+                !maxLayerSet ? attributeLayer.push(maxChildren) : true;
             });
-            ++maxChildren;
-            ++totalCol;
-            t[master+totalCol] = arr.Title == null ? "" : arr.Title;
-          }else if(master.indexOf("@") == -1){
-            ++maxChildren;
-            ++totalCol;
-            t[master+totalCol] = arr == null ? "" : arr;
-          }
-        }; 
-        for(let result in src){
-          t = [];
-          totalCol = 0;
-          Object.keys(src[result]).map(item=>{
-              maxLayer = tempMaxLayer > maxLayer ? tempMaxLayer : maxLayer;
-              currentLayer = 1;
-              maxChildren = 0;
-              flatten(src[result][item],item,0);
-              !maxLayerSet ? attributeLayer.push(maxChildren) : true;
-          });
-          maxLayerSet = true;
-          flattenResult.push(t);
+            maxLayerSet = true;
+            flattenResult.push(t);
         }
-        
-        return [flattenResult,attributeLayer];
+
+        return [flattenResult, attributeLayer];
     }
 
-    function styleArray(ws,col,row,src,maxLayer){
+    function styleArray(ws, col, row, src, maxLayer) {
         let lineBreakColumn = [];
         //set header
-        if(src.length > 0){
-                Object.keys(src[0]).map((item, index)=>{
-          if(item.indexOf("CheckList") == -1){
-            
-          lineBreakColumnIndex = String.fromCharCode(97 + index).toUpperCase();
-          lineBreakColumn.push(String.fromCharCode(97 + index).toUpperCase());
-          var cell = "";
-          if(col>=26){
-            cell = String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26).toUpperCase();
-          }else{
-            cell = String.fromCharCode(97 + col).toUpperCase();
-          }
-          if(maxLayer[index] > 1){ //hv children
-            //ws["!merges"].push({s:{r:row,c:col},e:{r:row,c:col+maxLayer[index]-1}}); //horizontally merge
-            ws[cell + (row+2)] = {t:"s",v:item};
-            for(let i = 0; i < maxLayer[index]; ++i){
-              if(col >= 26){
-              ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26  + i).toUpperCase() + (row+1)].s = {font:{bold: true}, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }};
-              ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26  + i).toUpperCase() + (row+2)] = {t:"s",v:Object.keys(src[0][item])[i]};
-              //ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26  + i).toUpperCase() + (row+2)].s = {font:{bold: true},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
-              }else{
-              ws[String.fromCharCode(97 + col + i).toUpperCase() + (row+1)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center'}};
-              ws[String.fromCharCode(97 + col + i).toUpperCase() + (row+2)] = {t:"s",v:Object.keys(src[0][item])[i]};
-              //ws[String.fromCharCode(97 + col + i).toUpperCase() + (row+2)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
-              }
-              
-            }
-            col += maxLayer[index];
-            }else{
-            //ws["!merges"].push({s:{r:row,c:col},e:{r:row+1,c:col}}); //only vertically merge
-            ws[String.fromCharCode(97 + col).toUpperCase() + (row+1)] = {t:"s",v:item};
-            //ws[String.fromCharCode(97 + col).toUpperCase() + (row+2)] = {t:"s",v:item};
-            ws[String.fromCharCode(97 + col).toUpperCase() + (row+1)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' },border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
-            //ws[String.fromCharCode(97 + col).toUpperCase() + (row+2)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' },border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
-            col += maxLayer[index];
-            }
-        }
-        
-          });
+        if (src.length > 0) {
+            Object.keys(src[0]).map((item, index) => {
+                if (item.indexOf("CheckList") == -1) {
+
+                    lineBreakColumnIndex = String.fromCharCode(97 + index).toUpperCase();
+                    lineBreakColumn.push(String.fromCharCode(97 + index).toUpperCase());
+                    var cell = "";
+                    if (col >= 26) {
+                        cell = String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26).toUpperCase();
+                    } else {
+                        cell = String.fromCharCode(97 + col).toUpperCase();
+                    }
+                    if (maxLayer[index] > 1) { //hv children
+                        //ws["!merges"].push({s:{r:row,c:col},e:{r:row,c:col+maxLayer[index]-1}}); //horizontally merge
+                        ws[cell + (row + 2)] = { t: "s", v: item };
+                        for (let i = 0; i < maxLayer[index]; ++i) {
+                            if (col >= 26) {
+                                ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26 + i).toUpperCase() + (row + 1)].s = { font: { bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } };
+                                ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26 + i).toUpperCase() + (row + 2)] = { t: "s", v: Object.keys(src[0][item])[i] };
+                                //ws[String.fromCharCode(97 + 0).toUpperCase() + String.fromCharCode(97 + col - 26  + i).toUpperCase() + (row+2)].s = {font:{bold: true},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
+                            } else {
+                                ws[String.fromCharCode(97 + col + i).toUpperCase() + (row + 1)].s = { font: { bold: true, sz: 11 }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } };
+                                ws[String.fromCharCode(97 + col + i).toUpperCase() + (row + 2)] = { t: "s", v: Object.keys(src[0][item])[i] };
+                                //ws[String.fromCharCode(97 + col + i).toUpperCase() + (row+2)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
+                            }
+
+                        }
+                        col += maxLayer[index];
+                    } else {
+                        //ws["!merges"].push({s:{r:row,c:col},e:{r:row+1,c:col}}); //only vertically merge
+                        ws[String.fromCharCode(97 + col).toUpperCase() + (row + 1)] = { t: "s", v: item };
+                        //ws[String.fromCharCode(97 + col).toUpperCase() + (row+2)] = {t:"s",v:item};
+                        ws[String.fromCharCode(97 + col).toUpperCase() + (row + 1)].s = { font: { bold: true, sz: 11 }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, left: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } };
+                        //ws[String.fromCharCode(97 + col).toUpperCase() + (row+2)].s = {font:{bold: true,sz:11},alignment: { wrapText: true, vertical: 'center', horizontal: 'center' },border: { top: { style: 'thick', color: { rgb: "000000"}}, left: { style: 'thick', color: { rgb: "000000"}}, bottom: { style: 'thick', color: { rgb: "000000"}}, right: { style: 'thick', color: { rgb: "000000"}}}};
+                        col += maxLayer[index];
+                    }
+                }
+
+            });
         }
         let wscols = [];
-        for(let i = 0;i < col;++i){
-          if(lineBreakColumn.indexOf(String.fromCharCode(97 + i).toUpperCase()) != -1){
-            wscols.push({wpx:350});
-          }else{
-            wscols.push({wpx:350});
-          }
+        for (let i = 0; i < col; ++i) {
+            if (lineBreakColumn.indexOf(String.fromCharCode(97 + i).toUpperCase()) != -1) {
+                wscols.push({ wpx: 350 });
+            } else {
+                wscols.push({ wpx: 350 });
+            }
         }
         ws['!cols'] = wscols;
-        var wsrows =  [
-          {hpt: 50}, 
-          {hpt: 15}
+        var wsrows = [
+            { hpt: 50 },
+            { hpt: 15 }
         ];
         ws['!rows'] = wsrows; // ws - worksheet
         return ws;
-      }
-    
-      function convertMessageWithLineBreak(ws){
-        Object.keys(ws).map(item=>{
-          if(item.indexOf("!") == -1 && item.indexOf(lineBreakColumnIndex) != -1){
-            if(ws[item]["s"] == undefined){
-              ws[item]["s"] = {alignment: { wrapText: true}};
+    }
+
+    function convertMessageWithLineBreak(ws) {
+        Object.keys(ws).map(item => {
+            if (item.indexOf("!") == -1 && item.indexOf(lineBreakColumnIndex) != -1) {
+                if (ws[item]["s"] == undefined) {
+                    ws[item]["s"] = { alignment: { wrapText: true } };
+                }
             }
-          }
         });
         return ws;
-      }
+    }
 
     return (
         <div>
@@ -394,8 +394,8 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                 </div>
             </div>
             <div className="row">
-                <div className="col-2" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -413,8 +413,8 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                         </div>
                     </div>
                 </div>
-                <div className="col-4" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -425,21 +425,21 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                         setSelectedOptions(selected);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          permission.map((item) => {
-                            //debugger
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            permission.map((item) => {
+                                //
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serviceLocation.map((item) => {
@@ -448,8 +448,8 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                         */}
                     </select>
                 </div>
-                <div className="col-4" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         顯示狀態
                     </div>
                     <select className="form-control" onChange={(event) => {
@@ -460,23 +460,23 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                         <option value="Confirm">確認檔案</option>
                         {/*<option value="PROCESSING">跟進中個案</option>
                         <option value="CLOSED">已結束個案</option>*/}
-                        
+
                     </select>
                 </div>
             </div>
             <div className="mb-3">
-                <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }} >
+                <div style={{ fontSize: "1.05rem", fontWeight: 600 }} >
                     關鍵字
                 </div>
                 <div className="row">
-                    <div className="col-10">
-                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" onChange={inputFieldHandler}/>
+                    <div className="col-md-8 col-12 mt-1">
+                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" onChange={inputFieldHandler} />
                     </div>
-                    <div className="col">
-                        <button type="button" className="btn btn-primary" onClick={() => filter()}  >搜尋</button>
+                    <div className="col-md-2 col-6 mt-1">
+                        <button type="button" className="btn btn-primary w-100" onClick={() => filter()}  >搜尋</button>
                     </div>
-                    <div className="col">
-                        <button type="button" className="btn btn-success" onClick={() => exportExcel()} >Excel</button>
+                    <div className="col-md-2 col-6 mt-1">
+                        <button type="button" className="btn btn-success w-100" onClick={() => exportExcel()} >Excel</button>
                     </div>
                 </div>
             </div>
@@ -485,9 +485,9 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                     搜尋結果 [{`${displayData.length} 筆記錄`}]
                 </div>
                 <div className="summaryDashboard">
-                <BootstrapTable boot keyField='id' data={displayData || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
+                    <BootstrapTable boot keyField='id' data={displayData || []} columns={column} pagination={paginationFactory()} bootstrap4={true} />
                 </div>
-                
+
             </div>
         </div>
     )
@@ -505,33 +505,33 @@ const column = [
         dataField: 'ServiceLocationTC',
         text: '服務單位',
         sort: true,
-        headerStyle: {width: '200px'}
+        headerStyle: { width: '200px' }
     },
     {
         dataField: 'AccidentTime',
         text: '意外發生日期及時間',
         sort: true,
-        headerStyle: {width: '180px'},
+        headerStyle: { width: '180px' },
         formatter: dateFormatter.bind(this)
     },
     {
         dataField: 'ServiceUserGender',
         text: '性別',
         sort: true,
-        headerStyle: {width: '80px'},
+        headerStyle: { width: '80px' },
         formatter: genderFormatter.bind(this)
     },
     {
         dataField: 'ServiceUserAge',
         text: '年齡',
         sort: true,
-        headerStyle: {width: '80px'}
+        headerStyle: { width: '80px' }
     },
     {
         dataField: 'AccidentLocation',
         text: '意外發生地點',
         sort: true,
-        headerStyle: {width: '130px'}
+        headerStyle: { width: '130px' }
     },
     /*{
         dataField: 'Intelligence',
@@ -551,7 +551,7 @@ const column = [
         dataField: 'AccidentNature',
         text: '意外性質',
         sort: true,
-        headerStyle: {width: '300px'},
+        headerStyle: { width: '300px' },
         formatter: accidentNatureFormatter.bind(this)
     },
     /*{
@@ -572,26 +572,26 @@ const column = [
         dataField: 'AccidentDetail',
         text: '意外詳情',
         sort: true,
-        headerStyle: {width: '300px'},
+        headerStyle: { width: '300px' },
         formatter: accidentDetailFormatter.bind(this)
     },
     {
         dataField: 'AccidentCauseFactor',
         text: '成因',
         sort: true,
-        headerStyle: {width: '300px'},
+        headerStyle: { width: '300px' },
         formatter: accidentCauseFactorFormatter.bind(this)
     },
     {
         dataField: 'Suggestion',
         text: '跟進工作及報告建議',
         sort: true,
-        headerStyle: {width: '300px'},
+        headerStyle: { width: '300px' },
         formatter: suggestionFactorFormatter.bind(this)
     }
 ]
 
-function dateFormatter(cell,rowIndex){
+function dateFormatter(cell, rowIndex) {
     let div = [];
     if (cell != undefined && cell != null) {
         div.push(<div>{moment(cell).format("YYYY-MM-DD")}</div>);
@@ -601,7 +601,7 @@ function dateFormatter(cell,rowIndex){
     return div;
 }
 
-function intelligenceFormatter(cell,rowIndex){
+function intelligenceFormatter(cell, rowIndex) {
     let div = [];
     if (cell == 'MILD') {
         div.push(<div>輕度</div>);
@@ -617,7 +617,7 @@ function intelligenceFormatter(cell,rowIndex){
     return div;
 }
 
-function asdFormatter(cell,rowIndex){
+function asdFormatter(cell, rowIndex) {
     let div = [];
     if (cell) {
         div.push(<div>是</div>);
@@ -636,7 +636,7 @@ function genderFormatter(cell, rowIndex) {
     }
     return div;
 }
-function accidentNatureFormatter(cell,rowIndex){
+function accidentNatureFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].AccidentNatureFall) {
@@ -657,7 +657,7 @@ function accidentNatureFormatter(cell,rowIndex){
     }
     return div;
 }
-function envirnmentFactorFormatter(cell,rowIndex){
+function envirnmentFactorFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].EnvFactorSlipperyGround) {
@@ -694,7 +694,7 @@ function envirnmentFactorFormatter(cell,rowIndex){
     return div;
 }
 
-function personalFactorFormatter(cell,rowIndex){
+function personalFactorFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].PersonalFactorEmotional) {
@@ -719,7 +719,7 @@ function personalFactorFormatter(cell,rowIndex){
     return div;
 }
 
-function accidentDetailFormatter(cell,rowIndex){
+function accidentDetailFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].AccidentalDiscovery != null) {
@@ -728,7 +728,7 @@ function accidentDetailFormatter(cell,rowIndex){
     }
     return div;
 }
-function accidentCauseFactorFormatter(cell,rowIndex){
+function accidentCauseFactorFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].AccidentCauseFactor != null) {
@@ -738,7 +738,7 @@ function accidentCauseFactorFormatter(cell,rowIndex){
     return div;
 }
 
-function suggestionFactorFormatter(cell,rowIndex){
+function suggestionFactorFormatter(cell, rowIndex) {
     let div = [];
     if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         if (rowIndex.AccidentReportForm[0].Suggestion != null) {

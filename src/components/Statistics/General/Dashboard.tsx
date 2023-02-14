@@ -2014,7 +2014,7 @@ function Dashboard(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>*/}
-                <div className="col" >
+                <div className="col-12 mb-3" >
                     <div className="mb-3" style={{ fontWeight: 600 }}>
                         服務單位
                     </div>

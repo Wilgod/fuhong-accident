@@ -16,7 +16,7 @@ export function useAllowanceStats(permission): [any[], Date, Date, string[], Dis
             serviceUnits: serviceUnits
         }).then((res) => {
             let allDate = [];
-            debugger
+            
             for (let r of res) {
                 let add = false;
                 if (permission.indexOf('All') >= 0) {

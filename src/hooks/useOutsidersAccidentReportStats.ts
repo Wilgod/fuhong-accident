@@ -16,7 +16,7 @@ export function useOutsidersAccidentReportStats(permission): [any[], Date, Date,
             serviceUnits: serviceUnits
         }).then((res) => {
             let allDate = [];
-            debugger
+            
             for (let r of res) {
                 let add = false;
                 if (permission.indexOf('All') >= 0) {

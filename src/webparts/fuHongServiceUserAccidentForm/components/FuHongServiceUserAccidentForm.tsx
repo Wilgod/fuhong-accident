@@ -7,7 +7,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import 'react-tabs/style/react-tabs.css';
-import 'bootstrap/dist/css/bootstrap.css';
 import "./react-tabs.css";
 import ServiceUserAccidentForm from "./ServiceUserAccidentForm";
 import AccidentFollowUpForm from "../../../components/AccidentFollowUpForm/AccidentFollowUpForm";
@@ -22,6 +21,7 @@ import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 import { getAccidentReportFormById, getAccidentFollowUpFormById, getAllAccidentFollowUpFormByCaseNumber,getAdmin, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { getServiceUserAccidentWorkflow, getCMSUserWorkflow } from '../../../api/FetchFuHongList';
 import ServiceUserAccidentFormPrint from "../../../components/ServiceUserAccidentForm/ServiceUserAccidentFormPrint";
+import 'bootstrap/dist/css/bootstrap.css';
 
 const getCanvasZone = () => {
   let x = document.getElementsByTagName("div");
@@ -195,7 +195,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             })
           }).catch(console.error)
-          debugger
+          
           this.setState({ permissionList: lists[0], loading:false, serviceUserAccidentWorkflow:lists[1], serviceUnitList:lists[2], cmsUserWorkflow:lists[3] });
           
           //this.checkRole();// Testing Only 
@@ -209,11 +209,11 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
     try {
       const formId = getQueryParameterNumber("formId");
       if (formId) {
-        debugger
+        
         const data = await getServiceUserAccidentById(formId);
         let contactStaff = null;
         if (data.ContactFamilyStaffId != null) {
-          debugger
+          
           contactStaff = await getUserAdByGraph(data.ContactFamilyStaff.EMail);
           
           if (contactStaff == null) {
@@ -227,10 +227,10 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
           }
           
         }
-        debugger
+        
         const Reporter = await getUserAdByGraph(data.Reporter.EMail);
         const investigator = data.Investigator != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
-        debugger
+        
         if (Reporter == null) {
           let r = {
             displayName: data.Reporter.Title,

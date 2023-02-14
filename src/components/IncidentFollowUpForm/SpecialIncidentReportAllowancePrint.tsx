@@ -172,9 +172,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
 
     let followUpActions = null;
     let formTwentySixDataPrint = null;
-    debugger
+    
     if (formTwentySixData != null && formTwentySixData.length > 0) {
-        debugger
+        
         formTwentySixDataPrint = formTwentySixData.filter(item => {return item.Id == formTwentySixDataSelected});
         if (Array.isArray(formTwentySixDataPrint) && formTwentySixDataPrint[0].FollowUpActions != null) {
             followUpActions = JSON.parse(formTwentySixDataPrint[0].FollowUpActions);
@@ -335,7 +335,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             /*if (formData.GuardianStaff) {
                 setNotifyStaff([formData.GuardianStaff]);
             }*/
-            debugger
+            
             setForm({
                 ...form,
                 toDepartment:formData.ToDepartment,

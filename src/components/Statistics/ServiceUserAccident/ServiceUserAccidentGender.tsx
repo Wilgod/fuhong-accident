@@ -128,25 +128,25 @@ const sexFilter = (sex: string, dataset: IDataset) => {
             result.male += 1;
         }
     }
-    
+
     return result;
 }
 
 
-const financialYearChartParser = (result) =>{
+const financialYearChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         jan.push(item.dataset['jan']);
@@ -162,7 +162,7 @@ const financialYearChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         apr,
         may,
@@ -176,25 +176,25 @@ const financialYearChartParser = (result) =>{
         jan,
         feb,
         mar
-        
+
     ];
     return data;
 }
 
-const normalChartParser = (result) =>{
+const normalChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         jan.push(item.dataset['jan']);
@@ -210,7 +210,7 @@ const normalChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         jan,
         feb,
@@ -228,16 +228,16 @@ const normalChartParser = (result) =>{
     return data;
 }
 
-const financialChartParser = (result) =>{
+const financialChartParser = (result) => {
     let dataResult = ['Year'];
-    let male =['男'];
-    let female =['女'];
+    let male = ['男'];
+    let female = ['女'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         male.push(item.dataset['male']);
         female.push(item.dataset['female']);
     });
-    let data=[
+    let data = [
         dataResult,
         male,
         female
@@ -245,16 +245,16 @@ const financialChartParser = (result) =>{
     return data;
 }
 
-const yearChartParser = (result) =>{
+const yearChartParser = (result) => {
     let dataResult = ['Year'];
-    let male =['男'];
-    let female =['女'];
+    let male = ['男'];
+    let female = ['女'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         male.push(item.dataset['male']);
         female.push(item.dataset['female']);
     });
-    let data=[
+    let data = [
         dataResult,
         male,
         female
@@ -300,10 +300,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         let calYear;
         if (currentMonth - i < 0) {
             if (i > 12) {
-                let moreYear = Math.floor(i/12);
+                let moreYear = Math.floor(i / 12);
                 let remainMonth = i % 12;
                 if (currentMonth - remainMonth < 0) {
-                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calMonth = 12 - (remainMonth - currentMonth);
                     calYear = currentYear - (moreYear + 1);
                 } else {
                     calMonth = currentMonth - remainMonth
@@ -317,7 +317,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             calMonth = currentMonth - i
             calYear = currentYear;
         }
-        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
+        const d = moment(new Date(calYear, calMonth, 1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
     /*for (let i = diff; i > -1; i--) {
@@ -342,14 +342,14 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy: parseInt(key.substr(3, 4) + key.substr(0, 2)) }
         result.push(item);
     })
     arraySort(result, 'mmyyyy');
     return result;
 }
 
-const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate: Date, endDate: Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -373,11 +373,11 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(financialYear, newDataset);
@@ -387,7 +387,7 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -424,11 +424,11 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(year.toString(), newDataset);
@@ -438,7 +438,7 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result
 }
@@ -468,12 +468,12 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(financialYear, initialDataset);
@@ -520,12 +520,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(year.toString(), initialDataset);
@@ -543,7 +543,7 @@ function ServiceUserAccidentGender(props) {
     const [groupBy, setGroupBy] = useState("NON");
     const [genderDataset, setGenderDataset] = useState<IDataset>(initialDataset);
     const [serviceLocation] = useServiceLocation(props.siteCollectionUrl);
-    const [data, startDate, endDate,serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats(props.permission);
+    const [data, startDate, endDate, serviceUnits, setStartDate, setEndDate, setServiceUnits] = useServiceUserStats(props.permission);
 
 
     const multipleOptionsSelectParser = (event) => {
@@ -593,7 +593,7 @@ function ServiceUserAccidentGender(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
                             </div>
                         </div>
@@ -616,7 +616,7 @@ function ServiceUserAccidentGender(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
                             </div>
                         </div>
@@ -655,10 +655,10 @@ function ServiceUserAccidentGender(props) {
                     </>
                 )
             case "BY_MONTH_FINANCIAL":
-                let maleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'male'}), startDate, endDate);
+                let maleResult = sampleThreeParser(data.filter((item) => { return item.ServiceUserGender == 'male' }), startDate, endDate);
                 let maleMFChart = financialYearChartParser(maleResult);
 
-                let femaleResult = sampleThreeParser(data.filter((item) => {return item.ServiceUserGender == 'female'}), startDate, endDate);
+                let femaleResult = sampleThreeParser(data.filter((item) => { return item.ServiceUserGender == 'female' }), startDate, endDate);
                 let femaleMFChart = financialYearChartParser(femaleResult);
                 return <>
                     <div className="row">
@@ -670,9 +670,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -721,7 +721,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -747,7 +747,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -774,7 +774,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
                     <div className="row">
                         <div className="col-1">
                             <h6 style={{ fontWeight: 600 }}>
@@ -784,9 +784,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${title} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -835,7 +835,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -843,7 +843,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -861,7 +861,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -869,7 +869,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -891,10 +891,10 @@ function ServiceUserAccidentGender(props) {
                 </>
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let maleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'male'}), startDate, endDate);
+                let maleMCResult = sampleFourParser(data.filter((item) => { return item.ServiceUserGender == 'male' }), startDate, endDate);
                 let maleMCChart = normalChartParser(maleMCResult);
 
-                let femaleMCResult = sampleFourParser(data.filter((item) => {return item.ServiceUserGender == 'female'}), startDate, endDate);
+                let femaleMCResult = sampleFourParser(data.filter((item) => { return item.ServiceUserGender == 'female' }), startDate, endDate);
                 let femaleMCChart = normalChartParser(femaleMCResult);
 
                 maleMCResult.forEach((item, i) => {
@@ -913,9 +913,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -963,7 +963,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -971,7 +971,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -989,7 +989,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -997,7 +997,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1017,7 +1017,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
                     <div className="row">
                         <div className="col-1">
                             <h6 style={{ fontWeight: 600 }}>
@@ -1027,9 +1027,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1077,7 +1077,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1085,7 +1085,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1103,7 +1103,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1111,7 +1111,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每月總數)
+                                    服務使用者意外 - 性別統計 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1152,9 +1152,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${titleYear3} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1182,7 +1182,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1190,7 +1190,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每年總數)
+                                    服務使用者意外 - 性別統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1208,7 +1208,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1216,7 +1216,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每年總數)
+                                    服務使用者意外 - 性別統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1256,9 +1256,9 @@ function ServiceUserAccidentGender(props) {
                         <div className="col-12">
                             <h6>{`${titleYear4} - 性別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1286,7 +1286,7 @@ function ServiceUserAccidentGender(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1294,7 +1294,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每年總數)
+                                    服務使用者意外 - 性別統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1312,7 +1312,7 @@ function ServiceUserAccidentGender(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1320,7 +1320,7 @@ function ServiceUserAccidentGender(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                服務使用者意外 - 性別統計 (每年總數)
+                                    服務使用者意外 - 性別統計 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1355,7 +1355,7 @@ function ServiceUserAccidentGender(props) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonBarChart")}>下載圖表</button>
                                 <div className="nonBarChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -1380,10 +1380,10 @@ function ServiceUserAccidentGender(props) {
                                 </div>
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="nonPieChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
-                                        
+
                                         <div className="">
                                             {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                         </div>
@@ -1400,14 +1400,14 @@ function ServiceUserAccidentGender(props) {
                                             legend: {
                                                 position: 'labeled',
                                                 textStyle: {
-                                                  fontName: 'monospace',
-                                                  fontSize: 9
+                                                    fontName: 'monospace',
+                                                    fontSize: 9
                                                 }
-                                              },
-                                              pieSliceTextStyle: {
+                                            },
+                                            pieSliceTextStyle: {
                                                 fontSize: 8
-                                              },
-                                              sliceVisibilityThreshold: 0
+                                            },
+                                            sliceVisibilityThreshold: 0
 
                                         }}
                                         data={
@@ -1431,10 +1431,10 @@ function ServiceUserAccidentGender(props) {
                 return (
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
-                            
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+
                         </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
+                        <div className="col-12 byMonthBarChart" style={{ overflow: 'auto' }}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -1452,12 +1452,12 @@ function ServiceUserAccidentGender(props) {
                                 ...sampleTwoParser(data, startDate, endDate).map((item) => {
                                     return [item.month, item.dataset.male, item.dataset.female]
                                 })]
-                            }
+                                }
 
                             />
                         </div>
                     </div>
-                    
+
                 )
             default:
                 return null;
@@ -1467,17 +1467,17 @@ function ServiceUserAccidentGender(props) {
     const changeGroupHandler = (event) => {
         const value = event.target.value;
         if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_MONTH_CALENDAR') {
             setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         }
         setGroupBy(value);
     }
@@ -1517,14 +1517,14 @@ function ServiceUserAccidentGender(props) {
         }
     }, [groupBy, data])
 
-    const downloadScreenshot = async(className) => {
-        
-        let chart = (document.querySelector("."+className) as HTMLElement);
+    const downloadScreenshot = async (className) => {
+
+        let chart = (document.querySelector("." + className) as HTMLElement);
         const canvas = await html2canvas(chart);
         const dataURL = canvas.toDataURL('image/png');
         downloadjs(dataURL, 'download.png', 'image/png');
     }
-    
+
     return (
         <div>
             <div className="row mb-3">
@@ -1534,8 +1534,8 @@ function ServiceUserAccidentGender(props) {
             </div>
 
             <div className="row">
-                <div className="col">
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -1553,8 +1553,8 @@ function ServiceUserAccidentGender(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         日期分組
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -1569,8 +1569,8 @@ function ServiceUserAccidentGender(props) {
                         <option value="BY_YEAR_CALENDAR">按年 - 日曆年度</option>
                     </select>
                 </div>
-                <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                <div className="col-xl-4 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                         服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -1581,20 +1581,20 @@ function ServiceUserAccidentGender(props) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {props.permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          props.permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {props.permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            props.permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)

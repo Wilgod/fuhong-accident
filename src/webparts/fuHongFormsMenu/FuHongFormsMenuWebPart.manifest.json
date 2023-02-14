@@ -1,33 +1,38 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  //UAT
+  //"id": "736c52d7-16d3-45e3-804a-db0ca9c84999",
   //prod
-  //"id": "746c52d7-26d4-47e3-804a-db0ca9c85999",
-  //uat
-  "id": "736c52d7-16d3-45e3-804a-db0ca9c84999",
+  "id": "746c52d7-26d4-47e3-804a-db0ca9c85999",
   "alias": "FuHongFormsMenuWebPart",
   "componentType": "WebPart",
-
   // The "*" signifies that the version should be taken from the package.json
   "version": "*",
   "manifestVersion": 2,
-
   // If true, the component can only be installed on sites where Custom Script is allowed.
   // Components that allow authors to embed arbitrary script code should set this to true.
   // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
   "requiresCustomScript": false,
-  "supportedHosts": ["SharePointWebPart"],
-
-  "preconfiguredEntries": [{
-    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
-    "group": { "default": "Other" },
-    //prod
-    //"title": { "default": "Fu Hong Forms Menu Prod" },
-    //uat
-    "title": { "default": "fuHongFormsMenu" },
-    "description": { "default": "Forms Menu" },
-    "officeFabricIconFontName": "Page",
-    "properties": {
-      "description": "fuHongFormsMenu"
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+      "group": {
+        "default": "Other"
+      },
+      "title": {
+        //"default": "fuHongFormsMenu"
+        "default": "Fu Hong Forms Menu Prod"
+      },
+      "description": {
+        "default": "Forms Menu"
+      },
+      "officeFabricIconFontName": "Page",
+      "properties": {
+        "description": "fuHongFormsMenu"
+      }
     }
-  }]
+  ]
 }

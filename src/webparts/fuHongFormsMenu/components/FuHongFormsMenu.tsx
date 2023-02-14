@@ -1,17 +1,16 @@
 import * as React from 'react';
 import styles from './FuHongFormsMenu.module.scss';
 import { IFuHongFormsMenuProps } from './IFuHongFormsMenuProps';
-import 'bootstrap/dist/css/bootstrap.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import classnames from 'classnames';
-import './FuHongFormsMenu.css';
+// import './FuHongFormsMenu.css';
 import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 import MainTableComponent from '../../../components/MainTable/MainTableComponent';
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 import { IUser } from '../../../interface/IUser';
 import { locationFilterParser } from '../../../hooks/useServiceLocation';
@@ -46,11 +45,13 @@ import FuHongOutsidersAccidentForm from '../../fuHongOutsidersAccidentForm/compo
 import FuHongSpecialIncidentReportAllowanceForm from '../../fuHongSpecialIncidentReportAllowance/components/FuHongSpecialIncidentReportAllowance';
 import FuHongSpecialIncidentReportLicenseForm from '../../fuHongSpecialIncidentReportLicense/components/FuHongSpecialIncidentReportLicense';
 import FuHongOtherIncidentReportForm from '../../fuHongOtherIncidentReport/components/FuHongOtherIncidentReport';
-import { getAccessRight,getUserInfo,getSMSDMapping } from '../../../api/FetchFuHongList';
+import { getAccessRight, getUserInfo, getSMSDMapping } from '../../../api/FetchFuHongList';
 import { isArray } from '@pnp/pnpjs';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 //import {useSearchParams} from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.css';
+import { isMobile } from 'react-device-detect';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -74,11 +75,11 @@ interface IFuHongFormsMenuStates {
   serviceUnitList: any[];
   searchKeyword: string;
   tempKeyword: string;
-  permissionList:any[];
-  adminPermission:any[];
-  adminPermissionBoolean:boolean;
-  loading:boolean;
-  mainTableDisplay:boolean;
+  permissionList: any[];
+  adminPermission: any[];
+  adminPermissionBoolean: boolean;
+  loading: boolean;
+  mainTableDisplay: boolean;
 }
 //const [searchParams, setSearchParams] = useSearchParams();
 export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuProps, IFuHongFormsMenuStates> {
@@ -91,12 +92,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private SITE_CONTENT = `${this.props.context.pageContext.web.absoluteUrl}/_layouts/15/viewlsts.aspx?view=14`;
 
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.split('/sites/')[1].split('/')[0];
-	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
-	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
-  
-	private formId = getQueryParameterNumber("formId");
-  private navScreen:string = getQueryParameterString("navScreen") ;
-  
+  private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
+  private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
+
+  private formId = getQueryParameterNumber("formId");
+  private navScreen: string = getQueryParameterString("navScreen");
+
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -118,11 +119,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       searchServiceUnit: ["ALL"],
       searchKeyword: "",
       tempKeyword: "",
-      permissionList:[],
-      adminPermission:[],
-      adminPermissionBoolean:false,
-      loading:true,
-      mainTableDisplay:false
+      permissionList: [],
+      adminPermission: [],
+      adminPermissionBoolean: false,
+      loading: true,
+      mainTableDisplay: false
     }
   }
 
@@ -137,15 +138,15 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   }
 
   private initialState = async () => {
-    debugger
+
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const adminPermission: any[] = await sp.web.lists.getByTitle("Admin").items.select("*", "Admin/Id", "Admin/EMail", 'Admin/Title').expand("Admin").get();
-    let adminPermissionOwner = adminPermission.filter(item => {return item.Admin.EMail == this.CURRENT_USER.email})
+    let adminPermissionOwner = adminPermission.filter(item => { return item.Admin.EMail == this.CURRENT_USER.email })
     let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
 
-    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading:false, adminPermission:adminPermission, adminPermissionBoolean: adminPermissionBoolean });
+    this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading: false, adminPermission: adminPermission, adminPermissionBoolean: adminPermissionBoolean });
   }
 
   private formToggleHandler = (event) => {
@@ -189,12 +190,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private searchResult() {
     if (this.state.mainTableDisplay) {
-      this.setState({mainTableDisplay: false}, () => {
-        this.setState({mainTableDisplay: true});
+      this.setState({ mainTableDisplay: false }, () => {
+        this.setState({ mainTableDisplay: true });
       })
     } else {
-      this.setState({mainTableDisplay: true});
-    } 
+      this.setState({ mainTableDisplay: true });
+    }
   }
   private multipleOptionsSelectParser = (event) => {
     let result = [];
@@ -206,9 +207,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   }
 
   public render(): React.ReactElement<IFuHongFormsMenuProps> {
-    console.log('permissionList :' ,this.state.permissionList);
+    console.log('permissionList :', this.state.permissionList);
     const ItemComponent = (href, name) => {
-      return <a className="text-decoration-none" href={this.props.context.pageContext.site.absoluteUrl +'/accident-and-incident/SitePages/'+ href + ".aspx"} target="_blank" data-interception="off">
+      return <a className="text-decoration-none" href={this.props.context.pageContext.site.absoluteUrl + '/accident-and-incident/SitePages/' + href + ".aspx"} target="_blank" data-interception="off">
         {name}
       </a>
     }
@@ -223,7 +224,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       </ul>
     }*/
     const formList = () => {
-      return <ul style={{fontSize:'15px'}}>
+      return <ul style={{ fontSize: '15px' }}>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "ServiceUserAccident")}>
             服務使用者意外
@@ -231,28 +232,28 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </li>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "OutsidersAccident")}>
-          外界人士意外
+            外界人士意外
           </div>
         </li>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportLicense")}>
-          特別事故報告 (牌照事務處)
+            特別事故報告 (牌照事務處)
           </div>
         </li>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "SpecialIncidentReportAllowance")}>
-          特別事故報告 (津貼科)
+            特別事故報告 (津貼科)
           </div>
         </li>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "OtherIncidentReport")}>
-          其他事故
+            其他事故
           </div>
         </li>
       </ul>
     }
     const reportList = () => {
-      return <ul style={{fontSize:'15px'}}>
+      return <ul style={{ fontSize: '15px' }}>
         <li>
           <div onClick={(event) => this.caseSummaryToggleHandler(event)}>
             個案概要
@@ -303,7 +304,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     console.log(this.state.screenNav)
     const statList = () => {
       return (
-        <ul style={{fontSize:'15px'}}>
+        <ul style={{ fontSize: '15px' }}>
           <li>
             <div onClick={(event) => event.stopPropagation()}>
               一般統計
@@ -392,7 +393,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
               </li>
               <li>
                 <div onClick={(event) => this.screenNavHandler(event, "SIH_NATURE")}>
-                虐待性質
+                  虐待性質
                 </div>
               </li>
             </ul>
@@ -426,13 +427,13 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     }
 
     const navigationMenu = () => {
-      console.log(Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >=0);
+      console.log(Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >= 0);
       console.log("permissionList ", this.state.permissionList);
-      console.log("ALL ", this.state.permissionList.indexOf("All") >=0);
-      return <div className={`${styles.navigationMenu}`} style={{position:'absolute'}}>
+      console.log("ALL ", this.state.permissionList.indexOf("All") >= 0);
+      return <div className={`${styles.navigationMenu}`} style={{ position: !isMobile ? 'absolute' : 'unset' }}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
           <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
+            <div style={{ marginRight: '10px' }}>
               <FontAwesomeIcon size="lg" icon={fontawesome.faHome} title={"主頁"} />
             </div>
             <div>
@@ -442,7 +443,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </div>
         <div className={`${styles.child}`} onClick={this.formToggleHandler}>
           <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
+            <div style={{ marginRight: '10px' }}>
               <FontAwesomeIcon size="lg" icon={fontawesome.faPen} title={"表格"} />
             </div>
             <div>
@@ -453,7 +454,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </div>
         <div className={`${styles.child}`} onClick={this.repotToggleHandler}>
           <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
+            <div style={{ marginRight: '10px' }}>
               <FontAwesomeIcon size="lg" icon={fontawesome.faFileContract} title={"報告"} />
             </div>
             <div>
@@ -464,7 +465,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </div>
         <div className={`${styles.child}`} onClick={(this.statToggleHandler)}>
           <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
+            <div style={{ marginRight: '10px' }}>
               <FontAwesomeIcon size="lg" icon={fontawesome.faChartBar} title={"統計資料"} />
             </div>
             <div>
@@ -475,25 +476,25 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </div>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "DASHBOARD")}>
           <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
+            <div style={{ marginRight: '10px' }}>
               <FontAwesomeIcon size="lg" icon={fontawesome.faTachometerAlt} title={"常用圖表"} />
             </div>
             <div>
-            常用圖表
+              常用圖表
             </div>
           </div>
         </div>
         {this.state.adminPermissionBoolean &&
-        <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "ADMIN")}>
-          <div className="d-flex align-items center">
-            <div style={{marginRight:'10px'}}>
-              <FontAwesomeIcon size="lg" icon={fontawesome.faUserCog} title={"Admin"} />
-            </div>
-            <div>
-              Admin
+          <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "ADMIN")}>
+            <div className="d-flex align-items center">
+              <div style={{ marginRight: '10px' }}>
+                <FontAwesomeIcon size="lg" icon={fontawesome.faUserCog} title={"Admin"} />
+              </div>
+              <div>
+                Admin
+              </div>
             </div>
           </div>
-        </div>
         }
       </div>
     }
@@ -501,69 +502,69 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     const screenSwitch = () => {
       switch (this.state.screenNav) {
         case 'ServiceUserAccident':
-          return <FuHongServiceUserAccidentForm context={this.props.context} description={""}/>
+          return <FuHongServiceUserAccidentForm context={this.props.context} description={""} />
         case 'OutsidersAccident':
-          return <FuHongOutsidersAccidentForm context={this.props.context} description={""}/>
+          return <FuHongOutsidersAccidentForm context={this.props.context} description={""} />
         case 'SpecialIncidentReportAllowance':
-          return <FuHongSpecialIncidentReportAllowanceForm context={this.props.context} description={""}/>
+          return <FuHongSpecialIncidentReportAllowanceForm context={this.props.context} description={""} />
         case 'SpecialIncidentReportLicense':
-          return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""}/>
+          return <FuHongSpecialIncidentReportLicenseForm context={this.props.context} description={""} />
         case 'OtherIncidentReport':
-          return <FuHongOtherIncidentReportForm context={this.props.context} description={""}/>
+          return <FuHongOtherIncidentReportForm context={this.props.context} description={""} />
         case 'CASE_SUMMARY':
-          return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <CaseSummaryScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'INSURANCE_EMAIL':
-          return <InsuranceEmailReportScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <InsuranceEmailReportScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'LOG':
-          return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <LogScreen context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'GENERAL':
-          return <General siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <General siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_AGE':
-          return <ServiceUserAccidentAge siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <ServiceUserAccidentAge siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_GENDER':
-          return <ServiceUserAccidentSex siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentSex siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_INTELLIGENCE':
-          return <ServiceUserAccidentIntelligence siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentIntelligence siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_ASD':
-          return <ServiceUserAccidentASD siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentASD siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_NATURE':
-          return <ServiceUserAccidentNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentNature siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_ENV':
-          return <ServiceUserAccidentEnv siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentEnv siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SUI_PERSONAL':
-          return <ServiceUserAccidentPersonal siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <ServiceUserAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'PUI_NATURE':
-          return <OutsiderAccidentNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <OutsiderAccidentNature siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'PUI_ENV':
-          return <OutsiderAccidentEnv siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <OutsiderAccidentEnv siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'PUI_PERSONAL':
-          return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <OutsiderAccidentPersonal siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SIH_CATEGORY':
-          return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <LicenseCategory siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SIH_NATURE':
-          return <LicenseNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <LicenseNature siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SID_CATEGORY':
-          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <AllowanceCategory siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'SID_NATURE':
-          return <AllowanceNature siteCollectionUrl={this.siteCollectionUrl}  permission={this.state.permissionList}/>
+          return <AllowanceNature siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'CS_SUI':
-          return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <ServiceUserAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'CS_PUI':
-          return <OutsiderAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <OutsiderAccidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'CS_SIH':
-          return <LicenseIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <LicenseIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'CS_SID':
-          return <AllowanceCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <AllowanceCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case 'CS_OIN':
-          return <OtherIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <OtherIncidentCaseSummary context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case "REPORT":
         // return <div>REPORT</div>
         case "STAT":
         // return <div>STAT</div>
         case "DASHBOARD":
-         return <Dashboard siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList}/>
+          return <Dashboard siteCollectionUrl={this.siteCollectionUrl} permission={this.state.permissionList} />
         case "ADMIN":
-            return <Admin context={this.props.context} siteCollectionUrl={this.siteCollectionUrl}/>
+          return <Admin context={this.props.context} siteCollectionUrl={this.siteCollectionUrl} />
         case "HOME":
         default:
           console.log('1')
@@ -574,16 +575,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
               </div>
               <div className="mb-3">
                 {!this.state.loading &&
-                <TodoListComponent context={this.props.context} permissionList={this.state.permissionList}/>
-                } 
+                  <TodoListComponent context={this.props.context} permissionList={this.state.permissionList} />
+                }
               </div>
               <div className="mb-3">
                 <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                   搜尋
                 </div>
                 <div className="row">
-                  <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                  <div className="col-xl-2 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                       發生日期
                     </div>
                     <div className="d-flex flex-column py-1">
@@ -591,18 +592,18 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                         <div className="mr-3">
                           由
                         </div>
-                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateStart} onChange={(date) => this.setState({ mainTableDisplay:false,searchDateStart: date })} />
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateStart} onChange={(date) => this.setState({ mainTableDisplay: false, searchDateStart: date })} />
                       </div>
                       <div className="d-flex">
                         <div className="mr-3">
                           至
                         </div>
-                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateEnd} onChange={(date) => this.setState({ mainTableDisplay:false, searchDateEnd: date })} />
+                        <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={this.state.searchDateEnd} onChange={(date) => this.setState({ mainTableDisplay: false, searchDateEnd: date })} />
                       </div>
                     </div>
                   </div>
-                  <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                  <div className="col-xl-2 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                       服務單位
                     </div>
                     {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
@@ -610,36 +611,36 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                       const selectedOptions = this.multipleOptionsSelectParser(event);
-                      this.setState({  mainTableDisplay:false,searchServiceUnit: selectedOptions });
+                      this.setState({ mainTableDisplay: false, searchServiceUnit: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
-                      {this.state.permissionList.indexOf('All') >=0 &&
-                            this.state.serviceUnitList.map((item) => {
-                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
-                            })
+                      {this.state.permissionList.indexOf('All') >= 0 &&
+                        this.state.serviceUnitList.map((item) => {
+                          return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                        })
                       }
-                      {this.state.permissionList.indexOf('All') < 0 && 
-                          this.state.permissionList.map((item) => {
-                              let ser = this.state.serviceUnitList.filter(o => {return o.su_Eng_name_display == item});
+                      {this.state.permissionList.indexOf('All') < 0 &&
+                        this.state.permissionList.map((item) => {
+                          let ser = this.state.serviceUnitList.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                          if (ser.length > 0) {
+                            return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                          }
+
+                        })
                       }
                       {/*this.state.serviceUnitList.map((item) => {
                         return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                       })*/}
                     </select>
                   </div>
-                  <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                  <div className="col-xl-2 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                       意外/事故
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
                       const selectedOptions = this.multipleOptionsSelectParser(event);
-                      this.setState({  mainTableDisplay:false,searchFormType: selectedOptions });
+                      this.setState({ mainTableDisplay: false, searchFormType: selectedOptions });
                     }}>
                       <option value="ALL">--- 所有 ---</option>
                       <option value="SUI">服務使用者意外</option>
@@ -649,12 +650,12 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       <option value="OIN">其他事故</option>
                     </select>
                   </div>
-                  <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                  <div className="col-xl-2 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                       顯示狀態
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
-                      this.setState({  mainTableDisplay:false, searchFormStatus: event.target.value });
+                      this.setState({ mainTableDisplay: false, searchFormStatus: event.target.value });
                     }}>
                       <option value="ALL">所有狀態</option>
                       <option value="Apply">遞交檔案</option>
@@ -673,25 +674,25 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                       <option value="ALL">所有狀態</option>*/}
                     </select>
                   </div>
-                  <div className="col" >
-                    <div className="mb-3" style={{ fontWeight: 600 }}>
+                  <div className="col-xl-2 col-md-6 col-12 mb-3" >
+                    <div style={{ fontWeight: 600 }}>
                       過期未交報告
                     </div>
                     <div className="form-check">
-                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({  mainTableDisplay:false, searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
+                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({ mainTableDisplay: false, searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
                     </div>
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }} >
+                <div style={{ fontSize: "1.05rem", fontWeight: 600 }} >
                   關鍵字
                 </div>
                 <div className="row">
-                  <div className="col-10">
+                  <div className="col-md-10 col-12  mt-1">
                     <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" value={this.state.searchKeyword} onChange={(event) => this.setState({ searchKeyword: event.target.value })} />
                   </div>
-                  <div className="col">
+                  <div className="col mt-1">
                     <button type="button" className="btn btn-primary" onClick={() => this.searchResult()}>搜尋</button>
                   </div>
                 </div>
@@ -712,9 +713,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     adminPermissionBoolean={this.state.adminPermissionBoolean}
                     serviceUnitList={this.state.serviceUnitList}
                     permissionList={this.state.permissionList}
-                />
+                  />
                 }
-                
+
               </div>
             </div>
           )
@@ -722,35 +723,36 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     }
     console.log('this.state.permissionList.length : ' + this.state.permissionList.length);
     console.log('loading : ' + this.state.loading);
+    let navigationMenuDivCss = !isMobile ? { backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" } : { backgroundColor: "#fff2d4", padding: "10px 0px" };
     return (
-      <div className={styles.fuHongFormsMenu} >
+      <div className={styles.fuHongFormsMenu} id="fuHongFormsMenu">
         <div className={styles.container} >
           <div className="container-fluid">
-            <div className="row no-gutters" style={{height:'90vh'}}>
+            <div className="row no-gutters" style={{ height: '90vh' }}>
               {
-                !this.state.loading && (this.state.permissionList.length == 0) ? 
-                <NoAccessComponent redirectLink={""} />
-                :
-                <>
-                {/* Navigation menu */}
-                  <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={{ backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" }}>
-                    {navigationMenu()}
-                  </div>
-                  {/* Main Content */}
-                  <div className="col-sm-12 col-md-10 col-lg-10" >
-                    <div className={`${styles.systemTitle} notPrintable`}>
-                      意外及事故呈報系統
-                      {/*<div style={{ float: "right" }}>
+                !this.state.loading && (this.state.permissionList.length == 0) ?
+                  <NoAccessComponent redirectLink={""} />
+                  :
+                  <>
+                    {/* Navigation menu */}
+                    <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={navigationMenuDivCss}>
+                      {navigationMenu()}
+                    </div>
+                    {/* Main Content */}
+                    <div className="col-sm-12 col-md-10 col-lg-10" >
+                      <div className={`${styles.systemTitle} notPrintable`}>
+                        意外及事故呈報系統
+                        {/*<div style={{ float: "right" }}>
                         {siteContentCog()}
         </div>*/}
+                      </div>
+                      <div className="p-2">
+                        {screenSwitch()}
+                      </div>
                     </div>
-                    <div className="p-2">
-                      {screenSwitch()}
-                    </div>
-                  </div>
-                </>
+                  </>
               }
-              
+
             </div>
           </div>
         </div>
