@@ -192,7 +192,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
       console.log('user hr_jobcode1 : ' +  user[0].hr_jobcode);
       console.log('user access : ' +  access);
       let admin = adminList.filter(a => {return a.Admin.EMail.toLowerCase() == userEmail.toLowerCase()});
-      
+      debugger
       if (admin.length > 0) {
         dept.push('All');
       } else {

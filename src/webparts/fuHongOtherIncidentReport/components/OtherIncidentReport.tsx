@@ -912,7 +912,26 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [sdInfo])
     // Get current User info in ad
     useEffect(() => {
-        getAllServiceUnit(siteCollectionUrl).then(setServiceUserUnitList).catch(console.error);
+        getAllServiceUnit(siteCollectionUrl).then((userUnitList) => {
+            if (permissionList.indexOf('All') >= 0) {
+                setServiceUserUnitList(userUnitList);
+            } else {
+                console.log('permissionList',permissionList);
+                console.log('userUnitList',userUnitList);
+                let filterList = [];
+                for (let unit of userUnitList) {
+                    let filterP = permissionList.filter(item => {return item == unit.su_Eng_name_display});
+                    if (filterP.length > 0) {
+                        filterList.push(unit);
+                    }
+                }
+                debugger
+                setServiceUserUnitList(filterList);
+            }
+            
+            
+
+        }).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
         getInsuranceEMailSetting();
     }, []);
