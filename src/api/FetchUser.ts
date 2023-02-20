@@ -226,7 +226,7 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
             }
         })
       }
-      
+      debugger
       return dept;
     } else {
       return dept;

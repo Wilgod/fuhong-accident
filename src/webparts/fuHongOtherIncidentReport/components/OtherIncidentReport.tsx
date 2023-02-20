@@ -33,7 +33,7 @@ import { IItemAddResult } from "@pnp/sp/items";
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
-export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, workflow, print }: IOtherIncidentReportProps) {
+export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, workflow, print, permissionList }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -865,6 +865,12 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setEmailBody(value)
     }
 
+    const changeServiceUserUnit = (event) =>{
+        let value = event.target.value;
+        setServiceUnitTC(value);
+    }
+
+
     useEffect(() => {
         if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
             loadData(formData);
@@ -970,13 +976,27 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            {/* <select className="form-control" value={serviceUnit} onChange={(event) => setServiceUnit(event.target.value)}>
-                                <option>請選擇服務單位</option>
-                                {serviceUnitList.map((unit) => {
-                                    return <option value={unit.ShortForm}>{`${unit.ShortForm} - ${unit.Title}`}</option>
-                                })}
-                            </select> */}
-                            {<input type="text" className={`form-control  ${(error && error['ServiceUnit']) ? "is-invalid" : ""}`} value={serviceUnitTC || ""} disabled />}
+                            <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnitTC} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
+                                disabled={(!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus))}
+                            >
+                                <option value={""} ></option>
+                                {permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={item == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                            </select>
+                            {/*<input type="text" className={`form-control  ${(error && error['ServiceUnit']) ? "is-invalid" : ""}`} value={serviceUnitTC || ""} disabled />*/}
 
                         </div>
 

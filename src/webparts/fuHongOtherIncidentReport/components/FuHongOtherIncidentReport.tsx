@@ -103,6 +103,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
     const speicalIncidentReportWorkflow = await getOtherIncidentReportWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
+    debugger
     return [PermissionList, DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
     //this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url, serviceUnitList:serviceUnitList });
   }
@@ -245,7 +246,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
                           <Tab onClick={()=>this.tab(1)}>事故跟進/結束報告</Tab>
                         </TabList>
                         <TabPanel>
-                          <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow} print={this.print}/>
+                          <OtherIncidentReport context={this.props.context} styles={styles} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.otherIncidentReportFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} workflow={this.state.speicalIncidentReportWorkflow} print={this.print} permissionList={this.state.permissionList}/>
                         </TabPanel>
                         <TabPanel>
                           <IncidentFollowUpForm context={this.props.context} styles={styles} formType={"OTHER_INCIDENT"} formSubmittedHandler={this.formSubmittedHandler} parentFormData={this.state.otherIncidentReportFormData} currentUserRole={this.state.currentUserRole} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} formTwentySixData={this.state.formTwentySixData} workflow={this.state.speicalIncidentReportWorkflow} changeFormTwentySixDataSelected={this.changeFormTwentySixDataSelected} serviceUnitList={this.state.serviceUnitList} print={this.print}/>

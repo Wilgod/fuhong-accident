@@ -12,6 +12,7 @@ export interface IOtherIncidentReportProps {
     siteCollectionUrl:string;
     workflow:string;
     print:any;
+    permissionList:any;
 }
 
 export interface IOtherIncidentReportStates {
