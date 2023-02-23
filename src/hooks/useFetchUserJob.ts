@@ -13,6 +13,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         let allSMSDMapping = await getAllSMSDMapping(siteCollectionUrl);
         let serviceUserAccidentData = [];
+        debugger
         for (let sa of allServiceUserAccident) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});

@@ -632,6 +632,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory("DRAFT");
+        body["ReporterId"] = CURRENT_USER.id;
         if (formStatus === "DRAFT") {
             updateServiceUserAccidentById(formData.Id, {
                 ...body,

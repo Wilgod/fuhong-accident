@@ -206,24 +206,24 @@ export async function checkPermissionList(siteCollectionUrl,userEmail) {
             }
             if (item.JobCode == user[0].hr_jobcode && item.AllServiceUser) {
                 dept.push('All');
+            }else if (item.JobCode == user[0].hr_jobcode && (item.DeptId == null || item.DeptId == '')&& (!item.CMS || item.CMS == undefined)) {
+                console.log('444 : ');
+                if (getSMSD.length > 0) {
+                    console.log('222 : ' +  getSMSD[0].su_Eng_name_display);
+                    dept.push(getSMSD[0].su_Eng_name_display);
+                }
+            } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
+                let groups = user[0].Group == null ? [] :user[0].Group.split(',')
+                for (let group of groups) {
+                    if (group.indexOf('_CMS_SU_') >=0 ) {
+                        console.log('333 : ');
+                        dept.push(group.trim().replace('_CMS_SU_', ''));
+                        }
+                }
             } else if (item.JobCode == user[0].hr_jobcode && item.DeptId == user[0].hr_deptid) {
                 console.log('111 : ');
                 dept.push(getSMSD[0].su_Eng_name_display);
-            } else if (item.JobCode == user[0].hr_jobcode && (item.DeptId == null || item.DeptId == '')&& (!item.CMS || item.CMS == undefined)) {
-                console.log('444 : ');
-                if (getSMSD.length > 0) {
-                console.log('222 : ' +  getSMSD[0].su_Eng_name_display);
-                dept.push(getSMSD[0].su_Eng_name_display);
-            }
-            } else if (item.JobCode == user[0].hr_jobcode && item.CMS) {
-            let groups = user[0].Group == null ? [] :user[0].Group.split(',')
-            for (let group of groups) {
-                if (group.indexOf('_CMS_SU_') >=0 ) {
-                    console.log('333 : ');
-                dept.push(group.trim().replace('_CMS_SU_', ''));
-                }
-            }
-            }
+            } 
         })
       }
       debugger
