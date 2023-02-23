@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //uat
-  "id": "50b8d895-b600-4057-b098-896f9464f47d",
+  //"id": "50b8d895-b600-4057-b098-896f9464f47d",
   //prod
-  // "id": "53b8d895-b611-4257-b198-896f9565f47d",
+  "id": "53b8d895-b611-4257-b198-896f9565f47d",
   "alias": "FuHongOutsidersAccidentFormWebPart",
   "componentType": "WebPart",
   // The "*" signifies that the version should be taken from the package.json
@@ -24,8 +24,8 @@
         "default": "Other"
       },
       "title": {
-        "default": "fuHongOutsidersAccidentForm"
-        // "default": "Fu Hong Outsiders Accident Form Prod"
+        //"default": "fuHongOutsidersAccidentForm"
+        "default": "Fu Hong Outsiders Accident Form Prod"
       },
       "description": {
         "default": "Fu Hong Outsiders Accident Form 22"
