@@ -145,7 +145,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
-
+    debugger
     this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading: false, adminPermission: adminPermission, adminPermissionBoolean: adminPermissionBoolean });
   }
 

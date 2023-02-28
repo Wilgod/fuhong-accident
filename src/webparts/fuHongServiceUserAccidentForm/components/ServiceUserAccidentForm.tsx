@@ -697,6 +697,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
     const submitHandler = (event) => {
         event.preventDefault();
+        debugger
         if (currentUserRole === Role.ADMIN) {
             if (insuranceNumber != null && insuranceNumber != "") {
                 getInsuranceEMailRecords(formData.CaseNumber, "SUI", formId).then((res1) => {
@@ -727,7 +728,27 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 });
             } else if (form.cctv === "CCTV_TRUE") {
                 updateServiceUserAccidentById(formId, {
-                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString(),
+                    "Status": "PENDING_SM_APPROVE"
+                }).then((res) => {
+                    // Update form to stage 1-2
+                    // Trigger notification workflow
+                    console.log(res);
+                    postLog({
+                        AccidentTime: formData.AccidentTime,
+                        Action: "更新",
+                        CaseNumber: formData.CaseNumber,
+                        FormType: "SUI",
+                        Report: "服務使用者意外填報表(一)",
+                        ServiceUnit: formData.ServiceLocation,
+                        RecordId: formData.Id
+                    }).catch(console.error);
+
+                    formSubmittedHandler();
+                }).catch(console.error);
+            } else {
+                updateServiceUserAccidentById(formId, {
+                    "Status": "PENDING_SM_APPROVE"
                 }).then((res) => {
                     // Update form to stage 1-2
                     // Trigger notification workflow

@@ -482,6 +482,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                 setSptComment(formTwentyData.SPTComment);
                 if (formTwentyData.SPTDate) {
+                    debugger
                     setSptDate(new Date(formTwentyData.SPTDate));
                 }
 
@@ -534,7 +535,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     }
 
-
+    console.log('sptDate',sptDate);
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -924,7 +925,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         {/* 意外發生時間*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-5">
-                            <DatePicker className="form-control" selected={sptDate} dateFormat="yyyy/MM/dd" onChange={setSptDate} readOnly={true} />
+                            <DatePicker className="form-control" selected={sptDate} dateFormat="yyyy/MM/dd"  readOnly={true} />{/*onChange={setSptDate}*/}
                         </div>
                     </div>
                     <div className="form-row mb-2">

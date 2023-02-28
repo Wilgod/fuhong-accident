@@ -66,7 +66,11 @@ export const stageTwoPendingSptApprove = (context:any, currentUserRole: Role, st
 
 //Stage 2 /PENDING_SPT_APPROVE
 export const stageTwoPendingSptApproveForSM = (context:any, currentUserRole: Role, status: string, stage: string,sptDate:Date, formTwentyData:any): boolean => {
-    if ((stage === "2" && status === "PENDING_SPT_APPROVE" && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail) || (stage === "3" && status === "PENDING_SM_FILL_IN" && (sptDate == null || (sptDate != null && new Date(sptDate.setDate(sptDate.getDate() + 7)) > new Date())) && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail)) {
+    let newSptDate = null
+    if (sptDate !=null) {
+        newSptDate = new Date(sptDate.getFullYear(),sptDate.getMonth(),sptDate.getDate());
+    }
+    if ((stage === "2" && status === "PENDING_SPT_APPROVE" && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail) || (stage === "3" && status === "PENDING_SM_FILL_IN" && (newSptDate == null || (newSptDate != null && new Date(newSptDate.setDate(newSptDate.getDate() + 7)) > new Date())) && formTwentyData.SM.EMail == context.pageContext.legacyPageContext.userEmail)) {
         return true;
     }
     return false;
