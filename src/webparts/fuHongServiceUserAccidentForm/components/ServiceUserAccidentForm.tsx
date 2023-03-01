@@ -734,6 +734,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     // Update form to stage 1-2
                     // Trigger notification workflow
                     console.log(res);
+                    notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                     postLog({
                         AccidentTime: formData.AccidentTime,
                         Action: "更新",
@@ -753,6 +754,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     // Update form to stage 1-2
                     // Trigger notification workflow
                     console.log(res);
+                    notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                     postLog({
                         AccidentTime: formData.AccidentTime,
                         Action: "更新",
