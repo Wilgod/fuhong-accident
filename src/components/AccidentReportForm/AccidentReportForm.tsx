@@ -115,9 +115,11 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
         if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther &&
             !form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
-            && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther) {
+            && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther && !form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok
+            && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
             error["accidentalNature"] = true;
             error["envFactor"] = true;
+            error["personalFactor"] = true;
         }
         /*if () {
             error["envFactor"] = true;
@@ -153,9 +155,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 //error handling
             }
         }
-        if (!form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
+        /*if (!form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
             error["personalFactor"] = true;
-        }
+        }*/
         //AccidentalDiscovery 意外發現之經過
         if (form.accidentalDiscovery) {
             body["AccidentalDiscovery"] = form.accidentalDiscovery;
@@ -183,6 +185,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const submitHandler = () => {
+        debugger
         if (parentFormData.AccidentReportFormId) {
 
             if (stageTwoPendingSptApproveForSM(context, currentUserRole, formStatus, formStage, sptDate, formTwentyData)) {
@@ -219,6 +222,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             } else {
                 // Investigator 
                 const [body, error] = dataFactory();
+                
+                console.log('error',error)
+                debugger
                 if (Object.keys(error).length > 0) {
                     alert("提交錯誤");
                     setError(error);
