@@ -92,6 +92,26 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
                     if (residentAbuse != "") { residentAbuse += ","; }
                     residentAbuse += sa['RA_OtherDescription']
                 }
+                if (residentAbuse != '') {
+                    debugger
+                }
+                if (sa['UnusalIncident'] != null && sa['UnusalIncident'] != '') {
+                    sa['IncidentReason'] =sa['UnusalIncident']
+                } else if (sa['ResidentMissing'] != null && sa['ResidentMissing'] != '') {
+                    sa['IncidentReason'] =sa['ResidentMissing']
+                } else if (residentAbuse != null && residentAbuse != '') {
+                    sa['IncidentReason'] = '(3) 院舍內證實／懷疑有住客受虐待／被侵犯私隱 - '+residentAbuse
+                } else if (sa['Conflict'] != null && sa['Conflict'] != '') {
+                    sa['IncidentReason'] =sa['Conflict']
+                } else if (sa['MedicalIncident'] != null && sa['MedicalIncident'] != '') {
+                    sa['IncidentReason'] =sa['MedicalIncident']
+                } else if (sa['OtherIncident'] != null && sa['OtherIncident'] != '') {
+                    sa['IncidentReason'] =sa['OtherIncident']
+                } else if (sa['Other'] != null && sa['Other'] != '') {
+                    sa['IncidentReason'] =sa['Other']
+                } else {
+                    sa['IncidentReason'] = '';
+                }
                 sa['ResidentAbuse'] = residentAbuse;
                 sa['AccidentReportForm'] = getARF;
                 if (sa['Stage'] == '1') {
@@ -132,6 +152,7 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
             }
 
         }
+        debugger
         if (startDate != null) {
             filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() >= new Date(startDate).getTime() });
         }
@@ -158,27 +179,68 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
 
     async function exportExcel() {
         let exportList = [];
+        debugger
         for (let results of displayData) {
             let IncidentTime = '';
-            let ResidentAbuse = '';
+            let IncidentReason = '';
             if (results.IncidentTime != undefined && results.IncidentTime != null) {
                 IncidentTime = moment(results.IncidentTime).format("YYYY-MM-DD hh:mm");
                 // IncidentTime = new Date(results.IncidentTime).getFullYear() + `-` +(`0`+(new Date(results.IncidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(results.IncidentTime).getDate()).slice(-2) + ` ` + (`0`+new Date(results.IncidentTime).getHours()).slice(-2) + `:` + + (`0`+new Date(results.IncidentTime).getMinutes()).slice(-2)
             }
-            if (results.ResidentAbuse == "UNUSAL_INCIDENT_GENERAL") {
-                ResidentAbuse = "在院舍內發生事故及送院救治／送院後死亡";
-            } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_SUICIDE") {
-                ResidentAbuse = "在院舍內自殺及送院救治／送院後死亡";
-            } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_OTHER") {
-                ResidentAbuse = "其他不尋常死亡／受傷";
-            } else if (results.ResidentAbuse == "UNUSAL_INCIDENT_COURT") {
-                ResidentAbuse = "收到死因裁判法庭要求出庭的傳票";
+            if (results.IncidentReason == "UNUSAL_INCIDENT_GENERAL") {
+                IncidentReason = "(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 在院舍內發生事故及送院救治／送院後死亡";
+            } else if (results.IncidentReason == "UNUSAL_INCIDENT_SUICIDE") {
+                IncidentReason = "(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 在院舍內自殺及送院救治／送院後死亡";
+            } else if (results.IncidentReason == "UNUSAL_INCIDENT_OTHER") {
+                IncidentReason = "(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 其他不尋常死亡／受傷";
+            } else if (results.IncidentReason == "UNUSAL_INCIDENT_COURT") {
+                IncidentReason = "(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 收到死因裁判法庭要求出庭的傳票";
+            } else if (results.IncidentReason == "RESIDENT_MISSING_INSIDE") {
+                IncidentReason = "(2) 住客失蹤以致需要報警求助 - 住客擅自／在員工不知情下離開院舍";
+            } else if (results.IncidentReason == "RESIDENT_MISSING_OUTSIDE") {
+                IncidentReason = "(2) 住客失蹤以致需要報警求助 - 院外活動期間失蹤";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_TENANT_AND_TENANT") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 住客與住客";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_TENANT_AND_STAFF") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 住客與員工";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_TENANT_AND_GUEST") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 住客與訪客";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_STAFF_AND_STAFF") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 員工與員工";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_STAFF_AND_GUEST") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 員工與訪客";
+            } else if (results.IncidentReason == "DISPUTE_POLICE_GUEST_AND_GUEST") {
+                IncidentReason = "(4) 院舍內有爭執事件以致需要報警求助 - 訪客與訪客";
+            } else if (results.IncidentReason == "SERIOUS_MEDICAL_INCIDENT_MISTAKE") {
+                IncidentReason = "(5) 嚴重醫療／藥物事故 - 住客誤服藥物引致入院接受檢查或治療";
+            } else if (results.IncidentReason == "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED") {
+                IncidentReason = "(5) 嚴重醫療／藥物事故 - 住客漏服或多服藥物引致入院接受檢查或治療";
+            } else if (results.IncidentReason == "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG") {
+                IncidentReason = "(5) 嚴重醫療／藥物事故 - 住客服用成藥或非處方藥物引致入院接受檢查或治療";
+            } else if (results.IncidentReason == "SERIOUS_MEDICAL_INCIDENT_OTHER") {
+                IncidentReason = "(5) 嚴重醫療／藥物事故 - 其他";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_POWER_SUPPLY") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 停止電力供應";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_BUILDING") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 樓宇破損或結構問題";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_FIRE") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 火警";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_WATER_SUPPLY") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 停止食水供應";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_OTHER") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 水浸／山泥傾瀉／不明氣體／其他天災意外";
+            } else if (results.IncidentReason == "OTHER_INCIDENT_OTHERS") {
+                IncidentReason = "(6) 其他重大特別事故以致影響院舍日常運作 - 其他";
+            } else if (results.IncidentReason == true) {
+                IncidentReason = '(7) 其他 - ' + results.OtherDescription
+            } else {
+                IncidentReason = results.IncidentReason
             }
 
             exportList.push({
                 ServiceLocation: results.ServiceLocation,
                 IncidentTime: IncidentTime,
-                UnusalIncident: results.ServiceUserGender,
+                IncidentReason: IncidentReason,
                 ResidentAbuse: results.ResidentAbuse
             })
         }
@@ -191,7 +253,7 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
         for (let i = 0; i < exportList.length; i++) {
             ws["A" + (i + row)] = { t: 's', v: exportList[i].ServiceLocation, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
             ws["B" + (i + row)] = { t: 's', v: exportList[i].IncidentTime, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
-            ws["C" + (i + row)] = { t: 's', v: exportList[i].UnusalIncident, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
+            ws["C" + (i + row)] = { t: 's', v: exportList[i].IncidentReason, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
             ws["D" + (i + row)] = { t: 's', v: exportList[i].ResidentAbuse, s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' } } };
         }
         XLSX.utils.sheet_add_json(ws, flattenedResult, { origin: "A3" });
@@ -344,6 +406,7 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
         });
         return ws;
     }
+    console.log('displayData',displayData);
     return (
         <div>
             <div className="row mb-3">
@@ -467,11 +530,11 @@ const column = [
         headerStyle: { width: '180px' },
         formatter: dateFormatter.bind(this)
     }, {
-        dataField: 'UnusalIncident',
+        dataField: 'IncidentReason',
         text: '特別事故類別',
         sort: true,
         headerStyle: { width: '180px' },
-        formatter: unusalIncidentFormatter.bind(this)
+        formatter: incidentReasonFormatter.bind(this)
     },
     {
         dataField: 'ResidentAbuse',
@@ -485,25 +548,63 @@ const column = [
 function dateFormatter(cell, rowIndex) {
     let div = [];
     if (cell != undefined && cell != null) {
-        div.push(<div >{moment(cell.IncidentTime).format("YYYY-MM-DD hh:mm")}</div>);
+        div.push(<div >{moment(cell).format("YYYY-MM-DD hh:mm")}</div>);
         //div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
     }
     return div;
 }
 
-function unusalIncidentFormatter(cell, rowIndex) {
+function incidentReasonFormatter(cell, rowIndex) {
     let div = [];
+    debugger
     if (cell == "UNUSAL_INCIDENT_GENERAL") {
-        div.push(<div>在院舍內發生事故及送院救治／送院後死亡</div>);
-    }
-    if (cell == "UNUSAL_INCIDENT_SUICIDE") {
-        div.push(<div>在院舍內自殺及送院救治／送院後死亡</div>);
-    }
-    if (cell == "UNUSAL_INCIDENT_OTHER") {
-        div.push(<div>其他不尋常死亡／受傷</div>);
-    }
-    if (cell == "UNUSAL_INCIDENT_COURT") {
-        div.push(<div>收到死因裁判法庭要求出庭的傳票</div>);
+        div.push(<div>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 在院舍內發生事故及送院救治／送院後死亡</div>);
+    } else if (cell == "UNUSAL_INCIDENT_SUICIDE") {
+        div.push(<div>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 在院舍內自殺及送院救治／送院後死亡</div>);
+    } else if (cell == "UNUSAL_INCIDENT_OTHER") {
+        div.push(<div>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 其他不尋常死亡／受傷</div>);
+    } else if (cell == "UNUSAL_INCIDENT_COURT") {
+        div.push(<div>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 收到死因裁判法庭要求出庭的傳票</div>);
+    } else if (cell == "RESIDENT_MISSING_INSIDE") {
+        div.push(<div>(2) 住客失蹤以致需要報警求助 - 住客擅自／在員工不知情下離開院舍</div>);
+    } else if (cell == "RESIDENT_MISSING_OUTSIDE") {
+        div.push(<div>(2) 住客失蹤以致需要報警求助 - 院外活動期間失蹤</div>);
+    } else if (cell == "DISPUTE_POLICE_TENANT_AND_TENANT") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 住客與住客</div>);
+    } else if (cell == "DISPUTE_POLICE_TENANT_AND_STAFF") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 住客與員工</div>);
+    } else if (cell == "DISPUTE_POLICE_TENANT_AND_GUEST") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 住客與訪客</div>);
+    } else if (cell == "DISPUTE_POLICE_STAFF_AND_STAFF") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 員工與員工</div>);
+    } else if (cell == "DISPUTE_POLICE_STAFF_AND_GUEST") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 員工與訪客</div>);
+    } else if (cell == "DISPUTE_POLICE_GUEST_AND_GUEST") {
+        div.push(<div>(4) 院舍內有爭執事件以致需要報警求助 - 訪客與訪客</div>);
+    } else if (cell == "SERIOUS_MEDICAL_INCIDENT_MISTAKE") {
+        div.push(<div>(5) 嚴重醫療／藥物事故 - 住客誤服藥物引致入院接受檢查或治療</div>);
+    } else if (cell == "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED") {
+        div.push(<div>(5) 嚴重醫療／藥物事故 - 住客漏服或多服藥物引致入院接受檢查或治療</div>);
+    } else if (cell == "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG") {
+        div.push(<div>(5) 嚴重醫療／藥物事故 - 住客服用成藥或非處方藥物引致入院接受檢查或治療</div>);
+    } else if (cell == "SERIOUS_MEDICAL_INCIDENT_OTHER") {
+        div.push(<div>(5) 嚴重醫療／藥物事故 - 其他</div>);
+    } else if (cell == "OTHER_INCIDENT_POWER_SUPPLY") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 停止電力供應</div>);
+    } else if (cell == "OTHER_INCIDENT_BUILDING") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 樓宇破損或結構問題</div>);
+    } else if (cell == "OTHER_INCIDENT_FIRE") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 火警</div>);
+    } else if (cell == "OTHER_INCIDENT_WATER_SUPPLY") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 停止食水供應</div>);
+    } else if (cell == "OTHER_INCIDENT_OTHER") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 水浸／山泥傾瀉／不明氣體／其他天災意外</div>);
+    } else if (cell == "OTHER_INCIDENT_OTHERS") {
+        div.push(<div>(6) 其他重大特別事故以致影響院舍日常運作 - 其他</div>);
+    } else if (cell == true) {
+        div.push(<div>(7) 其他 - {rowIndex.OtherDescription}</div>);
+    } else {
+        div.push(<div>{cell}</div>);
     }
     return div;
 }
