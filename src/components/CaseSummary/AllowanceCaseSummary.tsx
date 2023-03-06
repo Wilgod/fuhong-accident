@@ -15,6 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import * as XLSX from 'xlsx';
 import * as XLSXStyle from 'xlsx-style';
 import * as FileSaver from 'file-saver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 interface IAllowanceCaseSummary {
     context: WebPartContext;
     siteCollectionUrl: string;
@@ -30,6 +32,85 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [status, setStatus] = useState('');
     const [keyword, setKeyword] = useState('');
+    const column = [
+        {
+            dataField: 'ID',
+            text: 'ID',
+            hidden: true
+        },
+        {
+            dataField: 'Id',
+            text: "Action",
+            sort: true,
+            headerStyle: {textAlign: 'center', verticalAlign: 'middle',width:'80px'},
+            style: {justifyContent: "center",textAlign: "center"},
+            formatter: actionFormatter.bind(this)
+        },
+        {
+            dataField: 'ServiceLocationTC',
+            text: '服務單位',
+            sort: true,
+            headerStyle: { width: '100px' }
+        }, {
+            dataField: 'IncidentTime',
+            text: '意外發生日期及時間',
+            sort: true,
+            headerStyle: { width: '180px' },
+            formatter: dateFormatter.bind(this)
+        }, {
+            dataField: 'IncidentLocation',
+            text: '事故發生地點',
+            sort: true,
+            headerStyle: { width: '180px' }
+        }, {
+            dataField: 'IncidentCategory',
+            text: '事故類別',
+            sort: true,
+            headerStyle: { width: '180px' },
+            formatter: unusalIncidentFormatter.bind(this)
+        },
+        {
+            dataField: 'ResidentAbuse',
+            text: '虐待性質',
+            sort: true,
+            headerStyle: { width: '200px' }
+        },
+        {
+            dataField: 'IncidentDescription',
+            text: '特別事故的描述',
+            sort: true,
+            headerStyle: { width: '200px' }
+        },
+        {
+            dataField: 'ImmediateFollowUp',
+            text: '即時跟進行動',
+            sort: true,
+            headerStyle: { width: '200px' }
+        },
+        {
+            dataField: 'FollowUpPlan',
+            text: '跟進計劃',
+            sort: true,
+            headerStyle: { width: '200px' }
+        }
+    ]
+    
+
+
+    function actionFormatter(cell, rowIndex) {
+    
+        debugger
+        let divButton = [];
+        
+        divButton.push(
+            <span onClick={() => window.open(context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx?formId=`+ cell + `&navScreen=SpecialIncidentReportAllowance`, '_blank')} >
+                <FontAwesomeIcon icon={fontawesome["faPen"]} size="lg" style={{ marginRight:'15px', fontSize: '15px', color: '#656262', cursor:'pointer' }} />
+            </span>
+            
+        );
+        return divButton
+    }
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions = event.target.selectedOptions;
@@ -481,60 +562,6 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
 
 export default AllowanceCaseSummary
 
-const column = [
-    {
-        dataField: 'ID',
-        text: 'ID',
-        hidden: true
-    },
-    {
-        dataField: 'ServiceLocationTC',
-        text: '服務單位',
-        sort: true,
-        headerStyle: { width: '100px' }
-    }, {
-        dataField: 'IncidentTime',
-        text: '意外發生日期及時間',
-        sort: true,
-        headerStyle: { width: '180px' },
-        formatter: dateFormatter.bind(this)
-    }, {
-        dataField: 'IncidentLocation',
-        text: '事故發生地點',
-        sort: true,
-        headerStyle: { width: '180px' }
-    }, {
-        dataField: 'IncidentCategory',
-        text: '事故類別',
-        sort: true,
-        headerStyle: { width: '180px' },
-        formatter: unusalIncidentFormatter.bind(this)
-    },
-    {
-        dataField: 'ResidentAbuse',
-        text: '虐待性質',
-        sort: true,
-        headerStyle: { width: '200px' }
-    },
-    {
-        dataField: 'IncidentDescription',
-        text: '特別事故的描述',
-        sort: true,
-        headerStyle: { width: '200px' }
-    },
-    {
-        dataField: 'ImmediateFollowUp',
-        text: '即時跟進行動',
-        sort: true,
-        headerStyle: { width: '200px' }
-    },
-    {
-        dataField: 'FollowUpPlan',
-        text: '跟進計劃',
-        sort: true,
-        headerStyle: { width: '200px' }
-    }
-]
 
 function dateFormatter(cell, rowIndex) {
     let div = [];

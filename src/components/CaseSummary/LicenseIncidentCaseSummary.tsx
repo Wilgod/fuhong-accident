@@ -15,6 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import * as XLSX from 'xlsx';
 import * as XLSXStyle from 'xlsx-style';
 import * as FileSaver from 'file-saver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 interface ILicenseIncidentCaseSummary {
     context: WebPartContext;
     siteCollectionUrl: string;
@@ -38,6 +40,46 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
         }
         return result;
     }
+    const column = [
+        {
+            dataField: 'ID',
+            text: 'ID',
+            hidden: true
+        },
+        {
+            dataField: 'Id',
+            text: "Action",
+            sort: true,
+            headerStyle: {textAlign: 'center', verticalAlign: 'middle',width:'80px'},
+            style: {justifyContent: "center",textAlign: "center"},
+            formatter: actionFormatter.bind(this)
+        },
+        {
+            dataField: 'ServiceLocationTC',
+            text: '服務單位',
+            sort: true,
+            headerStyle: { width: '100px' }
+        }, {
+            dataField: 'IncidentTime',
+            text: '意外發生日期及時間',
+            sort: true,
+            headerStyle: { width: '180px' },
+            formatter: dateFormatter.bind(this)
+        }, {
+            dataField: 'IncidentReason',
+            text: '特別事故類別',
+            sort: true,
+            headerStyle: { width: '180px' },
+            formatter: incidentReasonFormatter.bind(this)
+        },
+        {
+            dataField: 'ResidentAbuse',
+            text: '虐待／被侵犯性質',
+            sort: true,
+            headerStyle: { width: '80px' },
+            //formatter: genderFormatter.bind(this)
+        }
+    ]
     let lineBreakColumnIndex = "";
     useEffect(() => {
         if (Array.isArray(serviceLocation) && serviceLocation.length > 0) {
@@ -396,6 +438,20 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
         return ws;
     }
 
+    function actionFormatter(cell, rowIndex) {
+    
+        debugger
+        let divButton = [];
+        
+        divButton.push(
+            <span onClick={() => window.open(context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx?formId=`+ cell + `&navScreen=SpecialIncidentReportLicense`, '_blank')} >
+                <FontAwesomeIcon icon={fontawesome["faPen"]} size="lg" style={{ marginRight:'15px', fontSize: '15px', color: '#656262', cursor:'pointer' }} />
+            </span>
+            
+        );
+        return divButton
+    }
+
     function convertMessageWithLineBreak(ws) {
         Object.keys(ws).map(item => {
             if (item.indexOf("!") == -1 && item.indexOf(lineBreakColumnIndex) != -1) {
@@ -512,38 +568,8 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
 
 export default LicenseIncidentCaseSummary
 
-const column = [
-    {
-        dataField: 'ID',
-        text: 'ID',
-        hidden: true
-    },
-    {
-        dataField: 'ServiceLocationTC',
-        text: '服務單位',
-        sort: true,
-        headerStyle: { width: '100px' }
-    }, {
-        dataField: 'IncidentTime',
-        text: '意外發生日期及時間',
-        sort: true,
-        headerStyle: { width: '180px' },
-        formatter: dateFormatter.bind(this)
-    }, {
-        dataField: 'IncidentReason',
-        text: '特別事故類別',
-        sort: true,
-        headerStyle: { width: '180px' },
-        formatter: incidentReasonFormatter.bind(this)
-    },
-    {
-        dataField: 'ResidentAbuse',
-        text: '虐待／被侵犯性質',
-        sort: true,
-        headerStyle: { width: '80px' },
-        //formatter: genderFormatter.bind(this)
-    }
-]
+
+
 
 function dateFormatter(cell, rowIndex) {
     let div = [];

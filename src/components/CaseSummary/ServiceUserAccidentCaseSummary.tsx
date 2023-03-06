@@ -15,6 +15,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import * as XLSX from 'xlsx';
 import * as XLSXStyle from 'xlsx-style';
 import * as FileSaver from 'file-saver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 interface IServiceUserAccidentCaseSummary {
     context: WebPartContext;
     siteCollectionUrl: string;
@@ -31,6 +33,124 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [status, setStatus] = useState('');
     const [keyword, setKeyword] = useState('');
+    const column = [
+        {
+            dataField: 'ID',
+            text: 'ID',
+            hidden: true
+        },
+        {
+            dataField: 'Id',
+            text: "Action",
+            sort: true,
+            headerStyle: {textAlign: 'center', verticalAlign: 'middle',width:'80px'},
+            style: {justifyContent: "center",textAlign: "center"},
+            formatter: actionFormatter.bind(this)
+        },
+        {
+            dataField: 'ServiceLocationTC',
+            text: '服務單位',
+            sort: true,
+            headerStyle: { width: '200px' }
+        },
+        {
+            dataField: 'AccidentTime',
+            text: '意外發生日期及時間',
+            sort: true,
+            headerStyle: { width: '180px' },
+            formatter: dateFormatter.bind(this)
+        },
+        {
+            dataField: 'ServiceUserGender',
+            text: '性別',
+            sort: true,
+            headerStyle: { width: '80px' },
+            formatter: genderFormatter.bind(this)
+        },
+        {
+            dataField: 'ServiceUserAge',
+            text: '年齡',
+            sort: true,
+            headerStyle: { width: '80px' }
+        },
+        {
+            dataField: 'AccidentLocation',
+            text: '意外發生地點',
+            sort: true,
+            headerStyle: { width: '130px' }
+        },
+        /*{
+            dataField: 'Intelligence',
+            text: '智力障礙程度',
+            sort: true,
+            headerStyle: {width: '130px'},
+            formatter: intelligenceFormatter.bind(this)
+        },
+        {
+            dataField: 'ASD',
+            text: '自閉症譜系障礙 (ASD)',
+            sort: true,
+            headerStyle: {width: '200px'},
+            formatter: asdFormatter.bind(this)
+        },*/
+        {
+            dataField: 'AccidentNature',
+            text: '意外性質',
+            sort: true,
+            headerStyle: { width: '300px' },
+            formatter: accidentNatureFormatter.bind(this)
+        },
+        /*{
+            dataField: 'EnvirnmentFactor',
+            text: '意外成因 - 環境因素',
+            sort: true,
+            headerStyle: {width: '180px'},
+            formatter: envirnmentFactorFormatter.bind(this)
+        },
+        {
+            dataField: 'PersonalFactor',
+            text: '意外成因 - 個人因素',
+            sort: true,
+            headerStyle: {width: '180px'},
+            formatter: personalFactorFormatter.bind(this)
+        },*/
+        {
+            dataField: 'AccidentDetail',
+            text: '意外詳情',
+            sort: true,
+            headerStyle: { width: '300px' },
+            formatter: accidentDetailFormatter.bind(this)
+        },
+        {
+            dataField: 'AccidentCauseFactor',
+            text: '成因',
+            sort: true,
+            headerStyle: { width: '300px' },
+            formatter: accidentCauseFactorFormatter.bind(this)
+        },
+        {
+            dataField: 'Suggestion',
+            text: '跟進工作及報告建議',
+            sort: true,
+            headerStyle: { width: '300px' },
+            formatter: suggestionFactorFormatter.bind(this)
+        }
+    ]
+
+    function actionFormatter(cell, rowIndex) {
+    
+        debugger
+        let divButton = [];
+        
+        divButton.push(
+            <span onClick={() => window.open(context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx?formId=`+ cell + `&navScreen=ServiceUserAccident`, '_blank')} >
+                <FontAwesomeIcon icon={fontawesome["faPen"]} size="lg" style={{ marginRight:'15px', fontSize: '15px', color: '#656262', cursor:'pointer' }} />
+            </span>
+            
+        );
+        return divButton
+    }
+
     const multipleOptionsSelectParser = (event) => {
         let result = [];
         const selectedOptions1 = event.target.selectedOptions;
@@ -495,101 +615,7 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
 
 export default ServiceUserAccidentCaseSummary
 
-const column = [
-    {
-        dataField: 'ID',
-        text: 'ID',
-        hidden: true
-    },
-    {
-        dataField: 'ServiceLocationTC',
-        text: '服務單位',
-        sort: true,
-        headerStyle: { width: '200px' }
-    },
-    {
-        dataField: 'AccidentTime',
-        text: '意外發生日期及時間',
-        sort: true,
-        headerStyle: { width: '180px' },
-        formatter: dateFormatter.bind(this)
-    },
-    {
-        dataField: 'ServiceUserGender',
-        text: '性別',
-        sort: true,
-        headerStyle: { width: '80px' },
-        formatter: genderFormatter.bind(this)
-    },
-    {
-        dataField: 'ServiceUserAge',
-        text: '年齡',
-        sort: true,
-        headerStyle: { width: '80px' }
-    },
-    {
-        dataField: 'AccidentLocation',
-        text: '意外發生地點',
-        sort: true,
-        headerStyle: { width: '130px' }
-    },
-    /*{
-        dataField: 'Intelligence',
-        text: '智力障礙程度',
-        sort: true,
-        headerStyle: {width: '130px'},
-        formatter: intelligenceFormatter.bind(this)
-    },
-    {
-        dataField: 'ASD',
-        text: '自閉症譜系障礙 (ASD)',
-        sort: true,
-        headerStyle: {width: '200px'},
-        formatter: asdFormatter.bind(this)
-    },*/
-    {
-        dataField: 'AccidentNature',
-        text: '意外性質',
-        sort: true,
-        headerStyle: { width: '300px' },
-        formatter: accidentNatureFormatter.bind(this)
-    },
-    /*{
-        dataField: 'EnvirnmentFactor',
-        text: '意外成因 - 環境因素',
-        sort: true,
-        headerStyle: {width: '180px'},
-        formatter: envirnmentFactorFormatter.bind(this)
-    },
-    {
-        dataField: 'PersonalFactor',
-        text: '意外成因 - 個人因素',
-        sort: true,
-        headerStyle: {width: '180px'},
-        formatter: personalFactorFormatter.bind(this)
-    },*/
-    {
-        dataField: 'AccidentDetail',
-        text: '意外詳情',
-        sort: true,
-        headerStyle: { width: '300px' },
-        formatter: accidentDetailFormatter.bind(this)
-    },
-    {
-        dataField: 'AccidentCauseFactor',
-        text: '成因',
-        sort: true,
-        headerStyle: { width: '300px' },
-        formatter: accidentCauseFactorFormatter.bind(this)
-    },
-    {
-        dataField: 'Suggestion',
-        text: '跟進工作及報告建議',
-        sort: true,
-        headerStyle: { width: '300px' },
-        formatter: suggestionFactorFormatter.bind(this)
-    }
-]
+
 
 function dateFormatter(cell, rowIndex) {
     let div = [];

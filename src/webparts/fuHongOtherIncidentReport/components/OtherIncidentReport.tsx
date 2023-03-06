@@ -867,7 +867,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     const changeServiceUserUnit = (event) =>{
         let value = event.target.value;
-        setServiceUnitTC(value);
+        //setServiceUnitTC(value);
+        setServiceUnit(value);
+        
     }
 
 
@@ -978,7 +980,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [departments]);
 
 
-
+    console.log('serviceUnit',serviceUnit);
+    console.log('permissionList',permissionList);
+    console.log('serviceUserUnitList',serviceUserUnitList);
     return (
         <>
             {isPrintMode && <Header displayName="其他事故呈報表" />}
@@ -995,13 +999,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {/* 服務單位 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
-                            <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnitTC} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
+                            <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
                                 disabled={(!pendingSmApprove(currentUserRole, formStatus, formStage) && !formInitial(currentUserRole, formStatus))}
                             >
                                 <option value={""} ></option>
                                 {permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        return <option value={item.su_Eng_name_display} selected={item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                        if (item.su_Eng_name_display == 'RCYHH' && serviceUnit == 'RCYHH') {
+                                            console.log('serviceUnit',serviceUnit);
+                                            debugger
+                                        }
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {permissionList.indexOf('All') < 0 &&
