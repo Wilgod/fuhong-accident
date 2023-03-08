@@ -450,7 +450,10 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         //調查員
         console.log('parentFormData.Investigator', parentFormData.Investigator);
         console.log('investigator1', investigator);
-        if (parentFormData.Investigator) {
+        debugger
+        if (formTwentyData.Investigator) {
+            setInvestigator([{ secondaryText: formTwentyData.Investigator.EMail, id: formTwentyData.Investigator.Id }]);
+        } else if (parentFormData.Investigator) {
             console.log('setInvestigator');
             setInvestigator([{ secondaryText: parentFormData.Investigator.EMail, id: parentFormData.Investigator.Id }]);
 
