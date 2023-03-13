@@ -22,7 +22,7 @@ export const formInitBySm = (currentUserEmail: string, smEmail: string, status: 
 //Stage 1 / PENDING_SM_APPROVE
 export const pendingSmApprove = (context:any, currentUserRole: Role, status: string, stage: string, sm:any): boolean => {
 
-    if (stage === "1" && status === "PENDING_SM_APPROVE" && currentUserRole === Role.SERVICE_MANAGER && sm != null && sm.Email == context.pageContext.legacyPageContext.userEmail) {
+    if (stage === "1" && status === "PENDING_SM_APPROVE" && sm != null && sm.Email == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }
     return false;
