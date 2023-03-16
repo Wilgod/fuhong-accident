@@ -49,6 +49,7 @@ export const pendingSptApproveForSD = (context:any, currentUserRole: Role, statu
 // ------------------------------------------
 // Stage 2 / PENDING_INVESTIGATE
 export const pendingInvestigate = (context:any, investigator: any, status: string, stage: string): boolean => {
+    console.log('stage', stage + ', status', status + ', investigator.mail' + investigator);
     if (stage === "2" && status === "PENDING_INVESTIGATE" && investigator != null && investigator.mail == context.pageContext.legacyPageContext.userEmail) {
         return true;
     }

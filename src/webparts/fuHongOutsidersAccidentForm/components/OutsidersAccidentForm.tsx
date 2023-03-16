@@ -331,6 +331,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 } else {
                     error["MedicalArrangementHospital"] = true;
                 }
+                debugger
                 if (hospitalArriveTime) {
                     body["HospitalArriveTime"] = hospitalArriveTime.toISOString();
                 } else {
@@ -1016,6 +1017,14 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
             setFamilyContactDate(new Date(data.FamilyContactDate));
             setPoliceDatetime(new Date(data.PoliceDatetime));
+            if (data.MedicalArrangement == 'ARRANGEMENT_EMERGENCY_DEPARTMENT') {
+                if (data.HospitalArriveTime != null) {
+                    setHospitalArriveTime(new Date(data.HospitalArriveTime));
+                }
+                if (data.HospitalLeaveTime != null) {
+                    setHospitalLeaveTime(new Date(data.HospitalLeaveTime));
+                }
+            }
             setForm({
                 accidentDetail: data.AccidentDetail,
                 accidentLocation: data.AccidentLocation,

@@ -739,7 +739,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     useEffect(() => {
         updateState();
     }, [selectedAccidentFollowUpFormId]);
-
+    console.log('form.accidentalFollowUpContinue' , form.accidentalFollowUpContinue);
     return (
         <>
             {isPrintMode && <Header displayName="事故跟進/結束報告(三)" />}
@@ -1049,7 +1049,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         !completed && stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData) &&
                         <div className="form-row justify-content-center mb-2">
                             {
-                                form.accidentalFollowUpContinue === false &&
                                 <div className="col-md-2 col-4 mb-2">
                                     <button className="btn btn-warning w-100" onClick={() => sdApproveHandler()}>批准</button>
                                 </div>
