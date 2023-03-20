@@ -80,7 +80,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     //IncidentTime
     //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [serviceUnit, setServiceUnit] = useState("");
-    const [serviceUserUnitList, setServiceUserUnitList] = useState([]);;
+    const [serviceUserUnitList, setServiceUserUnitList] = useState([]);
     const [serviceUnitTC, setServiceUnitTC] = useState("");
 
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名

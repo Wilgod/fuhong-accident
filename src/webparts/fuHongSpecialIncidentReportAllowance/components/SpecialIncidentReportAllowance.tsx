@@ -8,7 +8,7 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
 import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance, deleteSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
 import { IAccidentCategoryAbuseDetails, IErrorFields, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
-import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
+import { getUserInfoByEmailInUserInfoAD, getAllServiceUnit } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { IUser } from '../../../interface/IUser';
@@ -33,9 +33,10 @@ import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
-export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print }: ISpecialIncidentReportAllowanceProps) {
+export default function SpecialIncidentReportAllowance({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print, permissionList }: ISpecialIncidentReportAllowanceProps) {
     //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [serviceUnit, setServiceUnit] = useState("");
+    const [serviceUserUnitList, setServiceUserUnitList] = useState([]);
     const [reporter, setReporter, reporterPickerInfo] = useUserInfoAD(); // 填報人姓名
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -438,6 +439,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     }
 
+    const changeServiceUserUnit = (event) =>{
+        let value = event.target.value;
+        //setServiceUnitTC(value);
+        setServiceUnit(value);
+        debugger
+        setServiceLocation(value);
+        
+    }
+
     const loadData = () => {
         console.log("loadData", formData);
         if (formData) {
@@ -447,6 +457,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.SubmitDate) {
                 setReportDate(new Date(formData.SubmitDate));
             }
+            debugger
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
             }
@@ -470,6 +481,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
+                let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == formData.ServiceUnit });
+                
             }
 
             if (formData.Reporter) {
@@ -925,6 +938,26 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     }
 
     useEffect(() => {
+        getAllServiceUnit(siteCollectionUrl).then((userUnitList) => {
+            if (permissionList.indexOf('All') >= 0) {
+                setServiceUserUnitList(userUnitList);
+            } else {
+                console.log('permissionList',permissionList);
+                console.log('userUnitList',userUnitList);
+                let filterList = [];
+                for (let unit of userUnitList) {
+                    let filterP = permissionList.filter(item => {return item == unit.su_Eng_name_display});
+                    if (filterP.length > 0) {
+                        filterList.push(unit);
+                    }
+                }
+                debugger
+                setServiceUserUnitList(filterList);
+            }
+            
+            
+
+        }).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
         getInsuranceEMailSetting();
     }, [])
@@ -971,7 +1004,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     // Find SD && SM
     useEffect(() => {
-        if (formInitial(currentUserRole, formStatus)) {
+        if (formInitial(currentUserRole, formStatus) && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
             /*if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
                 setHrDepartment("CHH");
                 setServiceUnit("CHH");
@@ -984,7 +1017,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 setServiceLocation(userInfo.hr_location);
             }
         }
-    }, [userInfo]);
+    }, [userInfo, serviceUserUnitList]);
 
 
     // Get SD & SM
@@ -1021,6 +1054,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     }, [sdInfo]);
 
 
+    
     return (
         <>
             {isPrintMode && <Header displayName="殘疾人士院舍特別事故報告" />}
@@ -1169,10 +1203,55 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                         {/* 單位名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>單位名稱</label>
-                        <div className="col-12 col-md-4">
+                        {/*<div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={suTcName} onChange={(event) => setSuTcName(event.target.value)}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                        </div>*/}
+                        <div className="col-12 col-md-4">
+                            <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
+                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                            >
+                                <option value={""} ></option>
+                                {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
+                                        if (serviceUnit == 'JFP') {
+                                            console.log('serviceUnit',serviceUnit);
+                                            debugger
+                                        }
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
+
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit != "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                            </select>
                         </div>
+                        
                     </div>
                     <div className="form-row mb-2">
                         {/* 聯絡電話 */}
