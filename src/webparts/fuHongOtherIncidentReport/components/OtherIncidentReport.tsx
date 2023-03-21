@@ -984,6 +984,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [departments]);
 
 
+    useEffect(() => {
+        setHrDepartment(serviceUnit)
+    }, [serviceUnit]);
+
     console.log('serviceUnit',serviceUnit);
     console.log('permissionList',permissionList);
     console.log('serviceUserUnitList',serviceUserUnitList);

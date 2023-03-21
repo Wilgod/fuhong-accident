@@ -1054,7 +1054,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     }, [sdInfo]);
 
 
-    
+    useEffect(() => {
+        setHrDepartment(serviceUnit)
+    }, [serviceUnit]);
     return (
         <>
             {isPrintMode && <Header displayName="殘疾人士院舍特別事故報告" />}
