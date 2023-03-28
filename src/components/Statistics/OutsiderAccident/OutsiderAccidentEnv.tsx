@@ -743,7 +743,7 @@ function OutsiderAccidentEnv(props) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
-                let a = data.filter((item) => { debugger;return item.EnvSlipperyGround});
+                let a = data.filter((item) => { return item.EnvSlipperyGround});
                 let envSlipperyGroundResult = sampleThreeParser(data.filter((item) => { return item.EnvSlipperyGround}), startDate, endDate);
                 let envSlipperyGroundMFChart = financialYearChartParser(envSlipperyGroundResult);
 
