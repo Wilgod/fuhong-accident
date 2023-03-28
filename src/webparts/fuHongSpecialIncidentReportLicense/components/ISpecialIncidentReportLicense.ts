@@ -11,7 +11,8 @@ export interface ISpecialIncidentReportLicenseProps {
     siteCollectionUrl:string;
     departmentList:any;
     speicalIncidentReportWorkflow:string;
-    print:any
+    print:any;
+    permissionList:any;
 }
 
 export interface ISpecialIncidentReportLicenseStates {

@@ -214,9 +214,12 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 filterOtherIncidentData = otherIncidentData.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
                     item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
             }
-                
+            debugger
             for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
+                if (item.Id== 252) {
+                    debugger
+                }
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
@@ -244,7 +247,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             }
             result = result.concat(filterOtherIncidentData);
         }
-
+        debugger
         let filterResult = result.filter(item => {
             const d = new Date(item.AccidentTime || item.IncidentTime);
             return (d.getTime() <= searchCriteria.endDate.getTime() && d.getTime() >= searchCriteria.startDate.getTime())

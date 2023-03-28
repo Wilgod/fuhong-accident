@@ -9,7 +9,7 @@ import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTexta
 import { IErrorFields, ISpecialIncidentReportLicenseProps, ISpecialIncidentReportLicenseStates } from './ISpecialIncidentReportLicense';
 import { inputProperties } from 'office-ui-fabric-react';
 import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, createSpecialIncidentReportLicense, getSpecialIncidentReportLicenseAllAttachmentById, updateSpecialIncidentReportLicense, updateSpecialIncidentReportLicenseAttachmentById, deleteSpecialIncidentReportLicense } from '../../../api/PostFuHongList';
-import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
+import { getDepartmentByShortName, getUserInfoByEmailInUserInfoAD, getAllServiceUnit } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
 import { IUser } from '../../../interface/IUser';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
@@ -36,7 +36,7 @@ import { IItemAddResult } from "@pnp/sp/items";
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
-export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print }: ISpecialIncidentReportLicenseProps) {
+export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print, permissionList }: ISpecialIncidentReportLicenseProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -48,6 +48,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [reporterJobTitle, setReporterJobTitle] = useState("");
     //const [serviceUnitList, serviceUnit, setServiceUnit] = useServiceUnit();
     const [serviceUnit, setServiceUnit] = useState("");
+    const [serviceUserUnitList, setServiceUserUnitList] = useState([]);
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [selectDepartment, setSelectDepartment] = useState("");
 
@@ -1636,6 +1637,15 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
     }
 
+    const changeServiceUserUnit = (event) =>{
+        let value = event.target.value;
+        //setServiceUnitTC(value);
+        setServiceUnit(value);
+        debugger
+        setServiceLocation(value);
+        
+    }
+
     const loadData = async () => {
         console.log(formData)
         if (formData) {
@@ -1865,6 +1875,26 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     }
 
     useEffect(() => {
+        getAllServiceUnit(siteCollectionUrl).then((userUnitList) => {
+            if (permissionList.indexOf('All') >= 0) {
+                setServiceUserUnitList(userUnitList);
+            } else {
+                console.log('permissionList',permissionList);
+                console.log('userUnitList',userUnitList);
+                let filterList = [];
+                for (let unit of userUnitList) {
+                    let filterP = permissionList.filter(item => {return item == unit.su_Eng_name_display});
+                    if (filterP.length > 0) {
+                        filterList.push(unit);
+                    }
+                }
+                debugger
+                setServiceUserUnitList(filterList);
+            }
+            
+            
+
+        }).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
         getInsuranceEMailSetting();
     }, [])
@@ -1886,20 +1916,23 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         // } else if (CURRENT_USER.email === "FHS.portal.dev@fuhong.hk") {
         //     setHrDepartment("CSWATC(D)");
         // }
-        if (userInfo != null && userInfo != '') {
-            if (formInitial(currentUserRole, formStatus)) {
-                //if (departmentList.length == 1) {
-                if (userInfo && userInfo.hr_deptid) {
-                    setHrDepartment(userInfo.hr_deptid);
-                    setServiceUnit(userInfo.hr_deptid);
-                    setServiceLocation(userInfo.hr_location);
-                }
-                //}
+        if (formInitial(currentUserRole, formStatus) && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
+        
+            if (userInfo != null && userInfo != '') {
+                if (formInitial(currentUserRole, formStatus)) {
+                    //if (departmentList.length == 1) {
+                    if (userInfo && userInfo.hr_deptid) {
+                        setHrDepartment(userInfo.hr_deptid);
+                        setServiceUnit(userInfo.hr_deptid);
+                        setServiceLocation(userInfo.hr_location);
+                    }
+                    //}
 
+                }
             }
         }
 
-    }, [userInfo]);
+    }, [userInfo, serviceUserUnitList]);
 
     useEffect(() => {
         if (selectDepartment != null && selectDepartment != '') {
@@ -1970,6 +2003,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }, [reporter])
 
+    useEffect(() => {
+        setHrDepartment(serviceUnit)
+    }, [serviceUnit]);
     //console.log('departmentList',departmentList);
     //console.log('isPrintMode',isPrintMode);
     //console.log('reporter',reporter);
@@ -2858,8 +2894,49 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
-                        <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" value={form.homesName} disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                        <div className="col-12 col-xl-4">
+                        <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
+                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                            >
+                                <option value={""} ></option>
+                                {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
+                                        if (serviceUnit == 'JFP') {
+                                            console.log('serviceUnit',serviceUnit);
+                                            debugger
+                                        }
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
+
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit != "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                            </select>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生日期和時間</label>
                         <div className="col-12 col-md-4">

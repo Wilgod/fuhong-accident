@@ -12,6 +12,7 @@ export interface ISpecialIncidentReportAllowanceProps {
     departmentList:any;
     speicalIncidentReportWorkflow:string;
     print:any;
+    permissionList:any;
 }
 
 export interface IAccidentCategoryAbuseDetails {
