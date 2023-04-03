@@ -439,13 +439,13 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     }
 
-    const changeServiceUserUnit = (event) =>{
+    const changeServiceUserUnit = (event) => {
         let value = event.target.value;
         //setServiceUnitTC(value);
         setServiceUnit(value);
         debugger
         setServiceLocation(value);
-        
+
     }
 
     const loadData = () => {
@@ -482,7 +482,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
                 let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == formData.ServiceUnit });
-                
+
             }
 
             if (formData.Reporter) {
@@ -942,11 +942,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (permissionList.indexOf('All') >= 0) {
                 setServiceUserUnitList(userUnitList);
             } else {
-                console.log('permissionList',permissionList);
-                console.log('userUnitList',userUnitList);
+                console.log('permissionList', permissionList);
+                console.log('userUnitList', userUnitList);
                 let filterList = [];
                 for (let unit of userUnitList) {
-                    let filterP = permissionList.filter(item => {return item == unit.su_Eng_name_display});
+                    let filterP = permissionList.filter(item => { return item == unit.su_Eng_name_display });
                     if (filterP.length > 0) {
                         filterList.push(unit);
                     }
@@ -954,8 +954,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 debugger
                 setServiceUserUnitList(filterList);
             }
-            
-            
+
+
 
         }).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
@@ -1216,9 +1216,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 <option value={""} ></option>
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234',serviceUnit);
+                                        console.log('serviceUnit1234', serviceUnit);
                                         if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit',serviceUnit);
+                                            console.log('serviceUnit', serviceUnit);
                                             debugger
                                         }
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
@@ -1226,7 +1226,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 }
                                 {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234',serviceUnit);
+                                        console.log('serviceUnit1234', serviceUnit);
 
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
@@ -1253,7 +1253,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 }
                             </select>
                         </div>
-                        
+
                     </div>
                     <div className="form-row mb-2">
                         {/* 聯絡電話 */}
@@ -1869,8 +1869,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 showHiddenInUI={false} /> */}
                             <input className="form-control" value={reporter && reporter.displayName || ""} disabled />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
+                        <div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={reporterJobTitle} disabled={true} />
                         </div>
 
@@ -1881,8 +1881,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             <input type="text" className="form-control" value={reporterPhone} onChange={(event) => { setReporterPhone(event.target.value) }}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={reportDate}
@@ -1979,8 +1979,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
                             }
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
+                        <div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={sdInfo && sdInfo.hr_jobcode || ""} disabled />
                         </div>
                     </div>
@@ -1989,8 +1989,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={sdPhoneNo} onChange={(event) => setSdPhoneNo(event.target.value)} disabled={!pendingSdApprove(context, currentUserRole, formStatus, formStage, spSdInfo)} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={sdDate}

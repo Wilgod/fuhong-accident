@@ -12,6 +12,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./OutsiderAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     "personalFactorEmotional": number;
     "personalFactorImpatient": number;
@@ -604,11 +605,11 @@ function OutsiderAccidentPersonal(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因-環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -627,11 +628,11 @@ function OutsiderAccidentPersonal(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因-環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -705,7 +706,7 @@ function OutsiderAccidentPersonal(props) {
                 let personalOtherMFChart = financialYearChartParser(personalOtherResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -820,7 +821,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -935,7 +936,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1050,7 +1051,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1173,7 +1174,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1288,7 +1289,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1430,7 +1431,7 @@ function OutsiderAccidentPersonal(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1545,7 +1546,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1660,7 +1661,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1775,7 +1776,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1891,7 +1892,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2006,7 +2007,7 @@ function OutsiderAccidentPersonal(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2131,7 +2132,7 @@ function OutsiderAccidentPersonal(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2254,7 +2255,7 @@ function OutsiderAccidentPersonal(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2421,7 +2422,7 @@ function OutsiderAccidentPersonal(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["個人因素", "數量"],
@@ -2432,6 +2433,14 @@ function OutsiderAccidentPersonal(props) {
                                             ["抽搐", personalFactorDataset.personalFactorTwitch],
                                             ["其他", personalFactorDataset.personalFactorOther],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -2454,7 +2463,7 @@ function OutsiderAccidentPersonal(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9

@@ -11,6 +11,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./ServiceUserAccident.css";
+import { isMobile } from 'react-device-detect';
 //Age interval
 interface IDataset {
     lessThanFifteen: number;
@@ -705,11 +706,11 @@ function ServiceUserAccidentAge(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${title} - 年齡統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -728,11 +729,11 @@ function ServiceUserAccidentAge(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${title} - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -814,11 +815,11 @@ function ServiceUserAccidentAge(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`<15歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -930,11 +931,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`15-20歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1047,11 +1048,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row" style={{marginTop:'50px'}}>
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`21-30歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1164,11 +1165,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`31-40歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1281,11 +1282,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
 
                         <div className="row" style={{marginTop:'50px'}}>
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`41-50歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1399,11 +1400,11 @@ function ServiceUserAccidentAge(props) {
                         <hr/>
 
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`51-60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1516,11 +1517,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`>60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1665,11 +1666,11 @@ function ServiceUserAccidentAge(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 <15歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1780,11 +1781,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 15-20歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -1894,11 +1895,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row" style={{marginTop:'50px'}}>
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 21-30歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -2008,11 +2009,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 31-40歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -2122,11 +2123,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 41-50歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -2236,11 +2237,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 51-60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -2350,11 +2351,11 @@ function ServiceUserAccidentAge(props) {
                         </div>
                         <hr/>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-11">
                                 <h6>{`${titleYear2}年 >60歲 - 年齡統計(每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -2476,7 +2477,7 @@ function ServiceUserAccidentAge(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2593,7 +2594,7 @@ function ServiceUserAccidentAge(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2731,7 +2732,7 @@ function ServiceUserAccidentAge(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["年齡", "年齡"],
@@ -2743,6 +2744,14 @@ function ServiceUserAccidentAge(props) {
                                             ["51-60歲", ageDataset.fiftyOneToSixty],
                                             [">60歲", ageDataset.greaterThanSixty],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -2765,7 +2774,7 @@ function ServiceUserAccidentAge(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9

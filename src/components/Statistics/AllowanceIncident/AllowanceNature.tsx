@@ -12,6 +12,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./AllowanceIncident.css";
+import { isMobile } from 'react-device-detect';
 //Age interval
 interface IDataset {
     body: number;
@@ -698,11 +699,11 @@ function AllowanceNature(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 虐待性質 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -721,11 +722,11 @@ function AllowanceNature(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 虐待性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -793,7 +794,7 @@ function AllowanceNature(props) {
                 let abusiveOtherMFChart = financialYearChartParser(abusiveOtherMFResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -908,7 +909,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1023,7 +1024,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1138,7 +1139,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1253,7 +1254,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1391,7 +1392,7 @@ function AllowanceNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1506,7 +1507,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1621,7 +1622,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1736,7 +1737,7 @@ function AllowanceNature(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1852,7 +1853,7 @@ function AllowanceNature(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1978,7 +1979,7 @@ function AllowanceNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2099,7 +2100,7 @@ function AllowanceNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2226,7 +2227,7 @@ function AllowanceNature(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["虐待性質", "數量"],
@@ -2236,6 +2237,14 @@ function AllowanceNature(props) {
                                             ["疏忽照顧", abuseNatureDataset.negligent],
                                             ["其他", abuseNatureDataset.other],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -2258,7 +2267,7 @@ function AllowanceNature(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9

@@ -11,6 +11,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./ServiceUserAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     "envSlipperyGround": number;
     "envUnevenGround": number;
@@ -698,11 +699,11 @@ function ServiceUserAccidentEnv(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因-環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -721,11 +722,11 @@ function ServiceUserAccidentEnv(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因-環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -821,7 +822,7 @@ function ServiceUserAccidentEnv(props) {
                 let envOtherMFChart = financialYearChartParser(envOtherResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -936,7 +937,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1052,7 +1053,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1169,7 +1170,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1284,7 +1285,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1400,7 +1401,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1515,7 +1516,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1630,7 +1631,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1745,7 +1746,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1860,7 +1861,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2013,7 +2014,7 @@ function ServiceUserAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2128,7 +2129,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2243,7 +2244,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2359,7 +2360,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2475,7 +2476,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2590,7 +2591,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2706,7 +2707,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2821,7 +2822,7 @@ function ServiceUserAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2937,7 +2938,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3053,7 +3054,7 @@ function ServiceUserAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3179,7 +3180,7 @@ function ServiceUserAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3314,7 +3315,7 @@ function ServiceUserAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3505,7 +3506,7 @@ function ServiceUserAccidentEnv(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["環境因素", "數量"],
@@ -3520,6 +3521,14 @@ function ServiceUserAccidentEnv(props) {
                                             ["輔助器材使用不當", envFactorDataset.envImproperUseOfAssistiveEquipment],
                                             ["其他", envFactorDataset.envOther],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>

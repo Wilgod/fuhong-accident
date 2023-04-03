@@ -12,6 +12,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./LicenseIncident.css";
+import { isMobile } from 'react-device-detect';
 //Age interval
 interface IDataset {
     //accidentCategoryIncidentGeneral: number;
@@ -737,11 +738,11 @@ function LicenseCategory(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -760,11 +761,11 @@ function LicenseCategory(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 特別事故類別統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -833,7 +834,7 @@ function LicenseCategory(props) {
                 let accidentCategoryCourtMFChart = financialYearChartParser(accidentCategoryCourtResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -948,7 +949,7 @@ function LicenseCategory(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1063,7 +1064,7 @@ function LicenseCategory(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1178,7 +1179,7 @@ function LicenseCategory(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1314,7 +1315,7 @@ function LicenseCategory(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1429,7 +1430,7 @@ function LicenseCategory(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1545,7 +1546,7 @@ function LicenseCategory(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1660,7 +1661,7 @@ function LicenseCategory(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1787,7 +1788,7 @@ function LicenseCategory(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2043,7 +2044,7 @@ function LicenseCategory(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["事故類別", "數量"],
@@ -2055,6 +2056,14 @@ function LicenseCategory(props) {
                                             ["影響運作事故", categoryDataset.otherIncident],
                                             ["其他", categoryDataset.other]
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -2077,7 +2086,7 @@ function LicenseCategory(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9

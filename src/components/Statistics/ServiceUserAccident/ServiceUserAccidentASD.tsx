@@ -11,6 +11,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./ServiceUserAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     asdTrue: number;
     asdFalse: number;
@@ -577,11 +578,11 @@ function ServiceUserAccidentASD(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 服務使用者意外 - 自閉症譜系障礙 (ASD) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -600,11 +601,11 @@ function ServiceUserAccidentASD(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 服務使用者意外 - 自閉症譜系障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -654,7 +655,7 @@ function ServiceUserAccidentASD(props) {
                 let ASDFFYChart = financialYearChartParser(ASDFResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -768,7 +769,7 @@ function ServiceUserAccidentASD(props) {
                     </div>
                     <hr/>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -897,7 +898,7 @@ function ServiceUserAccidentASD(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1011,7 +1012,7 @@ function ServiceUserAccidentASD(props) {
                     </div>
                     <hr/>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1136,7 +1137,7 @@ function ServiceUserAccidentASD(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1240,7 +1241,7 @@ function ServiceUserAccidentASD(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1358,13 +1359,21 @@ function ServiceUserAccidentASD(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["智力障礙程度", "數量"],
                                             ["是", asdDataset.asdTrue],
                                             ["否", asdDataset.asdFalse],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -1387,7 +1396,7 @@ function ServiceUserAccidentASD(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9
