@@ -873,6 +873,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setServiceUnit(value);
         debugger
         setServiceLocation(value);
+        
 
     }
 
