@@ -11,6 +11,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./ServiceUserAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     mild: number;
     moderate: number;
@@ -634,11 +635,11 @@ function ServiceUserAccidentIntelligence(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 智力障礙程度 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -657,11 +658,11 @@ function ServiceUserAccidentIntelligence(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 服務使用者意外 - 智力障礙程度統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -728,7 +729,7 @@ function ServiceUserAccidentIntelligence(props) {
                 let unknownMFChart = financialYearChartParser(unknownMFResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -844,7 +845,7 @@ function ServiceUserAccidentIntelligence(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -959,7 +960,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1074,7 +1075,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1189,7 +1190,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1327,7 +1328,7 @@ function ServiceUserAccidentIntelligence(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1441,7 +1442,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1555,7 +1556,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1669,7 +1670,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1783,7 +1784,7 @@ function ServiceUserAccidentIntelligence(props) {
                     <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1907,7 +1908,7 @@ function ServiceUserAccidentIntelligence(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2018,7 +2019,7 @@ function ServiceUserAccidentIntelligence(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2142,7 +2143,7 @@ function ServiceUserAccidentIntelligence(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["智力障礙程度", "數量"],
@@ -2152,6 +2153,14 @@ function ServiceUserAccidentIntelligence(props) {
                                             ["極度嚴重", intelligenceDataset.extremeSevere],
                                             ["不知", intelligenceDataset.unknown]
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>

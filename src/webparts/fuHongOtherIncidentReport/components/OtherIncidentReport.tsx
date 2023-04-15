@@ -867,13 +867,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setEmailBody(value)
     }
 
-    const changeServiceUserUnit = (event) =>{
+    const changeServiceUserUnit = (event) => {
         let value = event.target.value;
         //setServiceUnitTC(value);
         setServiceUnit(value);
         debugger
         setServiceLocation(value);
         
+
     }
 
 
@@ -903,9 +904,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [reporter])
     useEffect(() => {
         if (sdInfo) {
-            getUserInfoByEmailInUserInfoAD(siteCollectionUrl, reporter.mail).then((userInfosRes) => {
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl, sdInfo.Email).then((userInfosRes) => {
 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    debugger
                     setSdJobTitle(userInfosRes[0].hr_jobcode);
                 }
 
@@ -922,11 +924,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             if (permissionList.indexOf('All') >= 0) {
                 setServiceUserUnitList(userUnitList);
             } else {
-                console.log('permissionList',permissionList);
-                console.log('userUnitList',userUnitList);
+                console.log('permissionList', permissionList);
+                console.log('userUnitList', userUnitList);
                 let filterList = [];
                 for (let unit of userUnitList) {
-                    let filterP = permissionList.filter(item => {return item == unit.su_Eng_name_display});
+                    let filterP = permissionList.filter(item => { return item == unit.su_Eng_name_display });
                     if (filterP.length > 0) {
                         filterList.push(unit);
                     }
@@ -934,8 +936,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 debugger
                 setServiceUserUnitList(filterList);
             }
-            
-            
+
+
 
         }).catch(console.error);
         setCurrentUserEmail(CURRENT_USER.email);
@@ -977,6 +979,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 }
 
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    debugger
                     setSDEmail(dept.hr_sd);
                 }
             }
@@ -988,9 +991,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setHrDepartment(serviceUnit)
     }, [serviceUnit]);
 
-    console.log('serviceUnit',serviceUnit);
-    console.log('permissionList',permissionList);
-    console.log('serviceUserUnitList',serviceUserUnitList);
+    console.log('serviceUnit', serviceUnit);
+    console.log('permissionList', permissionList);
+    console.log('serviceUserUnitList', serviceUserUnitList);
     return (
         <>
             {isPrintMode && <Header displayName="其他事故呈報表" />}
@@ -1013,9 +1016,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 <option value={""} ></option>
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234',serviceUnit);
+                                        console.log('serviceUnit1234', serviceUnit);
                                         if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit',serviceUnit);
+                                            console.log('serviceUnit', serviceUnit);
                                             debugger
                                         }
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
@@ -1023,7 +1026,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 }
                                 {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234',serviceUnit);
+                                        console.log('serviceUnit1234', serviceUnit);
 
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
@@ -1440,8 +1443,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 } /> */}
                             <input className="form-control" value={reporter && reporter.displayName || ""} disabled />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
+                        <div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={reporter && (reporterJobTitle || "")} disabled={true} />
                         </div>
 
@@ -1451,8 +1454,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" name="preparationStaffPhone" placeholder={reporter && reporter.mobilePhone || ""} value={form.preparationStaffPhone} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus)} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 onChange={(date) => setSubmitDate(date)}
@@ -1544,8 +1547,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                     <input type="text" className="form-control" value={`${sdInfo && sdInfo.Lastname || ""} ${sdInfo && sdInfo.Firstname || ""} `.trim() || `${sdInfo && sdInfo.Name || ""}`} disabled={true} />
                             }
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
+                        <div className="col-12 col-md-4">
                             <input type="text" className="form-control" disabled value={sdInfo && sdJobTitle || ""} />
                         </div>
                     </div>
@@ -1554,8 +1557,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" placeholder={sdInfo && sdInfo.Phone} value={sdPhone} onChange={event => setSdPhone(event.target.value)} disabled={!pendingSdApprove(context, formStatus, formStage, sdInfo)} />
                         </div>
-                        <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
-                        <div className="col-12 col-md-5">
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
+                        <div className="col-12 col-md-4">
                             <DatePicker
                                 className="form-control"
                                 selected={sdDate}

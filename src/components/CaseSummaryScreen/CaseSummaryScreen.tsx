@@ -10,11 +10,11 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import useServiceLocation from '../../hooks/useServiceLocation';
 interface ICaseSummaryScreenProps {
     context: WebPartContext;
-    siteCollectionUrl:string;
-    permission:any
+    siteCollectionUrl: string;
+    permission: any
 }
 
-function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummaryScreenProps) {
+function CaseSummaryScreen({ context, siteCollectionUrl, permission }: ICaseSummaryScreenProps) {
 
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
@@ -28,7 +28,7 @@ function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummar
         }
         return result;
     }
-    
+
     return (
         <div>
             <div className="row mb-3">
@@ -68,21 +68,21 @@ function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummar
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {permission.indexOf('All') >=0 &&
+                        {permission.indexOf('All') >= 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item}>{item}</option>
                             })
                         }
-                        {permission.indexOf('All') < 0 && 
-                          permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o == item});
+                        {permission.indexOf('All') < 0 &&
+                            permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0]}>{ser[0]}</option>
-                              }
-                              
-                          })
-                      }
+                                if (ser.length > 0) {
+                                    return <option value={ser[0]}>{ser[0]}</option>
+                                }
+
+                            })
+                        }
                         {/*
                             serviceLocation.map((item) => {
                                 return <option value={item}>{item}</option>
@@ -121,9 +121,9 @@ function CaseSummaryScreen({ context,siteCollectionUrl,permission }: ICaseSummar
                 <div className="col" >
                     <div className="mb-3" style={{ fontWeight: 600 }}>
                         過期未交報告
-                    </div>
-                    <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                        <div className="form-check">
+                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -274,11 +274,11 @@ const columns = (context) => {
                     const [caseType] = data.CaseNumber.split("-");
                     //formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
                     let navPage = caseNumberToSitePageParser(caseType)
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    formLink = path + `Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else if (data && data.Title) {
                     //formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
                     let navPage = caseNumberToSitePageParser(data.Title.toUpperCase())
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    formLink = path + `Home.aspx?formId=${value}&navScreen=${navPage}`;
                 } else {
                     return null;
                 }

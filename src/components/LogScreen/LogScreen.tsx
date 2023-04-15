@@ -143,9 +143,9 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                 <div className="col-xl-4 col-md-6 col-12 mb-3" >
                     <div style={{ fontWeight: 600 }}>
                         過期未交報告
-                    </div>
                     <div className="form-check">
                         <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                    </div>
                     </div>
                 </div>
             </div>

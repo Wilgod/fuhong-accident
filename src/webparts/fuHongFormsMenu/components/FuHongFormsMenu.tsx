@@ -6,7 +6,7 @@ import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 import { sp } from "@pnp/sp";
 import { graph } from "@pnp/graph/presets/all";
 import classnames from 'classnames';
-// import './FuHongFormsMenu.css';
+import './FuHongFormsMenu.css';
 import TodoListComponent from '../../../components/TodoList/TodoListComponent';
 import MainTableComponent from '../../../components/MainTable/MainTableComponent';
 import DatePicker from "react-datepicker";
@@ -51,7 +51,7 @@ import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightCo
 import { getQueryParameterNumber, getQueryParameterString } from '../../../utils/UrlQueryHelper';
 //import {useSearchParams} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
-import { isMobile } from 'react-device-detect';
+import { isDesktop, isMobile } from 'react-device-detect';
 if (document.getElementById('workbenchPageContent') != null) {
   document.getElementById('workbenchPageContent').style.maxWidth = 'none';
 }
@@ -145,7 +145,6 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     let adminPermissionBoolean = adminPermissionOwner.length == 0 ? false : true;
     const serviceUnitList = await getAllServiceUnit(this.siteCollectionUrl);
     const serviceLocations = locationFilterParser(serviceUnitList);
-    debugger
     this.setState({ permissionList: PermissionList, serviceUnitList: serviceLocations, loading: false, adminPermission: adminPermission, adminPermissionBoolean: adminPermissionBoolean });
   }
 
@@ -430,7 +429,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       console.log(Array.isArray(this.state.permissionList) && this.state.permissionList.indexOf("All") >= 0);
       console.log("permissionList ", this.state.permissionList);
       console.log("ALL ", this.state.permissionList.indexOf("All") >= 0);
-      return <div className={`${styles.navigationMenu}`} style={{ position: !isMobile ? 'absolute' : 'unset' }}>
+      return <div className={`${styles.navigationMenu}`} style={{ position: isDesktop ? 'absolute' : 'unset' }}>
         <div className={`${styles.child}`} onClick={(event) => this.screenNavHandler(event, "HOME")}>
           <div className="d-flex align-items center">
             <div style={{ marginRight: '10px' }}>
@@ -677,9 +676,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   <div className="col-xl-2 col-md-6 col-12 mb-3" >
                     <div style={{ fontWeight: 600 }}>
                       過期未交報告
-                    </div>
-                    <div className="form-check">
-                      <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({ mainTableDisplay: false, searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
+                      <div className="form-check">
+                        <input type="checkbox" className="form-check-input" id="exampleCheck1" onClick={() => this.setState({ mainTableDisplay: false, searchExpired: !this.state.searchExpired })} checked={this.state.searchExpired} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -723,7 +722,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
     }
     console.log('this.state.permissionList.length : ' + this.state.permissionList.length);
     console.log('loading : ' + this.state.loading);
-    let navigationMenuDivCss = !isMobile ? { backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" } : { backgroundColor: "#fff2d4", padding: "10px 0px" };
+    let navigationMenuDivCss = isDesktop ? { backgroundColor: "#fff2d4", minHeight: 500, padding: "10px 0px" } : { backgroundColor: "#fff2d4", padding: "10px 0px" };
     return (
       <div className={styles.fuHongFormsMenu} id="fuHongFormsMenu">
         <div className={styles.container} >
@@ -735,11 +734,11 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                   :
                   <>
                     {/* Navigation menu */}
-                    <div className={classnames("col-sm-12 col-md-2 col-lg-2 notPrintable")} style={navigationMenuDivCss}>
+                    <div className={`${isDesktop ? 'col-sm-12 col-md-2 col-lg-2' : 'col-12'} notPrintable`} style={navigationMenuDivCss}>
                       {navigationMenu()}
                     </div>
                     {/* Main Content */}
-                    <div className="col-sm-12 col-md-10 col-lg-10" >
+                    <div className={`${isDesktop ? 'col-sm-12 col-md-10 col-lg-10' : 'col-12'}`} >
                       <div className={`${styles.systemTitle} notPrintable`}>
                         意外及事故呈報系統
                         {/*<div style={{ float: "right" }}>

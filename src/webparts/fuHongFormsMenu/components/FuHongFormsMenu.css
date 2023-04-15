@@ -1,5 +1,9 @@
-@media print {
+/* @media print {
   .notPrintable {
     display: none;
   }
+} */
+
+#fuHongFormsMenu .react-bootstrap-table table {
+  table-layout: unset;
 }

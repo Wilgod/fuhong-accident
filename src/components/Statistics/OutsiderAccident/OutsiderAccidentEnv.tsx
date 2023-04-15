@@ -12,6 +12,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./OutsiderAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     "envSlipperyGround": number;
     "envUnevenGround": number;
@@ -651,11 +652,11 @@ function OutsiderAccidentEnv(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因 - 環境因素統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -674,11 +675,11 @@ function OutsiderAccidentEnv(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
-                                <h6 style={{ fontWeight: 600 }}>
-                                    標題:
-                                </h6>
-                            </div>
+                            <div className="col-12">
+                            <h6 style={{ fontWeight: 600 }}>
+                                標題:
+                            </h6>
+                        </div>
                             <div className="col-12">
                                 <h6>{`${title} - 意外成因-環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
@@ -743,7 +744,7 @@ function OutsiderAccidentEnv(props) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
-                let a = data.filter((item) => { debugger;return item.EnvSlipperyGround});
+                let a = data.filter((item) => { return item.EnvSlipperyGround});
                 let envSlipperyGroundResult = sampleThreeParser(data.filter((item) => { return item.EnvSlipperyGround}), startDate, endDate);
                 let envSlipperyGroundMFChart = financialYearChartParser(envSlipperyGroundResult);
 
@@ -776,7 +777,7 @@ function OutsiderAccidentEnv(props) {
                 debugger
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -891,7 +892,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1007,7 +1008,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1123,7 +1124,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1238,7 +1239,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1354,7 +1355,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1469,7 +1470,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1584,7 +1585,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1699,7 +1700,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1814,7 +1815,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1966,7 +1967,7 @@ function OutsiderAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2081,7 +2082,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2196,7 +2197,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2312,7 +2313,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2428,7 +2429,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2543,7 +2544,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2659,7 +2660,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2774,7 +2775,7 @@ function OutsiderAccidentEnv(props) {
                     <hr/>
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2890,7 +2891,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3006,7 +3007,7 @@ function OutsiderAccidentEnv(props) {
 
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3131,7 +3132,7 @@ function OutsiderAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3266,7 +3267,7 @@ function OutsiderAccidentEnv(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -3457,7 +3458,7 @@ function OutsiderAccidentEnv(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["環境因素", "數量"],
@@ -3472,6 +3473,14 @@ function OutsiderAccidentEnv(props) {
                                             ["輔助器材使用不當", envFactorDataset.envImproperEquip],
                                             ["其他", envFactorDataset.envOther],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
@@ -3494,7 +3503,7 @@ function OutsiderAccidentEnv(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
                                                   fontName: 'monospace',
                                                   fontSize: 9

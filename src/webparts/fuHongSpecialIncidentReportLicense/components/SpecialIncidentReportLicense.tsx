@@ -2085,23 +2085,49 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         {/* 殘疾人士院舍名稱 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
-                        <div className="col">
-                            {departmentList.length == 1 &&
-                                <input type="text" className={`form-control ${(error && error['HomesName']) ? "is-invalid" : ""}`} value={form.homesName} name="homesName" onChange={inputFieldHandler}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                        <div className="col-12 col-xl-4">
+                        <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
+                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                            >
+                                <option value={""} ></option>
+                                {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
+                                        if (serviceUnit == 'JFP') {
+                                            console.log('serviceUnit',serviceUnit);
+                                            debugger
+                                        }
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
+                                    serviceUserUnitList.map((item) => {
+                                        console.log('serviceUnit1234',serviceUnit);
 
-                            }
-                            {departmentList.length > 1 &&
-                                <select className={`custom-select`} onChange={(event) => { setSelectDepartment(event.target.value); }}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)}>
-                                    <option value={""} ></option>
-                                    {
-                                        departmentList.map((list) => {
-                                            return <option value={list.su_Eng_name_display} data-su_Eng_name_display={list.su_Eng_name_display} selected={list.su_name_tc == form.homesName}>{list.su_name_tc}</option>
-                                        })
-                                    }
-                                </select>
-                            }
+                                        return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
+                                    })
+                                }
+                                {serviceUnit != "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                                {serviceUnit == "" && permissionList.indexOf('All') < 0 &&
+                                    permissionList.map((item) => {
+                                        let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == item });
+
+                                        if (ser.length > 0) {
+                                            return <option value={ser[0].su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{ser[0].su_name_tc}</option>
+                                        }
+
+                                    })
+                                }
+                            </select>
                         </div>
                     </div>
                     <div className="form-row mb-2">

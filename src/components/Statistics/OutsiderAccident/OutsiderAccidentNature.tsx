@@ -12,6 +12,7 @@ import arraySort from 'array-sort';
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
 import "./OutsiderAccident.css";
+import { isMobile } from 'react-device-detect';
 interface IDataset {
     accidentNatureFall: number;
     accidentNatureChok: number;
@@ -83,20 +84,20 @@ interface ISampleSixDataset {
     dataset: IDataset;
 }
 
-const financialYearChartParser = (result) =>{
+const financialYearChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         jan.push(item.dataset['jan']);
@@ -112,7 +113,7 @@ const financialYearChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         apr,
         may,
@@ -126,25 +127,25 @@ const financialYearChartParser = (result) =>{
         jan,
         feb,
         mar
-        
+
     ];
     return data;
 }
 
-const normalChartParser = (result) =>{
+const normalChartParser = (result) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         jan.push(item.dataset['jan']);
@@ -160,7 +161,7 @@ const normalChartParser = (result) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[
+    let data = [
         dataResult,
         jan,
         feb,
@@ -178,13 +179,13 @@ const normalChartParser = (result) =>{
     return data;
 }
 
-const financialChartParser = (result) =>{
+const financialChartParser = (result) => {
     let dataResult = ['Year'];
-    let accidentNatureFall =['跌倒'];
-    let accidentNatureChok =['哽塞'];
-    let accidentNatureBehavior =['服務使用者行為問題'];
-    let accidentNatureEnvFactor =['環境因素'];
-    let accidentNatureOther =['其他'];
+    let accidentNatureFall = ['跌倒'];
+    let accidentNatureChok = ['哽塞'];
+    let accidentNatureBehavior = ['服務使用者行為問題'];
+    let accidentNatureEnvFactor = ['環境因素'];
+    let accidentNatureOther = ['其他'];
     result.map((item) => {
         dataResult.push(item.financialYear);
         accidentNatureFall.push(item.dataset['accidentNatureFall']);
@@ -193,7 +194,7 @@ const financialChartParser = (result) =>{
         accidentNatureEnvFactor.push(item.dataset['accidentNatureEnvFactor']);
         accidentNatureOther.push(item.dataset['accidentNatureOther']);
     });
-    let data=[
+    let data = [
         dataResult,
         accidentNatureFall,
         accidentNatureChok,
@@ -204,13 +205,13 @@ const financialChartParser = (result) =>{
     return data;
 }
 
-const yearChartParser = (result) =>{
+const yearChartParser = (result) => {
     let dataResult = ['Year'];
-    let accidentNatureFall =['跌倒'];
-    let accidentNatureChok =['哽塞'];
-    let accidentNatureBehavior =['服務使用者行為問題'];
-    let accidentNatureEnvFactor =['環境因素'];
-    let accidentNatureOther =['其他'];
+    let accidentNatureFall = ['跌倒'];
+    let accidentNatureChok = ['哽塞'];
+    let accidentNatureBehavior = ['服務使用者行為問題'];
+    let accidentNatureEnvFactor = ['環境因素'];
+    let accidentNatureOther = ['其他'];
     result.map((item) => {
         dataResult.push(item.year.toString());
         accidentNatureFall.push(item.dataset['accidentNatureFall']);
@@ -219,7 +220,7 @@ const yearChartParser = (result) =>{
         accidentNatureEnvFactor.push(item.dataset['accidentNatureEnvFactor']);
         accidentNatureOther.push(item.dataset['accidentNatureOther']);
     });
-    let data=[
+    let data = [
         dataResult,
         accidentNatureFall,
         accidentNatureChok,
@@ -315,10 +316,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             let calYear;
             if (currentMonth - i < 0) {
                 if (i > 12) {
-                    let moreYear = Math.floor(i/12);
+                    let moreYear = Math.floor(i / 12);
                     let remainMonth = i % 12;
                     if (currentMonth - remainMonth < 0) {
-                        calMonth = 12 - (remainMonth - currentMonth) ;
+                        calMonth = 12 - (remainMonth - currentMonth);
                         calYear = currentYear - (moreYear + 1);
                     } else {
                         calMonth = currentMonth - remainMonth
@@ -332,7 +333,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
                 calMonth = currentMonth - i
                 calYear = currentYear;
             }
-            const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
+            const d = moment(new Date(calYear, calMonth, 1)).format("MM/yyyy");
             m.set(d, { ...initialDataset });
         }
 
@@ -353,7 +354,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         });
 
         m.forEach((value, key) => {
-            let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
+            let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy: parseInt(key.substr(3, 4) + key.substr(0, 2)) }
             result.push(item);
         })
         arraySort(result, 'mmyyyy');
@@ -363,7 +364,7 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     }
 }
 
-const sampleThreeParser = (data: any[],startDate,endDate): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate, endDate): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
@@ -386,11 +387,11 @@ const sampleThreeParser = (data: any[],startDate,endDate): ISampleThreeDataset[]
         let item: ISampleThreeDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(financialYear, newDataset);
@@ -400,7 +401,7 @@ const sampleThreeParser = (data: any[],startDate,endDate): ISampleThreeDataset[]
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'financialYear');
     return result;
 }
@@ -436,11 +437,11 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
         let item: ISampleFourDataset = { year: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(year.toString(), newDataset);
@@ -450,12 +451,12 @@ const sampleFourParser = (data: any[], startDate: Date, endDate: Date): ISampleF
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result
 }
 
-const sampleFiveParser = (data: any[],startDate,endDate): ISampleFiveDataset[] => {
+const sampleFiveParser = (data: any[], startDate, endDate): ISampleFiveDataset[] => {
     let result: ISampleFiveDataset[] = []
     let m = new Map<string, IDataset>();
 
@@ -481,12 +482,12 @@ const sampleFiveParser = (data: any[],startDate,endDate): ISampleFiveDataset[] =
         let item: ISampleFiveDataset = { financialYear: key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const financialYear =  getDateFinancialYear(d);
+        const financialYear = getDateFinancialYear(d);
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.financialYear == financialYear});
+        const filterResult = result.filter(item => { return item.financialYear == financialYear });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(financialYear, initialDataset);
@@ -540,12 +541,12 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
         let item: ISampleSixDataset = { year: +key, dataset: value }
         result.push(item);
     })
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
 
-        const year =  d.getFullYear()
+        const year = d.getFullYear()
         let m1 = new Map<string, IDataset>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             //let newDataset = unitFilter(formType, { ...initialDataset });
             m1.set(year.toString(), initialDataset);
@@ -560,7 +561,6 @@ const sampleSixParser = (data: any[], startDate: Date, endDate: Date): ISampleSi
 }
 
 const natureFilter = (item: any, dataset: IDataset): IDataset => {
-    debugger
     let result = dataset;
     if (item.AccidentNatureFall === true) {
         result.accidentNatureFall += 1;
@@ -609,7 +609,7 @@ function OutsiderAccidentNature(props) {
                 return (
                     <React.Fragment>
                         <div className="row">
-                            <div className="col-1">
+                            <div className="col-12">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
                                 </h6>
@@ -617,7 +617,7 @@ function OutsiderAccidentNature(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
                             </div>
                         </div>
@@ -632,7 +632,7 @@ function OutsiderAccidentNature(props) {
                 return (
                     <>
                         <div className="row">
-                            <div className="col-1">
+                            <div className="col-12">
                                 <h6 style={{ fontWeight: 600 }}>
                                     標題:
                                 </h6>
@@ -640,7 +640,7 @@ function OutsiderAccidentNature(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>
                             </div>
                         </div>
@@ -688,23 +688,23 @@ function OutsiderAccidentNature(props) {
                         </div>
                     </>)
             case "BY_MONTH_FINANCIAL":
-                let accidentNatureFallResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureFall}), startDate, endDate);
+                let accidentNatureFallResult = sampleThreeParser(data.filter((item) => { return item.AccidentNatureFall }), startDate, endDate);
                 let accidentNatureFallMFChart = financialYearChartParser(accidentNatureFallResult);
 
-                let accidentNatureChokResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureChok}), startDate, endDate);
+                let accidentNatureChokResult = sampleThreeParser(data.filter((item) => { return item.AccidentNatureChok }), startDate, endDate);
                 let accidentNatureChokMFChart = financialYearChartParser(accidentNatureChokResult);
 
-                let accidentNatureBehaviorResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureBehavior}), startDate, endDate);
+                let accidentNatureBehaviorResult = sampleThreeParser(data.filter((item) => { return item.AccidentNatureBehavior }), startDate, endDate);
                 let accidentNatureBehaviorMFChart = financialYearChartParser(accidentNatureBehaviorResult);
 
-                let accidentNatureEnvFactorResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureEnvFactor}), startDate, endDate);
+                let accidentNatureEnvFactorResult = sampleThreeParser(data.filter((item) => { return item.AccidentNatureEnvFactor }), startDate, endDate);
                 let accidentNatureEnvFactorMFChart = financialYearChartParser(accidentNatureEnvFactorResult);
 
-                let accidentNatureOtherResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureOther}), startDate, endDate);
+                let accidentNatureOtherResult = sampleThreeParser(data.filter((item) => { return item.AccidentNatureOther }), startDate, endDate);
                 let accidentNatureOtherMFChart = financialYearChartParser(accidentNatureOtherResult);
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -712,9 +712,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${title} - 意外性質 跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table2')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -763,7 +763,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -771,7 +771,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質統計 - 跌倒 (每月總數)
+                                    外界人士意外 - 意外性質統計 - 跌倒 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -789,7 +789,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -797,7 +797,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質統計 - 跌倒 (每月總數)
+                                    外界人士意外 - 意外性質統計 - 跌倒 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -817,10 +817,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
-                    
+                    <hr />
+
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -828,9 +828,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${title} - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -879,7 +879,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -887,7 +887,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 哽塞 (每月總數)
+                                    外界人士意外 - 意外性質 - 哽塞 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -905,7 +905,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -913,7 +913,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 哽塞 (每月總數)
+                                    外界人士意外 - 意外性質 - 哽塞 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -933,10 +933,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -944,9 +944,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${title} - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -995,7 +995,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1003,7 +1003,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
+                                    外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1021,7 +1021,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1029,7 +1029,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
+                                    外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1049,10 +1049,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1060,9 +1060,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${title} - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1111,7 +1111,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1119,7 +1119,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 環境因素 (每月總數)
+                                    外界人士意外 - 意外性質 - 環境因素 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1137,7 +1137,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1145,7 +1145,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 環境因素 (每月總數)
+                                    外界人士意外 - 意外性質 - 環境因素 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1165,10 +1165,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1176,9 +1176,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${title} - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1227,7 +1227,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1235,7 +1235,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 其他 (每月總數)
+                                    外界人士意外 - 意外性質 - 其他 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1253,7 +1253,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthFinancialBarChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1261,7 +1261,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 其他 (每月總數)
+                                    外界人士意外 - 意外性質 - 其他 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1284,19 +1284,19 @@ function OutsiderAccidentNature(props) {
                 </>
             case "BY_MONTH_CALENDAR":
                 let titleYear2 = "";
-                let accidentNatureFallMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureFall}), startDate, endDate);
+                let accidentNatureFallMCResult = sampleFourParser(data.filter((item) => { return item.AccidentNatureFall }), startDate, endDate);
                 let accidentNatureFallMCChart = normalChartParser(accidentNatureFallMCResult);
 
-                let accidentNatureChokMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureChok}), startDate, endDate);
+                let accidentNatureChokMCResult = sampleFourParser(data.filter((item) => { return item.AccidentNatureChok }), startDate, endDate);
                 let accidentNatureChokMCChart = normalChartParser(accidentNatureChokMCResult);
 
-                let accidentNatureBehaviorMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureBehavior}), startDate, endDate);
+                let accidentNatureBehaviorMCResult = sampleFourParser(data.filter((item) => { return item.AccidentNatureBehavior }), startDate, endDate);
                 let accidentNatureBehaviorMCChart = normalChartParser(accidentNatureBehaviorMCResult);
 
-                let accidentNatureEnvFactorMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureEnvFactor}), startDate, endDate);
+                let accidentNatureEnvFactorMCResult = sampleFourParser(data.filter((item) => { return item.AccidentNatureEnvFactor }), startDate, endDate);
                 let accidentNatureEnvFactorMCChart = normalChartParser(accidentNatureEnvFactorMCResult);
 
-                let accidentNatureOtherMCResult = sampleFourParser(data.filter((item) => {return item.AccidentNatureOther}), startDate, endDate);
+                let accidentNatureOtherMCResult = sampleFourParser(data.filter((item) => { return item.AccidentNatureOther }), startDate, endDate);
                 let accidentNatureOtherMCChart = normalChartParser(accidentNatureOtherMCResult);
 
                 accidentNatureFallMCResult.forEach((item, i) => {
@@ -1307,7 +1307,7 @@ function OutsiderAccidentNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1315,9 +1315,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質跌倒 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1365,7 +1365,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1373,7 +1373,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 跌倒 (每月總數)
+                                    外界人士意外 - 意外性質 - 跌倒 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1391,7 +1391,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart1")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart1">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1399,7 +1399,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 跌倒 (每月總數)
+                                    外界人士意外 - 意外性質 - 跌倒 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1419,10 +1419,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1430,9 +1430,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 哽塞 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table8')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1480,7 +1480,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1488,7 +1488,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 哽塞 (每月總數)
+                                    外界人士意外 - 意外性質 - 哽塞 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1506,7 +1506,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart2")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart2">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1514,7 +1514,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 哽塞 (每月總數)
+                                    外界人士意外 - 意外性質 - 哽塞 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1534,10 +1534,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1545,9 +1545,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 服務使用者行為問題 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table9')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1595,7 +1595,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1603,7 +1603,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
+                                    外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1621,7 +1621,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart3")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart3">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1629,7 +1629,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
+                                    外界人士意外 - 意外性質 - 服務使用者行為問題 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1649,10 +1649,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1660,9 +1660,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 環境因素 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table10')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1710,7 +1710,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1718,7 +1718,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 環境因素 (每月總數)
+                                    外界人士意外 - 意外性質 - 環境因素 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1736,7 +1736,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart4")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart4">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1744,7 +1744,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 環境因素 (每月總數)
+                                    外界人士意外 - 意外性質 - 環境因素 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1764,10 +1764,10 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
 
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1775,9 +1775,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear2} - 外界人士意外 - 意外性質 其他 統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table11')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1825,7 +1825,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarLineChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarLineChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1833,7 +1833,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 其他 (每月總數)
+                                    外界人士意外 - 意外性質 - 其他 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1851,7 +1851,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthCalendarBarChart5")}>下載圖表</button>
                         </div>
                         <div className="col-12 byMonthCalendarBarChart5">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1859,7 +1859,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 - 其他 (每月總數)
+                                    外界人士意外 - 意外性質 - 其他 (每月總數)
                                 </div>
                             </div>
                             <Chart
@@ -1879,7 +1879,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                     </div>
-                    <hr/>
+                    <hr />
                 </>
             case "BY_YEAR_FINANCIAL":
                 let titleYear3 = "";
@@ -1893,7 +1893,7 @@ function OutsiderAccidentNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -1901,9 +1901,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear3} - 外界人士意外 - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table12')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -1947,7 +1947,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1955,7 +1955,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 (每年總數)
+                                    外界人士意外 - 意外性質 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -1973,7 +1973,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearFinancialBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearFinancialBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1981,7 +1981,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 (每年總數)
+                                    外界人士意外 - 意外性質 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2014,7 +2014,7 @@ function OutsiderAccidentNature(props) {
                 })
                 return <>
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-12">
                             <h6 style={{ fontWeight: 600 }}>
                                 標題:
                             </h6>
@@ -2022,9 +2022,9 @@ function OutsiderAccidentNature(props) {
                         <div className="col-12">
                             <h6>{`${titleYear4} - 意外性質統計 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                         </div>
-                        <div className="col-12" style={{margin:'5px 0'}}>
-                                <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
-                            </div>
+                        <div className="col-12" style={{ margin: '5px 0' }}>
+                            <button className="btn btn-primary" onClick={() => copyTable('#table13')}>複製到表格</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-12">
@@ -2060,7 +2060,7 @@ function OutsiderAccidentNature(props) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarLineChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarLineChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2068,7 +2068,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 (每年總數)
+                                    外界人士意外 - 意外性質 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2086,7 +2086,7 @@ function OutsiderAccidentNature(props) {
                             />
                         </div>
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byYearCalendarBarChart")}>下載圖表</button>
                         </div>
                         <div className="col-12 byYearCalendarBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -2094,7 +2094,7 @@ function OutsiderAccidentNature(props) {
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                                 </div>
                                 <div className="">
-                                外界人士意外 - 意外性質 (每年總數)
+                                    外界人士意外 - 意外性質 (每年總數)
                                 </div>
                             </div>
                             <Chart
@@ -2164,7 +2164,7 @@ function OutsiderAccidentNature(props) {
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonBarChart")}>下載圖表</button>
                                 <div className="nonBarChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -2177,7 +2177,7 @@ function OutsiderAccidentNature(props) {
                                     <Chart
                                         chartType={"Bar"}
                                         width={'100%'}
-                                        height={'400px'}
+                                        height={!isMobile ? '400px' : 'auto'}
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         data={[
                                             ["意外性質", "數量"],
@@ -2187,12 +2187,23 @@ function OutsiderAccidentNature(props) {
                                             ["環境因素", natureDataset.accidentNatureEnvFactor],
                                             ["其他", natureDataset.accidentNatureOther],
                                         ]}
+                                        options={{
+                                            bars: isMobile && "horizontal",
+                                            axes: isMobile && {
+                                                y: {
+                                                    0: { side: "right" },
+                                                },
+                                                x: {
+                                                    distance: { label: 'parsecs' }
+                                                }
+                                            },
+                                        }}
                                     />
 
                                 </div>
                             </div>
                             <div className="col-12">
-                                <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonPieChart")}>下載圖表</button>
+                                <button className="btn btn-primary" onClick={() => downloadScreenshot("nonPieChart")}>下載圖表</button>
                                 <div className="nonPieChart">
                                     <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                         <div className="">
@@ -2209,16 +2220,16 @@ function OutsiderAccidentNature(props) {
                                         loader={<div className="d-flex justify-content-center align-items-center"> <div className="spinner-border text-primary" /></div>}
                                         options={{
                                             legend: {
-                                                position: 'labeled',
+                                                position: !isMobile ? 'labeled' : 'bottom',
                                                 textStyle: {
-                                                  fontName: 'monospace',
-                                                  fontSize: 9
+                                                    fontName: 'monospace',
+                                                    fontSize: 9
                                                 }
-                                              },
-                                              pieSliceTextStyle: {
+                                            },
+                                            pieSliceTextStyle: {
                                                 fontSize: 8
-                                              },
-                                              sliceVisibilityThreshold: 0
+                                            },
+                                            sliceVisibilityThreshold: 0
 
                                         }}
                                         data={
@@ -2233,7 +2244,7 @@ function OutsiderAccidentNature(props) {
                                         }
                                     />
                                 </div>
-                                
+
                             </div>
                         </div>
                     </React.Fragment>
@@ -2246,9 +2257,9 @@ function OutsiderAccidentNature(props) {
                 return (
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthBarChart")}>下載圖表</button>
+                            <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthBarChart")}>下載圖表</button>
                         </div>
-                        <div className="col-12 byMonthBarChart" style={{overflow:'auto'}}>
+                        <div className="col-12 byMonthBarChart" style={{ overflow: 'auto' }}>
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
                                     {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
@@ -2267,12 +2278,12 @@ function OutsiderAccidentNature(props) {
                                     debugger
                                     return [item.month, item.dataset.accidentNatureFall, item.dataset.accidentNatureChok, item.dataset.accidentNatureBehavior, item.dataset.accidentNatureEnvFactor, item.dataset.accidentNatureOther]
                                 })]
-                            }
+                                }
 
                             />
                         </div>
                     </div>
-                    
+
                 )
             default:
                 return null;
@@ -2282,17 +2293,17 @@ function OutsiderAccidentNature(props) {
     const changeGroupHandler = (event) => {
         const value = event.target.value;
         if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_MONTH_CALENDAR') {
             setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         }
         setGroupBy(value);
     }
@@ -2331,9 +2342,9 @@ function OutsiderAccidentNature(props) {
         }
     }, [groupBy, data])
 
-    const downloadScreenshot = async(className) => {
-        
-        let chart = (document.querySelector("."+className) as HTMLElement);
+    const downloadScreenshot = async (className) => {
+
+        let chart = (document.querySelector("." + className) as HTMLElement);
         const canvas = await html2canvas(chart);
         const dataURL = canvas.toDataURL('image/png');
         downloadjs(dataURL, 'download.png', 'image/png');
@@ -2395,20 +2406,20 @@ function OutsiderAccidentNature(props) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {props.permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          props.permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {props.permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            props.permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)

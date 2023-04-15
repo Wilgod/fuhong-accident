@@ -13,6 +13,7 @@ import * as copy from 'copy-to-clipboard';
 import "./General.css";
 import html2canvas from 'html2canvas';
 import downloadjs from 'downloadjs';
+import { isMobile } from 'react-device-detect';
 
 interface IDataset {
     sui: number;
@@ -202,10 +203,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
         let calYear;
         if (currentMonth - i < 0) {
             if (i > 12) {
-                let moreYear = Math.floor(i/12);
+                let moreYear = Math.floor(i / 12);
                 let remainMonth = i % 12;
                 if (currentMonth - remainMonth < 0) {
-                    calMonth = 12 - (remainMonth - currentMonth) ;
+                    calMonth = 12 - (remainMonth - currentMonth);
                     calYear = currentYear - (moreYear + 1);
                 } else {
                     calMonth = currentMonth - remainMonth
@@ -219,10 +220,10 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
             calMonth = currentMonth - i
             calYear = currentYear;
         }
-        const d = moment(new Date(calYear,calMonth,1)).format("MM/yyyy");
+        const d = moment(new Date(calYear, calMonth, 1)).format("MM/yyyy");
         m.set(d, { ...initialDataset });
     }
-    
+
     data.forEach((item) => {
         if ((item.AccidentTime || item.IncidentTime) && item.CaseNumber) {
             const formType: string = item.CaseNumber.split("-")[0];
@@ -240,27 +241,27 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
     });
 
     m.forEach((value, key) => {
-        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy:parseInt(key.substr(3,4) + key.substr(0,2)) }
+        let item: ISampleTwoDataset = { month: key, dataset: value, mmyyyy: parseInt(key.substr(3, 4) + key.substr(0, 2)) }
         result.push(item);
     })
     arraySort(result, 'mmyyyy');
     return result;
 }
 
-const yearChartParser = (result, startMonth) =>{
+const yearChartParser = (result, startMonth) => {
     let dataResult = ['Month'];
-    let jan =['JAN'];
-    let feb =['FEB'];
-    let mar =['MAR'];
-    let apr =['APR'];
-    let may =['MAY'];
-    let jun =['JUN'];
-    let jul =['JUL'];
-    let aug =['AUG'];
-    let sep =['SEP'];
-    let oct =['OCT'];
-    let nov =['NOV'];
-    let dec =['DEC'];
+    let jan = ['JAN'];
+    let feb = ['FEB'];
+    let mar = ['MAR'];
+    let apr = ['APR'];
+    let may = ['MAY'];
+    let jun = ['JUN'];
+    let jul = ['JUL'];
+    let aug = ['AUG'];
+    let sep = ['SEP'];
+    let oct = ['OCT'];
+    let nov = ['NOV'];
+    let dec = ['DEC'];
     result.map((item) => {
         dataResult.push(item.year);
         jan.push(item.dataset['jan']);
@@ -276,31 +277,31 @@ const yearChartParser = (result, startMonth) =>{
         nov.push(item.dataset['nov']);
         dec.push(item.dataset['dec']);
     });
-    let data=[];
+    let data = [];
     if (startMonth == 0) {
-        data=[ dataResult,jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec];
+        data = [dataResult, jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec];
     } else if (startMonth == 1) {
-        data=[ dataResult,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec,jan];
+        data = [dataResult, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, jan];
     } else if (startMonth == 2) {
-        data=[ dataResult,mar,apr,may,jun,jul,aug,sep,oct,nov,dec,jan,feb];
+        data = [dataResult, mar, apr, may, jun, jul, aug, sep, oct, nov, dec, jan, feb];
     } else if (startMonth == 3) {
-        data=[ dataResult,apr,may,jun,jul,aug,sep,oct,nov,dec,jan,feb,mar];
+        data = [dataResult, apr, may, jun, jul, aug, sep, oct, nov, dec, jan, feb, mar];
     } else if (startMonth == 4) {
-        data=[ dataResult,may,jun,jul,aug,sep,oct,nov,dec,jan,feb,mar,apr];
+        data = [dataResult, may, jun, jul, aug, sep, oct, nov, dec, jan, feb, mar, apr];
     } else if (startMonth == 5) {
-        data=[ dataResult,jun,jul,aug,sep,oct,nov,dec,jan,feb,mar,apr,may];
+        data = [dataResult, jun, jul, aug, sep, oct, nov, dec, jan, feb, mar, apr, may];
     } else if (startMonth == 6) {
-        data=[ dataResult,jul,aug,sep,oct,nov,dec,jan,feb,mar,apr,may,jun];
+        data = [dataResult, jul, aug, sep, oct, nov, dec, jan, feb, mar, apr, may, jun];
     } else if (startMonth == 7) {
-        data=[ dataResult,aug,sep,oct,nov,dec,jan,feb,mar,apr,may,jun,jul];
+        data = [dataResult, aug, sep, oct, nov, dec, jan, feb, mar, apr, may, jun, jul];
     } else if (startMonth == 8) {
-        data=[ dataResult,sep,oct,nov,dec,jan,feb,mar,apr,may,jun,jul,aug];
+        data = [dataResult, sep, oct, nov, dec, jan, feb, mar, apr, may, jun, jul, aug];
     } else if (startMonth == 9) {
-        data=[ dataResult,oct,nov,dec,jan,feb,mar,apr,may,jun,jul,aug,sep];
+        data = [dataResult, oct, nov, dec, jan, feb, mar, apr, may, jun, jul, aug, sep];
     } else if (startMonth == 10) {
-        data=[ dataResult,nov,dec,jan,feb,mar,apr,may,jun,jul,aug,sep,oct];
+        data = [dataResult, nov, dec, jan, feb, mar, apr, may, jun, jul, aug, sep, oct];
     } else if (startMonth == 11) {
-        data=[ dataResult,dec,jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov];
+        data = [dataResult, dec, jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov];
     }
     return data;
 }
@@ -310,32 +311,32 @@ const yearChartParser = (result, startMonth) =>{
 
 
 
-const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleThreeDataset[] => {
+const sampleThreeParser = (data: any[], startDate: Date, endDate: Date): ISampleThreeDataset[] => {
     let result: ISampleThreeDataset[] = [];
     let m = new Map<string, IMonth>();
 
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
-        if((d.getTime() <= endDate.getTime() && d.getTime() >= startDate.getTime()))
-        if (d) {
-            //const currentFinicailYear = getDateFinancialYear(d);
+        if ((d.getTime() <= endDate.getTime() && d.getTime() >= startDate.getTime()))
+            if (d) {
+                //const currentFinicailYear = getDateFinancialYear(d);
 
-            const currentYear = startDate.getFullYear() + '-' + endDate.getFullYear();
-            let oldDataset = m.get(currentYear);
-            let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
-            m.set(currentYear, newDataset);
-        }
+                const currentYear = startDate.getFullYear() + '-' + endDate.getFullYear();
+                let oldDataset = m.get(currentYear);
+                let newDataset = monthFilter(d.getMonth() + 1, oldDataset);
+                m.set(currentYear, newDataset);
+            }
     });
     m.forEach((value, key) => {
         let item: ISampleThreeDataset = { year: key, dataset: value }
         result.push(item);
     })
 
-    let temp = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate());
+    let temp = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     for (let d = temp; d <= endDate; d.setFullYear(d.getFullYear() + 1)) {
-        const year =  startDate.getFullYear() + '-' + endDate.getFullYear();
+        const year = startDate.getFullYear() + '-' + endDate.getFullYear();
         let m1 = new Map<string, IMonth>();
-        const filterResult = result.filter(item => {return item.year == year});
+        const filterResult = result.filter(item => { return item.year == year });
         if (filterResult.length == 0) {
             let newDataset = monthZero();
             m1.set(year, newDataset);
@@ -345,7 +346,7 @@ const sampleThreeParser = (data: any[], startDate:Date, endDate:Date): ISampleTh
             result.push(item);
         })
     }
-    
+
     arraySort(result, 'year');
     return result;
 }
@@ -379,7 +380,7 @@ function Dashboard(props) {
         setGroupBy("");
         setTimeout(() => {
             setGroupBy(oldGroupBy);
-        },500);
+        }, 500);
     }
     const changeStaticsComponentByEndDate = (e) => {
         setEndDate(e);
@@ -387,7 +388,7 @@ function Dashboard(props) {
         setGroupBy("");
         setTimeout(() => {
             setGroupBy(oldGroupBy);
-        },500);
+        }, 500);
     }
     const byMonthTableComponent = () => {
         return (
@@ -427,17 +428,17 @@ function Dashboard(props) {
     const changeGroupHandler = (event) => {
         const value = event.target.value;
         if (value == 'BY_MONTH_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-1, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 1, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_MONTH_CALENDAR') {
             setStartDate(new Date(new Date().getFullYear(), 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 3, 1));
-            setEndDate(new Date(new Date().getFullYear(),2,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 3, 1));
+            setEndDate(new Date(new Date().getFullYear(), 2, 31));
         } else if (value == 'BY_YEAR_FINANCIAL') {
-            setStartDate(new Date(new Date().getFullYear()-3, 0, 1));
-            setEndDate(new Date(new Date().getFullYear(),11,31));
+            setStartDate(new Date(new Date().getFullYear() - 3, 0, 1));
+            setEndDate(new Date(new Date().getFullYear(), 11, 31));
         }
         setGroupBy(value);
     }
@@ -476,21 +477,21 @@ function Dashboard(props) {
     }, [groupBy, data])
 
 
-    const downloadScreenshot = async(className) => {
-        
-        let chart = (document.querySelector("."+className) as HTMLElement);
+    const downloadScreenshot = async (className) => {
+
+        let chart = (document.querySelector("." + className) as HTMLElement);
         const canvas = await html2canvas(chart);
         const dataURL = canvas.toDataURL('image/png');
         downloadjs(dataURL, 'download.png', 'image/png');
     }
 
 
-      
+
     const statsTableSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
         switch (groupBy) {
             case "NON":
-                console.log('serviceUnits',serviceUnits)
+                console.log('serviceUnits', serviceUnits)
                 return (
                     <React.Fragment>
                         <div className="row">
@@ -502,7 +503,7 @@ function Dashboard(props) {
                             <div className="col-12">
                                 <h6>{`${title} - 新發生意外或事故總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                             </div>
-                            <div className="col-12" style={{margin:'5px 0'}}>
+                            <div className="col-12" style={{ margin: '5px 0' }}>
                                 <button className="btn btn-primary" onClick={() => copyTable('#table1')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                                 {displayBarChart1 == '' &&
                                     <button className="btn btn-primary" onClick={() => setDisplayBarChart1('none')}>隱藏圖表</button>
@@ -526,7 +527,7 @@ function Dashboard(props) {
 
     const chartSwitch = () => {
         let title = `${moment(startDate).format("MM/YYYY")} - ${moment(endDate).format("MM/YYYY")}`
-        console.log('startDate',startDate.getMonth());
+        console.log('startDate', startDate.getMonth());
         let SUIResult = sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SUI") > -1), startDate, endDate);
         let SUIFYChart = yearChartParser(SUIResult, startDate.getMonth());
 
@@ -702,8 +703,8 @@ function Dashboard(props) {
         return (
             <React.Fragment>
                 <div className="row">
-                    <div className="col-12" style={{display:displayBarChart1}}>
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("nonBarChart")}>下載圖表</button>
+                    <div className="col-12" style={{ display: displayBarChart1 }}>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("nonBarChart")}>下載圖表</button>
                         <div className="nonBarChart">
                             <div className="text-center mb-2" style={{ fontSize: 16 }}>
                                 <div className="">
@@ -760,9 +761,9 @@ function Dashboard(props) {
                     </div>*/}
                 </div>
 
-                <hr/>
+                <hr />
                 <div className="row">
-                    <div className="col-1">
+                    <div className="col-12">
                         <h6 style={{ fontWeight: 600 }}>
                             標題:
                         </h6>
@@ -772,7 +773,7 @@ function Dashboard(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12" style={{margin:'5px 0'}}>
+                    <div className="col-12" style={{ margin: '5px 0' }}>
                         <button className="btn btn-primary" onClick={() => copyTable('#table3')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                         {displayBarChart2 == '' &&
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart2('none')}>隱藏圖表</button>
@@ -781,8 +782,8 @@ function Dashboard(props) {
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart2('')}>顯示圖表</button>
                         }
                     </div>
-                    <div className="col-12">
-                        <table className="table" id="table3">
+                    <div className="col-12" style={{ overflow: isMobile && 'auto' }}>
+                        <table className="table" id="table3" style={{ width: isMobile && 'max-content' }}>
                             <thead>
                                 <tr>
                                     <th scope="col">服務使用者意外</th>
@@ -791,7 +792,7 @@ function Dashboard(props) {
                             </thead>
                             <tbody>
                                 {SUIResult.map((item) => {
-                                    let result=[];
+                                    let result = [];
                                     if (startDate.getMonth() == 0) {
                                         result.push(<td>{item.dataset.jan}</td>);
                                         result.push(<td>{item.dataset.feb}</td>);
@@ -960,7 +961,7 @@ function Dashboard(props) {
                         </table>
                     </div>
                 </div>
-                <div className="row" style={{display:displayBarChart2}}>
+                <div className="row" style={{ display: displayBarChart2 }}>
                     {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart1")}>下載圖表</button>
                     </div>
@@ -982,7 +983,7 @@ function Dashboard(props) {
                         />
                     </div>*/}
                     <div className="col-12">
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart1")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialBarChart1">
                         <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -990,7 +991,7 @@ function Dashboard(props) {
                                 {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                             </div>
                             <div className="">
-                            服務使用者意外 (每月總數)
+                                服務使用者意外 (每月總數)
                             </div>
                         </div>
                         <Chart
@@ -1003,9 +1004,9 @@ function Dashboard(props) {
                         />
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="row">
-                    <div className="col-1">
+                    <div className="col-12">
                         <h6 style={{ fontWeight: 600 }}>
                             標題:
                         </h6>
@@ -1013,7 +1014,7 @@ function Dashboard(props) {
                     <div className="col-12">
                         <h6>{`${title} - 外界人士意外每月總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
-                    <div className="col-12" style={{margin:'5px 0'}}>
+                    <div className="col-12" style={{ margin: '5px 0' }}>
                         <button className="btn btn-primary" onClick={() => copyTable('#table4')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                         {displayBarChart3 == '' &&
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart3('none')}>隱藏圖表</button>
@@ -1024,8 +1025,8 @@ function Dashboard(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
-                        <table className="table" id="table4">
+                    <div className="col-12" style={{ overflow: isMobile && 'auto' }}>
+                        <table className="table" id="table4" style={{ width: isMobile && 'max-content' }}>
                             <thead>
                                 <tr>
                                     <th scope="col">外界人士意外</th>
@@ -1034,7 +1035,7 @@ function Dashboard(props) {
                             </thead>
                             <tbody>
                                 {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("PUI") > -1), startDate, endDate).map((item) => {
-                                    let result=[];
+                                    let result = [];
                                     if (startDate.getMonth() == 0) {
                                         result.push(<td>{item.dataset.jan}</td>);
                                         result.push(<td>{item.dataset.feb}</td>);
@@ -1203,7 +1204,7 @@ function Dashboard(props) {
                         </table>
                     </div>
                 </div>
-                <div className="row" style={{display:displayBarChart3}}>
+                <div className="row" style={{ display: displayBarChart3 }}>
                     {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart2")}>下載圖表</button>
                     </div>
@@ -1225,7 +1226,7 @@ function Dashboard(props) {
                         />
                     </div>*/}
                     <div className="col-12">
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart2")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialBarChart2">
                         <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1233,7 +1234,7 @@ function Dashboard(props) {
                                 {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                             </div>
                             <div className="">
-                            外界人士意外 (每月總數)
+                                外界人士意外 (每月總數)
                             </div>
                         </div>
                         <Chart
@@ -1245,9 +1246,9 @@ function Dashboard(props) {
                         />
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="row">
-                    <div className="col-1">
+                    <div className="col-12">
                         <h6 style={{ fontWeight: 600 }}>
                             標題:
                         </h6>
@@ -1255,7 +1256,7 @@ function Dashboard(props) {
                     <div className="col-12">
                         <h6>{`${title} - 特別事故(牌照事務處)每月總數 - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
-                    <div className="col-12" style={{margin:'5px 0'}}>
+                    <div className="col-12" style={{ margin: '5px 0' }}>
                         <button className="btn btn-primary" onClick={() => copyTable('#table5')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                         {displayBarChart4 == '' &&
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart4('none')}>隱藏圖表</button>
@@ -1266,8 +1267,8 @@ function Dashboard(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
-                        <table className="table" id="table5">
+                    <div className="col-12" style={{ overflow: isMobile && 'auto' }}>
+                        <table className="table" id="table5" style={{ width: isMobile && 'max-content' }}>
                             <thead>
                                 <tr>
                                     <th scope="col">特別事故(牌照事務處)</th>
@@ -1276,7 +1277,7 @@ function Dashboard(props) {
                             </thead>
                             <tbody>
                                 {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SIH") > -1), startDate, endDate).map((item) => {
-                                    let result=[];
+                                    let result = [];
                                     if (startDate.getMonth() == 0) {
                                         result.push(<td>{item.dataset.jan}</td>);
                                         result.push(<td>{item.dataset.feb}</td>);
@@ -1445,7 +1446,7 @@ function Dashboard(props) {
                         </table>
                     </div>
                 </div>
-                <div className="row" style={{display:displayBarChart4}}>
+                <div className="row" style={{ display: displayBarChart4 }}>
                     {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart3")}>下載圖表</button>
                     </div>
@@ -1467,7 +1468,7 @@ function Dashboard(props) {
                         />
                     </div>*/}
                     <div className="col-12">
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart3")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialBarChart3">
                         <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1475,7 +1476,7 @@ function Dashboard(props) {
                                 {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                             </div>
                             <div className="">
-                            特別事故(牌照事務處) (每月總數)
+                                特別事故(牌照事務處) (每月總數)
                             </div>
                         </div>
                         <Chart
@@ -1487,9 +1488,9 @@ function Dashboard(props) {
                         />
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="row">
-                    <div className="col-1">
+                    <div className="col-12">
                         <h6 style={{ fontWeight: 600 }}>
                             標題:
                         </h6>
@@ -1497,7 +1498,7 @@ function Dashboard(props) {
                     <div className="col-12">
                         <h6>{`${title} - 財政年度新發生意外或事故 (特別事故(津貼科)每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
-                    <div className="col-12" style={{margin:'5px 0'}}>
+                    <div className="col-12" style={{ margin: '5px 0' }}>
                         <button className="btn btn-primary" onClick={() => copyTable('#table6')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                         {displayBarChart5 == '' &&
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart5('none')}>隱藏圖表</button>
@@ -1508,8 +1509,8 @@ function Dashboard(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
-                        <table className="table" id="table6">
+                    <div className="col-12" style={{ overflow: isMobile && 'auto' }}>
+                        <table className="table" id="table6" style={{ width: isMobile && 'max-content' }}>
                             <thead>
                                 <tr>
                                     <th scope="col">特別事故(津貼科))</th>
@@ -1518,7 +1519,7 @@ function Dashboard(props) {
                             </thead>
                             <tbody>
                                 {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("SID") > -1), startDate, endDate).map((item) => {
-                                    let result=[];
+                                    let result = [];
                                     if (startDate.getMonth() == 0) {
                                         result.push(<td>{item.dataset.jan}</td>);
                                         result.push(<td>{item.dataset.feb}</td>);
@@ -1687,7 +1688,7 @@ function Dashboard(props) {
                         </table>
                     </div>
                 </div>
-                <div className="row" style={{display:displayBarChart5}}>
+                <div className="row" style={{ display: displayBarChart5 }}>
                     {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart4")}>下載圖表</button>
                     </div>
@@ -1709,7 +1710,7 @@ function Dashboard(props) {
                         />
                     </div>*/}
                     <div className="col-12">
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart4")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialBarChart4">
                         <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1717,7 +1718,7 @@ function Dashboard(props) {
                                 {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                             </div>
                             <div className="">
-                            特別事故(津貼科) (每月總數)
+                                特別事故(津貼科) (每月總數)
                             </div>
                         </div>
                         <Chart
@@ -1729,9 +1730,9 @@ function Dashboard(props) {
                         />
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div className="row">
-                    <div className="col-1">
+                    <div className="col-12">
                         <h6 style={{ fontWeight: 600 }}>
                             標題:
                         </h6>
@@ -1739,7 +1740,7 @@ function Dashboard(props) {
                     <div className="col-12">
                         <h6>{`${title} - 財政年度新發生意外或事故 (其他事故每月總數) - ${serviceUnits.length == 0 ? 'ALL' : serviceUnits}`}</h6>
                     </div>
-                    <div className="col-12" style={{margin:'5px 0'}}>
+                    <div className="col-12" style={{ margin: '5px 0' }}>
                         <button className="btn btn-primary" onClick={() => copyTable('#table7')}>複製到表格</button>&nbsp;&nbsp;&nbsp;
                         {displayBarChart6 == '' &&
                             <button className="btn btn-primary" onClick={() => setDisplayBarChart6('none')}>隱藏圖表</button>
@@ -1750,8 +1751,8 @@ function Dashboard(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
-                        <table className="table" id="table7">
+                    <div className="col-12" style={{ overflow: isMobile && 'auto' }}>
+                        <table className="table" id="table7" style={{ width: isMobile && 'max-content' }}>
                             <thead>
                                 <tr>
                                     <th scope="col">其他事故意外</th>
@@ -1760,7 +1761,7 @@ function Dashboard(props) {
                             </thead>
                             <tbody>
                                 {sampleThreeParser(data.filter((item) => item.CaseNumber.indexOf("OIN") > -1), startDate, endDate).map((item) => {
-                                    let result=[];
+                                    let result = [];
                                     if (startDate.getMonth() == 0) {
                                         result.push(<td>{item.dataset.jan}</td>);
                                         result.push(<td>{item.dataset.feb}</td>);
@@ -1929,7 +1930,7 @@ function Dashboard(props) {
                         </table>
                     </div>
                 </div>
-                <div className="row" style={{display:displayBarChart6}}>
+                <div className="row" style={{ display: displayBarChart6 }}>
                     {/*<div className="col-12">
                         <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialLineChart5")}>下載圖表</button>
                     </div>
@@ -1951,7 +1952,7 @@ function Dashboard(props) {
                         />
                     </div>*/}
                     <div className="col-12">
-                        <button className="btn btn-primary" onClick={()=>downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
+                        <button className="btn btn-primary" onClick={() => downloadScreenshot("byMonthFinancialBarChart5")}>下載圖表</button>
                     </div>
                     <div className="col-12 byMonthFinancialBarChart5">
                         <div className="text-center mb-2" style={{ fontSize: 16 }}>
@@ -1959,7 +1960,7 @@ function Dashboard(props) {
                                 {moment(startDate).format("MM/YYYY")} - {moment(endDate).format("MM/YYYY")}
                             </div>
                             <div className="">
-                            其他事故 (每月總數)
+                                其他事故 (每月總數)
                             </div>
                         </div>
                         <Chart
@@ -2025,20 +2026,20 @@ function Dashboard(props) {
                         setServiceUnits(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
-                        {props.permission.indexOf('All') >=0 && serviceLocation.length > 0 &&
+                        {props.permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
                                 return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
                             })
                         }
-                        {props.permission.indexOf('All') < 0 &&  serviceLocation.length > 0 &&
-                          props.permission.map((item) => {
-                              let ser = serviceLocation.filter(o => {return o.su_Eng_name_display == item});
+                        {props.permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
+                            props.permission.map((item) => {
+                                let ser = serviceLocation.filter(o => { return o.su_Eng_name_display == item });
 
-                              if (ser.length > 0) {
-                                  return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
-                              }
-                              
-                          })
+                                if (ser.length > 0) {
+                                    return <option value={ser[0].su_Eng_name_display}>{ser[0].su_name_tc}</option>
+                                }
+
+                            })
                         }
                         {/*
                             serivceLocation.map((item) => <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>)
