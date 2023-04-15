@@ -904,9 +904,10 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }, [reporter])
     useEffect(() => {
         if (sdInfo) {
-            getUserInfoByEmailInUserInfoAD(siteCollectionUrl, reporter.mail).then((userInfosRes) => {
+            getUserInfoByEmailInUserInfoAD(siteCollectionUrl, sdInfo.Email).then((userInfosRes) => {
 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                    debugger
                     setSdJobTitle(userInfosRes[0].hr_jobcode);
                 }
 
@@ -978,6 +979,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 }
 
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                    debugger
                     setSDEmail(dept.hr_sd);
                 }
             }

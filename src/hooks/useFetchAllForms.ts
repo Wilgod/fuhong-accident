@@ -27,7 +27,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         let specialIncidentReportAllowance = [];
         let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
-        
+        debugger
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1 || searchCriteria.formTypes.indexOf("PUI") > -1) {
             accidentReportForm = await getAllAccidentReportForm();
             accidentFollowUpForm = await getAllAccidentFollowUpForm();
