@@ -98,6 +98,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
   private formId = getQueryParameterNumber("formId");
   private navScreen: string = getQueryParameterString("navScreen");
 
+  private keyword: string = getQueryParameterString("keyword");
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -569,14 +570,16 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
           console.log('1')
           return (
             <div>
-              <div className="mb-3" style={{ fontSize: 19, fontWeight: 600 }}>
-                主頁
-              </div>
-              <div className="mb-3">
-                {!this.state.loading &&
-                  <TodoListComponent context={this.props.context} permissionList={this.state.permissionList} />
-                }
-              </div>
+              {this.navScreen != 'cms' && 
+              <>
+                <div className="mb-3" style={{ fontSize: 19, fontWeight: 600 }}>
+                  主頁
+                </div>
+                <div className="mb-3">
+                  {!this.state.loading &&
+                    <TodoListComponent context={this.props.context} permissionList={this.state.permissionList} />
+                  }
+                </div>
               <div className="mb-3">
                 <div className="mb-3" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                   搜尋
@@ -605,9 +608,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     <div style={{ fontWeight: 600 }}>
                       服務單位
                     </div>
-                    {/* <div className="" style={{ overflowY: "scroll", border: "1px solid gray", height: 100 }}>
 
-                    </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                       const selectedOptions = this.multipleOptionsSelectParser(event);
                       this.setState({ mainTableDisplay: false, searchServiceUnit: selectedOptions });
@@ -628,9 +629,6 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
                         })
                       }
-                      {/*this.state.serviceUnitList.map((item) => {
-                        return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
-                      })*/}
                     </select>
                   </div>
                   <div className="col-xl-2 col-md-6 col-12 mb-3" >
@@ -716,6 +714,25 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                 }
 
               </div>
+              </>
+              }
+              {this.navScreen == 'cms' &&
+                  <MainTableComponent
+                    context={this.props.context}
+                    searchExpired={this.state.searchExpired}
+                    dateRange={{
+                      start: new Date(new Date().setFullYear(2000)),
+                      end: new Date()
+                    }}
+                    searchFormStatus={"ALL"}
+                    searchFormType={["ALL"]}
+                    searchServiceUnit={["ALL"]}
+                    searchKeyword={this.keyword}
+                    adminPermissionBoolean={this.state.adminPermissionBoolean}
+                    serviceUnitList={this.state.serviceUnitList}
+                    permissionList={this.state.permissionList}
+                  />
+                }
             </div>
           )
       }
@@ -727,6 +744,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       <div className={styles.fuHongFormsMenu} id="fuHongFormsMenu">
         <div className={styles.container} >
           <div className="container-fluid">
+            {this.navScreen == 'cms' &&
+              screenSwitch()
+            }
+            {this.navScreen != 'cms' &&
             <div className="row no-gutters" style={{ height: '90vh' }}>
               {
                 !this.state.loading && (this.state.permissionList.length == 0) ?
@@ -753,6 +774,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
               }
 
             </div>
+            }
           </div>
         </div>
       </div>
