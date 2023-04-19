@@ -38,7 +38,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, postCMSWorkflowGetUser } from '../../../api/Notification';
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, postCMSWorkflowGetUser, postCMSUserInformationWorkflowGetUser } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -53,7 +53,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow, cmsUserInformationWorkflow }: IServiceUserAccidentFormProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [formId, setFormId] = useState(null);
@@ -1410,6 +1410,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
         if (cmsUserWorkflow != null) {
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
+            debugger
             let cmsuser = []
             for (let user of userlist.results) {
                 /*if (user.cr98a_mentalretarded != 111910000) {
@@ -1430,6 +1431,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 } else if (user.cr98a_mentalretarded == 111910004) {
                     mentalretarded = "UNKNOWN";
                 }
+                debugger
                 cmsuser.push({
                     "ServiceNumber": user.cr98a_filenumber,
                     "Age": parseInt(user.cr98a_age),
@@ -1442,8 +1444,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     "Mentallyretardedlive": user.cr98a_mentallyretardedlive,//智障程度
                     "Autismspectrum": user.cr98a_autismspectrum, //自閉症譜系
                     "Wheelchairtypes": user.cr98a_wheelchairspecialchairandrelatedac == 111910006 ? false : true, //輪椅
-                    "ServiceCategory": ["住宿"]
+                    "UserinformationId": user.cr98a_userinformationid
                 })
+                //"ServiceCategory": ["住宿"],
             }
             setCmsUserList(cmsuser)
         }
@@ -1469,6 +1472,24 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         let selectUser = cmsUserList.filter(item => { return item.ServiceNumber == value });
         if (selectUser.length > 0) {
+            let userInformationlist = await postCMSUserInformationWorkflowGetUser(context, selectUser[0].UserinformationId, cmsUserInformationWorkflow);
+            debugger
+            let sc = [];
+            if (userInformationlist.ServiceType.length > 0) {
+                for (let st of userInformationlist.ServiceType) {
+                    if (st == 'AD') {
+                        sc.push('自閉症及發展障礙支援服務');
+                    } else if (st == 'CS') {
+                        sc.push('社區支援服務');
+                    } else if (st == 'DT') {
+                        sc.push('日間訓練服務');
+                    } else if (st == 'VR') {
+                        sc.push('職業康復及發展服務');
+                    } else if (st == 'RS') {
+                        sc.push('住宿服務');
+                    }
+                }
+            }
             setServiceUserNameEN(selectUser[0].NameEN);
             setServiceUserNameCN(selectUser[0].NameCN);
             setServiceUserAge(selectUser[0].Age);

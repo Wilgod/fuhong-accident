@@ -51,6 +51,7 @@ interface IServiceUserAccidentFormProps {
     serviceUserAccidentWorkflow:string;
     print:any;
     cmsUserWorkflow:string;
+    cmsUserInformationWorkflow:string;
 }
 
 interface IErrorFields {

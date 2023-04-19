@@ -15,7 +15,7 @@ export interface ISearchCriteria {
 
 export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria) {
     const [result, setResult] = useState([]);
-   
+   debugger
     const initial = async () => {
         let result = [];
         let accidentReportForm = [];
@@ -28,6 +28,10 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
         debugger
+        let key = null;
+        if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
+            key = decodeURI(searchCriteria.keyword);
+        }
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1 || searchCriteria.formTypes.indexOf("PUI") > -1) {
             accidentReportForm = await getAllAccidentReportForm();
             accidentFollowUpForm = await getAllAccidentFollowUpForm();
@@ -39,9 +43,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
             let filterServiceUserAccidentData = serviceUserAccidentData;
-            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return item.ServiceUserNameCN == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
-                    item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            if (key != null && key != '') {
+                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return item.ServiceUserNameCN == key || item.ServiceUserNameEN == key  || 
+                    item.ServiceUserAge == key || item.ServiceUserGender == key || item.CaseName == key || item.InsuranceCaseNo == key })
             }
             for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUserUnit});
@@ -83,9 +87,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("PUI") > -1) {
             outsiderAccidentData = await getAllOutsiderAccidentWithClosed();
             let filterOutsiderAccidentData = outsiderAccidentData;
-            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-                filterOutsiderAccidentData = outsiderAccidentData.filter(item=> {return item.ServiceUserNameTC == searchCriteria.keyword || item.ServiceUserNameEN == searchCriteria.keyword  || 
-                    item.ServiceUserAge == searchCriteria.keyword || item.ServiceUserGender == searchCriteria.keyword})
+            if (key != null && key != '') {
+                filterOutsiderAccidentData = outsiderAccidentData.filter(item=> {return item.ServiceUserNameTC == key || item.ServiceUserNameEN == key  || 
+                    item.ServiceUserAge == key || item.ServiceUserGender == key || item.CaseName == key || item.InsuranceCaseNo == key})
             }
             
             for (let item of filterOutsiderAccidentData) {
@@ -133,9 +137,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             specialIncidentReportLicense = await getAllSpecialIncidentReportLicenseWithClosed();
 
             let filterSpecialIncidentReportLicense = specialIncidentReportLicense;
-            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-                filterSpecialIncidentReportLicense = specialIncidentReportLicense.filter(item=> {return item.ResponsibleName == searchCriteria.keyword || item.HomesManagerName == searchCriteria.keyword  || 
-                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            if (key != null && key != '') {
+                filterSpecialIncidentReportLicense = specialIncidentReportLicense.filter(item=> {return item.ResponsibleName == key || item.HomesManagerName == key  || 
+                    item.GuardianName == key || item.GuardianRelation == key || item.CaseName == key || item.InsuranceCaseNo == key})
             }
             for (let item of filterSpecialIncidentReportLicense) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
@@ -171,9 +175,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             specialIncidentReportAllowance = await getAllSpecialIncidentReportAllowanceWithClosed();
 
             let filterSpecialIncidentReporAllowance = specialIncidentReportAllowance;
-            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-                filterSpecialIncidentReporAllowance = specialIncidentReportAllowance.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
-                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            if (key != null && key != '') {
+                filterSpecialIncidentReporAllowance = specialIncidentReportAllowance.filter(item=> {return item.IncidentLocation == key || item.GuardianDescription == key  || 
+                    item.GuardianName == key || item.GuardianRelation == key || item.CaseName == key || item.InsuranceCaseNo == key})
             }
 
             for (let item of filterSpecialIncidentReporAllowance) {
@@ -210,9 +214,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             otherIncidentData = await getAllOtherIncidentReportWithClosed();
 
             let filterOtherIncidentData = otherIncidentData;
-            if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-                filterOtherIncidentData = otherIncidentData.filter(item=> {return item.IncidentLocation == searchCriteria.keyword || item.GuardianDescription == searchCriteria.keyword  || 
-                    item.GuardianName == searchCriteria.keyword || item.GuardianRelation == searchCriteria.keyword})
+            if (key != null && key != '') {
+                filterOtherIncidentData = otherIncidentData.filter(item=> {return item.IncidentLocation == key || item.GuardianDescription == key  || 
+                    item.GuardianName == key || item.GuardianRelation == key || item.CaseName == key || item.InsuranceCaseNo == key})
             }
             for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
@@ -302,7 +306,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
         });
         
-        
+        debugger
         setResult(filterResult);
     }
 
