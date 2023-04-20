@@ -1495,7 +1495,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setServiceUserAge(selectUser[0].Age);
             setServiceUserGender(selectUser[0].Sex);
             setServiceUserId(value);
-            setServiceCategory([selectUser[0].ServiceCategory]);
+            setServiceCategory(sc);
             setAsd(selectUser[0].Autismspectrum);
             setWheelchair(selectUser[0].Wheelchairtypes);
             setIntelligence(selectUser[0].Mentalretarded);
