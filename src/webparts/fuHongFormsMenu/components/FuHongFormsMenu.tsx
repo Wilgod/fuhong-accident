@@ -700,8 +700,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     context={this.props.context}
                     searchExpired={this.state.searchExpired}
                     dateRange={{
-                      start: this.state.searchDateStart,
-                      end: this.state.searchDateEnd
+                      start: new Date(this.state.searchDateStart.setHours(0,0,0)),
+                      end: new Date(this.state.searchDateEnd.setHours(23,59,59))
                     }}
                     searchFormStatus={this.state.searchFormStatus}
                     searchFormType={this.state.searchFormType}
@@ -722,7 +722,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     searchExpired={this.state.searchExpired}
                     dateRange={{
                       start: new Date(new Date().setFullYear(2000)),
-                      end: new Date()
+                      end: new Date(new Date().setHours(23,59,59))
                     }}
                     searchFormStatus={"ALL"}
                     searchFormType={["ALL"]}
