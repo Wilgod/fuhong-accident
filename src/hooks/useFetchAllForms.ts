@@ -46,7 +46,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             if (key != null && key != '') {
                 filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN.trim() != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
                     (item.ServiceUserNameEN != null && item.ServiceUserNameEN.toLocaleLowerCase().trim() == key)  || 
-                    (item.ServiceUserAge != null && item.ServiceUserAge.trim() == key) || 
+                    (item.ServiceUserAge != null && item.ServiceUserAge == key) || 
                     (item.ServiceUserGender != null && item.ServiceUserGender.toLocaleLowerCase().trim() == key) || 
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
                     (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) })
