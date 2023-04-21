@@ -30,7 +30,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         debugger
         let key = null;
         if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
-            key = decodeURI(searchCriteria.keyword).toLocaleLowerCase();
+            key = decodeURI(searchCriteria.keyword).toLocaleLowerCase().trim();
         }
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1 || searchCriteria.formTypes.indexOf("PUI") > -1) {
             accidentReportForm = await getAllAccidentReportForm();

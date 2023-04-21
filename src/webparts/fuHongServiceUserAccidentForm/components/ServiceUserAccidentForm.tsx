@@ -109,6 +109,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
 
     const [loadingService, setLoadingService] = useState(false);
+    const [hkid, setHkid] = useState("");
     const [form, setForm] = useState<IServiceUserAccidentFormStates>({
         patientAcciedntScenario: "",
         injuredArea: [],
@@ -238,7 +239,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["Wheelchair"] = wheelchair;
         body["ASD"] = asd;
         body["Intelligence"] = intelligence;
-
+        body["HKID"] = hkid
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUser"] = serviceUserRecordId.toString();
         } else {
@@ -1432,6 +1433,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     mentalretarded = "UNKNOWN";
                 }
                 debugger
+                
                 cmsuser.push({
                     "ServiceNumber": user.cr98a_filenumber,
                     "Age": parseInt(user.cr98a_age),
@@ -1489,6 +1491,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         sc.push('住宿服務');
                     }
                 }
+                
+                setHkid(userInformationlist.BasicInformation.cr98a_hkid);
             }
             setServiceUserNameEN(selectUser[0].NameEN);
             setServiceUserNameCN(selectUser[0].NameCN);
@@ -1500,6 +1504,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             setWheelchair(selectUser[0].Wheelchairtypes);
             setIntelligence(selectUser[0].Mentalretarded);
             setServiceUserRecordId(selectUser[0].ServiceNumber);
+            //cr98a_hkid
         } else {
             setServiceUserRecordId(-1);
         }
