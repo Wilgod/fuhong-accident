@@ -42,6 +42,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
+            debugger
             let filterServiceUserAccidentData = serviceUserAccidentData;
             if (key != null && key != '') {
                 filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN.trim() != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
@@ -49,7 +50,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     (item.ServiceUserAge != null && item.ServiceUserAge == key) || 
                     (item.ServiceUserGender != null && item.ServiceUserGender.toLocaleLowerCase().trim() == key) || 
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
-                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) })
+                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
+                    (item.HKID != null && item.HKID.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUserUnit});

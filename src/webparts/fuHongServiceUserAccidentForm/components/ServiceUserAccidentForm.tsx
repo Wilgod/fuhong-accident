@@ -1244,6 +1244,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setPatientServiceUnit(data.ServiceUserUnit);
             }
             setMedicalArrangementDate(data.MedicalArrangementDate != null ? new Date(data.MedicalArrangementDate) : null);
+            setHkid(data.HKID)
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
