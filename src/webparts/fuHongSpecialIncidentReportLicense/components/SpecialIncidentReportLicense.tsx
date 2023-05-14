@@ -36,7 +36,9 @@ import { IItemAddResult } from "@pnp/sp/items";
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
 export default function SpecialIncidentReportLicense({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, departmentList, speicalIncidentReportWorkflow, print, permissionList }: ISpecialIncidentReportLicenseProps) {
+    const type: string = getQueryParameterString("type");
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>();
@@ -1521,6 +1523,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
     }
 
+    const backToCMS =(e) => {
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx?navScreen=cms&keyword=`+form.affectedIdCardNo+`&type=cms`;
+        window.open(path, "_self");
+    }
     const smSubmitHandler = () => {
         const [body, error] = dataFactory();
         updateSpecialIncidentReportLicense(formData.Id, {
@@ -2040,7 +2046,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                         <div className="input-group mb-3">
                                             <div className="custom-file">
                                                 <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={incomingfile1} //onChange={(event) => { setExtraFile }}
-                                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} multiple />
+                                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} multiple />
                                                 <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{extraFile && extraFile.length > 0 ? `${extraFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                             </div>
                                         </div>
@@ -2079,7 +2085,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>經辦人<span className="d-sm-inline d-md-block">(負責督察姓名)</span></label>
                         <div className="col-12 col-md-4">
                             <input type="text" className={`form-control ${(error && error['ResponsibleName']) ? "is-invalid" : ""}`} value={form.responsibleName} name={"responsibleName"} onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2087,7 +2093,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
                         <div className="col-12 col-xl-4">
                         <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
-                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                                disabled={type=='cms' ||(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
                             >
                                 <option value={""} ></option>
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
@@ -2169,7 +2175,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>保險公司備案編號</label>
                                 <div className="col-12 col-md-4">
                                     <input type="text" className="form-control" value={form.insuranceCaseNo} name="insuranceCaseNo" onChange={inputFieldHandler}
-                                        disabled={!adminUpdateInsuranceNumber(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || !adminUpdateInsuranceNumber(currentUserRole, formStatus)} />
                                 </div>
                             </>
                         }
@@ -2190,7 +2196,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-general" value="UNUSAL_INCIDENT_GENERAL" onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_GENERAL"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-general">在院舍內發生事故及送院救治／送院後死亡</label>
                             </div>
                             {
@@ -2198,17 +2204,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <div className="">
                                     <div>請註明事件:</div>
                                     <AutosizeTextarea className={`form-control ${(error && error['UnusalIncideintGeneral']) ? "is-invalid" : ""}`} placeholder="請註明" value={form.unusalIncideintGeneral} name="unusalIncideintGeneral" onChange={inputFieldHandler}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-suicide" value="UNUSAL_INCIDENT_SUICIDE" onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_SUICIDE"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-suicide">在院舍內自殺及送院救治／送院後死亡</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-other" value="UNUSAL_INCIDENT_OTHER" onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_OTHER"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-other">其他不尋常死亡／受傷</label>
                             </div>
                             {
@@ -2216,12 +2222,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <div className="">
                                     <div>請註明事件:</div>
                                     <AutosizeTextarea className={`form-control ${(error && error['UnusalIncideintIncident']) ? "is-invalid" : ""}`} placeholder="請註明" value={form.unusalIncideintIncident} name="unusalIncideintIncident" onChange={inputFieldHandler}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="unusalIncident" id="unusal-incident-court" value="UNUSAL_INCIDENT_COURT" onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled1} checked={form.unusalIncident === "UNUSAL_INCIDENT_COURT"} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="unusal-incident-court">收到死因裁判法庭要求出庭的傳票<br />(請夾附傳票副本並在附頁說明詳情)</label>
                             </div>
                             {
@@ -2230,7 +2236,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     <div className="input-group mb-2">
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" name="subpoenaFile" id="subpoena-file" onChange={incomingfile2} multiple// onChange={(event) => { setSubpoenaFile(event.target.files) }}
-                                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                             <label className={`custom-file-label ${styles.fileUploader}`} htmlFor="subpoena-file">{subpoenaFile && subpoenaFile.length > 0 ? `${subpoenaFile[0].name}` : "請選擇文件 (如適用)"}</label>
                                         </div>
                                         {/*
@@ -2250,7 +2256,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                             })}
                                             <div className="input-group-append">
                                                 <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setSubpoenaFile([])}
-                                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && formInitial(currentUserRole, formStatus)}>
+                                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && formInitial(currentUserRole, formStatus))}>
                                                     清除</button>
                                             </div>
                                         </>
@@ -2271,7 +2277,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className={`col`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="police" id="police-true" onChange={(e) => checkboxHandler1(e, true)} checked={form.police === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">已報警求助</label>
                             </div>
                             {
@@ -2280,18 +2286,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     <div className="mb-1">
                                         <label>報警日期</label>
                                         <DatePicker className={`form-control ${(error && error['PoliceDatetime']) ? "is-invalid" : ""}`} selected={form.policeDatetime} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, policeDatetime: date })}
-                                            readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            readOnly={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                     </div>
                                     <div>
                                         <label>報案編號</label>
                                         <input className={`form-control ${(error && error['PoliceReportNumber']) ? "is-invalid" : ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                     </div>
                                 </>
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="police" id="police-false" onChange={(e) => checkboxHandler1(e, false)} checked={form.police === false}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有報警求助</label>
                             </div>
                         </div>
@@ -2303,7 +2309,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className={`col`}>
                             <div className="form-check">
                                 <input className={"form-check-input"} type="checkbox" name="policeInvestigate" id="police-investigate-true" value={"true"} onChange={(e) => checkboxHandler1(e, true)} checked={form.policeInvestigate === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-true">有</label>
                             </div>
                             {
@@ -2318,7 +2324,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="policeInvestigate" id="police-investigate-false" value={"false"} onChange={(e) => checkboxHandler1(e, false)} checked={form.policeInvestigate === false}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-investigate-false">沒有</label>
                             </div>
                         </div>
@@ -2330,12 +2336,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className={`col ${(error && error['ResidentMissing']) ? styles.divInvalid : ""}`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="residentMissing" id="resident-missing-inside" value="RESIDENT_MISSING_INSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_INSIDE'} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-inside">住客擅自／在員工不知情下離開院舍</label>
                             </div>
                             <div className="form-check mb-2">
                                 <input className="form-check-input" type="checkbox" name="residentMissing" id="resident-missing-outside" value="RESIDENT_MISSING_OUTSIDE" checked={form.residentMissing === 'RESIDENT_MISSING_OUTSIDE'} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-outside">院外活動期間失蹤</label>
                             </div>
                             {
@@ -2343,17 +2349,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <div className={`px-3 ${(error && error['ResidentMissingReason']) ? styles.divInvalid : ""}`}>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" name="residentMissingReason" id="resident-missing-reason-vacation" value="RESIDENT_MISSING_REASON_VACATION" checked={form.residentMissingReason === 'RESIDENT_MISSING_REASON_VACATION'} onChange={radioButtonHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-reason-vacation">回家度假期間</label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" name="residentMissingReason" id="resident-missing-reason-voluntarily" value="RESIDENT_MISSING_REASON_VOLUNTARILY" checked={form.residentMissingReason === 'RESIDENT_MISSING_REASON_VOLUNTARILY'} onChange={radioButtonHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-reason-voluntarily">自行外出活動</label>
                                     </div>
                                     <div className="form-check form-check-inline">
                                         <input className="form-check-input" type="radio" name="residentMissingReason" id="resident-missing-reason-home-out" value="RESIDENT_MISSING_REASON_HOME_OUT" checked={form.residentMissingReason === 'RESIDENT_MISSING_REASON_HOME_OUT'} onChange={radioButtonHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-reason-home-out">院舍外出活動</label>
                                     </div>
                                 </div>
@@ -2367,7 +2373,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             <div>
                                 <label>報警編號</label>
                                 <AutosizeTextarea className={`form-control ${(error && error['MissingPoliceReportNo']) ? "is-invalid" : ""}`} value={form.missingPoliceReportNo} onChange={inputFieldHandler} name="missingPoliceReportNo"
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled2} />
                             </div>
                         </div>
                     </div>
@@ -2378,7 +2384,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="residentMissingFound" id="resident-missing-found-true" onClick={() => setForm({ ...form, found: true })} checked={form.found === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-true">已尋回</label>
                             </div>
                             {
@@ -2386,12 +2392,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <div className="d-flex align-items-center">
                                     <label className="mr-3">尋回日期</label>
                                     <DatePicker className={`form-control ${(error && error['FoundDate']) ? "is-invalid" : ""}`} selected={form.foundDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, foundDate: date })}
-                                        readOnly={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        readOnly={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                             <div className="form-check">
                                 <input className={`form-check-input`} type="checkbox" name="residentMissingFound" id="resident-missing-found-false" onClick={() => setForm({ ...form, found: false })} checked={form.found === false}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-missing-found-false">仍未尋回</label>
                             </div>
                             {
@@ -2400,7 +2406,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     由失蹤日計起至呈報日，已失蹤
                                     <div className="input-group mb-3">
                                         <input type="number" className={`form-control ${(error && error['NotYetFoundDayCount']) ? "is-invalid" : ""}`} min={0} value={form.notYetFoundDayCount} onChange={(event) => setForm({ ...form, notYetFoundDayCount: +event.target.value })}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         <div className="input-group-append">
                                             <span className="input-group-text" id="basic-addon2">日</span>
                                         </div>
@@ -2416,7 +2422,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2b) 失蹤住客病歷</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" name="medicalRecords" value={form.medicalRecords} onChange={inputFieldHandler}
-                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                         </div>
                     </div>
                     <hr />
@@ -2426,43 +2432,43 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_body" id="resident-abuse-body" onChange={checkboxHandlerResidentAbuse} checked={form.ra_body === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-body">身體虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_mental" id="resident-abuse-mental" onChange={checkboxHandlerResidentAbuse} checked={form.ra_mental === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-mental">精神虐待</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_negligent" id="resident-abuse-negligent" onChange={checkboxHandlerResidentAbuse} checked={form.ra_negligent === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-negligent">疏忽照顧</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_embezzleProperty" id="resident-abuse-embezzle-property" onChange={checkboxHandlerResidentAbuse} checked={form.ra_embezzleProperty === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-embezzle-property">侵吞財產</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_abandoned" id="resident-abuse-abandoned" onChange={checkboxHandlerResidentAbuse} checked={form.ra_abandoned === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-abandoned">遺棄</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="ra_sexualAssault" id="resident-abuse-sexual-assault" onChange={checkboxHandlerResidentAbuse} checked={form.ra_sexualAssault === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-sexual-assault">非禮／性侵犯</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="ra_other" id="resident-abuse-other" onChange={checkboxHandlerResidentAbuse} checked={form.ra_other === true}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-other">其他</label>
                             </div>
                             {
                                 form.ra_other &&
                                 <AutosizeTextarea className={`form-control ${(error && error['RA_OtherDescription']) ? "is-invalid" : ""}`} placeholder="請註明" name="ra_otherDescription" value={form.ra_otherDescription} onChange={inputFieldHandler}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                             }
                         </div>
                     </div>
@@ -2472,12 +2478,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-true" checked={form.establishedCase === true} onClick={() => setForm({ ...form, establishedCase: true })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-true">已確立個案</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-false" checked={form.establishedCase === false} onClick={() => setForm({ ...form, establishedCase: false })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="establishedCase-false">懷疑個案</label>
                             </div>
                         </div>
@@ -2489,28 +2495,28 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={checkboxHandler} checked={form.abuser === "ABUSER_STAFF"}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-staff">員工</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-tenant" value="ABUSER_TENANT" onChange={checkboxHandler} checked={form.abuser === "ABUSER_TENANT"}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-tenant">住客</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-guest" value="ABUSER_GUEST" onChange={checkboxHandler} checked={form.abuser === "ABUSER_GUEST"}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-guest">訪客</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-other" value="ABUSER_OTHER" onChange={checkboxHandler} checked={form.abuser === "ABUSER_OTHER"}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="abuser-other">其他</label>
                             </div>
                             {
                                 form.abuser === "ABUSER_OTHER" &&
                                 <AutosizeTextarea className={`form-control ${(error && error['AbuserDescription']) ? "is-invalid" : ""}`} placeholder="請註明" name="abuserDescription" value={form.abuserDescription} onChange={inputFieldHandler}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                             }
                         </div>
                     </div>
@@ -2521,12 +2527,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="referrals" id="referrals-true" checked={form.referSocialWorker === true} onClick={() => setForm({ ...form, referSocialWorker: true })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="referrals-true">已轉介社工</label>
                             </div>
                             {
@@ -2540,7 +2546,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     <div className="">
                                         <label>服務單位</label>
                                         <input type="text" className={`form-control ${(error && error['ReferServiceUnit']) ? "is-invalid" : ""}`} name="referServiceUnit" value={form.referServiceUnit} onChange={inputFieldHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                     </div>
                                 </>
                             }
@@ -2553,12 +2559,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-false">沒有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-true" checked={form.abuser_police === true} onClick={() => setForm({ ...form, abuser_police: true })}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="resident-abuse-police-true">已報警求助</label>
                             </div>
                             {
@@ -2572,7 +2578,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     <div>
                                         <label>報案編號</label>
                                         <input className={`form-control ${(error && error['Abuser_PoliceCaseNo']) ? "is-invalid" : ""}`} name="abuser_policeCaseNo" value={form.abuser_policeCaseNo} onChange={inputFieldHandler}
-                                            disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                     </div>
                                 </>
                             }
@@ -2585,55 +2591,55 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-tenant" value="DISPUTE_POLICE_TENANT_AND_TENANT" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_TENANT"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-tenant">住客與住客</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-staff" value="DISPUTE_POLICE_TENANT_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_STAFF"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-staff">住客與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-tenant-and-guest" value="DISPUTE_POLICE_TENANT_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_TENANT_AND_GUEST"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-tenant-and-guest">住客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-staff-and-staff" value="DISPUTE_POLICE_STAFF_AND_STAFF" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_STAFF"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-staff">員工與員工</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-staff-and-guest" value="DISPUTE_POLICE_STAFF_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_STAFF_AND_GUEST"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-staff-and-guest">員工與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-guest-and-guest" value="DISPUTE_POLICE_GUEST_AND_GUEST" checked={form.conflict === "DISPUTE_POLICE_GUEST_AND_GUEST"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-guest-and-guest">訪客與訪客</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="conflict" id="dispute-police-other" value="DISPUTE_POLICE_OTHER" checked={form.conflict === "DISPUTE_POLICE_OTHER"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="dispute-police-other">其他 (請註明)</label>
                             </div>
                             {
                                 form.conflict === "DISPUTE_POLICE_OTHER" &&
                                 <div className="">
                                     <AutosizeTextarea placeholder="請註明" className={`form-control  ${(error && error['ConflictDescription']) ? "is-invalid" : ""}`} value={form.conflictDescription} onChange={inputFieldHandler} name="conflictDescription"
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                             <div className="mb-1">
                                 <label>報警日期</label>
                                 <DatePicker className={`form-control ${(error && error['Conflict_PoliceDate']) ? "is-invalid" : ""}`} selected={form.conflict_policeDate} dateFormat="yyyy/MM/dd" onChange={(date) => setForm({ ...form, conflict_policeDate: date })}
-                                    readOnly={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    readOnly={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                             </div>
                             <div>
                                 <label>報案編號</label>
                                 <input className={`form-control ${(error && error['Conflict_PoliceCaseNo']) ? "is-invalid" : ""}`} name="conflict_policeCaseNo" value={form.conflict_policeCaseNo} onChange={inputFieldHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled4} />
                             </div>
                         </div>
                     </div>
@@ -2644,29 +2650,29 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-mistake" value="SERIOUS_MEDICAL_INCIDENT_MISTAKE" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_MISTAKE"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-mistake">住客誤服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-over-or-missed" value="SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OVER_OR_MISSED"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-over-or-missed">住客漏服或多服藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-counter-drug" value="SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_COUNTER_DRUG"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-counter-drug">住客服用成藥或非處方藥物引致入院接受檢查或治療</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="medicalIncident" id="serious-medical-incident-other" value="SERIOUS_MEDICAL_INCIDENT_OTHER" checked={form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled5} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serious-medical-incident-other">其他</label>
                             </div>
                             {
                                 form.medicalIncident === "SERIOUS_MEDICAL_INCIDENT_OTHER" &&
                                 <div className="">
                                     <AutosizeTextarea placeholder="請註明" className={`form-control ${(error && error['MI_Description']) ? "is-invalid" : ""}`} name="mi_description" value={form.mi_description} onChange={inputFieldHandler}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                         </div>
@@ -2678,39 +2684,39 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-power-supply" value="OTHER_INCIDENT_POWER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_POWER_SUPPLY"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-power-supply">停止電力供應</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-building" value="OTHER_INCIDENT_BUILDING" checked={form.otherIncident === "OTHER_INCIDENT_BUILDING"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-building">樓宇破損或結構問題</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-fire" value="OTHER_INCIDENT_FIRE" checked={form.otherIncident === "OTHER_INCIDENT_FIRE"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-fire">火警</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-water-supply" value="OTHER_INCIDENT_WATER_SUPPLY" checked={form.otherIncident === "OTHER_INCIDENT_WATER_SUPPLY"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-water-supply">停止食水供應</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-other" value="OTHER_INCIDENT_OTHER" checked={form.otherIncident === "OTHER_INCIDENT_OTHER"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-other">水浸／山泥傾瀉／不明氣體／其他天災意外</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="otherIncident" id="other-incident-others" value="OTHER_INCIDENT_OTHERS" checked={form.otherIncident === "OTHER_INCIDENT_OTHERS"} onChange={checkboxHandler}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled6} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-others">其他(例如:嚴重員工事故)，請註明</label>
                             </div>
                             {
                                 form.otherIncident === "OTHER_INCIDENT_OTHERS" &&
                                 <div className="">
                                     <AutosizeTextarea className={`form-control ${(error && error['OtherIncidentOthersDescription']) ? "is-invalid" : ""}`} placeholder="請註明" value={form.otherIncidentOthersDescription} name="otherIncidentOthersDescription" onChange={inputFieldHandler}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </div>
                             }
                         </div>
@@ -2723,18 +2729,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="other" id="other-incident-true" checked={form.other === true} onChange={(e) => checkboxHandler2(e, true)}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="other" id="other-incident-false" checked={form.other === false} onChange={(e) => checkboxHandler2(e, false)}
-                                    disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabled7} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="other-incident-false">沒有</label>
                             </div>
                             {
                                 form.other &&
                                 <AutosizeTextarea placeholder="請註明" className={`form-control ${(error && error['OtherDescription']) ? "is-invalid" : ""}`} value={form.otherDescription} onChange={inputFieldHandler} name="otherDescription"
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                             }
                         </div>
                     </div>
@@ -2753,13 +2759,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>住客姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" name="residentName" value={form.residentName} onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                         {/* 年齡 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" min={0} name="residentAge" value={form.residentAge} onChange={(event) => setForm({ ...form, residentAge: +event.target.value })}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2768,12 +2774,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-male" value="TENANT_GENDER_MALE" onClick={() => setForm({ ...form, residentGender: "male" })} checked={form.residentGender === "male"}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="tenant-gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="tenantGender" id="tenant-gender-female" value="TENANT_GENDER_FEMALE" onClick={() => setForm({ ...form, residentGender: "female" })} checked={form.residentGender === "female"}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="tenant-gender-female">女</label>
                             </div>
                         </div>
@@ -2781,14 +2787,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>房及/或床號</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" value={form.residentRoomNo} onChange={inputFieldHandler} name="residentRoomNo"
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <div className="col">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="notified" id="notified-true" value="NOTIFIED_TRUE" onClick={(event) => setForm({ ...form, guardian: true })} checked={form.guardian === true}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-true">已通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士（註３）（可填寫多於一名）</label>
                             </div>
                             {
@@ -2799,13 +2805,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>姓名</label>
                                         <div className="col-12 col-md-4">
                                             <input type="text" className="form-control" value={form.guardianName} name="guardianName" onChange={inputFieldHandler}
-                                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         </div>
                                         {/* 關係 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>關係</label>
                                         <div className="col-12 col-md-4">
                                             <input type="text" className="form-control" value={form.guardianRelation} name="guardianRelation" onChange={inputFieldHandler}
-                                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                         </div>
                                     </div>
                                     <div className="row mb-2">
@@ -2822,7 +2828,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                                 resolveDelay={1000}
                                                 selectedItems={setNotifyStaff}
                                                 defaultSelectedUsers={notifyStaff && [notifyStaff.mail]}
-                                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)}
+                                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))}
                                             />
                                         </div>
                                         {/* 負責通知的員工職位 */}
@@ -2852,7 +2858,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="notified" id="notified-false" value="NOTIFIED_FALSE" onClick={(event) => setForm({ ...form, guardian: false })} checked={form.guardian === false}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notified-false">沒有通知住客監護人／保證人／家人／親屬／相關員工／轉介社工／其他相關住客／人士</label>
                             </div>
                             {
@@ -2860,7 +2866,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 <>
                                     <label>原因:</label>
                                     <AutosizeTextarea className="form-control" placeholder="請註明" value={form.guardianReason} onChange={inputFieldHandler} name="guardianReason"
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 </>
                             }
                         </div>
@@ -2922,7 +2928,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>殘疾人士院舍名稱</label>
                         <div className="col-12 col-xl-4">
                         <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
-                                disabled={(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                                disabled={type=='cms' ||(!pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
                             >
                                 <option value={""} ></option>
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
@@ -2982,12 +2988,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>受影響住客姓名</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" name="affectedName" value={form.affectedName} onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>身份證號碼 (A123456(7))</label>
                         <div className="col-12 col-md-4">
                             <input type="text" className={`form-control IdCard ${(error && error['AffectedIdCardNo']) ? "is-invalid" : ""}`} name="affectedIdCardNo" value={form.affectedIdCardNo} onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -2996,12 +3002,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="affectedGender" id="attach-tenant-gender-male" value="male" onChange={radioButtonHandler} checked={form.affectedGender === "male"}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="attach-tenant-gender-male">男</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="affectedGender" id="attach-tenant-gender-female" value="female" onChange={radioButtonHandler} checked={form.affectedGender === "female"}
-                                    disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                    disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="attach-tenant-gender-female">女</label>
                             </div>
                         </div>
@@ -3009,7 +3015,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
                             <input type="number" className="form-control" min={0} name="affectedAge" value={form.affectedAge} onChange={(event) => setForm({ ...form, affectedAge: +event.target.value })}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -3017,7 +3023,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>住客病歷(如適用)</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={form.affectedMedicalRecord} name="affectedMedicalRecord" onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -3025,7 +3031,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>特別事故詳情／發生經過</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={form.affectedDetail} name="affectedDetail" onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -3033,7 +3039,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>院舍跟進行動（包括但不限於相關醫療安排，舉行多專業個案會議，為有關住客訂定照顧計劃，保護其他住客的措施，回應外界團體（例如關注組，區議會，立法會）等的關注或查詢）及／或預防事故再次發生的建議或措施</label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={form.affectedFollowUp} name="affectedFollowUp" onChange={inputFieldHandler}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -3088,7 +3094,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)}>
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))}>
                                         <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
                                         <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
                                     </select>
@@ -3106,7 +3112,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={smComment}
                                 onChange={(event) => setSmComment(event.target.value)}
-                                disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
+                                disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus))} />
                         </div>
                     </div>
                     {
@@ -3138,7 +3144,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)}
+                                        disabled={type=='cms' || (!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus))}
                                     >
                                         <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
                                         <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
@@ -3155,7 +3161,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSdApprove(context, currentUserRole, formStatus, formStage, spSdInfo)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={type=='cms' || (!pendingSdApprove(context, currentUserRole, formStatus, formStage, spSdInfo))} />
                         </div>
                     </div>
                     {/* <div className="form-row row mb-2">
@@ -3177,7 +3183,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 </section>
 
                 <hr className="my-4" />
-
+                {type != 'cms' &&
                 <section className="py-3">
                     <div className="row">
                         {
@@ -3235,6 +3241,17 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         }
                     </div>
                 </section>
+                }
+                {type =='cms' &&
+                <section className="py-3">
+                    <div className="row">
+                        <div className="col-md-2 col-4 mb-2">
+                            <button className="btn btn-warning w-100" onClick={(event => backToCMS(event))}>返回</button>
+                        </div>
+
+                    </div>
+                </section>
+                }
                 {openModel &&
 
                     <Modal dialogClassName="formModal" show={openModel} size="lg" backdrop="static">

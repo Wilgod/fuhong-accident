@@ -150,7 +150,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     (item.GuardianName != null && item.GuardianName.toLocaleLowerCase().trim() == key) || 
                     (item.GuardianRelation != null && item.GuardianRelation.toLocaleLowerCase().trim() == key) || 
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
-                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key)})
+                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
+                    (item.AffectedIdCardNo != null && item.AffectedIdCardNo.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterSpecialIncidentReportLicense) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
