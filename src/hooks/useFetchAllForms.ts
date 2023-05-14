@@ -15,7 +15,6 @@ export interface ISearchCriteria {
 
 export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria) {
     const [result, setResult] = useState([]);
-   debugger
     const initial = async () => {
         let result = [];
         let accidentReportForm = [];
@@ -27,7 +26,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         let specialIncidentReportAllowance = [];
         let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
-        debugger
         let key = null;
         if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
             key = decodeURI(searchCriteria.keyword).toLocaleLowerCase().trim();
@@ -42,7 +40,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
-            debugger
             let filterServiceUserAccidentData = serviceUserAccidentData;
             if (key != null && key != '') {
                 filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN.trim() != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
@@ -328,7 +325,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
         });
         
-        debugger
         setResult(filterResult);
     }
 
