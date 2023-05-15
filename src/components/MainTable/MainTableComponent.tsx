@@ -193,7 +193,7 @@ const columns = (context, type) => {
                 }
 
                 return <div className="d-flex justify-content-center">
-                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_blank")} disabled={value === null}>
+                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_self")} disabled={value === null}>
                         檢視
                     </button>
                 </div>
