@@ -16,6 +16,7 @@ import { faPager } from '@fortawesome/free-solid-svg-icons';
 import { notifySpecialIncidentAllowance, notifyOtherIncident, notifySpecialIncidentLicense, notifyIncidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 import { getUserInfoByEmailInUserInfoAD } from '../../api/FetchUser';
+import { getQueryParameterString } from '../../utils/UrlQueryHelper';
 interface IIncidentFollowUpFormProps {
     context: WebPartContext;
     styles: any;
@@ -55,7 +56,7 @@ interface IErrorFields {
 
 }
 export default function IncidentFollowUpForm({ context, styles, formType, formSubmittedHandler, currentUserRole, parentFormData, isPrintMode, siteCollectionUrl, permissionList, formTwentySixData, workflow, changeFormTwentySixDataSelected, serviceUnitList, print }: IIncidentFollowUpFormProps) {
-
+    const type: string = getQueryParameterString("type");
     const [form, setForm] = useState<IIncidentFollowUpFormStates>({
         incidentFollowUpContinue: undefined,
     });
@@ -148,6 +149,10 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         window.open(path, "_self");
     }
 
+    const backToCMS =(e) => {
+        const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/Home.aspx?navScreen=cms&keyword=`+parentFormData.AffectedIdCardNo+`&type=cms`;
+        window.open(path, "_self");
+    }
     const smSubmitHandler = (event) => {
         event.preventDefault();
 
@@ -833,6 +838,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                             // (completed === false || (stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) || stageThreePendingSdApprove(currentUserRole, formStatus, formStage))) &&
                             <button type="button" className="btn btn-primary" onClick={(event) => { setFollowUpActions([...followUpActions, { action: "", date: new Date().toISOString(), remark: "" }]); }}
                                 disabled={
+                                    type=='cms' ||
                                     followUpActions.length >= 5 ||
                                     completed ||
                                     (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}>
@@ -875,7 +881,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 setFollowUpActions(arr);
                                             }}
                                                 value={item.action}
-                                                disabled={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                                disabled={type=='cms' || completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -890,7 +896,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 actionItem.date = new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
-                                                readOnly={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                                readOnly={type=='cms' || completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -904,7 +910,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                                 actionItem.remark = event.target.value;
                                                 setFollowUpActions(arr);
                                             }} value={item.remark}
-                                                disabled={completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                                disabled={type=='cms' || completed || (!canSaveDraft && !pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                             />
                                         </div>
                                     </div>
@@ -921,13 +927,13 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" onClick={() => setForm({ ...form, incidentFollowUpContinue: true })} checked={form.incidentFollowUpContinue === true}
-                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                    disabled={type=='cms' || completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" onClick={() => setForm({ ...form, incidentFollowUpContinue: false })} checked={form.incidentFollowUpContinue === false}
-                                    disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                    disabled={type=='cms' || completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
@@ -1008,7 +1014,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData))} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={type=='cms' || completed || (!pendingSdApprove(context, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData))} />
                         </div>
                     </div>
 
@@ -1026,7 +1032,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 </section>
 
                 <hr className="my-4" />
-
+                {type != 'cms' &&
                 <section className="py-3">
                     <div className="row">
                         {
@@ -1067,6 +1073,17 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         </div>
                     </div>
                 </section>
+                }
+                {type =='cms' &&
+                <section className="py-3">
+                    <div className="row">
+                        <div className="col-md-2 col-4 mb-2">
+                            <button className="btn btn-warning w-100" onClick={(event => backToCMS(event))}>返回</button>
+                        </div>
+
+                    </div>
+                </section>
+                }
             </div >
         </>
     )

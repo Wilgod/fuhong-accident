@@ -97,7 +97,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
 
   private formId = getQueryParameterNumber("formId");
   private navScreen: string = getQueryParameterString("navScreen");
-
+  private type: string = getQueryParameterString("type");
   private keyword: string = getQueryParameterString("keyword");
   public constructor(props) {
     super(props);
@@ -744,10 +744,10 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
       <div className={styles.fuHongFormsMenu} id="fuHongFormsMenu">
         <div className={styles.container} >
           <div className="container-fluid">
-            {this.navScreen == 'cms' &&
+            {(this.navScreen == 'cms' || this.type == 'cms') &&
               screenSwitch()
             }
-            {this.navScreen != 'cms' &&
+            {this.navScreen != 'cms' && this.type != 'cms' &&
             <div className="row no-gutters" style={{ height: '90vh' }}>
               {
                 !this.state.loading && (this.state.permissionList.length == 0) ?

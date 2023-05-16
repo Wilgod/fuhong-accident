@@ -15,7 +15,6 @@ export interface ISearchCriteria {
 
 export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria) {
     const [result, setResult] = useState([]);
-   debugger
     const initial = async () => {
         let result = [];
         let accidentReportForm = [];
@@ -27,7 +26,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
         let specialIncidentReportAllowance = [];
         let otherIncidentData = [];
         let searchFormTypesAll = searchCriteria.formTypes.indexOf("ALL") > -1; // Form Types
-        debugger
         let key = null;
         if (searchCriteria.keyword != null && searchCriteria.keyword != '') {
             key = decodeURI(searchCriteria.keyword).toLocaleLowerCase().trim();
@@ -49,7 +47,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     (item.ServiceUserAge != null && item.ServiceUserAge == key) || 
                     (item.ServiceUserGender != null && item.ServiceUserGender.toLocaleLowerCase().trim() == key) || 
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
-                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) })
+                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
+                    (item.HKID != null && item.HKID.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUserUnit});
@@ -151,7 +150,8 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                     (item.GuardianName != null && item.GuardianName.toLocaleLowerCase().trim() == key) || 
                     (item.GuardianRelation != null && item.GuardianRelation.toLocaleLowerCase().trim() == key) || 
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
-                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key)})
+                    (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
+                    (item.AffectedIdCardNo != null && item.AffectedIdCardNo.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterSpecialIncidentReportLicense) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
@@ -326,7 +326,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             return new Date(b.Created).getTime() - new Date(a.Modified).getTime()
         });
         
-        debugger
         setResult(filterResult);
     }
 

@@ -8,8 +8,9 @@ import * as moment from 'moment';
 import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../utils/FormNameUtils';
 import useFetchAllForms from '../../hooks/useFetchAllForms';
 import { IUser } from '../../interface/IUser';
+import { getQueryParameterString } from './../../utils/UrlQueryHelper';
 export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermissionBoolean, serviceUnitList,permissionList }: IMainTableComponentProps) {
-
+    const type: string = getQueryParameterString("type");
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -37,12 +38,12 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
             <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                 搜尋結果 [{`${data.length} 筆記錄`}]
             </div>
-            <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
+            <BootstrapTable boot keyField='id' data={data || []} columns={columns(context, type)} pagination={paginationFactory()} bootstrap4={true} />
         </div>
     )
 }
 
-const columns = (context) => {
+const columns = (context, type) => {
     const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/`;
     return [
         {
@@ -167,22 +168,32 @@ const columns = (context) => {
             text: '[按鈕]',
             headerStyle: {width:'100px'},
             formatter: (value, data) => {
+                debugger
                 let formLink = "";
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
                     //formLink = path + caseNumberToSitePageParser(caseType) + `?formId=${value}`;
                     let navPage = caseNumberToSitePageParser(caseType)
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    if (type == 'cms') {
+                        formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}&type=cms`;
+                    } else {
+                        formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    }
+                    
                 } else if (data && data.Title) {
                     //formLink = path + caseNumberToSitePageParser(data.Title.toUpperCase()) + `?formId=${value}`;
-                    let navPage = caseNumberToSitePageParser(data.Title.toUpperCase())
-                    formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    let navPage = caseNumberToSitePageParser(data.Title.toUpperCase());
+                    if (type == 'cms') {
+                        formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}&type=cms`;
+                    } else {
+                        formLink = path +`Home.aspx?formId=${value}&navScreen=${navPage}`;
+                    }
                 } else {
                     return null;
                 }
 
                 return <div className="d-flex justify-content-center">
-                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_blank")} disabled={value === null}>
+                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_self")} disabled={value === null}>
                         檢視
                     </button>
                 </div>
