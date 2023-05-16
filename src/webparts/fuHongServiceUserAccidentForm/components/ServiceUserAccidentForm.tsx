@@ -737,102 +737,108 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             } else {
                 let [body, error] = dataFactory("SUBMIT");
                 body["ReporterId"] = CURRENT_USER.id;
-                caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
-                    console.log(caseNumber)
-                    let extraBody = {
-                        "CaseNumber": caseNumber,
-                        "Title": "SUI",
-                        "ServiceLocation": serviceLocation,
-                        "Status": "PENDING_SM_APPROVE"
-                    };
-
-
-                    if (formStatus === "DRAFT") {
-                        updateServiceUserAccidentById(formData.Id, {
-                            ...body,
-                            ...extraBody
-                        }).then(async (updateServiceUserAccidentByIdRes) => {
-                            let att = [];
-                            if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
-                                att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
-                            }
-
-                            if (injuryFiles.length > 0) {
-                                att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
-                            }
-
-                            if (att.length > 0) {
-                                // Do seomething
-                                await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
-                                    if (updateServiceUserAccidentAttachmentByIdRes) {
-                                        // Do something
-                                    }
-                                }).catch(console.error);
-                            }
-                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                            notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
-                            //}
-
-
-                            postLog({
-                                AccidentTime: accidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SUI",
-                                RecordId: formData.Id,
-                                Report: "服務使用者意外填報表(一)",
-                                ServiceUnit: serviceLocation
-                            })
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    } else {
-                        console.log("body : ", body);
-                        console.log("extraBody : ", extraBody);
-                        createServiceUserAccident({
-                            ...body,
-                            ...extraBody
-                        }).then(async (createServiceUserAccidentRes) => {
-
-                            if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
-
-                                // Attachement
+                if (Object.keys(error).length > 0) {
+                    alert("提交錯誤");
+                    setError(error);
+                } else {
+                    caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        console.log(caseNumber)
+                        let extraBody = {
+                            "CaseNumber": caseNumber,
+                            "Title": "SUI",
+                            "ServiceLocation": serviceLocation,
+                            "Status": "PENDING_SM_APPROVE"
+                        };
+    
+    
+                        if (formStatus === "DRAFT") {
+                            updateServiceUserAccidentById(formData.Id, {
+                                ...body,
+                                ...extraBody
+                            }).then(async (updateServiceUserAccidentByIdRes) => {
                                 let att = [];
                                 if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                                     att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
                                 }
-
+    
                                 if (injuryFiles.length > 0) {
                                     att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
                                 }
-
+    
                                 if (att.length > 0) {
                                     // Do seomething
-                                    await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                    await updateServiceUserAccidentAttachmentById(formData.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
                                         if (updateServiceUserAccidentAttachmentByIdRes) {
                                             // Do something
                                         }
                                     }).catch(console.error);
                                 }
-                            }
-                            //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
-                            notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
-                            //}
-
-                            postLog({
-                                AccidentTime: accidentTime.toISOString(),
-                                Action: "提交",
-                                CaseNumber: caseNumber,
-                                FormType: "SUI",
-                                RecordId: createServiceUserAccidentRes.data.Id,
-                                Report: "服務使用者意外填報表(一)",
-                                ServiceUnit: serviceLocation
+                                //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
+                                //}
+    
+    
+                                postLog({
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SUI",
+                                    RecordId: formData.Id,
+                                    Report: "服務使用者意外填報表(一)",
+                                    ServiceUnit: serviceLocation
+                                })
+    
+                                formSubmittedHandler();
                             }).catch(console.error);
-
-                            formSubmittedHandler();
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
+                        } else {
+                            console.log("body : ", body);
+                            console.log("extraBody : ", extraBody);
+                            createServiceUserAccident({
+                                ...body,
+                                ...extraBody
+                            }).then(async (createServiceUserAccidentRes) => {
+    
+                                if (createServiceUserAccidentRes && createServiceUserAccidentRes.data && createServiceUserAccidentRes.data.Id) {
+    
+                                    // Attachement
+                                    let att = [];
+                                    if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
+                                        att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];
+                                    }
+    
+                                    if (injuryFiles.length > 0) {
+                                        att = [...att, ...attachmentsFilesFormatParser(injuryFiles, "INJURY")];
+                                    }
+    
+                                    if (att.length > 0) {
+                                        // Do seomething
+                                        await updateServiceUserAccidentAttachmentById(createServiceUserAccidentRes.data.Id, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                            if (updateServiceUserAccidentAttachmentByIdRes) {
+                                                // Do something
+                                            }
+                                        }).catch(console.error);
+                                    }
+                                }
+                                //if (extraBody["Status"] === "PENDING_SPT_APPROVE") {
+                                notifyServiceUserAccident(context, createServiceUserAccidentRes.data.Id, 1, serviceUserAccidentWorkflow);
+                                //}
+    
+                                postLog({
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                    Action: "提交",
+                                    CaseNumber: caseNumber,
+                                    FormType: "SUI",
+                                    RecordId: createServiceUserAccidentRes.data.Id,
+                                    Report: "服務使用者意外填報表(一)",
+                                    ServiceUnit: serviceLocation
+                                }).catch(console.error);
+    
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        }
+                    }).catch(console.error);
+                }
+                
             }
 
         } else if (pendingSptApproveForSD(context, currentUserRole, formStatus, formStage, sptDate, sdInfo)) {
@@ -948,7 +954,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
 
                                 postLog({
-                                    AccidentTime: accidentTime.toISOString(),
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                     Action: "提交",
                                     CaseNumber: caseNumber,
                                     FormType: "SUI",
@@ -993,7 +999,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 //}
 
                                 postLog({
-                                    AccidentTime: accidentTime.toISOString(),
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                     Action: "提交",
                                     CaseNumber: caseNumber,
                                     FormType: "SUI",
@@ -1043,7 +1049,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
 
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                     Action: "批准",
                     CaseNumber: formData.CaseNumber,
                     FormType: "SUI",
@@ -1071,7 +1077,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 console.log(res);
                 notifyServiceUserAccident(context, formData.Id, 1, serviceUserAccidentWorkflow);
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                     Action: "拒絕",
                     CaseNumber: formData.CaseNumber,
                     FormType: "SUI",
@@ -1131,7 +1137,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     }
 
                                     postLog({
-                                        AccidentTime: accidentTime.toISOString(),
+                                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                         Action: "批准",
                                         CaseNumber: formData.CaseNumber,
                                         FormType: "SUI",
@@ -1164,7 +1170,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 // Trigger notification workflow
 
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                     Action: "拒絕",
                     CaseNumber: formData.CaseNumber,
                     FormType: "SUI",

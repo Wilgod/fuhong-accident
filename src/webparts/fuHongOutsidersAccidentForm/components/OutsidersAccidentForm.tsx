@@ -243,7 +243,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             error["ServiceUserIdentity"] = true;
         }
         if (accidentTime) {
-            body["AccidentTime"] = accidentTime.toISOString();
+            body["AccidentTime"] = accidentTime == null ? '' : accidentTime.toISOString();
         } else {
             error["AccidentTime"] = true;
         }
@@ -431,7 +431,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 console.log(res);
 
                                 postLog({
-                                    AccidentTime: accidentTime.toISOString(),
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                     Action: "更新",
                                     CaseNumber: formData.CaseNumber,
                                     FormType: "PUI",
@@ -455,7 +455,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                         console.log(res);
 
                         postLog({
-                            AccidentTime: accidentTime.toISOString(),
+                            AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                             Action: "更新",
                             CaseNumber: formData.CaseNumber,
                             FormType: "PUI",
@@ -476,7 +476,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     console.log(res);
 
                     postLog({
-                        AccidentTime: accidentTime.toISOString(),
+                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                         Action: "更新",
                         CaseNumber: formData.CaseNumber,
                         FormType: "PUI",
@@ -497,7 +497,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     console.log(res);
                     notifyOutsiderAccidentSMSDComment(context, formData.Id, 1, workflow);
                     postLog({
-                        AccidentTime: accidentTime.toISOString(),
+                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                         Action: "評語",
                         CaseNumber: formData.CaseNumber,
                         FormType: "PUI",
@@ -532,7 +532,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             }).catch(console.error);
                         }
                         postLog({
-                            AccidentTime: accidentTime.toISOString(),
+                            AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                             Action: "提交",
                             CaseNumber: formData.CaseNumber,
                             FormType: "PUI",
@@ -586,7 +586,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
 
                                     postLog({
-                                        AccidentTime: accidentTime.toISOString(),
+                                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                         Action: "提交",
                                         CaseNumber: caseNumber,
                                         FormType: "PUI",
@@ -596,7 +596,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }).catch(console.error);
                                 } else {
                                     postLog({
-                                        AccidentTime: accidentTime.toISOString(),
+                                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                         Action: "提交",
                                         CaseNumber: caseNumber,
                                         FormType: "PUI",
@@ -631,7 +631,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                     }
                                     if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
                                         postLog({
-                                            AccidentTime: accidentTime.toISOString(),
+                                            AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                             Action: "提交",
                                             CaseNumber: caseNumber,
                                             FormType: "PUI",
@@ -641,7 +641,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                         }).catch(console.error);
                                     } else {
                                         postLog({
-                                            AccidentTime: accidentTime.toISOString(),
+                                            AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                             Action: "提交",
                                             CaseNumber: caseNumber,
                                             FormType: "PUI",
@@ -762,7 +762,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 formSubmittedHandler();
 
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                     Action: "批准",
                     CaseNumber: formData.CaseNumber,
                     FormType: "PUI",
@@ -880,7 +880,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             updateOutsiderAccidentFormById(formId, body).then(() => {
 
                 postLog({
-                    AccidentTime: accidentTime.toISOString(),
+                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                     Action: "拒絕",
                     CaseNumber: formData.CaseNumber,
                     FormType: "PUI",
@@ -902,7 +902,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         values['RecordId'] = formId;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "PUI";
-        values['AccidentTime'] = accidentTime.toISOString();
+        values['AccidentTime'] = accidentTime == null ? '' : accidentTime.toISOString();
         values['EmailTo'] = emailTo;
         values['EmailCC'] = emailCc;
         values['EmailBody'] = emailBodyHtml;
