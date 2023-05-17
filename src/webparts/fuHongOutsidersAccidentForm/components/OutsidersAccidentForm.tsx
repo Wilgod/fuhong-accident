@@ -416,6 +416,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
+            alert("提交錯誤");
         } else {
             if (currentUserRole === Role.ADMIN) {
                 if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
