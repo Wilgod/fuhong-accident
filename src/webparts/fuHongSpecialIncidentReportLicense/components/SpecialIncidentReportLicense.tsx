@@ -1928,9 +1928,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 if (formInitial(currentUserRole, formStatus)) {
                     //if (departmentList.length == 1) {
                     if (userInfo && userInfo.hr_deptid) {
-                        setHrDepartment(userInfo.hr_deptid);
-                        setServiceUnit(userInfo.hr_deptid);
-                        setServiceLocation(userInfo.hr_location);
+                        
+                        debugger
+                        if (serviceUnit == '') {
+                            setHrDepartment(userInfo.hr_deptid);
+                            setServiceUnit(userInfo.hr_deptid);
+                            setServiceLocation(userInfo.hr_location);
+                        }
+                        
                     }
                     //}
 
@@ -1943,9 +1948,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     useEffect(() => {
         if (selectDepartment != null && selectDepartment != '') {
             if (formInitial(currentUserRole, formStatus)) {
-                setServiceLocation(selectDepartment);
-                setServiceUnit(selectDepartment);
-                setHrDepartment(selectDepartment);
+                if (serviceUnit == '') {
+                    setServiceLocation(selectDepartment);
+                    setServiceUnit(selectDepartment);
+                    setHrDepartment(selectDepartment);
+                }
+                
             }
         }
 
@@ -2099,10 +2107,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
                                         console.log('serviceUnit1234',serviceUnit);
-                                        if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit',serviceUnit);
-                                            debugger
-                                        }
+
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }

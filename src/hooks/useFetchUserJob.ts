@@ -192,7 +192,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             }
             oid['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
             if (oid.Status === "DRAFT") {
-                if (oid.ReporterId === spId) {
+                if (oid.ReporterId === spId || oid.AuthorId === spId) {
                     otherIncidentData.push(oid);
                 }
             } else {
@@ -291,7 +291,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
 
             }
             if (sira.Status === "DRAFT") {
-                if (sira.ReporterId === spId) {
+                if (sira.ReporterId === spId || sira.AuthorId === spId) {
                     otherIncidentData.push(sira);
                 }
             } else {

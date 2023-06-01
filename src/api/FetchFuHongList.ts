@@ -713,14 +713,14 @@ export async function getOtherIncidentReportBySPId(spId: number) {
     try {
         const LIST_NAME = "Other Incident Report";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or Reporter eq ${spId}) and Status ne 'CLOSED'`)
+            //.filter(`(SMId eq ${spId} or SDId eq ${spId} or Reporter eq ${spId} or AuthorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Reporter/Id", "Reporter/EMail", 'Reporter/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
             .expand("SM", "SD", "Reporter")
             .getAll();
 
         return items.filter((item) => {
             if (item.Status === "DRAFT") {
-                if (item.ReporterId === spId) {
+                if (item.ReporterId === spId || item.AuthorId === spId) {
                     return true
                 } else {
                     return false
@@ -971,14 +971,14 @@ export async function getSpecialIncidentReportAllowanceBySPId(spId: number) {
     try {
         const LIST_NAME = "Special Incident Report Allowance";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or ReporterId eq ${spId}) and Status ne 'CLOSED'`)
+            //.filter(`(SMId eq ${spId} or SDId eq ${spId} or ReporterId eq ${spId} or AuthorId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Reporter/Id", "Reporter/EMail", 'Reporter/Title', "SD/Id", "SD/EMail", 'SD/Title', "SM/Id", "SM/EMail", 'SM/Title',)
             .expand("SM", "SD", "Reporter")
             .getAll();
 
         return items.filter((item) => {
             if (item.Status === "DRAFT") {
-                if (item.ReporterId === spId) {
+                if (item.ReporterId === spId || item.AuthorId === spId) {
                     return true
                 } else {
                     return false
