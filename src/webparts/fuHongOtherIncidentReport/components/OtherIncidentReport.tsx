@@ -879,13 +879,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
 
     useEffect(() => {
-        if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0) {
+        if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0 && serviceLocation != '') {
             loadData(formData);
             getInsuranceRecord(formData);
         } else {
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
         }
-    }, [formData, serviceUserUnitList]);
+    }, [formData, serviceUserUnitList, serviceLocation]);
 
     useEffect(() => {
         if (reporter) {

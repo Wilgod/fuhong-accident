@@ -1451,7 +1451,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     "Age": parseInt(user.cr98a_age),
                     "NameCN": user.cr98a_namecn,
                     "NameEN": user.cr98a_nameen,
-                    "Sex": user.cr98a_sex == "111910000" ? "female" : "male",
+                    "Sex": user.cr98a_sex == "111910000" ? "male" : "female",
                     "Filenumber": user.cr98a_filenumber,
                     "Serviceproduct": user.cr98a_serviceproduct,
                     "Mentalretarded": mentalretarded,//智障
