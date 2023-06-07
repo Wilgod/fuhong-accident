@@ -766,10 +766,25 @@ function accidentCauseFactorFormatter(cell, rowIndex) {
 
 function suggestionFactorFormatter(cell, rowIndex) {
     let div = [];
-    if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
-        if (rowIndex.AccidentReportForm[0].Suggestion != null) {
-            div.push(<div>{rowIndex.AccidentReportForm[0].Suggestion}</div>);
+    //if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
+        debugger
+        if (rowIndex.TreatmentAfterAccident != null) {
+            div.push(<div>{rowIndex.TreatmentAfterAccident}</div>);
         }
-    }
+        if (rowIndex.MedicalArrangementTreatment != null) {
+            div.push(<div>{rowIndex.MedicalArrangementTreatment}</div>);
+        }
+        if (rowIndex.ContingencyMeasure != 'CONTINGENCY_MEASURE_TRUE') {
+            div.push(<div>{rowIndex.ContingencyMeasureRemark}</div>);
+        }
+        if (rowIndex.AfterTreatmentDescription != null) {
+            div.push(<div>{rowIndex.AfterTreatmentDescription}</div>);
+        }
+        
+        /*if (rowIndex.AccidentReportForm[0].Suggestion != null) {
+            div.push(<div>{rowIndex.AccidentReportForm[0].Suggestion}</div>);
+        }*/
+    //}
+    
     return div;
 }
