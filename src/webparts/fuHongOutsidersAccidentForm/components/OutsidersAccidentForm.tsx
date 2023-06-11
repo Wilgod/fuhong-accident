@@ -197,12 +197,13 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const dataFactory = (status: string) => {
         const body = {};
         const error = {};
-
+        let msg = "";
 
         if (serviceUnit) {
             body["ServiceUnit"] = serviceUnit
         } else {
             error["ServiceUnit"] = true;
+            msg += "請填寫服務單位\n";
         }
 
         // user info 
@@ -210,24 +211,28 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             body["ServiceUserNameTC"] = form.serviceUserNameTC;
         } else {
             error["ServiceUserNameTC"] = true;
+            msg += "請填寫姓名 (中文)\n";
         }
 
         if (form.serviceUserNameEN) {
             body["ServiceUserNameEN"] = form.serviceUserNameEN;
         } else {
             error["ServiceUserNameEN"] = true;
+            msg += "請填寫姓名 (英文)\n";
         }
 
         if (form.serviceUserAge) {
             body["ServiceUserAge"] = form.serviceUserAge;
         } else {
             error["ServiceUserAge"] = true;
+            msg += "請填寫年齡\n";
         }
 
         if (form.serviceUserGender) {
             body["ServiceUserGender"] = form.serviceUserGender;
         } else {
             error["ServiceUserGender"] = true;
+            msg += "請填寫性別\n";
         }
 
         if (form.serviceUserIdentity) {
@@ -237,21 +242,25 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     body["ServiceUserIdentityOther"] = form.serviceUserIdentityOther;
                 } else {
                     error["ServiceUserIdentityOther"] = true;
+                    msg += "請填寫其他其他\n";
                 }
             }
         } else {
             error["ServiceUserIdentity"] = true;
+            msg += "請填寫身份\n";
         }
         if (accidentTime) {
             body["AccidentTime"] = accidentTime == null ? '' : accidentTime.toISOString();
         } else {
             error["AccidentTime"] = true;
+            msg += "請填寫意外發生日期和時間\n";
         }
 
         if (form.accidentLocation) {
             body["AccidentLocation"] = form.accidentLocation;
         } else {
             error["AccidentLocation"] = true;
+            msg += "請填寫地點\n";
         }
 
         // 環境因素
@@ -271,9 +280,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 body["EnvOtherDescription"] = form.envOtherDescription;
             } else {
                 error["EnvOtherDescription"] === true;
+                msg += "請填寫其他環境因素\n";
             }
         } else if (form.envOther === undefined) {
             error["EnvOther"] = true;
+            msg += "請填寫其他環境因素\n";
         }
 
         //其他因素
@@ -289,12 +300,14 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 body["WitnessName"] = form.witnessName;
             } else {
                 error["WitnessName"] = true;
+                msg += "請填寫證人姓名\n";
             }
 
             if (form.witnessPhone) {
                 body["WitnessPhone"] = form.witnessPhone;
             } else {
                 error["WitnessPhone"] = true;
+                msg += "請填寫聯絡電話\n";
             }
         } else if (form.witness === undefined) {
             error["Witness"] = true;
@@ -306,6 +319,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             // selectedPhotoRecordFiles
         } else if (form.photoRecord === undefined) {
             error["PhotoRecord"] = true;
+            msg += "請上傳相片\n";
         }
 
         // CCTV
@@ -315,10 +329,12 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 body["CctvRecordReceiveDate"] = cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString();
             } else {
                 error["CctvRecordReceiveDate"] = true;
+                msg += "請填寫CCTV日期\n";
             }
 
         } else if (form.cctvRecord === undefined) {
             error["CctvRecord"] = true;
+            msg += "請上傳CCTV\n";
         }
 
         // 就診安排
@@ -330,22 +346,26 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     body["MedicalArrangementHospital"] = form.medicalArrangementHospital;
                 } else {
                     error["MedicalArrangementHospital"] = true;
+                    msg += "請填寫醫院名稱\n";
                 }
                 debugger
                 if (hospitalArriveTime) {
                     body["HospitalArriveTime"] = hospitalArriveTime.toISOString();
                 } else {
                     error["HospitalArriveTime"] = true;
+                    msg += "請填寫醫院到達時間\n";
                 }
                 if (hospitalLeaveTime) {
                     body["HospitalLeaveTime"] = hospitalLeaveTime.toISOString();
                 } else {
                     error["HospitalLeaveTime"] = true;
+                    msg += "請填寫醫院離開時間\n";
                 }
 
             }
         } else {
             error["MedicalArrangement"] = true;
+            msg += "請填寫就診安排\n";
         }
 
         //報警處理
@@ -355,14 +375,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 body["PoliceDatetime"] = policeDatetime.toISOString();
             } else {
                 error["PoliceDatetime"] = true;
+                msg += "請填寫報警日期和時間\n";
             }
             if (form.policeStation) {
                 body["PoliceStation"] = form.policeStation;
             } else {
                 error["PoliceStation"] = true;
+                msg += "請填寫警署名稱\n";
             }
         } else if (form.police === undefined) {
             error["Police"] = true;
+            msg += "請填寫是否報警\n";
         }
         //家屬聯絡
         body["FamilyContact"] = form.familyContact;
@@ -371,14 +394,17 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 body["FamilyContactDate"] = familyContactDate.toISOString();
             } else {
                 error["FamilyContactDate"] = true;
+                msg += "請填寫通知家屬日期及時間\n";
             }
             if (form.familyRelationship) {
                 body["FamilyRelationship"] = form.familyRelationship;
             } else {
                 error["FamilyRelationship"] = true;
+                msg += "請填寫與傷者關係\n";
             }
         } else if (form.familyContact === undefined) {
             error["FamilyContact"] = true;
+            msg += "請填寫家屬聯絡\n";
         }
 
         // 高級服務經理/服務經理
@@ -390,7 +416,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             body["SPTId"] = sPhysicalTherapy.Id;
         } else {
             //error implementation
-            error["spt"] = "請選擇";
+            error["spt"] = true;
+            msg += "請填寫高級物理治療師\n";
         }
 
         if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
@@ -405,18 +432,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }
 
         body["Stage"] = "1";
-        return [body, error];
+        return [body, error, msg];
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory("SUBMIT");
+        const [body, error,msg] = dataFactory("SUBMIT");
         body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
-            alert("提交錯誤");
+            alert(msg);
         } else {
             if (currentUserRole === Role.ADMIN) {
                 if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {

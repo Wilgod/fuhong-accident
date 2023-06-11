@@ -148,7 +148,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const dataFactory = () => {
         let body = {};
         let error = {};
-
+        let msg = "";
 
 
         //服務單位
@@ -156,6 +156,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             body["ServiceUnit"] = serviceUnit;
         } else {
             error["ServiceUnit"] = true;
+            msg += "請填寫服務單位\n";
         }
 
         //事故發生日期和時間
@@ -163,6 +164,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             body["IncidentTime"] = incidentTime.toISOString();
         } else {
             error["IncidentTime"] = true;
+            msg += "請填寫事故發生日期和時間\n";
         }
 
 
@@ -171,12 +173,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             body["IncidentLocation"] = form.incidentLocation;
         } else {
             error["IncidentLocation"] = true;
+            msg += "請填寫事故發生地點\n";
         }
 
         if (form.incidentDescription) {
             body["IncidentDescription"] = form.incidentDescription;
         } else {
             error["IncidentDescription"] = true;
+            msg += "請填寫事故的描述\n";
         }
 
         //事故被傳媒報導
@@ -186,9 +190,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 body["MediaReportsDescription"] = form.mediaReportsDescription;
             } else {
                 error["MediaReportsDescription"] = true;
+                msg += "請填寫事故被傳媒報導註明\n";
             }
         } else if (form.mediaReports === undefined) {
             error["MediaReports"] = true;
+            msg += "請填寫事故被傳媒報導\n";
         }
 
         //(a) 服務使用者 (一)
@@ -232,12 +238,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 body["PoliceDatetime"] = policeDatetime.toISOString();
             } else {
                 error["PoliceDatetime"] = true;
+                msg += "請填寫報警日期和時間\n";
             }
 
             if (form.policeReportNumber) {
                 body["PoliceReportNumber"] = form.policeReportNumber;
             } else {
                 error["PoliceReportNumber"] = true;
+                msg += "請填寫報案編號\n";
             }
         } else if (form.police === false) {
             if (form.policeDescription) {
@@ -245,6 +253,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             }
         } else if (form.police === undefined) {
             error["Police"] = true;
+            msg += "請填寫是否報警\n";
         }
 
         //通知家人 / 親屬 / 監護人 / 保證人
@@ -255,23 +264,27 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 body["GuardianDatetime"] = guardianDatetime.toISOString();
             } else {
                 error["GuardianDatetime"] = true;
+                msg += "請填寫通知日期和時間\n";
             }
             if (form.guardianRelationship) {
                 body["GuardianRelationship"] = form.guardianRelationship;
             } else {
                 error["GuardianRelationship"] = true;
+                msg += "請填寫與服務使用者的關係\n";
             }
 
             if (form.guardianStaff) {
                 body["GuardianStaff"] = form.guardianStaff;
             } else {
                 error["GuardianStaff"] = true;
+                msg += "請填寫負責職員姓名\n";
             }
 
         } else if (form.guardian === false) {
             body["GuardianDescription"] = form.guardianDescription;
         } else if (form.guardian === undefined) {
             error["Guardian"] = true;
+            msg += "請填寫通知家人 / 親屬 / 監護人 / 保證人\n";
         }
 
         //醫療安排
@@ -281,9 +294,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 body["MedicalArrangmentDetail"] = form.medicalArrangmentDetail;
             } else {
                 error["MedicalArrangmentDetail"] = true;
+                msg += "請填寫醫療安排\n";
             }
         } else if (form.medicalArrangement === undefined) {
             error["MedicalArrangement"] = true;
+            msg += "請填寫醫療安排\n";
         }
 
         //舉行專業個案會議 / 為有關服務使用者訂定照顧計劃
@@ -293,6 +308,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 body["CarePlanYesDescription"] = form.carePlanYesDescription;
             } else {
                 error["CarePlanYesDescription"] = true;
+                msg += "請填寫舉行專業個案會議 / 為有關服務使用者訂定照顧計劃\n";
             }
         } else if (form.carePlan === false) {
             if (form.carePlanNoDescription) {
@@ -300,6 +316,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             }
         } else if (form.carePlan === undefined) {
             error["CarePlan"] = true;
+            msg += "請填寫舉行專業個案會議 / 為有關服務使用者訂定照顧計劃\n";
         }
 
         //需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢
@@ -308,6 +325,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             body["NeedResponseDetail"] = form.needResponseDetail;
         } else if (form.needResponse === undefined) {
             error["NeedResponse"] = true;
+            msg += "請填寫需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢\n";
         }
 
         //已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)
@@ -318,6 +336,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             body["FollowUpPlan"] = form.followUpPlan;
         } else {
             error['FollowUpPlan'] = true;
+            msg += "請填寫跟進計劃\n";
         }
 
         //擬備人員
@@ -328,19 +347,19 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         body["SDId"] = spSdInfo.Id;
 
         console.log(body);
-        return [body, error]
+        return [body, error, msg]
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
+        const [body, error, msg] = dataFactory();
         body["ReporterId"] = CURRENT_USER.id;
         body["SubmitDate"] = new Date().toISOString();
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
-            alert("提交錯誤");
+            alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
                 updateOtherIncidentReport(formData.Id, {

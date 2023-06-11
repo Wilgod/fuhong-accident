@@ -769,15 +769,19 @@ function suggestionFactorFormatter(cell, rowIndex) {
     //if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         debugger
         if (rowIndex.TreatmentAfterAccident != null) {
+            div.push(<div>服務單位即時治療/處理 : </div>);
             div.push(<div>{rowIndex.TreatmentAfterAccident}</div>);
         }
         if (rowIndex.MedicalArrangementTreatment != null) {
+            div.push(<div>提供予服務使用者的治療 : </div>);
             div.push(<div>{rowIndex.MedicalArrangementTreatment}</div>);
         }
         if (rowIndex.ContingencyMeasure != 'CONTINGENCY_MEASURE_TRUE') {
+            div.push(<div>意外後中心即時應變措施 : </div>);
             div.push(<div>{rowIndex.ContingencyMeasureRemark}</div>);
         }
         if (rowIndex.AfterTreatmentDescription != null) {
+            div.push(<div>服務使用者經診治後情況 : </div>);
             div.push(<div>{rowIndex.AfterTreatmentDescription}</div>);
         }
         

@@ -99,6 +99,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
     const dataFactory = () => {
         let body = {};
+        let msg = "";
         let error: IAccidentFollowUpReportFormError = {};
         // Title <-form type
         body["Title"] = formType;
@@ -112,6 +113,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 body["AccidentNatureOtherRemark"] = form.accidentalNatureOtherRemark;
             } else {
                 // Error handling
+                error["accidentNatureOtherRemark"] = true;
+                msg += "請填寫其他環境因素\n";
             }
         }
         if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther &&
@@ -121,6 +124,9 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             error["accidentalNature"] = true;
             error["envFactor"] = true;
             error["personalFactor"] = true;
+            msg += "請填寫意外性質";
+            msg += "請填寫環境因素";
+            msg += "請填寫個人因素";
         }
         /*if () {
             error["envFactor"] = true;
@@ -139,6 +145,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             if (form.envFactorOtherRemark) {
                 body["EnvFactorOtherRemark"] = form.envFactorOtherRemark;
             } else {
+                error["envFactorOtherRemark"] = true;
+                msg += "請填寫其他環境因素\n";
                 //Error handling
             }
         }
@@ -154,6 +162,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 body["PersonalFactorOtherRemark"] = form.personalFactorOtherRemark;
             } else {
                 //error handling
+                error["personalFactorOtherRemark"] = true;
+                msg += "請填寫其他個人因素\n";
             }
         }
         /*if (!form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
@@ -164,6 +174,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             body["AccidentalDiscovery"] = form.accidentalDiscovery;
         } else {
             error["AccidentalDiscovery"] = true;
+            msg += "請填寫意外發現之經過\n";
         }
 
         //AccidentCauseFactor 可能引致意外之因素
@@ -171,6 +182,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             body["AccidentCauseFactor"] = form.accidentCauseFactor;
         } else {
             error["AccidentCauseFactor"] = true;
+            msg += "請填寫可能引致意外之因素\n";
         }
 
         //Suggestion 建議 
@@ -178,11 +190,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             body["Suggestion"] = form.suggestion;
         } else {
             error["Suggestion"] = true;
+            msg += "請填寫建議\n";
         }
 
 
 
-        return [body, error];
+        return [body, error, msg];
     }
 
     const backToCMS =(e) => {
@@ -227,12 +240,12 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 }).catch(console.error);
             } else {
                 // Investigator 
-                const [body, error] = dataFactory();
+                const [body, error, msg] = dataFactory();
                 
                 console.log('error',error)
                 debugger
                 if (Object.keys(error).length > 0) {
-                    alert("提交錯誤");
+                    alert(msg);
                     setError(error);
                 } else {
                     updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
@@ -711,7 +724,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             {
                                 form.accidentNatureOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="accidentalNatureOtherRemark" value={form.accidentalNatureOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['accidentNatureOtherRemark']) ? "is-invalid" : ""}`} placeholder="請註明" name="accidentalNatureOtherRemark" value={form.accidentalNatureOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                                 </div>
                             }
                         </div>
@@ -765,7 +778,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             {
                                 form.envFactorOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['envFactorOtherRemark']) ? "is-invalid" : ""}`} placeholder="請註明" name="envFactorOtherRemark" value={form.envFactorOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                                 </div>
                             }
                         </div>
@@ -802,7 +815,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                             {
                                 form.personalFactorOther &&
                                 <div className="">
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['personalFactorOtherRemark']) ? "is-invalid" : ""}`} placeholder="請註明" name="personalFactorOtherRemark" value={form.personalFactorOtherRemark} onChange={textFieldHandler} disabled={type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData)} />
                                 </div>
                             }
                         </div>
