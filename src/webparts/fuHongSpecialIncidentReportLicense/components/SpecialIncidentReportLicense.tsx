@@ -842,6 +842,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const dataFactory = () => {
         let body = {};
         let error = {};
+        let msg = '';
         body["ServiceUnit"] = serviceUnit
 
         //經辦人 (負責督察姓名)
@@ -849,6 +850,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["ResponsibleName"] = form.responsibleName;
         } else {
             error["ResponsibleName"] = true;
+            msg += "請填寫經辦人 (負責督察姓名)\n";
         }
 
         //殘疾人士院舍名稱
@@ -856,6 +858,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["HomesName"] = form.homesName;
         } else {
             error["HomesName"] = true;
+            msg += "請填寫殘疾人士院舍名稱\n";
         }
 
         //殘疾人士院舍主管姓名
@@ -863,6 +866,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["HomesManagerName"] = form.homesManagerName;
         } else {
             error["HomesManagerName"] = true;
+            msg += "請填寫殘疾人士院舍主管姓名\n";
         }
 
         //聯絡電話
@@ -870,6 +874,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["HomesManagerTel"] = form.homesManagerTel;
         } else {
             error["HomesManagerTel"] = true;
+            msg += "請填寫聯絡電話\n";
         }
 
         //事故發生日期
@@ -877,6 +882,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["IncidentTime"] = incidentTime.toISOString();
         } else {
             error["IncidentTime"] = true;
+            msg += "請填寫事故發生日期\n";
         }
         //(1) 住客不尋常死亡／事故導致住客嚴重受傷或死亡
         if (form.unusalIncident) {
@@ -900,6 +906,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["UnusalIncideintGeneral"] = form.unusalIncideintGeneral;
             } else {
                 error["UnusalIncideintGeneral"] = true;
+                msg += "請填寫在院舍內發生事故及送院救治／送院後死亡\n";
             }
         }
 
@@ -910,6 +917,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["UnusalIncideintIncident"] = form.unusalIncideintIncident;
             } else {
                 error["UnusalIncideintIncident"] = true;
+                msg += "請填寫其他不尋常死亡／受傷\n";
             }
         }
 
@@ -921,11 +929,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["PoliceDatetime"] = form.policeDatetime.toISOString();
             } else {
                 error["PoliceDatetime"] = true;
+                msg += "請填寫報警日期和時間\n";
             }
             if (form.policeReportNumber) {
                 body["PoliceReportNumber"] = form.policeReportNumber;
             } else {
                 error["PoliceReportNumber"] = true;
+                msg += "請填寫報案編號\n";
             }
         } else if (form.police === undefined) {
             //error["Police"] = true;
@@ -938,6 +948,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["PoliceInvestigateDate"] = form.policeInvestigateDate.toISOString();
             } else {
                 error["PoliceInvestigateDate"] = true;
+                msg += "請填寫警方到院舍調查日期及時間\n";
             }
         } else if (form.policeInvestigate === undefined) {
             //error["PoliceInvestigate"] = true;
@@ -952,17 +963,20 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     body["ResidentMissingReason"] = form.residentMissingReason;
                 } else {
                     error["ResidentMissingReason"] = true;
+                    msg += "請填寫住客失蹤以致需要報警求助\n";
                 }
             }
             if (form.missingPoliceDate) {
                 body["MissingPoliceDate"] = form.missingPoliceDate.toISOString();
             } else {
                 error["MissingPoliceDate"] = true;
+                msg += "請填寫住客失蹤報警日期\n";
             }
             if (form.missingPoliceReportNo) {
                 body["MissingPoliceReportNo"] = form.missingPoliceReportNo;
             } else {
                 error["MissingPoliceReportNo"] = true;
+                msg += "請填寫住客失蹤報警編號\n";
             }
 
         } else {
@@ -981,6 +995,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["NotYetFoundDayCount"] = null;
             } else {
                 error["FoundDate"] = true;
+                msg += "請填寫尋回日期\n";
             }
         } else if (form.found === false) {
             body["Found"] = false;
@@ -989,6 +1004,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["NotYetFoundDayCount"] = form.notYetFoundDayCount;
             } else {
                 error["NotYetFoundDayCount"] = true;
+                msg += "請填寫由失蹤日計起至呈報日，已失蹤\n";
             }
         } else {
             body["Found"] = false;
@@ -1018,6 +1034,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["RA_OtherDescription"] = form.ra_otherDescription;
             } else {
                 error["RA_OtherDescription"] = true;
+                msg += "請填寫院舍內證實／懷疑有住客受虐待／被侵犯私隱\n";
             }
         }
 
@@ -1031,6 +1048,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     body["AbuserDescription"] = form.abuserDescription;
                 } else {
                     error["AbuserDescription"] = true;
+                    msg += "請填寫施虐者／懷疑施虐者的身份\n";
                 }
             }
         }
@@ -1043,6 +1061,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["ReferDate"] = form.referDate.toISOString();
             } else {
                 error["ReferDate"] = true;
+                msg += "請填寫轉介日期\n";
             }
             if (form.referServiceUnit) {
                 body["ReferServiceUnit"] = form.referServiceUnit;
@@ -1060,11 +1079,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["Abuser_PoliceDate"] = form.abuser_policeDate.toISOString();
             } else {
                 error["Abuser_PoliceDate"] = true;
+                msg += "請填寫報警日期\n";
             }
             if (form.abuser_policeCaseNo) {
                 body["Abuser_PoliceCaseNo"] = form.abuser_policeCaseNo;
             } else {
                 error["Abuser_PoliceCaseNo"] = true;
+                msg += "請填寫報案編號\n";
             }
         } else if (form.abuser_police === undefined) {
             body["Abuser_Police"] = false;
@@ -1078,17 +1099,20 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     body["ConflictDescription"] = form.conflictDescription;
                 } else {
                     error["ConflictDescription"] = form.conflictDescription;
+                    msg += "請填寫院舍內有爭執事件以致需要報警求助\n";
                 }
             }
             if (form.conflict_policeDate) {
                 body["Conflict_PoliceDate"] = form.conflict_policeDate.toISOString();
             } else {
                 error["Conflict_PoliceDate"] = true;
+                msg += "請填寫報警日期\n";
             }
             if (form.conflict_policeCaseNo) {
                 body["Conflict_PoliceCaseNo"] = form.conflict_policeCaseNo;
             } else {
                 error["Conflict_PoliceCaseNo"] = true;
+                msg += "請填寫報案編號\n";
             }
         } else {
             body["Conflict"] = "";
@@ -1108,6 +1132,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     body["MI_Description"] = form.mi_description;
                 } else {
                     error["MI_Description"] = true;
+                    msg += "請填寫嚴重醫療／藥物事故（須同時提交「藥物風險管理報告」）\n";
                 }
             }
         } else {
@@ -1126,6 +1151,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["OtherIncidentOthersDescription"] = true;
             } else {
                 body["OtherIncidentOthersDescription"] = form.otherIncidentOthersDescription;
+                msg += "請填寫其他重大特別事故以致影響院舍日常運作\n";
             }
         }
 
@@ -1136,6 +1162,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 body["OtherDescription"] = form.otherDescription;
             } else {
                 error["OtherDescription"] = true;
+                msg += "請填寫其他\n";
             }
         } else if (form.other === undefined) {
             body["OtherDescription"] = "";
@@ -1167,6 +1194,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             //error["AffectedIdCardNo"] = true;
         } else if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
             error["AffectedIdCardNo"] = true;
+            msg += "請填寫身份證號碼\n";
         } else if (form.affectedIdCardNo.charAt(1).search(/[^0-9]+/) == -1) {
             let mNumber = form.affectedIdCardNo.substr(1, 6);
             if (mNumber.search(/[^0-9]+/) == -1) {
@@ -1178,22 +1206,26 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
             } else {
                 error["AffectedIdCardNo"] = true;
+                msg += "請填寫身份證號碼\n";
             }
 
         } else {
             if (form.affectedIdCardNo.charAt(1).search(/[^a-zA-Z]+/) != -1) {
                 error["AffectedIdCardNo"] = true;
+                msg += "請填寫身份證號碼\n";
             } else {
                 if (form.affectedIdCardNo.charAt(2).search(/[^0-9]+/) == -1) {
                     let mNumber = form.affectedIdCardNo.substr(2, 6);
                     if (mNumber.search(/[^0-9]+/) == -1) {
                         if (form.affectedIdCardNo.charAt(8) != '(' || form.affectedIdCardNo.charAt(10) != ')') {
                             error["AffectedIdCardNo"] = true;
+                            msg += "請填寫身份證號碼\n";
                         } else {
                             body["AffectedIdCardNo"] = form.affectedIdCardNo;
                         }
                     } else {
                         error["AffectedIdCardNo"] = true;
+                        msg += "請填寫身份證號碼\n";
                     }
                 }
             }
@@ -1204,19 +1236,19 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         body["AffectedDetail"] = form.affectedDetail;
         body["AffectedFollowUp"] = form.affectedFollowUp;
 
-        return [body, error];
+        return [body, error, msg];
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
+        const [body, error, msg] = dataFactory();
         body['SubmitDate'] = new Date().toISOString();
         body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
         if (Object.keys(error).length > 0) {
             setError(error);
-            alert("提交錯誤");
+            alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
                 updateSpecialIncidentReportLicense(formData.Id, {
@@ -1338,6 +1370,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         event.preventDefault();
         const [body] = dataFactory()
         body["ReporterId"] = CURRENT_USER.id;
+        body["SDId"] = spSdInfo.Id;
+        body["SMId"] = spSmInfo.Id;
         let error = {};
         if (form.affectedIdCardNo != null && form.affectedIdCardNo != '') {
             if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
@@ -1682,7 +1716,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (formData.Reporter) {
                 setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             }
-
+            debugger
             if (formData.SM) {
                 setSMEmail(formData.SM.EMail)
             }
@@ -1928,9 +1962,14 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 if (formInitial(currentUserRole, formStatus)) {
                     //if (departmentList.length == 1) {
                     if (userInfo && userInfo.hr_deptid) {
-                        setHrDepartment(userInfo.hr_deptid);
-                        setServiceUnit(userInfo.hr_deptid);
-                        setServiceLocation(userInfo.hr_location);
+                        
+                        debugger
+                        if (serviceUnit == '') {
+                            setHrDepartment(userInfo.hr_deptid);
+                            setServiceUnit(userInfo.hr_deptid);
+                            setServiceLocation(userInfo.hr_location);
+                        }
+                        
                     }
                     //}
 
@@ -1943,9 +1982,12 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     useEffect(() => {
         if (selectDepartment != null && selectDepartment != '') {
             if (formInitial(currentUserRole, formStatus)) {
-                setServiceLocation(selectDepartment);
-                setServiceUnit(selectDepartment);
-                setHrDepartment(selectDepartment);
+                if (serviceUnit == '') {
+                    setServiceLocation(selectDepartment);
+                    setServiceUnit(selectDepartment);
+                    setHrDepartment(selectDepartment);
+                }
+                
             }
         }
 
@@ -1957,11 +1999,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (Array.isArray(departments) && departments.length) {
 
                 const dept = departments[0];
-                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]" && formData == null) {
                     setSMEmail(dept.hr_deptmgr);
                 }
 
-                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]" && formData == null) {
                     setSDEmail(dept.hr_sd);
                 }
                 //setForm({ ...form, homesName: dept.su_name_tc ? `扶康會${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
@@ -2099,10 +2141,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
                                         console.log('serviceUnit1234',serviceUnit);
-                                        if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit',serviceUnit);
-                                            debugger
-                                        }
+
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }

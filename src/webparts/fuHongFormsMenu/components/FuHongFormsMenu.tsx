@@ -291,18 +291,17 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
         </li>
         {this.state.adminPermissionBoolean &&
         <>
-        <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "INSURANCE_EMAIL")}>
-            保險公司電郵報告
-          </div>
-        </li>
-        <li>
-          <div className="" onClick={(event) => this.screenNavHandler(event, "LOG")}>
-            表格更新記錄
-          </div>
-        </li>
+          <li>
+            <div className="" onClick={(event) => this.screenNavHandler(event, "INSURANCE_EMAIL")}>
+              保險公司電郵報告
+            </div>
+          </li>
+          <li>
+            <div className="" onClick={(event) => this.screenNavHandler(event, "LOG")}>
+              表格更新記錄
+            </div>
+          </li>
         </>
-        
         }
       </ul>
     }

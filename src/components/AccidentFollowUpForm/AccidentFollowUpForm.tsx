@@ -89,11 +89,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     const dataFactory = () => {
         let body = {};
         let error1 = {};
-
+        let msg = "";
         body["FollowUpActions"] = JSON.stringify(followUpActions);
         let emptyFollowUpActions = followUpActions.filter((item) => item.action == '');
         for (let i = 0; i < emptyFollowUpActions.length; i++) {
-            error1["FollowUpActions" + i] = true;
+            error1["followUpActions" + i] = true;
+            msg += "請填寫意外報告的跟進措施";
         }
         //if ()
         // if (form.followUpMeasures) {
@@ -118,9 +119,11 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             body["AccidentalFollowUpContinue"] = form.accidentalFollowUpContinue;
         } else {
             // error handling
+            error1["accidentalFollowUpContinue"] = true;
+            msg += "請填寫意外跟進";
         }
 
-        return [body, error1];
+        return [body, error1, msg];
     }
     //For SM only
     const smSubmitHandler = (event) => {
@@ -129,9 +132,9 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3, workflow);
             sptCommentUpdate();
         } else {
-            const [body, error] = dataFactory();
+            const [body, error, msg] = dataFactory();
             if (Object.keys(error).length > 0) {
-                alert("提交錯誤");
+                alert(msg);
                 setError(error);
             } else {
                 if (form.accidentalFollowUpContinue) {
@@ -875,7 +878,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                         {/* 意外報告的跟進措施 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外報告的跟進措施</label>
                                         <div className="col">
-                                            <AutosizeTextarea className={`form-control ${(error && error['FollowUpActions' + index]) ? "is-invalid" : ""}`} name="followUpMeasures" onChange={(event) => {
+                                            <AutosizeTextarea className={`form-control ${(error && error['followUpActions' + index]) ? "is-invalid" : ""}`} name="followUpMeasures" onChange={(event) => {
                                                 let arr = [...followUpActions];
                                                 let actionItem = arr[index];
                                                 actionItem.action = event.target.value;
@@ -922,7 +925,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 意外跟進 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>意外跟進</label>
                         <div className="col-12 col-md-4">
-                            <div className="form-check form-check-inline">
+                            <div className={`form-check form-check-inline ${(error && error['accidentalFollowUpContinue']) ? "is-invalid" : ""}`} >
                                 <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === true} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={() => setForm({ ...form, accidentalFollowUpContinue: true })}
                                     disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>

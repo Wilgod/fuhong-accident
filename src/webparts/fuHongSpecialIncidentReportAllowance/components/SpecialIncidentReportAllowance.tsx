@@ -184,7 +184,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const dataFactory = () => {
         let body = {};
         let error = {};
-
+        let msg = "";
         body["OrgName"] = reportOrg;
         body["OrgPhone"] = reportPhone;
         body["OrgAddress"] = reportAddress;
@@ -200,6 +200,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             body["IncidentTime"] = incidentTime.toISOString();
         } else {
             error["IncidentTime"] = true;
+            msg += "請填寫事故發生日期和時間\n";
         }
 
 
@@ -209,6 +210,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             body["IncidentLocation"] = form.incidentLocation;
         } else {
             error["IncidentLocation"] = true;
+            msg += "請填寫事故發生地點\n";
         }
 
         body["IncidentCategory"] = form.accidentCategory;
@@ -238,6 +240,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             // }
         } else if (form.mediaReports === undefined) {
             error["MediaReports"] = true;
+            msg += "請填寫事故被傳媒報導\n";
         }
 
         body["IncidentDescription"] = form.incidentDescription
@@ -283,12 +286,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 body["PoliceDatetime"] = policeDatetime.toISOString();
             } else {
                 error["PoliceDatetime"] = true;
+                msg += "請填寫報警日期和時間\n";
             }
 
             if (form.policeReportNumber) {
                 body["PoliceReportNumber"] = form.policeReportNumber;
             } else {
                 error["PoliceReportNumber"] = true;
+                msg += "請填寫報案編號\n";
             }
         }/* else if (form.police === false) {
             if (form.policeDescription) {
@@ -298,6 +303,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             }
         }*/ else if (form.police === undefined) {
             error["Police"] = true;
+            msg += "請填寫是否報案\n";
         }
 
         //通知家人 / 親屬 / 監護人 / 保證人
@@ -308,23 +314,27 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 body["GuardianDatetime"] = guardianDatetime.toISOString();
             } else {
                 error["GuardianDatetime"] = true;
+                msg += "請填寫通知日期和時間\n";
             }
             if (form.guardianRelationship) {
                 body["GuardianRelationship"] = form.guardianRelationship;
             } else {
                 error["GuardianRelationship"] = true;
+                msg += "請填寫與服務使用者的關係\n";
             }
 
             if (form.guardianStaff) {
                 body["GuardianStaff"] = form.guardianStaff;
             } else {
                 error["GuardianStaff"] = true;
+                msg += "請填寫負責職員姓名\n";
             }
 
         } else if (form.guardian === false) {
             body["GuardianDescription"] = form.guardianDescription;
         } else if (form.guardian === undefined) {
             error["Guardian"] = true;
+            msg += "請填寫通知家人 / 親屬 / 監護人 / 保證人\n";
         }
         body["OtherRelatedParties"] = form.otherRelatedParties;
         if (form.otherRelatedParties === true) {
@@ -332,22 +342,26 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 body["OtherRelatedPartiesDatetime"] = otherRelatedPartiesDatetime.toISOString();
             } else {
                 error["OtherRelatedPartiesDatetime"] = true;
+                msg += "請填寫通知日期和時間\n";
             }
             if (form.otherRelatedPartiesRelationship) {
                 body["OtherRelatedPartiesRelationship"] = form.otherRelatedPartiesRelationship;
             } else {
                 error["OtherRelatedPartiesRelationship"] = true;
+                msg += "請填寫與服務使用者的關係\n";
             }
 
             if (form.otherRelatedPartiesStaff) {
                 body["OtherRelatedPartiesStaff"] = form.otherRelatedPartiesStaff;
             } else {
                 error["OtherRelatedPartiesStaff"] = true;
+                msg += "請填寫負責職員姓名\n";
             }
         } else if (form.otherRelatedParties === false) {
             body["OtherRelatedPartiesDescription"] = form.guardianDescription;
         } else if (form.guardian === undefined) {
             error["OtherRelatedParties"] = true;
+            msg += "請填寫通知相關的服務使用者／員工／轉介社工／其他相關人士\n";
         }
         //醫療安排
         body["MedicalArrangement"] = form.medicalArrangement;
@@ -356,9 +370,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 body["MedicalArrangmentDetail"] = form.medicalArrangmentDetail;
             } else {
                 error["MedicalArrangmentDetail"] = true;
+                msg += "請填寫醫療安排\n";
             }
         } else if (form.medicalArrangement === undefined) {
             error["MedicalArrangement"] = true;
+            msg += "請填寫醫療安排\n";
         }
 
         //舉行專業個案會議 / 為有關服務使用者訂定照顧計劃
@@ -368,6 +384,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 body["CarePlanYesDescription"] = form.carePlanYesDescription;
             } else {
                 error["CarePlanYesDescription"] = true;
+                msg += "請填寫舉行專業個案會議 / 為有關服務使用者訂定照顧計劃\n";
             }
         } else if (form.carePlan === false) {
             if (form.carePlanNoDescription) {
@@ -377,6 +394,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             }*/
         } else if (form.carePlan === undefined) {
             error["CarePlan"] = true;
+            msg += "請填寫舉行多專業個案會議 / 為有關服務使用者訂定照顧計劃\n";
         }
 
         //需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢
@@ -385,6 +403,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             body["NeedResponseDetail"] = form.needResponseDetail;
         } else if (form.needResponse === undefined) {
             error["NeedResponse"] = true;
+            msg += "請填寫需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢\n";
         }
 
         //已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)
@@ -395,13 +414,14 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             body["FollowUpPlan"] = form.followUpPlan;
         } else {
             error['FollowUpPlan'] = true;
+            msg += "請填寫已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)\n";
         }
         body["ReporterPhone"] = reporterPhone;
 
 
 
 
-        return [body, error];
+        return [body, error, msg];
     }
 
     async function send() {
@@ -555,7 +575,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const [body, error] = dataFactory();
+        const [body, error, msg] = dataFactory();
         body["SubmitDate"] = new Date().toISOString();
         body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
@@ -563,7 +583,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
         if (Object.keys(error).length > 0) {
             setError(error);
-            alert("提交錯誤");
+            alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
                 updateSpecialIncidentReportAllowance(formData.Id, {

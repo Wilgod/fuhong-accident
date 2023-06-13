@@ -230,7 +230,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const dataFactory = (status: string) => {
         const body = {};
         const error = {};
-
+        let msg = "";
         // Service User info
         body["ServiceUserNameEN"] = serviceUserNameEN;
         body["ServiceUserNameCN"] = serviceUserNameCN;
@@ -246,14 +246,16 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["ServiceUser"] = serviceUserRecordId.toString();
         } else {
             error["ServiceUser"] = true;
+            msg += "請填寫服務使用者\n";
         }
-        //填寫人服務單位
+        //填寫服務單位
         body["ServiceUnit"] = serviceUnit;
 
         if (patientServiceUnit) {
             body["ServiceUserUnit"] = patientServiceUnit
         } else {
             error["ServiceUserUnit"] = true;
+            msg += "請填寫服務單位\n";
         }
 
 
@@ -262,6 +264,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["AccidentTime"] = accidentTime.toISOString();
         } else {
             error["AccidentTime"] = true;
+            msg += "請填寫意外發生日期和時間\n";
         }
 
         //意外發生地點
@@ -269,6 +272,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["AccidentLocation"] = form.accidentLocation;
         } else {
             error["AccidentLocation"] = true;
+            msg += "請填寫意外發生地點\n";
         }
 
         //智力障礙程度
@@ -287,16 +291,19 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["CircumstanceLocation"] = form.scenarioOutsideActivityRemark.trim();
                 } else {
                     error["CircumstanceLocation"] = true;
+                    msg += "請填寫服務使用者意外時情況註明\n";
                 }
             if (form.patientAcciedntScenario === "SCENARIO_OTHER") {
                 if (form.scenarioOtherRemark) {
                     body["CircumstanceOtherRemark"] = form.scenarioOtherRemark.trim();
                 } else {
                     error["CircumstanceOtherRemark"] = true;
+                    msg += "請填寫其他服務使用者意外時情況\n";
                 }
             }
         } else {
             error["Circumstance"] = true;
+            msg += "請填寫服務使用者意外時情況\n";
         }
 
         //服務使用者受傷部位
@@ -308,10 +315,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["InjuredAreaOtherRemark"] = form.injuredAreaOther;
                 } else {
                     error["InjuredAreaOtherRemark"] = true;
+                    msg += "請填寫服務使用者受傷部位註明\n";
                 }
             }
         } else {
             error["InjuredArea"] = true;
+            msg += "請填寫服務使用者受傷部位\n";
         }
 
         //服務使用者意外後有否身體不適/受傷
@@ -327,6 +336,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             body["UnwellAfterInjuredOther"] = form.uncomfortableOtherRemark;
                         } else {
                             error["UnwellAfterInjuredOther"] = true;
+                            msg += "請填寫服務使用者意外後有否身體不適/受傷註明\n";
                         }
                     }
 
@@ -334,15 +344,18 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         body["UnwellAfterInjuredDescription"] = form.uncomfortableDescription;
                     } else {
                         error["UnwellAfterInjuredDescription"] = true;
+                        msg += "請填寫受傷情況\n";
                     }
                 } else {
                     error["UnwellAfterInjuredChoices"] = true;
+                    msg += "請填寫服務使用者意外後有否身體不適/受傷\n";
                 }
             } else if (form.serviceUserUncomfort === "SERVICE_USER_UNCOMFORT_FALSE") {
                 // do nothing
             }
         } else {
             error["UnwellAfterInjured"] = true;
+            msg += "請填寫服務使用者意外後有否身體不適/受傷\n";
         }
 
         //服務使用者有否出現不安全的行為
@@ -358,14 +371,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             body["UnsafeBehaviorsOther"] = form.behaviorOtherRemark;
                         } else {
                             error["UnsafeBehaviorsOther"] = true;
+                            msg += "請填寫服務使用者有否出現不安全的行為\n";
                         }
                     }
                 } else {
                     error["UnsafeBehaviorsChoices"] = true;
+                    msg += "請填寫服務使用者有否出現不安全的行為\n";
                 }
             }
         } else {
             error["UnsafeBehaviors"] = true;
+            msg += "請填寫服務使用者有否出現不安全的行為\n";
         }
 
         //相片及CCTV紀錄
@@ -378,6 +394,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             // }
         } else {
             error["PhotoRecord"] = true;
+            msg += "請填寫相片及CCTV紀錄\n";
         }
 
         if (form.cctv) {
@@ -387,6 +404,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
         } else {
             error["CctvRecord"] = true;
+            msg += "請填寫CCTV紀錄\n";
         }
 
         // 環境因素
@@ -397,11 +415,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["ObserveEnvironmentFactorOther"] = form.enviromentalFactorOtherRemark.trim();
                 } else {
                     error["ObserveEnvironmentFactorOther"] = true;
+                    msg += "請填寫其他環境因素\n";
                 }
             }
         } else {
             if (form.personalFactor.length == 0) {
                 error["ObserveEnvironmentFactor"] = true;
+                msg += "請填寫個人因素\n";
             }
 
         }
@@ -414,11 +434,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["ObservePersonalFactorOther"] = form.personalFactorOtherRemark.trim();
                 } else {
                     error["ObservePersonalFactorOther"] = true;
+                    msg += "請填寫其他個人因素\n";
                 }
             }
         } else {
             if (form.envFactor.length == 0) {
                 error["ObservePersonalFactor"] = true;
+                msg += "請填寫環境因素\n";
             }
         }
 
@@ -427,6 +449,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["AccidentDetail"] = form.accidentDetail.trim();
         } else {
             error["AccidentDetail"] = true;
+            msg += "請填寫事發過程\n";
         }
 
         //服務單位即時治療/處理
@@ -434,6 +457,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["TreatmentAfterAccident"] = form.treatmentAfterAccident.trim();
         } else {
             error["TreatmentAfterAccident"] = true;
+            msg += "請填寫服務單位即時治療/處理\n";
         }
 
         //就診安排
@@ -445,6 +469,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["MedicalArrangementHospital"] = form.medicalArrangementHospital.trim();
                 } else {
                     error["MedicalArrangementHospital"] = true;
+                    msg += "請填寫醫院名稱\n";
                 }
 
 
@@ -453,6 +478,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["MedicalArrangementDate"] = medicalArrangementDate.toISOString();
                 } else {
                     error["MedicalArrangementDate"] = true;
+                    msg += "請填寫醫到達時間\n";
                 }
 
 
@@ -461,11 +487,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["MedicalArrangementTreatment"] = form.medicalArrangementTreatment.trim();
                 } else {
                     error["MedicalArrangementTreatment"] = true;
+                    msg += "請填寫提供予服務使用者的治療\n";
                 }
             }
 
         } else {
             error["MedicalArrangement"] = true;
+            msg += "請填寫就診安排\n";
         }
 
         //是否在醫院留醫
@@ -477,10 +505,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["StayInHospitalName"] = form.stayInHospitalName;
                 } else {
                     error["StayInHospitalName"] = true;
+                    msg += "請填寫醫院留醫名稱\n";
                 }
             }
         } else {
             error["StayInHospital"] = true;
+            msg += "請填寫是否在醫院留醫\n";
         }
 
         //報警處理
@@ -492,6 +522,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["CalledPoliceDate"] = policeDate.toISOString();
                 } else {
                     error["CalledPoliceDate"] = true;
+                    msg += "請填寫報警處理日期和時間\n";
                 }
 
 
@@ -500,6 +531,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["CalledPoliceReportNumber"] = form.policeReportNumber.trim();
                 } else {
                     error["CalledPoliceReportNumber"] = true;
+                    msg += "請填寫報案編號\n";
                 }
 
                 //警署
@@ -507,10 +539,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["CalledPoliceStation"] = form.policeStation.trim();
                 } else {
                     error["CalledPoliceStation"] = true;
+                    msg += "請填寫警署\n";
                 }
             }
         } else {
             error["CalledPolice"] = true;
+            msg += "請填寫是否報警處理\n";
         }
 
         //意外後中心即時應變措施 
@@ -521,10 +555,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     body["ContingencyMeasureRemark"] = form.contingencyMeasureRemark.trim();
                 } else {
                     error["ContingencyMeasureRemark"] = true;
+                    msg += "請填寫意外後中心即時應變措施\n";
                 }
             }
         } else {
             error["ContingencyMeasure"] = true;
+            msg += "請填寫意外後中心即時應變措施\n";
         }
 
         //通知家屬日期和時間
@@ -532,6 +568,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["ContactFamilyDate"] = contactFamilyDate.toISOString();
         } else {
             error["ContactFamilyDate"] = true;
+            msg += "請填寫通知家屬日期和時間\n";
         }
 
 
@@ -540,6 +577,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["ContactFamilyRelationship"] = form.contactFamilyRelationship.trim();
         } else {
             error["ContactFamilyRelationship"] = true;
+            msg += "請填寫與服務使用者關係\n";
         }
 
         //家屬姓名
@@ -547,11 +585,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["ContactFamilyName"] = form.contactFamilyName.trim();
         } else {
             error["ContactFamilyName"] = true;
+            msg += "請填寫家屬姓名\n";
         }
         //負責通知家屬的職員姓名
         if (contactStaffPickerInfo && contactStaffPickerInfo.length > 0) {
             const [contactStaffObj] = contactStaffPickerInfo;
             body["ContactFamilyStaffId"] = contactStaffObj.id;
+            msg += "請填寫負責通知家屬的職員姓名\n";
         }
 
         //服務使用者經診治後情況
@@ -559,6 +599,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["AfterTreatmentDescription"] = form.afterTreatmentDescription.trim();
         } else {
             error["AfterTreatmentDescription"] = true;
+            msg += "請填寫服務使用者經診治後情況\n";
         }
 
 
@@ -567,6 +608,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["SMId"] = spSmInfo.Id;
         } else {
             error["SMId"] = true;
+            msg += "請填寫高級服務經理/服務經理\n";
         }
 
         // if (serviceManager) {
@@ -581,6 +623,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["SDId"] = spSdInfo.Id;
         } else {
             error["SDId"] = true;
+            msg += "請填寫服務總監\n";
         }
 
         // if (serviceDirector) {
@@ -596,6 +639,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         } else {
             //error implementation
             error["SPTId"] = true;
+            msg += "請填寫高級物理治療師\n";
         }
 
 
@@ -613,7 +657,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         body["Stage"] = "1";
-        return [body, error];
+        return [body, error, msg];
     }
 
     const deleteHandler = () => {
@@ -735,10 +779,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                 });
             } else {
-                let [body, error] = dataFactory("SUBMIT");
+                let [body, error, msg] = dataFactory("SUBMIT");
                 body["ReporterId"] = CURRENT_USER.id;
                 if (Object.keys(error).length > 0) {
-                    alert("提交錯誤");
+                    debugger
+                    //alert("提交錯誤");
+                    alert(msg);
                     setError(error);
                 } else {
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
@@ -864,7 +910,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
-            let [body, error] = dataFactory("SUBMIT");
+            let [body, error, msg] = dataFactory("SUBMIT");
             body["ReporterId"] = CURRENT_USER.id;
             console.log(error);
             if (Object.keys(error).length > 0) {
@@ -1451,7 +1497,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     "Age": parseInt(user.cr98a_age),
                     "NameCN": user.cr98a_namecn,
                     "NameEN": user.cr98a_nameen,
-                    "Sex": user.cr98a_sex == "111910000" ? "female" : "male",
+                    "Sex": user.cr98a_sex == "111910000" ? "male" : "female",
                     "Filenumber": user.cr98a_filenumber,
                     "Serviceproduct": user.cr98a_serviceproduct,
                     "Mentalretarded": mentalretarded,//智障
@@ -1504,8 +1550,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     }
                 }
                 
-                setHkid(userInformationlist.BasicInformation.cr98a_hkid);
+                
             }
+            setHkid(userInformationlist.BasicInformation.cr98a_hkid);
             setServiceUserNameEN(selectUser[0].NameEN);
             setServiceUserNameCN(selectUser[0].NameCN);
             setServiceUserAge(selectUser[0].Age);

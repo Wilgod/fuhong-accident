@@ -98,11 +98,12 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const dataFactory = () => {
         let body = {};
         let error1 = {};
-
+        let msg = "";
         body["FollowUpActions"] = JSON.stringify(followUpActions);
         let emptyFollowUpActions = followUpActions.filter((item) => item.action == '');
         for (let i = 0; i < emptyFollowUpActions.length; i++) {
             error1["FollowUpActions" + i] = true;
+            msg += "請填寫意外報告的跟進措施\n";
         }
         // //跟進措施
         // if (form.followUpMeasures) {
@@ -124,10 +125,11 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         //事故跟進
         body["IncidentFollowUpContinue"] = form.incidentFollowUpContinue;
         if (form.incidentFollowUpContinue === undefined) {
-            error1["IncidentFollowUpContinue"] = true
+            error1["IncidentFollowUpContinue"] = true;
+            msg += "請填寫意外跟進\n";
         }
 
-        return [body, error1];
+        return [body, error1, msg];
     }
     console.log(selectedIncidentFollowUpFormId)
 
@@ -156,10 +158,10 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const smSubmitHandler = (event) => {
         event.preventDefault();
 
-        let [body, error] = dataFactory();
+        let [body, error, msg] = dataFactory();
         if (Object.keys(error).length > 0) {
-            alert("提交錯誤");
             setError(error);
+            alert(msg);
         } else {
             if (form.incidentFollowUpContinue) {
                 updateIncidentFollowUpForm(selectedIncidentFollowUpFormId, {
