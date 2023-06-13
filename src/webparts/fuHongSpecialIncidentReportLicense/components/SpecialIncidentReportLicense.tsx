@@ -1370,6 +1370,8 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         event.preventDefault();
         const [body] = dataFactory()
         body["ReporterId"] = CURRENT_USER.id;
+        body["SDId"] = spSdInfo.Id;
+        body["SMId"] = spSmInfo.Id;
         let error = {};
         if (form.affectedIdCardNo != null && form.affectedIdCardNo != '') {
             if (form.affectedIdCardNo.charAt(0).search(/[^a-zA-Z]+/) != -1) {
@@ -1714,7 +1716,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (formData.Reporter) {
                 setReporter([{ secondaryText: formData.Reporter.EMail, id: formData.Reporter.Id }]);
             }
-
+            debugger
             if (formData.SM) {
                 setSMEmail(formData.SM.EMail)
             }
@@ -1997,11 +1999,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             if (Array.isArray(departments) && departments.length) {
 
                 const dept = departments[0];
-                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]" && formData == null) {
                     setSMEmail(dept.hr_deptmgr);
                 }
 
-                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]" && formData == null) {
                     setSDEmail(dept.hr_sd);
                 }
                 //setForm({ ...form, homesName: dept.su_name_tc ? `扶康會${dept.su_name_tc }` : "", homesManagerTel: dept.su_phone || "" });
