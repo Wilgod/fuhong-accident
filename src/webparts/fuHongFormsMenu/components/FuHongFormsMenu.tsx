@@ -289,6 +289,8 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
             }
           </div>
         </li>
+        {this.state.adminPermissionBoolean &&
+        <>
         <li>
           <div className="" onClick={(event) => this.screenNavHandler(event, "INSURANCE_EMAIL")}>
             保險公司電郵報告
@@ -299,6 +301,9 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
             表格更新記錄
           </div>
         </li>
+        </>
+        
+        }
       </ul>
     }
     console.log(this.state.screenNav)
