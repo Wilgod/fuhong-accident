@@ -237,11 +237,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         body["ServiceUserAge"] = serviceUserAge;
         body["ServiceUserGender"] = serviceUserGender;
         body["ServiceUserId"] = serviceUserId == null ? null : serviceUserId.toString();
-        body["ServiceCategory"] = JSON.stringify(serviceCategory);
+        debugger
+        body["ServiceCategory"] = JSON.stringify(serviceCategory).replace(`"[`, `[`).replace(`]"`, `]`).replace(/\\/g, ``);
+        debugger
         body["Wheelchair"] = wheelchair;
         body["ASD"] = asd;
         body["Intelligence"] = intelligence;
-        body["HKID"] = hkid
+        body["HKID"] = hkid 
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUser"] = serviceUserRecordId.toString();
         } else {
@@ -780,6 +782,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 });
             } else {
                 let [body, error, msg] = dataFactory("SUBMIT");
+                debugger
                 body["ReporterId"] = CURRENT_USER.id;
                 if (Object.keys(error).length > 0) {
                     debugger
@@ -1303,7 +1306,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setPatientServiceUnit(data.ServiceUserUnit);
             }
             setMedicalArrangementDate(data.MedicalArrangementDate != null ? new Date(data.MedicalArrangementDate) : null);
-            setHkid(data.HKID)
+            setHkid(data.HKID);
+            debugger
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
