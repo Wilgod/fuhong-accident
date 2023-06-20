@@ -768,6 +768,10 @@ function suggestionFactorFormatter(cell, rowIndex) {
     let div = [];
     //if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
         debugger
+        if (rowIndex.AccidentReportForm[0].Suggestion != null) {
+            div.push(<div>跟進工作及報告建議 : </div>);
+            div.push(<div>{rowIndex.AccidentReportForm[0].Suggestion}</div>);
+        }
         if (rowIndex.TreatmentAfterAccident != null) {
             div.push(<div>服務單位即時治療/處理 : </div>);
             div.push(<div>{rowIndex.TreatmentAfterAccident}</div>);

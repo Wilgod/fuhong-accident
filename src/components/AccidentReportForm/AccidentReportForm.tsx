@@ -639,7 +639,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>上載文件</label>
                         <div className="col-12 col-md-4">
-                            {type=='cms' ||!pendingInvestigate(context, investigator, formStatus, formStage) && !stageTwoPendingSptApprove(context, currentUserRole, formStatus, formStage, formTwentyData) &&
+                            {pendingInvestigate(context, investigator, formStatus, formStage) &&
                                 <StyledDropzone selectedFiles={setUploadFile} />
                             }
                             {

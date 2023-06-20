@@ -1120,11 +1120,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (formInitial(currentUserRole, formStatus)) {
             if (Array.isArray(departments) && departments.length) {
                 const dept = departments[0];
-                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
+                if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]" && formData == null) {
+                    
                     setSMEmail(dept.hr_deptmgr);
                 }
 
-                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
+                if (dept && dept.hr_sd && dept.hr_sd !== "[empty]" && formData == null) {
                     setSDEmail(dept.hr_sd);
                 }
 

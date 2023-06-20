@@ -1063,12 +1063,18 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 console.log(dept);
                 if (dept && dept.hr_deptmgr && dept.hr_deptmgr !== "[empty]") {
                     console.log("hi");
-                    setSMEmail(dept.hr_deptmgr);
+                    if (!formData) {
+                        setSMEmail(dept.hr_deptmgr);
+                    }
+                    
                 }
 
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
                     debugger
-                    setSDEmail(dept.hr_sd);
+                    if (!formData) {
+                        setSDEmail(dept.hr_sd);
+                    }
+                    
                 }
             }
         }
