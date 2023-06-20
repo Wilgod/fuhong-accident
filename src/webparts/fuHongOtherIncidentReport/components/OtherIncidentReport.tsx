@@ -9,7 +9,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 import useServiceUnit from '../../../hooks/useServiceUnits';
 import { getUserInfoByEmailInUserInfoAD, getAllServiceUnit } from '../../../api/FetchUser';
 import { IErrorFields, IOtherIncidentReportProps, IOtherIncidentReportStates } from './IFuHongOtherIncidentReport';
-import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport, deleteOtherIncidentReport } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createOtherIncidentReport, updateOtherIncidentReport, deleteOtherIncidentReport, uploadOtherIncidentReportAttachmentById, getOtherIncidentReportAttachmentById } from '../../../api/PostFuHongList';
 import useUserInfoAD from '../../../hooks/useUserInfoAD';
 import { IUser } from '../../../interface/IUser';
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -33,6 +33,8 @@ import { IItemAddResult } from "@pnp/sp/items";
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import StyledDropzone from "../../../components/Dropzone/Dropzone";
+import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 export default function OtherIncidentReport({ context, styles, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, workflow, print, permissionList }: IOtherIncidentReportProps) {
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -106,6 +108,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [emailBody, setEmailBody] = useState("");
     const [emailCc, setEmailCc] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
+    const [uploadFile, setUploadFile] = useState([]);
+    const [selectedFile, setSelectedFile] = useState([]);
     console.log(sdInfo);
     const radioButtonHandler = (event) => {
         const name = event.target.name;
@@ -367,9 +371,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     "Status": "PENDING_SM_APPROVE",
                     "SubmitDate": new Date().toISOString(),
                     "PreparationStaffId": CURRENT_USER.id,
-                }).then((updateOtherIncidentReportRes) => {
+                }).then(async (updateOtherIncidentReportRes) => {
                     console.log(updateOtherIncidentReportRes)
-
+                    if (uploadFile.length > 0) {
+                        let att = [];
+                        att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                        await uploadOtherIncidentReportAttachmentById(formData.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                            if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交至服務經理",
@@ -406,11 +418,19 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         updateOtherIncidentReport(formData.Id, {
                             ...body,
                             ...extraBody
-                        }).then((updateOtherIncidentReportRes) => {
-                            console.log(updateOtherIncidentReportRes)
+                        }).then(async (updateOtherIncidentReportRes) => {
+                            console.log(updateOtherIncidentReportRes);
+                            if (uploadFile.length > 0) {
+                                let att = [];
+                                att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                                await uploadOtherIncidentReportAttachmentById(formData.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                                    if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                        // Do something
+                                    }
+                                }).catch(console.error);
+                            }
                             if (extraBody["Status"] === "PENDING_SD_APPROVE") {
                                 notifyOtherIncident(context, formData.Id, 1, workflow);
-
                                 postLog({
                                     AccidentTime: incidentTime.toISOString(),
                                     Action: "提交",
@@ -437,8 +457,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         createOtherIncidentReport({
                             ...body,
                             ...extraBody
-                        }).then(createOtherIncidentReportRes => {
-                            console.log(createOtherIncidentReportRes)
+                        }).then(async createOtherIncidentReportRes => {
+                            console.log(createOtherIncidentReportRes);
+                            if (uploadFile.length > 0) {
+                                let att = [];
+                                att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                                await uploadOtherIncidentReportAttachmentById(createOtherIncidentReportRes.data.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                                    if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                        // Do something
+                                    }
+                                }).catch(console.error);
+                            }
                             if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 notifyOtherIncident(context, createOtherIncidentReportRes.data.Id, 1, workflow);
 
@@ -480,7 +509,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 ...body,
                 "Title": "OIN",
                 "Status": "DRAFT"
-            }).then((updateOtherIncidentReportRes) => {
+            }).then(async (updateOtherIncidentReportRes) => {
+                if (uploadFile.length > 0) {
+                    let att = [];
+                    att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                    await uploadOtherIncidentReportAttachmentById(formData.Id, att).then(uploadOtherIncidentReportAttachmentByIdRes => {
+                        if (uploadOtherIncidentReportAttachmentByIdRes) {
+                            // Do something
+                        }
+                    }).catch(console.error);
+                }
                 console.log(updateOtherIncidentReportRes);
                 formSubmittedHandler();
             }).catch(console.error);
@@ -489,7 +527,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 ...body,
                 "Title": "OIN",
                 "Status": "DRAFT"
-            }).then(res => {
+            }).then(async res => {
+                if (uploadFile.length > 0) {
+                        let att = [];
+                        att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                        await uploadOtherIncidentReportAttachmentById(res.data.Id, att).then(uploadOtherIncidentReportAttachmentByIdRes => {
+                            if (uploadOtherIncidentReportAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
                 console.log(res)
                 formSubmittedHandler();
             }).catch(console.error);
@@ -772,6 +819,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             setFormStage(data.Stage);
             setPoliceDatetime(new Date(data.PoliceDatetime));
             setGuardianDatetime(new Date(data.GuardianDatetime));
+            if (formData.Attachments) {
+                getOtherIncidentReportAttachmentById(formData.Id).then((attchementsRes) => {
+                    let attachments = [];
+                    attchementsRes.forEach((att) => {
+                        attachments.push(att);
+                    });
+    
+                    setSelectedFile(attachments);
+                }).catch(console.error);
+            }
             setSmComment(data.SMComment);
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));
@@ -896,7 +953,19 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
     }
 
-
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
     useEffect(() => {
         if (formData && Array.isArray(serviceUserUnitList) && serviceUserUnitList.length > 0 && serviceLocation != '') {
             loadData(formData);
@@ -1134,6 +1203,21 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故的描述</label>
                         <div className="col">
                             <AutosizeTextarea className={`form-control ${(error && error['IncidentDescription']) ? "is-invalid" : ""}`} name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                        </div>
+                    </div>
+                    <div className="form-row mb-2">
+                        {/* 上載文件 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>上載文件</label>
+                        <div className="col">
+                            {formInitial(currentUserRole, formStatus) &&
+                                <StyledDropzone selectedFiles={setUploadFile} />
+                            }
+                            {
+                                selectedFile.length > 0 &&
+                                <aside>
+                                    <ul>{UploadedFilesComponent(selectedFile)}</ul>
+                                </aside>
+                            }
                         </div>
                     </div>
                 </section>

@@ -29,6 +29,39 @@ export async function getServiceUserAccidentAllAttachmentById(id: number) {
     }
 }
 
+export async function getAccidentReportFormAllAttachmentById(id: number) {
+    try {
+        const LIST_NAME = "Accident Report Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccidentAllAttachmentById failed");
+    }
+}
+export async function getSpecialIncidentReportAllowanceAttachmentById(id: number) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getServiceUserAccidentAllAttachmentById failed");
+    }
+}
+
+
+export async function getOtherIncidentReportAttachmentById(id: number) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles();
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getOtherIncidentReportAttachmentById failed");
+    }
+}
+
 export async function updateOutsidersAccidentFormAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
     try {
         const LIST_NAME = "Outsider Accident Form";
@@ -51,6 +84,17 @@ export async function getOutsidersAccidentAllAttachmentById(id: number) {
     }
 }
 
+export async function uploadAccidentReportAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
+    try {
+        const LIST_NAME = "Accident Report Form";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles.addMultiple(attachments);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("updateServiceUserAccidentAttachmentById failed");
+    }
+}
+
 export async function updateSpecialIncidentReportLicenseAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
     try {
         const LIST_NAME = "Special Incident Report License";
@@ -59,6 +103,28 @@ export async function updateSpecialIncidentReportLicenseAttachmentById(id: numbe
     } catch (err) {
         console.error(err);
         throw new Error("updateOutsidersAccidentFormAttachmentById failed");
+    }
+}
+
+export async function uploadSpecialIncidentReportAllowanceAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
+    try {
+        const LIST_NAME = "Special Incident Report Allowance";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles.addMultiple(attachments);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("uploadSpecialIncidentReportAllowanceAttachmentById failed");
+    }
+}
+
+export async function uploadOtherIncidentReportAttachmentById(id: number, attachments: IAttachmentFileInfo[]) {
+    try {
+        const LIST_NAME = "Other Incident Report";
+        const result = await sp.web.lists.getByTitle(LIST_NAME).items.getById(id).attachmentFiles.addMultiple(attachments);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw new Error("uploadOtherIncidentReportAttachmentById failed");
     }
 }
 

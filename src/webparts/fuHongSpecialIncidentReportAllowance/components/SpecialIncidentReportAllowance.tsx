@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import AutosizeTextarea from "../../../components/AutosizeTextarea/AutosizeTextarea";
-import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance, deleteSpecialIncidentReportAllowance } from '../../../api/PostFuHongList';
+import { createIncidentFollowUpForm, createSpecialIncidentReportAllowance, updateSpecialIncidentReportAllowance, deleteSpecialIncidentReportAllowance, uploadSpecialIncidentReportAllowanceAttachmentById, getSpecialIncidentReportAllowanceAttachmentById } from '../../../api/PostFuHongList';
 import { IAccidentCategoryAbuseDetails, IErrorFields, ISpecialIncidentReportAllowanceProps, ISpecialIncidentReportAllowanceStates } from './ISpecialIncidentReportAllowance';
 import { getUserInfoByEmailInUserInfoAD, getAllServiceUnit } from '../../../api/FetchUser';
 import useUserInfo from '../../../hooks/useUserInfo';
@@ -30,6 +30,8 @@ import { IItemAddResult } from "@pnp/sp/items";
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as fontawesome from '@fortawesome/free-solid-svg-icons';
+import StyledDropzone from "../../../components/Dropzone/Dropzone";
+import { attachmentsFilesFormatParser } from '../../../utils/FilesParser';
 const footNoteOne = "指在服務單位內及／或在其他地方提供服務時所發生的特別事故";
 const footNoteTwo = "包括寄養家庭的寄養家長及兒童之家的家舍家長及其家庭成員";
 
@@ -126,6 +128,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const [emailBody, setEmailBody] = useState("");
     const [emailCc, setEmailCc] = useState("");
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
+    const [uploadFile, setUploadFile] = useState([]);
+    const [selectedFile, setSelectedFile] = useState([]);
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
         name: context.pageContext.legacyPageContext.userDisplayName,
@@ -477,7 +481,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.SubmitDate) {
                 setReportDate(new Date(formData.SubmitDate));
             }
-            debugger
+            
+            if (formData.Attachments) {
+                getSpecialIncidentReportAllowanceAttachmentById(formData.Id).then((attchementsRes) => {
+                    let attachments = [];
+                    attchementsRes.forEach((att) => {
+                        attachments.push(att);
+                    });
+    
+                    setSelectedFile(attachments);
+                }).catch(console.error);
+            }
+
             if (formData.ServiceUnit) {
                 setServiceUnit(formData.ServiceUnit);
             }
@@ -590,9 +605,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     ...body,
                     "Status": "PENDING_SM_APPROVE",
 
-                }).then(res => {
+                }).then(async res => {
                     console.log(res)
-
+                    if (uploadFile.length > 0) {
+                        let att = [];
+                        att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                        await uploadSpecialIncidentReportAllowanceAttachmentById(formData.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                            if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交",
@@ -629,8 +652,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         updateSpecialIncidentReportAllowance(formData.Id, {
                             ...body,
                             ...extraBody
-                        }).then(res => {
+                        }).then(async res => {
                             console.log(res)
+                            if (uploadFile.length > 0) {
+                                let att = [];
+                                att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                                await uploadSpecialIncidentReportAllowanceAttachmentById(formData.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                                    if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                        // Do something
+                                    }
+                                }).catch(console.error);
+                            }
                             if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 //notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
 
@@ -660,8 +692,17 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         createSpecialIncidentReportAllowance({
                             ...body,
                             ...extraBody
-                        }).then(res => {
-                            console.log(res)
+                        }).then(async res => {
+                            console.log(res);
+                            if (uploadFile.length > 0) {
+                                let att = [];
+                                att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                                await uploadSpecialIncidentReportAllowanceAttachmentById(res.data.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                                    if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                                        // Do something
+                                    }
+                                }).catch(console.error);
+                            }
                             if (extraBody["Status"] === "PENDING_SM_APPROVE") {
                                 notifySpecialIncidentAllowance(context, res.data.Id, 1, speicalIncidentReportWorkflow);
 
@@ -708,8 +749,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 ...body,
                 "ServiceUnit": serviceUnit,
                 "Title": "SID"
-            }).then(res => {
+            }).then(async res => {
                 console.log(res)
+                if (uploadFile.length > 0) {
+                    let att = [];
+                    att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                    await uploadSpecialIncidentReportAllowanceAttachmentById(formData.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                        if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                            // Do something
+                        }
+                    }).catch(console.error);
+                }
+                
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
@@ -718,8 +769,18 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 "Status": "DRAFT",
                 "ServiceUnit": serviceUnit,
                 "Title": "SID"
-            }).then(res => {
-                console.log(res)
+            }).then(async res => {
+                console.log(res);
+                if (uploadFile.length > 0) {
+                    let att = [];
+                    att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                    await uploadSpecialIncidentReportAllowanceAttachmentById(res.data.Id, att).then(uploadSpecialIncidentReportAllowanceAttachmentByIdRes => {
+                        if (uploadSpecialIncidentReportAllowanceAttachmentByIdRes) {
+                            // Do something
+                        }
+                    }).catch(console.error);
+                }
+                
                 formSubmittedHandler();
             }).catch(console.error);
         }
@@ -956,6 +1017,20 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         const value = event.target.value;
         setEmailBody(value)
     }
+
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
 
     useEffect(() => {
         getAllServiceUnit(siteCollectionUrl).then((userUnitList) => {
@@ -1294,6 +1369,21 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         <div className="col">
                             <input type="text" className="form-control" value={reportAddress} onChange={(event) => setReportAddress(event.target.value)}
                                 disabled={!pendingSmApprove(context, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                        </div>
+                    </div>
+                    <div className="form-row mb-2">
+                        {/* 上載文件 */}
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>上載文件</label>
+                        <div className="col">
+                            {formInitial(currentUserRole, formStatus) &&
+                                <StyledDropzone selectedFiles={setUploadFile} />
+                            }
+                            {
+                                selectedFile.length > 0 &&
+                                <aside>
+                                    <ul>{UploadedFilesComponent(selectedFile)}</ul>
+                                </aside>
+                            }
                         </div>
                     </div>
                 </section>
