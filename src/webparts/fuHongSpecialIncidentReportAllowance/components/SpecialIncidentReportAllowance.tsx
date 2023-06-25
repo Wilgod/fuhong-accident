@@ -467,7 +467,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         let value = event.target.value;
         //setServiceUnitTC(value);
         setServiceUnit(value);
-        debugger
         setServiceLocation(value);
 
     }
@@ -743,6 +742,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
     const draftHandler = (event) => {
         event.preventDefault();
         const [body] = dataFactory()
+        body['SDId'] = spSdInfo.Id;
+        body['SMId'] = spSmInfo.Id;
         console.log(body);
         if (formStatus === "DRAFT") {
             updateSpecialIncidentReportAllowance(formData.Id, {
@@ -1046,7 +1047,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         filterList.push(unit);
                     }
                 }
-                debugger
                 setServiceUserUnitList(filterList);
             }
 
@@ -1106,7 +1106,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 return;
             }*/
 
-            if (userInfo && userInfo.hr_deptid) {
+            if (userInfo && userInfo.hr_deptid && !formData) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
                 setServiceLocation(userInfo.hr_location);
@@ -1313,16 +1313,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
                                         console.log('serviceUnit1234', serviceUnit);
-                                        if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit', serviceUnit);
-                                            debugger
+                                        if (serviceUnit == 'COATC') {
+                                            console.log('item.su_Eng_name_display', item.su_Eng_name_display);
                                         }
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234', serviceUnit);
+                                        console.log('serviceUnit234', serviceUnit);
 
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
