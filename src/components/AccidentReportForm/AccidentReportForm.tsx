@@ -308,6 +308,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
             const [body, error] = dataFactory();
 
             if (formType === "SERVICE_USER") {
+                debugger
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -492,7 +493,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 attchementsRes.forEach((att) => {
                     attachments.push(att);
                 });
-
+                debugger
                 setSelectedFile(attachments);
             }).catch(console.error);
         }
