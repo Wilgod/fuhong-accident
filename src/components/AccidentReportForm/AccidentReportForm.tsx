@@ -259,7 +259,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                     alert(msg);
                     setError(error);
                 } else {
-                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
+                    updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then(async (updateAccidentReportFormResponse) => {
+                        if (uploadFile.length > 0) {
+                            let att = [];
+                            att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                            await uploadAccidentReportAttachmentById(parentFormData.AccidentReportFormId, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                                if (updateServiceUserAccidentAttachmentByIdRes) {
+                                    // Do something
+                                }
+                            }).catch(console.error);
+                        }
                         if (formType === "SERVICE_USER") {
                             updateServiceUserAccidentById(parentFormData.Id, { "Status": "PENDING_SPT_APPROVE", "ReminderDate": null }).then((updateServiceUserAccidentResponse) => {
                                 console.log(updateServiceUserAccidentResponse)
