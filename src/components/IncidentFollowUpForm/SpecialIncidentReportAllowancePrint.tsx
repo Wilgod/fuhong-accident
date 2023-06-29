@@ -1166,9 +1166,9 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                     <div className="form-row mb-3" style={{fontSize:'18px'}}>
                         <div className={`col-12`}>
                             事故性質&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span>&#9745;</span>
-                            特別事故 (牌照事務處)&nbsp;&nbsp;&nbsp;&nbsp;
                             <span>&#9744;</span>
+                            特別事故 (牌照事務處)&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>&#9745;</span>
                             特別事故 (津貼科)&nbsp;&nbsp;&nbsp;&nbsp;
                             <span>&#9744;</span>
                             其他事故

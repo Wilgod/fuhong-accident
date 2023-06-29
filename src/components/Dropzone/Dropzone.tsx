@@ -45,7 +45,7 @@ export default function StyledDropzone(props) {
         isDragAccept,
         isDragReject,
         acceptedFiles
-    } = useDropzone({ accept: 'image/*' });
+    } = useDropzone({ accept: 'image/*, .pdf, .doc, .xlsx, .ppt' });
 
     const uploadedFilesHandler = () => {
         for (let item of acceptedFiles) {

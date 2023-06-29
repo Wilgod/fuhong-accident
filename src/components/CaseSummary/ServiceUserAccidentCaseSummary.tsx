@@ -784,7 +784,14 @@ function suggestionFactorFormatter(cell, rowIndex) {
             div.push(<div>服務使用者經診治後情況 : </div>);
             div.push(<div>{rowIndex.AfterTreatmentDescription}</div>);
         }
-        
+        if (rowIndex.AfterTreatmentDescription != null) {
+            div.push(<div>服務使用者經診治後情況 : </div>);
+            div.push(<div>{rowIndex.AfterTreatmentDescription}</div>);
+        }
+        if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0 && rowIndex.AccidentReportForm[0].Suggestion != null) {
+            div.push(<div>調查員建議 : </div>);
+            div.push(<div>{rowIndex.AccidentReportForm[0].Suggestion}</div>);
+        }
         /*if (rowIndex.AccidentReportForm[0].Suggestion != null) {
             div.push(<div>{rowIndex.AccidentReportForm[0].Suggestion}</div>);
         }*/

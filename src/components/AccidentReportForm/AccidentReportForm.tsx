@@ -12,13 +12,14 @@ import useServiceUnitByShortForm from '../../hooks/useServiceUnitByShortForm';
 import useServiceUser from '../../hooks/useServiceUser';
 import useSharePointGroup from '../../hooks/useSharePointGroup';
 import { getAccidentReportFormById } from '../../api/FetchFuHongList';
-import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById } from '../../api/PostFuHongList';
+import { createAccidentFollowUpRepotForm, updateAccidentReportFormById, updateServiceUserAccidentById, updateOutsiderAccidentFormById, uploadAccidentReportAttachmentById, getAccidentReportFormAllAttachmentById } from '../../api/PostFuHongList';
 import { addBusinessDays, addMonths, addDays } from '../../utils/DateUtils';
 import { pendingInvestigate, stageTwoPendingSptApprove, stageTwoPendingSptApproveForSM } from '../../webparts/fuHongServiceUserAccidentForm/permissionConfig';
 import { notifyOutsiderAccident, notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, notifyOutsiderAccidentReject } from '../../api/Notification';
 import { postLog } from '../../api/LogHelper';
 import { getQueryParameterString } from '../../utils/UrlQueryHelper';
-
+import StyledDropzone from "../../components/Dropzone/Dropzone";
+import { attachmentsFilesFormatParser } from '../../utils/FilesParser';
 const formTypeParser = (formType: string, additonalString: string) => {
     switch (formType) {
         case "SERVICE_USER":
@@ -36,6 +37,8 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
     const [error, setError] = useState<IErrorFields>({});
+    const [uploadFile, setUploadFile] = useState([]);
+    const [selectedFile, setSelectedFile] = useState([]);
     const [form, setForm] = useState<IAccidentFollowUpRepotFormStates>({
         accidentNatureFall: false,
         accidentNatureChok: false,
@@ -212,8 +215,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, {
                     "SMComment": smComment,
                     "SMDate": new Date().toISOString()
-                }).then((updateAccidentReportFormResponse) => {
-
+                }).then(async (updateAccidentReportFormResponse) => {
+                    if (uploadFile.length > 0) {
+                        let att = [];
+                        att = [...attachmentsFilesFormatParser(uploadFile, "")];
+                        await uploadAccidentReportAttachmentById(parentFormData.AccidentReportFormId, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                            if (updateServiceUserAccidentAttachmentByIdRes) {
+                                // Do something
+                            }
+                        }).catch(console.error);
+                    }
                     if (formType === "SERVICE_USER") {
                         postLog({
                             AccidentTime: parentFormData.AccidentTime,
@@ -292,17 +303,28 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         }
     };
 
-    const draftHandler = () => {
+    const draftHandler = async () => {
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
 
             if (formType === "SERVICE_USER") {
+                debugger
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
                 updateOutsiderAccidentFormById(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
                     formSubmittedHandler();
+                }).catch(console.error);
+            }
+            if (uploadFile.length > 0) {
+                let att = [];
+                att = [...attachmentsFilesFormatParser(uploadFile, "")];
+
+                await uploadAccidentReportAttachmentById(parentFormData.AccidentReportFormId, att).then(updateServiceUserAccidentAttachmentByIdRes => {
+                    if (updateServiceUserAccidentAttachmentByIdRes) {
+                        // Do something
+                    }
                 }).catch(console.error);
             }
 
@@ -450,6 +472,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
+        debugger
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)
         }
@@ -464,7 +487,16 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
 
-
+        if (formTwentyData.Attachments) {
+            getAccidentReportFormAllAttachmentById(formTwentyData.Id).then((attchementsRes) => {
+                let attachments = [];
+                attchementsRes.forEach((att) => {
+                    attachments.push(att);
+                });
+                debugger
+                setSelectedFile(attachments);
+            }).catch(console.error);
+        }
 
         //調查員
         console.log('parentFormData.Investigator', parentFormData.Investigator);
@@ -564,6 +596,19 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     console.log('sptDate',sptDate);
+    const UploadedFilesComponent = (files: any[]) => files.map((file, index) => {
+        const fileName = file.FileName
+        return <li key={`${file.FileName}_${index}`}>
+            <div className="d-flex">
+                <span className="flex-grow-1 text-break">
+                    <a href={file.ServerRelativeUrl} target={"_blank"} data-interception="off">{fileName}</a>
+                </span>
+                {/* <span style={{ fontSize: 18, fontWeight: 700, cursor: "pointer" }} onClick={() => removeHandler(index)}>
+                    &times;
+                </span> */}
+            </div>
+        </li>
+    })
     return (
         <>
             {isPrintMode && <Header displayName="服務使用者/外界人士意外報告(二)" />}
@@ -593,6 +638,19 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                         <div className="col-12 col-md-4">
                             <input type="text" className="form-control" readOnly value={`${parentFormData && parentFormData.CaseNumber ? `${parentFormData.CaseNumber}` : ""}`} />
                         </div>
+                        <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>上載文件</label>
+                        <div className="col-12 col-md-4">
+                            {pendingInvestigate(context, investigator, formStatus, formStage) &&
+                                <StyledDropzone selectedFiles={setUploadFile} />
+                            }
+                            {
+                                selectedFile.length > 0 &&
+                                <aside>
+                                    <ul>{UploadedFilesComponent(selectedFile)}</ul>
+                                </aside>
+                            }
+                        </div>
+                        
                     </div>
                 </section>
 

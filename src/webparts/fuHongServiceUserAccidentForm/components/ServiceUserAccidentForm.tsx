@@ -917,7 +917,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             body["ReporterId"] = CURRENT_USER.id;
             console.log(error);
             if (Object.keys(error).length > 0) {
-                alert("提交錯誤");
+                alert(msg);
                 setError(error);
             } else {
                 if (formStatus === "SM_VOID") {
