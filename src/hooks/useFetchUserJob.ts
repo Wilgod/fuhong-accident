@@ -17,6 +17,9 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sa.ServiceUserUnit });
+            if (sa.CaseNumber == 'SUI-2324COATC024') {
+                debugger
+            }
             sa['AccidentReportForm'] = getARF;
             sa['AccidentFollowUpForm'] = getAFUF;
             sa['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
@@ -31,7 +34,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                 sa['CurrentSM'] = getARF.length > 0 ? getARF[0]['SM'] : null;
                 sa['CurrentSD'] = getARF.length > 0 ? getARF[0]['SD'] : null;
                 sa['CurrentSPT'] = getARF.length > 0 ? getARF[0]['SPT'] : null;
-                sa['CurrentInvestigator'] = sa['Investigator'];
+                sa['CurrentInvestigator'] = getARF.length > 0 ? getARF[0]['Investigator'] : sa['Investigator'];
             } else if (sa['Stage'] == '3') {
                 sa['Form'] = '事故跟進/結束報告(三)';
                 sa['CurrentSM'] = getAFUF.length > 0 ? getAFUF[getAFUF.length -1]['SM'] : null;
@@ -74,7 +77,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                         serviceUserAccidentData.push(sa);
                     }
                 } else if (sa['Stage'] == '2') {
-                    if (sa.Status === "PENDING_INVESTIGATE" && sa['InvestigatorId'] == spId) {
+                    if (sa.Status === "PENDING_INVESTIGATE" && (sa['InvestigatorId'] == spId || getARF[0]['Investigator'].Id == spId)) {
                         serviceUserAccidentData.push(sa);
                     } else if (sa.Status === "PENDING_SPT_APPROVE" && getARF.length > 0 && (getARF[0]['SMId'] == spId || getARF[0]['SPTId'] == spId)) {
                         serviceUserAccidentData.push(sa);
