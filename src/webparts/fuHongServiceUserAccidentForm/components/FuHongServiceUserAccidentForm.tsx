@@ -250,6 +250,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         let formTwentyOneDataSelected = null;
         if (data.AccidentReportFormId != null) {
           formTwentyData = await getAccidentReportFormById(data.AccidentReportFormId);
+          const investigator2 = formTwentyData.Investigator != null ? await getUserAdByGraph(formTwentyData.Investigator.EMail) : null;
+          formTwentyData["InvestigatorAD"] =investigator2;
         }
         if (data.AccidentFollowUpFormId != null && data.AccidentFollowUpFormId.length > 0) {
           formTwentyOneData = await getAccidentFollowUpFormById(data.AccidentFollowUpFormId[data.AccidentFollowUpFormId.length - 1]);
