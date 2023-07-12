@@ -68,13 +68,16 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
                     if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
                         setInvestigatorName(userInfosRes[0].hr_jobcode);
                         setInvestigatorJobTitle(formData.Reporter.Title);
+                        window.print();
                     }
                 }).catch((err) => {
                     console.error('getUserInfoByEmailInUserInfoAD error')
                     console.error(err)
                 });
+            } else {
+                window.print();
             }
-            window.print();
+            
         }
     }, [formData])
 
