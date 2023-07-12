@@ -5,10 +5,9 @@
     //"name": "Fu Hong Accident Uat",
     //"id": "cf8f397d-36a7-47b1-8a3d-7ef61ba8f95a",
     //Prod
-
     "name": "Fu Hong Accident Prod",
     "id": "cf9f497d-46a7-47b2-8a4d-7ef63ba8f96a",
-    "version": "1.0.0.303",
+    "version": "1.0.0.305",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {

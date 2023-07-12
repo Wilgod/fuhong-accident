@@ -55,6 +55,7 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
         window.print();
     }, [])
     console.log('formData.ServiceCategory',formData.ServiceCategory);
+    debugger
 return <>
     <div style={{color:'black'}}>
         <div className={`notPrintable`}>
@@ -1248,7 +1249,7 @@ return <>
                                 調查員姓名及職級
                                 </td>
                                 <td style={{width:'250px',borderBottom:'1px solid'}}>
-                                {formData.InvestigatorAD.displayName},&nbsp;&nbsp;{formData.InvestigatorAD.jobTitle}
+                                {formTwentyData.InvestigatorAD.displayName},&nbsp;&nbsp;{formTwentyData.InvestigatorAD.jobTitle}
                                 </td>
                                 <td  style={{width:'100px'}}>
                                 &nbsp;&nbsp;日期

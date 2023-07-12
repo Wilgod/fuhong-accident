@@ -232,17 +232,62 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         const error = {};
         let msg = "";
         // Service User info
-        body["ServiceUserNameEN"] = serviceUserNameEN;
         body["ServiceUserNameCN"] = serviceUserNameCN;
-        body["ServiceUserAge"] = serviceUserAge;
-        body["ServiceUserGender"] = serviceUserGender;
-        body["ServiceUserId"] = serviceUserId == null ? null : serviceUserId.toString();
+        if (serviceUserNameEN) {
+            body["ServiceUserNameEN"] = serviceUserNameEN;
+        } else {
+            error["ServiceUserNameEN"] = true;
+            msg += "請填寫服務使用者姓名 (英文)\n";
+        }
+        
+        if (serviceUserAge) {
+            body["ServiceUserAge"] = serviceUserAge;
+        } else {
+            error["ServiceUserAge"] = true;
+            msg += "請填寫年齡\n";
+        }
+        if (serviceUserGender) {
+            body["ServiceUserGender"] = serviceUserGender;
+        } else {
+            error["ServiceUserGender"] = true;
+            msg += "請填寫性別\n";
+        }
+        if (serviceUserId) {
+            body["ServiceUserId"] = serviceUserId.toString();
+        } else {
+            error["ServiceUserId"] = true;
+            msg += "請填寫服務使用者檔案號碼\n";
+        }
+        //body["ServiceUserId"] = serviceUserId == null ? null : serviceUserId.toString();
         debugger
-        body["ServiceCategory"] = JSON.stringify(serviceCategory).replace(`"[`, `[`).replace(`]"`, `]`).replace(/\\/g, ``);
+        let serCategory= JSON.stringify(serviceCategory).replace(`"[`, `[`).replace(`]"`, `]`).replace(/\\/g, ``);
+        if (serCategory != '[]') {
+            body["ServiceCategory"] = serCategory
+        } else {
+            error["ResidentialServices"] = true;
+            msg += "請填寫接受服務類別\n";
+        }
+        
         debugger
-        body["Wheelchair"] = wheelchair;
-        body["ASD"] = asd;
-        body["Intelligence"] = intelligence;
+        if (wheelchair) {
+            body["Wheelchair"] = wheelchair;
+        } else {
+            error["Wheelchair"] = true;
+            msg += "請填寫是否使用輪椅\n";
+        }
+
+        if (asd) {
+            body["ASD"] = asd;
+        } else {
+            error["ASD"] = true;
+            msg += "請填寫自閉症譜系障礙(ASD)\n";
+        }
+        if (intelligence) {
+            body["Intelligence"] = intelligence;
+        } else {
+            error["Intelligence"] = true;
+            msg += "請填寫智力障礙程度\n";
+        }
         body["HKID"] = hkid 
         if (serviceUserRecordId !== null && isNaN(serviceUserRecordId) === false) {
             body["ServiceUser"] = serviceUserRecordId.toString();
@@ -1792,12 +1837,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 服務使用者姓名 (英文)*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務使用者姓名<span className="d-sm-inline d-xl-block">(英文)</span></label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['ServiceUserNameEN']) ? styles.divInvalid : ""}`}>
                             <input type="text" className="form-control"
                                 //  value={serviceUser ? serviceUser.NameEN : ""} 
                                 value={serviceUserNameEN}
                                 onChange={(event) => setServiceUserNameEN(event.target.value)}
-                                disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
                         </div>
                         {/* 服務使用者姓名 (中文)*/}
@@ -1815,23 +1860,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 年齡*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['ServiceUserAge']) ? styles.divInvalid : ""}`}>
                             <input type="number" className="form-control" min={0}
                                 // value={serviceUser ? serviceUser.Age : 0}
                                 value={serviceUserAge}
                                 onChange={(event) => setServiceUserAge(+event.target.value)}
-                                disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
                         </div>
                         {/* 性別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>性別</label>
-                        <div className="col-12 col-xl-4 pt-xl-0">
+                        <div className={`col-12 col-xl-4 ${(error && error['ServiceUserGender']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input form-check-lg" type="radio" name="patientGender" id="gender-male" value="male"
                                     // checked={serviceUser && serviceUser.Gender === "male"}
                                     checked={serviceUserGender === "male"}
                                     onClick={() => setServiceUserGender("male")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-male">男</label>
                             </div>
@@ -1840,7 +1885,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     //  checked={serviceUser && serviceUser.Gender === "female"} 
                                     checked={serviceUserGender === "female"}
                                     onClick={() => setServiceUserGender("female")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="gender-female">女</label>
                             </div>
@@ -1850,35 +1895,35 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 服務使用者檔案號碼*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0 pr-xl-0`}>服務使用者檔案號碼</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['ServiceUserId']) ? styles.divInvalid : ""}`}>
                             <input type="text" className="form-control"
                                 // value={serviceUser ? serviceUser.ServiceNumber : ""} 
                                 value={serviceUserId}
                                 onChange={(event) => setServiceUserId(event.target.value)}
-                                disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                             />
                         </div>
                         {/* 接受服務類別*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
-                        <div className={`col ${(error && error['Circumstance']) ? styles.divInvalid : ""}`}>
+                        <div className={`col ${(error && error['ResidentialServices']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Residential-Services" value="住宿服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("住宿服務") > -1} disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Residential-Services" value="住宿服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("住宿服務") > -1} disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Residential-Services">住宿服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Day-Training-Services" value="日間訓練服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("日間訓練服務") > -1} disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Day-Training-Services" value="日間訓練服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("日間訓練服務") > -1} disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Day-Training-Services">日間訓練服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Community-Support-Services" value="社區支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("社區支援服務") > -1} disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Community-Support-Services" value="社區支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("社區支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Community-Support-Services">社區支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("自閉症及發展障礙支援服務") > -1} disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("自閉症及發展障礙支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services">自閉症及發展障礙支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("職業康復及發展服務") > -1} disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("職業康復及發展服務") > -1} disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Vocational-Rehabilitation-and-Development-Services">職業康復及發展服務</label>
                             </div>
                             {/*
@@ -1932,13 +1977,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 是否使用輪椅*/}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>是否使用輪椅</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['Wheelchair']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientWheelchair" id="wheelchair-true" value="true"
                                     // checked={serviceUser && serviceUser.Wheelchair === true}
                                     checked={wheelchair === true}
                                     onClick={() => setWheelchair(true)}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-true">是</label>
                             </div>
@@ -1947,7 +1992,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     // checked={serviceUser && (serviceUser.Wheelchair === false || serviceUser.Wheelchair === null)}
                                     checked={wheelchair === false}
                                     onClick={(event) => setWheelchair(false)}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="wheelchair-false">否</label>
                             </div>
@@ -1955,13 +2000,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                         {/* 自閉症譜系障礙(ASD) */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>自閉症譜系障礙(ASD)</label>
-                        <div className="col-12 col-xl-4">
+                        <div className={`col-12 col-xl-4 ${(error && error['ASD']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="patientASD" id="asd_true" value="ASD_TRUE"
                                     // checked={serviceUser && (serviceUser.ASD === true)}
                                     checked={asd === true}
                                     onClick={() => setAsd(true)}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_true">是</label>
                             </div>
@@ -1970,7 +2015,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     // checked={serviceUser && (serviceUser.ASD === false || serviceUser.ASD === null)} 
                                     checked={asd === false}
                                     onClick={() => setAsd(false)}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="asd_false">否</label>
                             </div>
@@ -1980,13 +2025,13 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     <div className="form-row mb-2">
                         {/* 智力障礙程度 */}
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>智力障礙程度</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Intelligence']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-mild" value="INTELLECTUAL_DISABILITY_MILD"
                                     // checked={serviceUser && serviceUser.IntellectualDisability === "MILD"}
                                     checked={intelligence === "MILD"}
                                     onChange={() => setIntelligence("MILD")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-mild">輕度</label>
                             </div>
@@ -1994,7 +2039,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 <input className="form-check-input" type="radio" name="intellectualDisability" id="intellectual-disability-moderate" value="INTELLECTUAL_DISABILITY_MODERATE"
                                     checked={intelligence === "MODERATE"}
                                     onChange={() => setIntelligence("MODERATE")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-moderate">中度</label>
                             </div>
@@ -2003,7 +2048,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     // checked={serviceUser && serviceUser.IntellectualDisability === "SEVERE"}
                                     checked={intelligence === "SEVERE"}
                                     onChange={() => setIntelligence("SEVERE")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-severe">嚴重</label>
                             </div>
@@ -2012,7 +2057,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     // checked={serviceUser && serviceUser.IntellectualDisability === "EXTREME_SEVERE"}
                                     checked={intelligence === "EXTREME_SEVERE"}
                                     onChange={() => setIntelligence("EXTREME_SEVERE")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-extreme-severe">極度嚴重</label>
                             </div>
@@ -2022,7 +2067,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     // checked={serviceUser && (serviceUser.IntellectualDisability === "UNKNOWN" || serviceUser.IntellectualDisability === null)}
                                     checked={intelligence === "UNKNOWN" || intelligence === null}
                                     onChange={() => setIntelligence("UNKNOWN")}
-                                    disabled={type=='cms' ||serviceUserRecordId !== -1 || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
+                                    disabled={type=='cms' || !pendingSmApprove(context, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(context, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="intellectual-disability-unknown">不知</label>
                             </div>
