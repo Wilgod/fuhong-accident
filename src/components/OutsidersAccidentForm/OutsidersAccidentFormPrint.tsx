@@ -63,11 +63,25 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
                 console.error('getUserInfoByEmailInUserInfoAD error')
                 console.error(err)
             });
-            if (formData.Investigator) {
+            debugger
+            if (formTwentyData.Investigator) {
+                getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formTwentyData.Investigator.EMail).then((userInfosRes) => {
+                    if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                        debugger
+                        setInvestigatorName(userInfosRes[0].Name);
+                        setInvestigatorJobTitle(userInfosRes[0].hr_jobcode);
+                        window.print();
+                    }
+                }).catch((err) => {
+                    console.error('getUserInfoByEmailInUserInfoAD error')
+                    console.error(err)
+                });
+            } else if (formData.Investigator) {
                 getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Investigator.EMail).then((userInfosRes) => {
                     if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                        setInvestigatorName(userInfosRes[0].hr_jobcode);
-                        setInvestigatorJobTitle(formData.Reporter.Title);
+                        debugger
+                        setInvestigatorName(userInfosRes[0].Name);
+                        setInvestigatorJobTitle(userInfosRes[0].hr_jobcode);
                         window.print();
                     }
                 }).catch((err) => {

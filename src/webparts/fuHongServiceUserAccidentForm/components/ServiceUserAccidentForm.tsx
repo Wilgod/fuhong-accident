@@ -269,14 +269,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
         
         debugger
-        if (wheelchair) {
+        if (wheelchair != undefined) {
             body["Wheelchair"] = wheelchair;
         } else {
             error["Wheelchair"] = true;
             msg += "請填寫是否使用輪椅\n";
         }
 
-        if (asd) {
+        if (asd != undefined) {
             body["ASD"] = asd;
         } else {
             error["ASD"] = true;
