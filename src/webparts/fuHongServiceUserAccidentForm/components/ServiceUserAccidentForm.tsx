@@ -1557,6 +1557,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 })
                 //"ServiceCategory": ["住宿"],
             }
+            debugger
             setCmsUserList(cmsuser)
         }
 
@@ -1601,16 +1602,38 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 
                 
             }
+            let mentalretarded = ""
+            if (selectUser[0].cr98a_mentalretarded == 111910000) {
+                mentalretarded = "EXTREME_SEVERE";
+            } else if (selectUser[0].cr98a_mentalretarded == 111910001) {
+                mentalretarded = "SEVERE";
+            } else if (selectUser[0].cr98a_mentalretarded == 111910002) {
+                mentalretarded = "MODERATE";
+            } else if (selectUser[0].cr98a_mentalretarded == 111910003) {
+                mentalretarded = "MILD";
+            } else if (selectUser[0].cr98a_mentalretarded == 111910004) {
+                mentalretarded = "UNKNOWN";
+            }
+            const today = new Date();
+            const birthdateObj = new Date(userInformationlist.BasicInformation.cr98a_birthday);
+            let age = today.getFullYear() - birthdateObj.getFullYear();
+            if (
+                today.getMonth() < birthdateObj.getMonth() ||
+                (today.getMonth() === birthdateObj.getMonth() &&
+                  today.getDate() < birthdateObj.getDate())
+              ) {
+                age -= 1;
+              }
             setHkid(userInformationlist.BasicInformation.cr98a_hkid);
             setServiceUserNameEN(selectUser[0].NameEN);
             setServiceUserNameCN(selectUser[0].NameCN);
-            setServiceUserAge(selectUser[0].Age);
+            setServiceUserAge(age);
             setServiceUserGender(selectUser[0].Sex);
             setServiceUserId(value);
             setServiceCategory(sc);
             setAsd(selectUser[0].Autismspectrum);
             setWheelchair(selectUser[0].Wheelchairtypes);
-            setIntelligence(selectUser[0].Mentalretarded);
+            setIntelligence(mentalretarded);
             setServiceUserRecordId(selectUser[0].ServiceNumber);
             //cr98a_hkid
         } else {
