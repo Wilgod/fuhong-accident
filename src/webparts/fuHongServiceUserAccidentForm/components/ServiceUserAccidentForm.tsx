@@ -1522,7 +1522,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
             debugger
             let cmsuser = []
-            for (let user of userlist.results) {
+            let getUserlist = userlist.results.filter(item => {return item.cr98a_serviceunits == value});
+            for (let user of getUserlist) {
+                if (user.cr98a_namecn== '許曉欣') {
+                    debugger
+                }
                 /*if (user.cr98a_mentalretarded != 111910000) {
                     
                 }
