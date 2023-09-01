@@ -311,8 +311,26 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                 }
             }
             if (results.AccidentReportForm != undefined && results.AccidentReportForm.length > 0) {
-                if (results.AccidentReportForm[0].Suggestion != null) {
-                    Suggestion = results.AccidentReportForm[0].Suggestion;
+                if (results.TreatmentAfterAccident != null) {
+                    Suggestion += '服務單位即時治療/處理 : \n';
+                    Suggestion += results.TreatmentAfterAccident + '\n';
+                }
+                if (results.MedicalArrangementTreatment != null) {
+                    Suggestion += '提供予服務使用者的治療 : \n';
+                    Suggestion += results.MedicalArrangementTreatment + '\n';
+                }
+                if (results.ContingencyMeasure != 'CONTINGENCY_MEASURE_TRUE' && results.ContingencyMeasureRemark != null) {
+                    Suggestion += '意外後中心即時應變措施 : \n';
+                    Suggestion += results.ContingencyMeasureRemark + '\n';
+                }
+                if (results.AfterTreatmentDescription != null) {
+                    Suggestion += '服務使用者經診治後情況 : \n';
+                    Suggestion += results.AfterTreatmentDescription + '\n';
+                }
+                debugger
+                if (results.AccidentReportForm != undefined && results.AccidentReportForm.length > 0 && results.AccidentReportForm[0].Suggestion != null) {
+                    Suggestion += '調查員建議 : \n';
+                    Suggestion += results.AccidentReportForm[0].Suggestion + '\n';
                 }
             }
             exportList.push({
@@ -779,10 +797,6 @@ function suggestionFactorFormatter(cell, rowIndex) {
         if (rowIndex.ContingencyMeasure != 'CONTINGENCY_MEASURE_TRUE') {
             div.push(<div>意外後中心即時應變措施 : </div>);
             div.push(<div>{rowIndex.ContingencyMeasureRemark}</div>);
-        }
-        if (rowIndex.AfterTreatmentDescription != null) {
-            div.push(<div>服務使用者經診治後情況 : </div>);
-            div.push(<div>{rowIndex.AfterTreatmentDescription}</div>);
         }
         if (rowIndex.AfterTreatmentDescription != null) {
             div.push(<div>服務使用者經診治後情況 : </div>);

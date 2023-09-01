@@ -9,7 +9,7 @@ import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../ut
 import useFetchAllForms from '../../hooks/useFetchAllForms';
 import { IUser } from '../../interface/IUser';
 import { getQueryParameterString } from './../../utils/UrlQueryHelper';
-export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermissionBoolean, serviceUnitList,permissionList }: IMainTableComponentProps) {
+export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermissionBoolean, serviceUnitList,permissionList, siteCollectionUrl }: IMainTableComponentProps) {
     const type: string = getQueryParameterString("type");
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -27,8 +27,7 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
         keyword: searchKeyword,
         adminPermissionBoolean:adminPermissionBoolean,
         permissionList:permissionList
-        
-    });
+    }, siteCollectionUrl);
     // const [data, setStartDate, setEndDate, setSearchServiceUnit, setSearchFormTypes, setSearchFormStatus, setSearchExpired] = useFetchAllForms(CURRENT_USER.id);
 
 
@@ -168,7 +167,6 @@ const columns = (context, type) => {
             text: '[按鈕]',
             headerStyle: {width:'100px'},
             formatter: (value, data) => {
-                debugger
                 let formLink = "";
                 if (data && data.CaseNumber) {
                     const [caseType] = data.CaseNumber.split("-");
