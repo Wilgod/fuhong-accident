@@ -13,4 +13,5 @@ export interface IMainTableComponentProps {
     adminPermissionBoolean:boolean;
     serviceUnitList:any;
     permissionList:any;
+    siteCollectionUrl:string;
 }

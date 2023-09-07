@@ -714,6 +714,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     adminPermissionBoolean={this.state.adminPermissionBoolean}
                     serviceUnitList={this.state.serviceUnitList}
                     permissionList={this.state.permissionList}
+                    siteCollectionUrl={this.siteCollectionUrl}
                   />
                 }
 
@@ -735,6 +736,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     adminPermissionBoolean={this.state.adminPermissionBoolean}
                     serviceUnitList={this.state.serviceUnitList}
                     permissionList={this.state.permissionList}
+                    siteCollectionUrl={this.siteCollectionUrl}
                   />
                 }
             </div>

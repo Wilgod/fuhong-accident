@@ -46,6 +46,7 @@ import * as fontawesome from '@fortawesome/free-solid-svg-icons';
 import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
 import { getQueryParameterString } from '../../../utils/UrlQueryHelper';
 import 'bootstrap/dist/css/bootstrap.css';
+import arraySort from 'array-sort';
 if (document.getElementById('workbenchPageContent') != null) {
     document.getElementById('workbenchPageContent').style.maxWidth = '1920px';
 }
@@ -1522,7 +1523,37 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
             debugger
             let cmsuser = []
-            for (let user of userlist.results) {
+            let userlist1 = userlist.results.filter(item => {return item.cr98a_formstatus == "Approved"})
+            arraySort(userlist1, 'cr98a_lastupdate');
+            //cr98a_lastupdate
+            //cr98a_nameen
+            const namesArray = userlist1.map(elem => elem.cr98a_nameen);
+            const namesTraversed = [];
+            let currentCountOfName = 1;
+            let len = 0;
+
+            userlist1.forEach(elem => {
+            len = namesArray.filter(cr98a_nameen => cr98a_nameen === elem.cr98a_nameen).length;
+            
+            if (len >= 1) {
+                if (namesTraversed.includes(elem.cr98a_nameen)) {
+                    //namesTraversed.push(elem.cr98a_nameen);
+                    //currentCountOfName = namesTraversed.filter(cr98a_nameen => cr98a_nameen === elem.cr98a_nameen).length;
+                    //elem.cr98a_nameen = `${elem.name} (${currentCountOfName} of ${len})`;
+                } else {
+                    namesTraversed.push(elem);
+                    currentCountOfName = 1;
+                    elem.cr98a_nameen = `${elem.cr98a_nameen} (${currentCountOfName} of ${len})`;
+                    } 
+                }
+            });
+
+
+            arraySort(namesTraversed, 'cr98a_nameen');
+
+            //let getUserlist = userlist.results.filter(item => {return item.cr98a_serviceunits == value});
+            for (let user of namesTraversed) {
+                
                 /*if (user.cr98a_mentalretarded != 111910000) {
                     
                 }
@@ -1557,6 +1588,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 })
                 //"ServiceCategory": ["住宿"],
             }
+            debugger
             setCmsUserList(cmsuser)
         }
 
@@ -1601,16 +1633,38 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 
                 
             }
+            let mentalretarded = ""
+            if (selectUser[0].Mentallyretardedlive == 111910000) {
+                mentalretarded = "EXTREME_SEVERE";
+            } else if (selectUser[0].Mentallyretardedlive == 111910001) {
+                mentalretarded = "SEVERE";
+            } else if (selectUser[0].Mentallyretardedlive == 111910002) {
+                mentalretarded = "MODERATE";
+            } else if (selectUser[0].Mentallyretardedlive == 111910003) {
+                mentalretarded = "MILD";
+            } else if (selectUser[0].Mentallyretardedlive == 111910004) {
+                mentalretarded = "UNKNOWN";
+            }
+            const today = new Date();
+            const birthdateObj = new Date(userInformationlist.BasicInformation.cr98a_birthday);
+            let age = today.getFullYear() - birthdateObj.getFullYear();
+            if (
+                today.getMonth() < birthdateObj.getMonth() ||
+                (today.getMonth() === birthdateObj.getMonth() &&
+                  today.getDate() < birthdateObj.getDate())
+              ) {
+                age -= 1;
+              }
             setHkid(userInformationlist.BasicInformation.cr98a_hkid);
             setServiceUserNameEN(selectUser[0].NameEN);
             setServiceUserNameCN(selectUser[0].NameCN);
-            setServiceUserAge(selectUser[0].Age);
+            setServiceUserAge(age);
             setServiceUserGender(selectUser[0].Sex);
             setServiceUserId(value);
             setServiceCategory(sc);
             setAsd(selectUser[0].Autismspectrum);
             setWheelchair(selectUser[0].Wheelchairtypes);
-            setIntelligence(selectUser[0].Mentalretarded);
+            setIntelligence(mentalretarded);
             setServiceUserRecordId(selectUser[0].ServiceNumber);
             //cr98a_hkid
         } else {
