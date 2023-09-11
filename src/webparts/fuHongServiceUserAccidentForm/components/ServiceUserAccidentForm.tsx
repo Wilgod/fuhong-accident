@@ -38,7 +38,7 @@ import useUserInfo from '../../../hooks/useUserInfo';
 import useDepartmentMangers from '../../../hooks/useDepartmentManagers';
 import { ContactFolder } from '@pnp/graph/contacts';
 import useServiceUnit2 from '../../../hooks/useServiceUser2';
-import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, postCMSWorkflowGetUser, postCMSUserInformationWorkflowGetUser } from '../../../api/Notification';
+import { notifyServiceUserAccident, notifyServiceUserAccidentSMSDComment, notifyServiceUserAccidentReject, postCMSWorkflowGetUser, postCMSWorkflowGetUserInformationId, postCMSUserInformationWorkflowGetUser } from '../../../api/Notification';
 import { ILog, postLog } from '../../../api/LogHelper';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -55,7 +55,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow, cmsUserInformationWorkflow }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow, cmsUserInformationWorkflow, cmsUserInformationIdWorkflow }: IServiceUserAccidentFormProps) {
     const type: string = getQueryParameterString("type");
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -1521,6 +1521,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
         if (cmsUserWorkflow != null) {
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
+            let userInformationIdlist = await postCMSWorkflowGetUserInformationId(context, value, cmsUserInformationIdWorkflow);
+            //arraySort(userInformationIdlist.results, 'cr98a_nameen');
             debugger
             let cmsuser = []
             let userlist1 = userlist.results.filter(item => {return item.cr98a_formstatus == "Approved"})
@@ -1528,6 +1530,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             //cr98a_lastupdate
             //cr98a_nameen
             const namesArray = userlist1.map(elem => elem.cr98a_nameen);
+            const namesTempTraversed = [];
             const namesTraversed = [];
             let currentCountOfName = 1;
             let len = 0;
@@ -1536,21 +1539,26 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             len = namesArray.filter(cr98a_nameen => cr98a_nameen === elem.cr98a_nameen).length;
             
             if (len >= 1) {
-                if (namesTraversed.includes(elem.cr98a_nameen)) {
+                if (namesTempTraversed.includes(elem.cr98a_nameen)) {
                     //namesTraversed.push(elem.cr98a_nameen);
                     //currentCountOfName = namesTraversed.filter(cr98a_nameen => cr98a_nameen === elem.cr98a_nameen).length;
                     //elem.cr98a_nameen = `${elem.name} (${currentCountOfName} of ${len})`;
                 } else {
-                    namesTraversed.push(elem);
+                    namesTempTraversed.push(elem);
                     currentCountOfName = 1;
                     elem.cr98a_nameen = `${elem.cr98a_nameen} (${currentCountOfName} of ${len})`;
                     } 
                 }
             });
-
+            for (let nameTemp of namesTempTraversed) {
+                let temp = userInformationIdlist.results.filter(item => {return item.cr98a_userinformationid == nameTemp.cr98a_userinformationid})
+                if (temp.length > 0) {
+                    namesTraversed.push(nameTemp);
+                }
+            }
 
             arraySort(namesTraversed, 'cr98a_nameen');
-
+            console.log('namesTraversed',namesTraversed);
             //let getUserlist = userlist.results.filter(item => {return item.cr98a_serviceunits == value});
             for (let user of namesTraversed) {
                 
@@ -1613,6 +1621,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         let selectUser = cmsUserList.filter(item => { return item.ServiceNumber == value });
         if (selectUser.length > 0) {
+            debugger
             let userInformationlist = await postCMSUserInformationWorkflowGetUser(context, selectUser[0].UserinformationId, cmsUserInformationWorkflow);
             debugger
             let sc = [];

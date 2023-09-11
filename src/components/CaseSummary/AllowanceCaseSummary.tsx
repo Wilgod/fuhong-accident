@@ -207,10 +207,12 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
 
         }
         if (startDate != null) {
-            filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() >= new Date(startDate).getTime() });
+            let newStartDate = new Date(startDate).setHours(0,0,0);
+            filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() >= new Date(newStartDate).getTime() });
         }
         if (endDate != null) {
-            filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() <= new Date(endDate).getTime() });
+            let newEndDate = new Date(endDate).setHours(23,59,59);
+            filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() <= new Date(newEndDate).getTime() });
         }
 
         if (status != '' && status != 'ALL') {
