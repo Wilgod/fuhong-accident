@@ -17,9 +17,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sa.ServiceUserUnit });
-            if (sa.CaseNumber == 'SUI-2324COATC024') {
-                debugger
-            }
             sa['AccidentReportForm'] = getARF;
             sa['AccidentFollowUpForm'] = getAFUF;
             sa['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";

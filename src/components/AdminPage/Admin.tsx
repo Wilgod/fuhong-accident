@@ -160,9 +160,16 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                             return; 
                         }
                     } else if (item.Stage =='2') {
-                        if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
-                            return; 
+                        if (type == 'OtherIncidentReport' || type == 'SpecialIncidentReportLicense' || type == 'SpecialIncidentReportAllowance') {
+                            if (item.Status !='PENDING_SM_FILL_IN') {
+                                return; 
+                            }
+                        } else {
+                            if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
+                                return; 
+                            }
                         }
+                        
                     } else if (item.Stage =='3') {
                         if (item.Status !='PENDING_SM_FILL_IN') {
                             return;
@@ -195,7 +202,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         }
                     }
                 }
-                
+                if (type == 'SpecialIncidentReportLicense') {
+                    //debugger
+                }
                 let addItem = true;
                 for(let groupItem of groupBy) {
                     if (groupItem.key == item[position].Title) {
@@ -445,7 +454,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         setOutsiderAccident(allOutsiderAccident);
         setOtherIncidentReport(allOtherIncidentReport);
         setSpecialIncidentReportLicense(allSpecialIncidentReportLicense);
-        setSpecialIncidentReportAllowance(allSpecialIncidentReportLicense);
+        setSpecialIncidentReportAllowance(allSpecialIncidentReportAllowance);
         
     }
     async function getWorkflow() {
@@ -506,6 +515,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','SpecialIncidentReportLicense');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','SpecialIncidentReportLicense');
             }
+            debugger
             setGroupSpecialIncidentReportLicenseByServiceUserList(groupByList);
         }
         
