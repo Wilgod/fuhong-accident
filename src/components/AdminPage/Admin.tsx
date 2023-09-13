@@ -160,9 +160,16 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                             return; 
                         }
                     } else if (item.Stage =='2') {
-                        if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
-                            return; 
+                        if (type == 'OtherIncidentReport' || type == 'SpecialIncidentReportLicense' || type == 'SpecialIncidentReportAllowance') {
+                            if (item.Status !='PENDING_SM_FILL_IN') {
+                                return; 
+                            }
+                        } else {
+                            if (item.Status !='PENDING_SPT_APPROVE' && item.Status !='PENDING_INVESTIGATE') {
+                                return; 
+                            }
                         }
+                        
                     } else if (item.Stage =='3') {
                         if (item.Status !='PENDING_SM_FILL_IN') {
                             return;
@@ -195,7 +202,9 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         }
                     }
                 }
-                
+                if (type == 'SpecialIncidentReportLicense') {
+                    //debugger
+                }
                 let addItem = true;
                 for(let groupItem of groupBy) {
                     if (groupItem.key == item[position].Title) {
@@ -401,6 +410,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 
         for (let oir of allOtherIncidentReport) {
             let getIFUF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == oir.CaseNumber && item.ParentFormId == oir.ID});
+            oir['IncidentFollowUpForm'] = getIFUF;
             if (oir['Stage'] == '1') {
                 oir['Form'] = '其他事故呈報表';
                 oir['CurrentSM'] = oir['SM'];
@@ -413,6 +423,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         }
         for (let sirl of allSpecialIncidentReportLicense) {
             let getIFUF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sirl.CaseNumber && item.ParentFormId == sirl.ID});
+            sirl['IncidentFollowUpForm'] = getIFUF;
             if (sirl['Stage'] == '1') {
                 sirl['Form'] = '特別事故(牌照事務處)';
                 sirl['CurrentSM'] = sirl['SM'];
@@ -426,6 +437,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         }
         for (let sira of allSpecialIncidentReportAllowance) {
             let getIFUF = allIncidentFollowUpForm.filter(item => {return item.CaseNumber == sira.CaseNumber && item.ParentFormId == sira.ID});
+            sira['IncidentFollowUpForm'] = getIFUF;
             if (sira['Stage'] == '1') {
                 sira['Form'] = '特別事故(津貼科)';
                 sira['CurrentSM'] = sira['SM'];
@@ -442,7 +454,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         setOutsiderAccident(allOutsiderAccident);
         setOtherIncidentReport(allOtherIncidentReport);
         setSpecialIncidentReportLicense(allSpecialIncidentReportLicense);
-        setSpecialIncidentReportAllowance(allSpecialIncidentReportLicense);
+        setSpecialIncidentReportAllowance(allSpecialIncidentReportAllowance);
         
     }
     async function getWorkflow() {
@@ -503,6 +515,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','SpecialIncidentReportLicense');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','SpecialIncidentReportLicense');
             }
+            debugger
             setGroupSpecialIncidentReportLicenseByServiceUserList(groupByList);
         }
         

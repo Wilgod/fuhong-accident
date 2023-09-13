@@ -217,7 +217,7 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                                 "SMId": spSmInfo.Id
                             });
                         } else if (type =='SpecialIncidentReportLicense' || type =='SpecialIncidentReportAllowance' || type =='OtherIncidentReport') {
-                            await updateIncidentFollowUpForm(arf[0].AccidentReportForm[0].Id, {
+                            await updateIncidentFollowUpForm(arf[0].IncidentFollowUpForm[0].Id, {
                                 "SMId": spSmInfo.Id
                             });
                         }
@@ -260,11 +260,11 @@ export default function Dashboard({ context, siteCollectionUrl, type, serviceUni
                     }
                     
                 } else if (selected.stage == '2') { 
-                    const arf = item.child.filter(item => item.Id == selected.Id);
+                    const arf = item.child.filter(item1 => item1.Id == selected.Id);
                     if (arf.length > 0 ) {
                         if (type =='SpecialIncidentReportLicense' || type =='SpecialIncidentReportAllowance' || type =='OtherIncidentReport') {
-                            await updateIncidentFollowUpForm(arf[0].AccidentReportForm[0].Id, {
-                                "SMId": spSmInfo.Id
+                            await updateIncidentFollowUpForm(arf[0].IncidentFollowUpForm[0].Id, {
+                                "SDId": spSdInfo.Id
                             });
                         }
                     }

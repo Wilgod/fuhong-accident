@@ -773,7 +773,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const smApproveHandler = (event) => {
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory("");
-
+            notifyOutsiderAccident(context, formData.Id, 1, workflow);
 
             updateOutsiderAccidentFormById(formId, {
                 ...body,

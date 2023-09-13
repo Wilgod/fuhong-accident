@@ -91,6 +91,18 @@ export async function getCMSUserWorkflow() {
     }
 }
 
+export async function getCMSUserInformationIdWorkflow() {
+    try {
+        const LIST_NAME = "Workflow Setting";
+        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Title eq 'CMS_USERINFORMATIONID'").top(1).getAll();
+        if (item.length > 0) return item[0];
+        return null;
+    } catch (err) {
+        console.error(err);
+        throw new Error("getLastCaseNo failed");
+    }
+}
+
 export async function getCMSUserInformationWorkflow() {
     try {
         const LIST_NAME = "Workflow Setting";
