@@ -141,9 +141,9 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
   public componentDidMount() {
     this.initialState().then((lists)=> {
       getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
-        if (value && value.jobTitle) {
+        /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
-        }
+        }*/
         this.initialDataByFormId().then((data) => {
           if (data && data.Investigator && data.Investigator.EMail) {
             if (data.Investigator.EMail === this.getCurrentUser().userEmail) {
@@ -324,7 +324,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
+              !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?

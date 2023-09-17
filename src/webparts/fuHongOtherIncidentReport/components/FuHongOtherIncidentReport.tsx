@@ -112,9 +112,9 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     this.initialState().then((lists)=> {
       
       getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
-        if (value && value.jobTitle) {
+        /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
-        }
+        }*/
   
         this.initialDataByFormId().then(async(data) => {
           let formTwentySixData :any = [];
@@ -227,7 +227,7 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
+              !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?

@@ -715,6 +715,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     serviceUnitList={this.state.serviceUnitList}
                     permissionList={this.state.permissionList}
                     siteCollectionUrl={this.siteCollectionUrl}
+                    screenType="sharepoin"
                   />
                 }
 
@@ -737,6 +738,7 @@ export default class FuHongFormsMenu extends React.Component<IFuHongFormsMenuPro
                     serviceUnitList={this.state.serviceUnitList}
                     permissionList={this.state.permissionList}
                     siteCollectionUrl={this.siteCollectionUrl}
+                    screenType="cms"
                   />
                 }
             </div>

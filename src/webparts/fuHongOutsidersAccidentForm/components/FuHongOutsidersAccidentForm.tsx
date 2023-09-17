@@ -112,10 +112,9 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   public componentDidMount() {
     this.initialState().then((lists) => {
       getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
-        if (value && value.jobTitle) {
+        /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
-        }
-  
+        }*/
         this.initialDataByFormId().then((data) => {
           if (data && data.Investigator && data.Investigator.EMail) {
             if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -164,6 +163,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
+
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
@@ -258,7 +258,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   private formSubmittedHandler = () => this.setState({ formSubmitted: true });
 
   public render(): React.ReactElement<IFuHongOutsidersAccidentFormProps> {
-    console.log('indexTab', this.state.indexTab)
+    console.log('currentUserRole', this.state.currentUserRole)
+    console.log('this.state.permissionList', this.state.permissionList)
     return (
       <div className={styles.fuHongOutsidersAccidentForm}>
         <div className={styles.container}>
@@ -266,7 +267,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             !this.state.loading && this.state.formSubmitted ?
             <ThankYouComponent redirectLink={this.redirectPath} />
             :
-            !this.state.loading && (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight) ? 
+            !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
             <NoAccessComponent redirectLink={this.redirectPath} />
             :
             !this.state.loading ?
