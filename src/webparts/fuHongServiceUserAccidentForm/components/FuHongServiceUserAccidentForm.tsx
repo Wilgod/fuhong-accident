@@ -45,6 +45,7 @@ if (document.querySelector('.CanvasZone') != null) {
 }
 
 interface IFuHongServiceUserAccidentFormState {
+  currentUserRead:boolean;
   currentUserRole: Role;
   permissionList:any;
   serviceUserAccidentFormData: any;
@@ -87,6 +88,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
     this.state = {
       currentUserRole: Role.NoAccessRight,//Role.GENERAL,
+      currentUserRead:false,
       permissionList: [],
 
       serviceUserAccidentFormData: null,
@@ -152,6 +154,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
           }
   
           if (data) {
+            
             if (data.Stage == '1' && data.SM && data.SM.EMail) {
               if (data.SM.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
@@ -192,6 +195,64 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             }
+            let userCanRead = false;
+            if (data.SM && data.SM.EMail) {
+              if (data.SM.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SD && data.SD.EMail) {
+              if (data.SD.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Investigator && data.Investigator.EMail) {
+              if (data.Investigator.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Reporter && data.Reporter.EMail) {
+              if (data.Reporter.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SPT && data.SPT.EMail) {
+              if (data.SPT.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Stage == '2') {
+              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Stage == '3') {
+              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail) {
+                userCanRead = true;
+              }
+            }
+            this.setState({ currentUserRead: userCanRead });
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
@@ -324,7 +385,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
+              !this.state.loading  && !this.state.currentUserRead ?//&& (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?

@@ -42,6 +42,7 @@ const getCanvasZone = () => {
 }
 
 export default class FuHongSpecialIncidentReportAllowance extends React.Component<IFuHongSpecialIncidentReportAllowanceProps, { 
+  currentUserRead:boolean;
   currentUserRole: Role,
   permissionList:any;
   specialIncidentReportAllowanceFormData: any, 
@@ -82,7 +83,8 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
       formTwentySixDataPrint:[],
       formTwentySixDataSelected:null,
       indexTab:0,
-      serviceUnitList:[]
+      serviceUnitList:[],
+      currentUserRead:false
     }
     console.log("Flow 3");
   }
@@ -120,33 +122,59 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
             }
             
           }
-          
+          let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
           if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.Investigator.EMail === userEmail) {
               this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
           if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.Investigator.EMail === userEmail) {
               this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
   
           if (data && data.SM && data.SM.EMail) {
-            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SM.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SERVICE_MANAGER });
             }
           }
   
           if (data && data.SD && data.SD.EMail) {
-            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SD.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
             }
           }
   
           if (data && data.SPT && data.SPT.EMail) {
-            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SPT.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
+          }
+          let userCanRead = false;
+          if (data.SM && data.SM.EMail) {
+            if (data.SM.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.SD && data.SD.EMail) {
+            if (data.SD.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.Investigator && data.Investigator.EMail) {
+            if (data.Investigator.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.Reporter && data.Reporter.EMail) {
+            if (data.Reporter.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.SPT && data.SPT.EMail) {
+            if (data.SPT.EMail === userEmail) {
+              userCanRead = true;
             }
           }
           if (data && data.Stage == '1') {
@@ -157,7 +185,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
           getAdmin().then((admin) => {
             admin.forEach((item) => {
               if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-                this.setState({ currentUserRole: Role.ADMIN });
+                this.setState({ currentUserRole: Role.ADMIN, currentUserRead:true });
               }
             })
           }).catch(console.error)
@@ -230,7 +258,7 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
+              !this.state.loading && !this.state.currentUserRead ? //&& (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?

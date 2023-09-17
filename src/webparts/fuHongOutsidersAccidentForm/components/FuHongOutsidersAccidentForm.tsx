@@ -44,6 +44,7 @@ const getCanvasZone = () => {
 }
 
 interface IFuHongOutsidersAccidentFormState {
+  currentUserRead:boolean;
   currentUserRole: Role;
   permissionList:any;
   formSubmitted: boolean;
@@ -86,7 +87,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       outsiderAccidentWorkflow:'',
       indexTab:0,
       loading:true,
-      serviceUnitList:[]
+      serviceUnitList:[],
+      currentUserRead:false
     }
   }
 
@@ -123,52 +125,110 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           }
   
           if (data) {
+            let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
             if (data.Stage == '1' && data.SM && data.SM.EMail) {
-              if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SM.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyData.SM.EMail === userEmail || data.SM.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                this.state.formTwentyData.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail || 
-                data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SM.EMail === userEmail ||
+                this.state.formTwentyData.SM.EMail === userEmail || 
+                data.SM.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
             if (data.Stage == '1' && data.SD && data.SD.EMail || data.Stage == '2') {
-              if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SD.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail || data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SD.EMail === userEmail || data.SD.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
             if (data.Stage == '1' && data.SPT && data.SPT.EMail) {
-              if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (data.SPT.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyData.SPT.EMail === userEmail ||
+                data.SPT.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                this.state.formTwentyData.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail ||
-                data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (this.state.formTwentyOneData.SPT.EMail === userEmail ||
+                this.state.formTwentyData.SPT.EMail === userEmail ||
+                data.SPT.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
-
+            let userCanRead = false;
+            if (data.SM && data.SM.EMail) {
+              if (data.SM.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SD && data.SD.EMail) {
+              if (data.SD.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Investigator && data.Investigator.EMail) {
+              if (data.Investigator.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Reporter && data.Reporter.EMail) {
+              if (data.Reporter.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SPT && data.SPT.EMail) {
+              if (data.SPT.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Stage == '2') {
+              if (this.state.formTwentyData.SM.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.SPT.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.Investigator.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Stage == '3') {
+              if (this.state.formTwentyData.SM.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.SPT.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyData.Investigator.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SM.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SD.EMail === userEmail) {
+                userCanRead = true;
+              }
+              if (this.state.formTwentyOneData.SPT.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            this.setState({ currentUserRead: userCanRead });
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
               if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-                this.setState({ currentUserRole: Role.ADMIN,permissionList:['All']  });
+                this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'], currentUserRead:true  });
               }
             })
           }).catch(console.error)
@@ -267,7 +327,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
             !this.state.loading && this.state.formSubmitted ?
             <ThankYouComponent redirectLink={this.redirectPath} />
             :
-            !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
+            !this.state.loading && !this.state.currentUserRead ? //&& (this.state.permissionList.length == 0 && this.state.currentUserRole == Role.NoAccessRight)
             <NoAccessComponent redirectLink={this.redirectPath} />
             :
             !this.state.loading ?

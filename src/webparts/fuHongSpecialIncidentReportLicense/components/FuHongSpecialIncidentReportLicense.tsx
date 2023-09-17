@@ -42,6 +42,7 @@ const getCanvasZone = () => {
 }
 
 interface IFuHongSpecialIncidentReportLicenseStates {
+  currentUserRead:boolean;
   currentUserRole: Role;
   permissionList:any;
   specialINcidentReportLicenseData: any;
@@ -85,7 +86,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
       formTwentySixData:[],
       formTwentySixDataPrint:[],
       formTwentySixDataSelected:null,
-      serviceUnitList:[]
+      serviceUnitList:[],
+      currentUserRead:false
     }
   }
 
@@ -120,27 +122,54 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
               formTwentySixDataSelected = formTwentySixData.Id;
             }
           }
+          let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
           if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.Investigator.EMail === userEmail) {
               this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
   
           if (data && data.SM && data.SM.EMail) {
-            if (data.SM.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SM.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SERVICE_MANAGER });
             }
           }
   
           if (data && data.SD && data.SD.EMail) {
-            if (data.SD.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SD.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
             }
           }
   
           if (data && data.SPT && data.SPT.EMail) {
-            if (data.SPT.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.SPT.EMail === userEmail) {
               this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+            }
+          }
+          let userCanRead = false;
+          if (data.SM && data.SM.EMail) {
+            if (data.SM.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.SD && data.SD.EMail) {
+            if (data.SD.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.Investigator && data.Investigator.EMail) {
+            if (data.Investigator.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.Reporter && data.Reporter.EMail) {
+            if (data.Reporter.EMail === userEmail) {
+              userCanRead = true;
+            }
+          }
+          if (data.SPT && data.SPT.EMail) {
+            if (data.SPT.EMail === userEmail) {
+              userCanRead = true;
             }
           }
           if (data && data.Stage == '1') {
@@ -151,7 +180,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
           getAdmin().then((admin) => {
             admin.forEach((item) => {
               if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
-                this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true} });
+                this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true}, currentUserRead:true });
               }
             })
           }).catch(console.error)
@@ -225,7 +254,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
             !this.state.loading && this.state.formSubmitted ?
               <ThankYouComponent redirectLink={this.redirectPath} />
               :
-              !this.state.loading && (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
+              !this.state.loading  && !this.state.currentUserRead ? //&& (this.state.permissionList.length == 0 || this.state.currentUserRole == Role.NoAccessRight) ? 
               <NoAccessComponent redirectLink={this.redirectPath} />
               :
               !this.state.loading ?
