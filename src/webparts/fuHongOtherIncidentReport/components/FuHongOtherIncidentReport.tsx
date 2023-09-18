@@ -226,6 +226,8 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
         const data = await getOtherIncidentReportById(formId);
         this.setState({ otherIncidentReportFormData: data });
         return data;
+      } else {
+        this.setState({ currentUserRead: true });
       }
     } catch (err) {
       console.error(err);

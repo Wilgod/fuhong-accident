@@ -282,6 +282,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           this.setState({ outsiderAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });
         }
         return data;
+      } else {
+        this.setState({ currentUserRead: true });
       }
     } catch (err) {
       console.error(err);

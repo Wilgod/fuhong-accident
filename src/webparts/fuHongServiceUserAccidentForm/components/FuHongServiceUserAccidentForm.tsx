@@ -336,6 +336,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         }
         
         return data;
+      } else {
+        this.setState({ currentUserRead: true });
       }
     } catch (err) {
       console.error(err);

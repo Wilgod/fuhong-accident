@@ -214,6 +214,8 @@ export default class FuHongSpecialIncidentReportAllowance extends React.Componen
         const data = await getSpecialIncidentReportAllowanceById(formId);
         this.setState({ specialIncidentReportAllowanceFormData: data });
         return data;
+      } else {
+        this.setState({ currentUserRead: true });
       }
     } catch (err) {
       console.error(err);

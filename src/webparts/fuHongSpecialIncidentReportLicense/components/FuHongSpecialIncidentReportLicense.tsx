@@ -209,6 +209,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         const data = await getSpecialIncidentReportLicenseById(formId);
         this.setState({ specialINcidentReportLicenseData: data });
         return data;
+      } else {
+        this.setState({ currentUserRead: true });
       }
     } catch (err) {
       console.error(err);
