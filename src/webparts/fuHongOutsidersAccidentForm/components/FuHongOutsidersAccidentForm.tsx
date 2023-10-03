@@ -223,6 +223,15 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                 userCanRead = true;
               }
             }
+            if (lists[0].length > 0) {
+              for (let dept of lists[0]) {
+                if (dept == 'All') {
+                  userCanRead = true;
+                } else if (data.ServiceUserUnit.toLowerCase() == dept.toLowerCase()) {
+                  userCanRead = true;
+                }
+              }
+            }
             this.setState({ currentUserRead: userCanRead });
           }
           getAdmin().then((admin) => {

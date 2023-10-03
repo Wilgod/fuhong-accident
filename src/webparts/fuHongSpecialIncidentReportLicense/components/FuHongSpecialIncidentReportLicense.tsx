@@ -113,70 +113,81 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
           let formTwentySixDataSelected = null;
           if (data) {
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
+            if (formTwentySixDataPrint.length > 0) {
+              let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('SIH-') >= 0});
+              if (filterTSdata.length > 0) {
+                formTwentySixData = filterTSdata[0];
+                formTwentySixDataSelected = formTwentySixData.Id;
+              }
+            }
+            let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
+            if (data && data.Investigator && data.Investigator.EMail) {
+              if (data.Investigator.EMail === userEmail) {
+                this.setState({ currentUserRole: Role.INVESTIGATOR });
+              }
+            }
+    
+            if (data && data.SM && data.SM.EMail) {
+              if (data.SM.EMail === userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_MANAGER });
+              }
+            }
+    
+            if (data && data.SD && data.SD.EMail) {
+              if (data.SD.EMail === userEmail) {
+                this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
+              }
+            }
+    
+            if (data && data.SPT && data.SPT.EMail) {
+              if (data.SPT.EMail === userEmail) {
+                this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
+              }
+            }
+            let userCanRead = false;
+            if (data.SM && data.SM.EMail) {
+              if (data.SM.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SD && data.SD.EMail) {
+              if (data.SD.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Investigator && data.Investigator.EMail) {
+              if (data.Investigator.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.Reporter && data.Reporter.EMail) {
+              if (data.Reporter.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (data.SPT && data.SPT.EMail) {
+              if (data.SPT.EMail === userEmail) {
+                userCanRead = true;
+              }
+            }
+            if (lists[0].length > 0) {
+              for (let dept of lists[0]) {
+                if (dept == 'All') {
+                  userCanRead = true;
+                } else if (data.ServiceUnit.toLowerCase() == dept.toLowerCase()) {
+                  userCanRead = true;
+                }
+              }
+            }
+            this.setState({ currentUserRead: userCanRead });
+            if (data && data.Stage == '1') {
+              this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
+            } else if (data && data.Stage == '2') {
+              this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
+            }
           }
           
-          if (formTwentySixDataPrint.length > 0) {
-            let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('SIH-') >= 0});
-            if (filterTSdata.length > 0) {
-              formTwentySixData = filterTSdata[0];
-              formTwentySixDataSelected = formTwentySixData.Id;
-            }
-          }
-          let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
-          if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === userEmail) {
-              this.setState({ currentUserRole: Role.INVESTIGATOR });
-            }
-          }
-  
-          if (data && data.SM && data.SM.EMail) {
-            if (data.SM.EMail === userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_MANAGER });
-            }
-          }
-  
-          if (data && data.SD && data.SD.EMail) {
-            if (data.SD.EMail === userEmail) {
-              this.setState({ currentUserRole: Role.SERVICE_DIRECTOR });
-            }
-          }
-  
-          if (data && data.SPT && data.SPT.EMail) {
-            if (data.SPT.EMail === userEmail) {
-              this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
-            }
-          }
-          let userCanRead = false;
-          if (data.SM && data.SM.EMail) {
-            if (data.SM.EMail === userEmail) {
-              userCanRead = true;
-            }
-          }
-          if (data.SD && data.SD.EMail) {
-            if (data.SD.EMail === userEmail) {
-              userCanRead = true;
-            }
-          }
-          if (data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === userEmail) {
-              userCanRead = true;
-            }
-          }
-          if (data.Reporter && data.Reporter.EMail) {
-            if (data.Reporter.EMail === userEmail) {
-              userCanRead = true;
-            }
-          }
-          if (data.SPT && data.SPT.EMail) {
-            if (data.SPT.EMail === userEmail) {
-              userCanRead = true;
-            }
-          }
-          if (data && data.Stage == '1') {
-            this.setState({ indexTab: 0, formTwentySixData:formTwentySixData });
-          } else if (data && data.Stage == '2') {
-            this.setState({ indexTab: 1, formTwentySixData:formTwentySixData, formTwentySixDataPrint:formTwentySixDataPrint, formTwentySixDataSelected:formTwentySixDataSelected });
-          }
+          
           getAdmin().then((admin) => {
             admin.forEach((item) => {
               if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
@@ -211,6 +222,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
         return data;
       } else {
         this.setState({ currentUserRead: true });
+        return null;
       }
     } catch (err) {
       console.error(err);

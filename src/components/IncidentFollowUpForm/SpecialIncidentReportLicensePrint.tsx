@@ -1395,18 +1395,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                 </tr>
                             </table>
                         </div>
-                        <div className={`col-12`}>
-                            評語
-                        </div>
-                        <div className={`col-12`}>
-                            <table style={{width:'780px'}}>
-                                <tr>
-                                    <td style={{borderBottom:'1px solid'}}>
-                                    &nbsp;&nbsp;{formTwentySixDataPrint != null && formTwentySixDataPrint[0].SMComment != null ? formTwentySixDataPrint[0].SMComment : ''}
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                        
                         <div className={`col-12`}>
                             <table style={{width:'780px',margin:'40px 0 20px'}}>
                                 <tr>
@@ -1421,6 +1410,18 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                                     </td>
                                     <td style={{width:'220px',borderBottom:'1px solid'}}>
                                     {formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDDate != null && new Date(formTwentySixDataPrint[0].SDDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SDDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SDDate).getDate()).slice(-2)}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div className={`col-12`}>
+                            評語
+                        </div>
+                        <div className={`col-12`}>
+                            <table style={{width:'780px'}}>
+                                <tr>
+                                    <td style={{borderBottom:'1px solid'}}>
+                                    &nbsp;&nbsp;{formTwentySixDataPrint != null && formTwentySixDataPrint[0].SDComment != null ? formTwentySixDataPrint[0].SDComment : ''}
                                     </td>
                                 </tr>
                             </table>

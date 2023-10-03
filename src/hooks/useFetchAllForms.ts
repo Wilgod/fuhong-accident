@@ -53,7 +53,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
             }
             let filterServiceUserAccidentData = serviceUserAccidentData;
             if (key != null && key != '') {
-                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN.trim() != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
+                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
                     (item.ServiceUserNameEN != null && item.ServiceUserNameEN.toLocaleLowerCase().trim() == key)  || 
                     (item.ServiceUserAge != null && item.ServiceUserAge == key) || 
                     (item.ServiceUserGender != null && item.ServiceUserGender.toLocaleLowerCase().trim() == key) || 

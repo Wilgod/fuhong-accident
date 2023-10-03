@@ -1553,10 +1553,11 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             for (let nameTemp of namesTempTraversed) {
                 let temp = userInformationIdlist.results.filter(item => {return item.cr98a_userinformationid == nameTemp.cr98a_userinformationid})
                 if (temp.length > 0) {
+                    nameTemp['cr98a_nameen'] = nameTemp['cr98a_nameen'].toLowerCase();
                     namesTraversed.push(nameTemp);
                 }
             }
-
+            debugger
             arraySort(namesTraversed, 'cr98a_nameen');
             console.log('namesTraversed',namesTraversed);
             //let getUserlist = userlist.results.filter(item => {return item.cr98a_serviceunits == value});
