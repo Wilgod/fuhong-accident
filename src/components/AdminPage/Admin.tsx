@@ -177,9 +177,16 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                     }
                 } else if (position == 'CurrentSD') {
                     if (item.Stage =='1') {
-                        if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
-                            return; 
+                        if (type == 'ServiceUserAccident' || type == 'OutsiderAccident') {
+                            if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SPT_APPROVE') {
+                                return; 
+                            }
+                        } else {
+                            if (item.Status !='DRAFT' && item.Status !='PENDING_SM_APPROVE' && item.Status !='PENDING_SD_APPROVE') {
+                                return; 
+                            }
                         }
+                        
                     } else if (item.Stage =='2') {
                         if (type == 'ServiceUserAccident' || type == 'OutsiderAccident') {
                             return;
@@ -498,10 +505,12 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     useEffect(() => {
         if (Array.isArray(otherIncidentReport) && otherIncidentReport.length > 0) {
             let groupByList = groupByOtherIncidentReportServiceUnit();
+            
             for (let i=0; i<groupByList.length; i++) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','OtherIncidentReport');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','OtherIncidentReport');
             }
+            debugger;
             setGroupOtherIncidentReportByServiceUserList(groupByList);
         }
         

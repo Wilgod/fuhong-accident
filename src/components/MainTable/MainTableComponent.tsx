@@ -9,7 +9,7 @@ import { caseNumberToFormNameParser, caseNumberToSitePageParser } from '../../ut
 import useFetchAllForms from '../../hooks/useFetchAllForms';
 import { IUser } from '../../interface/IUser';
 import { getQueryParameterString } from './../../utils/UrlQueryHelper';
-export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermissionBoolean, serviceUnitList,permissionList, siteCollectionUrl }: IMainTableComponentProps) {
+export default function MainTableComponent({ context, dateRange, searchExpired, searchFormStatus, searchFormType, searchServiceUnit, searchKeyword, adminPermissionBoolean, serviceUnitList,permissionList, siteCollectionUrl, screenType }: IMainTableComponentProps) {
     const type: string = getQueryParameterString("type");
     const CURRENT_USER: IUser = {
         email: context.pageContext.legacyPageContext.userEmail,
@@ -17,7 +17,7 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
         id: context.pageContext.legacyPageContext.userId,
     }
 
-    const [data] = useFetchAllForms(CURRENT_USER.id, serviceUnitList, {
+    const [data] = useFetchAllForms(CURRENT_USER.id, serviceUnitList, screenType, {
         startDate: dateRange.start,
         endDate: dateRange.end,
         expired: searchExpired,
@@ -30,7 +30,7 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
     }, siteCollectionUrl);
     // const [data, setStartDate, setEndDate, setSearchServiceUnit, setSearchFormTypes, setSearchFormStatus, setSearchExpired] = useFetchAllForms(CURRENT_USER.id);
 
-
+    console.log("data", data)
 
     return (
         <div>

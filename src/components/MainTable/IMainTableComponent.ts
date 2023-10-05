@@ -14,4 +14,5 @@ export interface IMainTableComponentProps {
     serviceUnitList:any;
     permissionList:any;
     siteCollectionUrl:string;
+    screenType:string;
 }

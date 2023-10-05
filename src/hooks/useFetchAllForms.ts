@@ -13,7 +13,7 @@ export interface ISearchCriteria {
     permissionList:any;
 }
 
-export default function useFetchAllForms(spId: number, serviceUnitList:any, searchCriteria: ISearchCriteria, siteCollectionUrl:string) {
+export default function useFetchAllForms(spId: number, serviceUnitList:any,screenType:string, searchCriteria: ISearchCriteria, siteCollectionUrl:string) {
     const [result, setResult] = useState([]);
     const initial = async () => {
         let result = [];
@@ -53,7 +53,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
             }
             let filterServiceUserAccidentData = serviceUserAccidentData;
             if (key != null && key != '') {
-                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN.trim() != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
+                filterServiceUserAccidentData = serviceUserAccidentData.filter(item=> {return (item.ServiceUserNameCN != null && item.ServiceUserNameCN.toLocaleLowerCase().trim() == key) ||
                     (item.ServiceUserNameEN != null && item.ServiceUserNameEN.toLocaleLowerCase().trim() == key)  || 
                     (item.ServiceUserAge != null && item.ServiceUserAge == key) || 
                     (item.ServiceUserGender != null && item.ServiceUserGender.toLocaleLowerCase().trim() == key) || 
@@ -318,7 +318,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any, sear
                 return searchCriteria.serviceUnits.indexOf(item.ServiceLocation) >= 0
             })
         }
-        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") >= 0) {
+        if (Array.isArray(searchCriteria.serviceUnits) && searchCriteria.serviceUnits.indexOf("ALL") >= 0 && screenType != "cms") {
             let filterServiceUnitResult = [];
             if (searchCriteria.permissionList.indexOf('All') < 0) {
                 for (let p of searchCriteria.permissionList) {
