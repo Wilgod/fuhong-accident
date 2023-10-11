@@ -110,7 +110,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [sendInsuranceEmail, setSendInsuranceEmail] = useState(true);
     const [uploadFile, setUploadFile] = useState([]);
     const [selectedFile, setSelectedFile] = useState([]);
-    console.log(sdInfo);
     const radioButtonHandler = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -863,7 +862,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     setServiceUnitTC(ser[0].su_name_tc);
 
                 }
-                debugger
             }
 
             if (data.SDPhone) {
@@ -947,7 +945,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         let value = event.target.value;
         //setServiceUnitTC(value);
         setServiceUnit(value);
-        debugger
         setServiceLocation(value);
         
 
@@ -995,7 +992,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl, sdInfo.Email).then((userInfosRes) => {
 
                 if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                    debugger
                     setSdJobTitle(userInfosRes[0].hr_jobcode);
                 }
 
@@ -1021,7 +1017,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         filterList.push(unit);
                     }
                 }
-                debugger
                 setServiceUserUnitList(filterList);
             }
 
@@ -1042,7 +1037,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             }*/
 
             if (userInfo && userInfo.hr_deptid) {
-                debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
                 let ser = serviceUserUnitList.filter(o => { return o.su_Eng_name_display == userInfo.hr_deptid });
@@ -1070,7 +1064,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 }
 
                 if (dept && dept.hr_sd && dept.hr_sd !== "[empty]") {
-                    debugger
                     if (!formData) {
                         setSDEmail(dept.hr_sd);
                     }
@@ -1085,9 +1078,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
         setHrDepartment(serviceUnit)
     }, [serviceUnit]);
 
-    console.log('serviceUnit', serviceUnit);
-    console.log('permissionList', permissionList);
-    console.log('serviceUserUnitList', serviceUserUnitList);
     return (
         <>
             {isPrintMode && <Header displayName="其他事故呈報表" />}
@@ -1105,23 +1095,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務單位</label>
                         <div className="col-12 col-md-4">
                             <select className={`custom-select ${(error && error['ServiceUserUnit']) ? "is-invalid" : ""}`} value={serviceUnit} onChange={(event) => { changeServiceUserUnit(event) }}//setPatientServiceUnit(event.target.value)
-                                disabled={(!pendingSmApprove(context, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
+                                disabled={(!pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus))}
                             >
                                 <option value={""} ></option>
                                 {serviceUnit != "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234', serviceUnit);
-                                        if (serviceUnit == 'JFP') {
-                                            console.log('serviceUnit', serviceUnit);
-                                            debugger
-                                        }
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
                                 {serviceUnit == "" && permissionList.indexOf('All') >= 0 &&
                                     serviceUserUnitList.map((item) => {
-                                        console.log('serviceUnit1234', serviceUnit);
-
                                         return <option value={item.su_Eng_name_display} selected={serviceUnit != '' && item.su_Eng_name_display == serviceUnit}>{item.su_name_tc}</option>
                                     })
                                 }
@@ -1177,7 +1160,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                 timeFormat="p"
                                 timeIntervals={15}
                                 dateFormat="yyyy/MM/dd h:mm aa"
-                                readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)}
+                                readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)}
                             />
                         </div>
                     </div>
@@ -1185,30 +1168,30 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {/* 事故發生地點 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生地點</label>
                         <div className="col">
-                            <input type="text" className={`form-control ${(error && error['IncidentLocation']) ? "is-invalid" : ""}`} name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="text" className={`form-control ${(error && error['IncidentLocation']) ? "is-invalid" : ""}`} name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故被傳媒報導</label>
                         <div className={`col ${(error && error['MediaReports']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_true" onChange={() => setForm({ ...form, mediaReports: true })} checked={form.mediaReports === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_true" onChange={() => setForm({ ...form, mediaReports: true })} checked={form.mediaReports === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="reportedByNews_true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_false" onChange={() => setForm({ ...form, mediaReports: false })} checked={form.mediaReports === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="reportedByNews" id="reportedByNews_false" onChange={() => setForm({ ...form, mediaReports: false })} checked={form.mediaReports === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="reportedByNews_false">否</label>
                             </div>
                             {
                                 form.mediaReports === true &&
-                                <AutosizeTextarea className={`form-control ${(error && error['MediaReportsDescription']) ? "is-invalid" : ""}`} placeholder="請註明" name="mediaReportsDescription" value={form.mediaReportsDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <AutosizeTextarea className={`form-control ${(error && error['MediaReportsDescription']) ? "is-invalid" : ""}`} placeholder="請註明" name="mediaReportsDescription" value={form.mediaReportsDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                             }
                         </div>
                     </div>
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故的描述</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${(error && error['IncidentDescription']) ? "is-invalid" : ""}`} name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['IncidentDescription']) ? "is-invalid" : ""}`} name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1239,17 +1222,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderMale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "male" })} checked={form.serviceUserGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderMale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "male" })} checked={form.serviceUserGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderMale1">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderFemale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "female" })} checked={form.serviceUserGenderOne === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers1" id="serviceUserGenderFemale1" onChange={() => setForm({ ...form, serviceUserGenderOne: "female" })} checked={form.serviceUserGenderOne === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderFemale1">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className={`form-control`} min={0} value={form.serviceUserAgeOne} onChange={(event) => setForm({ ...form, serviceUserAgeOne: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="number" className={`form-control`} min={0} value={form.serviceUserAgeOne} onChange={(event) => setForm({ ...form, serviceUserAgeOne: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1257,17 +1240,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderMale2" value="SERVICE_USER_GENDER_MALE_2" onChange={() => setForm({ ...form, serviceUserGenderTwo: "male" })} checked={form.serviceUserGenderTwo === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderMale2" value="SERVICE_USER_GENDER_MALE_2" onChange={() => setForm({ ...form, serviceUserGenderTwo: "male" })} checked={form.serviceUserGenderTwo === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderMale2">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderFemale2" value="SERVICE_USER_GENDER_FEMALE_2" onChange={() => setForm({ ...form, serviceUserGenderTwo: "female" })} checked={form.serviceUserGenderTwo === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers2" id="serviceUserGenderFemale2" value="SERVICE_USER_GENDER_FEMALE_2" onChange={() => setForm({ ...form, serviceUserGenderTwo: "female" })} checked={form.serviceUserGenderTwo === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderFemale2">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" min={0} value={form.serviceUserAgeTwo} onChange={(event) => setForm({ ...form, serviceUserAgeTwo: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="number" className="form-control" min={0} value={form.serviceUserAgeTwo} onChange={(event) => setForm({ ...form, serviceUserAgeTwo: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row mb-2">
@@ -1275,17 +1258,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderMale3" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, serviceUserGenderThree: "male" })} checked={form.serviceUserGenderThree === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderMale3" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, serviceUserGenderThree: "male" })} checked={form.serviceUserGenderThree === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderMale3">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, serviceUserGenderThree: "female" })} checked={form.serviceUserGenderThree === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="serviceUsers3" id="serviceUserGenderFemale3" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, serviceUserGenderThree: "female" })} checked={form.serviceUserGenderThree === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="serviceUserGenderFemale3">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>年齡</label>
                         <div className="col-12 col-md-4">
-                            <input type="number" className="form-control" min={0} value={form.serviceUserAgeThree} onChange={(event) => setForm({ ...form, serviceUserAgeThree: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="number" className="form-control" min={0} value={form.serviceUserAgeThree} onChange={(event) => setForm({ ...form, serviceUserAgeThree: +event.target.value })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                 </section>
@@ -1301,17 +1284,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className={`col-12 col-md-4 d-flex align-items-center`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderMale1" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, staffGenderOne: "male" })} checked={form.staffGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderMale1" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, staffGenderOne: "male" })} checked={form.staffGenderOne === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderMale1">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderFemale1" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, staffGenderOne: "female" })} checked={form.staffGenderOne === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender1" id="staffGenderFemale1" value="SERVICE_USER_GENDER_MALE_3" onChange={() => setForm({ ...form, staffGenderOne: "female" })} checked={form.staffGenderOne === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderFemale1">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className={`form-control`} name="staffPositionOne" value={form.staffPositionOne} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="text" className={`form-control`} name="staffPositionOne" value={form.staffPositionOne} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row row mb-2">
@@ -1319,17 +1302,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`} >性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderMale2" onChange={() => setForm({ ...form, staffGenderTwo: "male" })} checked={form.staffGenderTwo === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderMale2" onChange={() => setForm({ ...form, staffGenderTwo: "male" })} checked={form.staffGenderTwo === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderMale2">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderFemale2" onChange={() => setForm({ ...form, staffGenderTwo: "female" })} checked={form.staffGenderTwo === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender2" id="staffGenderFemale2" onChange={() => setForm({ ...form, staffGenderTwo: "female" })} checked={form.staffGenderTwo === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderFemale2">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="staffPositionTwo" value={form.staffPositionTwo} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="text" className="form-control" name="staffPositionTwo" value={form.staffPositionTwo} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     <div className="form-row row mb-2">
@@ -1337,17 +1320,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>性別</label>
                         <div className="col-12 col-md-4 d-flex align-items-center">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderMale3" onChange={() => setForm({ ...form, staffGenderThree: "male" })} checked={form.staffGenderThree === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderMale3" onChange={() => setForm({ ...form, staffGenderThree: "male" })} checked={form.staffGenderThree === "male"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderMale3">男</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderFemale3" onChange={() => setForm({ ...form, staffGenderThree: "female" })} checked={form.staffGenderThree === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="staffGender3" id="staffGenderFemale3" onChange={() => setForm({ ...form, staffGenderThree: "female" })} checked={form.staffGenderThree === "female"} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="staffGenderFemale3">女</label>
                             </div>
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>職位</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" name="staffPositionThree" value={form.staffPositionThree} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="text" className="form-control" name="staffPositionThree" value={form.staffPositionThree} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                 </section>
@@ -1362,11 +1345,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>報警處理</label>
                         <div className={`col ${(error && error['Police']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="police" id="police-true" onClick={() => setForm({ ...form, police: true })} checked={form.police === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="police" id="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="police" id="police-false" onClick={() => setForm({ ...form, police: false })} checked={form.police === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="police-false">沒有</label>
                             </div>
                             {
@@ -1382,18 +1365,18 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)}
+                                            readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)}
                                         />
                                     </div>
                                     <div>
                                         <label className="form-label">報案編號</label>
-                                        <input type="text" className={`form-control ${(error && error['PoliceReportNumber']) ? "is-invalid" : ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                        <input type="text" className={`form-control ${(error && error['PoliceReportNumber']) ? "is-invalid" : ""}`} name="policeReportNumber" value={form.policeReportNumber} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                     </div>
                                 </>
                             }
                             {
                                 form.police === false &&
-                                <AutosizeTextarea className={`form-control`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <AutosizeTextarea className={`form-control`} placeholder="請註明" name="policeDescription" value={form.policeDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                             }
                         </div>
                     </div>
@@ -1402,11 +1385,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>通知家人 / 親屬 / 監護人 / 保證人</label>
                         <div className={`col ${(error && error['Guardian']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-true" value="NOTIFY_FAMILY_TRUE" checked={form.guardian === true} onClick={() => setForm({ ...form, guardian: true })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-true" value="NOTIFY_FAMILY_TRUE" checked={form.guardian === true} onClick={() => setForm({ ...form, guardian: true })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notify-family-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-false" value="NOTIFY_FAMILY_FALSE" checked={form.guardian === false} onClick={() => setForm({ ...form, guardian: false })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="notifyFamily" id="notify-family-false" value="NOTIFY_FAMILY_FALSE" checked={form.guardian === false} onClick={() => setForm({ ...form, guardian: false })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="notify-family-false">沒有</label>
                             </div>
                             {
@@ -1422,22 +1405,22 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                             timeFormat="p"
                                             timeIntervals={15}
                                             dateFormat="yyyy/MM/dd h:mm aa"
-                                            readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)}
+                                            readOnly={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)}
                                         />
                                     </div>
                                     <div>
                                         <label className="form-label">與服務使用者的關係</label>
-                                        <input type="text" className={`form-control ${(error && error['GuardianRelationship']) ? "is-invalid" : ""}`} name="guardianRelationship" value={form.guardianRelationship} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                        <input type="text" className={`form-control ${(error && error['GuardianRelationship']) ? "is-invalid" : ""}`} name="guardianRelationship" value={form.guardianRelationship} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                     </div>
                                     <div>
                                         <label className="form-label">負責職員姓名</label>
-                                        <input type="text" className={`form-control ${(error && error['GuardianStaff']) ? "is-invalid" : ""}`} name="guardianStaff" value={form.guardianStaff} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                        <input type="text" className={`form-control ${(error && error['GuardianStaff']) ? "is-invalid" : ""}`} name="guardianStaff" value={form.guardianStaff} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                     </div>
                                 </>
                             }
                             {form.guardian === false &&
                                 <div>
-                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="guardianDescription" value={form.guardianDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                    <AutosizeTextarea className="form-control" placeholder="請註明" name="guardianDescription" value={form.guardianDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 </div>
                             }
                         </div>
@@ -1447,17 +1430,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>醫療安排</label>
                         <div className={`col ${(error && error['MedicalArrangement']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medical" id="medical-true" checked={form.medicalArrangement === true} onClick={() => setForm({ ...form, medicalArrangement: true })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="medical" id="medical-true" checked={form.medicalArrangement === true} onClick={() => setForm({ ...form, medicalArrangement: true })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="medical-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="medical" id="medical-false" checked={form.medicalArrangement === false} onClick={() => setForm({ ...form, medicalArrangement: false })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="medical" id="medical-false" checked={form.medicalArrangement === false} onClick={() => setForm({ ...form, medicalArrangement: false })} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="medical-false">沒有</label>
                             </div>
                             {
                                 form.medicalArrangement === true &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control ${(error && error['MedicalArrangmentDetail']) ? "is-invalid" : ""}`} placeholder="請註明" name="medicalArrangmentDetail" value={form.medicalArrangmentDetail} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['MedicalArrangmentDetail']) ? "is-invalid" : ""}`} placeholder="請註明" name="medicalArrangmentDetail" value={form.medicalArrangmentDetail} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 </div>
                             }
                         </div>
@@ -1467,23 +1450,23 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>舉行專業個案會議 / 為有關服務使用者訂定照顧計劃</label>
                         <div className={`col ${(error && error['CarePlan']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="meeting" id="meeting-true" onChange={() => setForm({ ...form, carePlan: true })} checked={form.carePlan === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="meeting" id="meeting-true" onChange={() => setForm({ ...form, carePlan: true })} checked={form.carePlan === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="meeting-true">有</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="meeting" id="meeting-false" onChange={() => setForm({ ...form, carePlan: false })} checked={form.carePlan === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="meeting" id="meeting-false" onChange={() => setForm({ ...form, carePlan: false })} checked={form.carePlan === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="meeting-false">沒有</label>
                             </div>
                             {
                                 form.carePlan === true &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control ${(error && error['CarePlanYesDescription']) ? "is-invalid" : ""}`} placeholder="請註明，包括日期" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['CarePlanYesDescription']) ? "is-invalid" : ""}`} placeholder="請註明，包括日期" name="carePlanYesDescription" value={form.carePlanYesDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 </div>
                             }
                             {
                                 form.carePlan === false &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control`} placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                    <AutosizeTextarea className={`form-control`} placeholder="請註明" name="carePlanNoDescription" value={form.carePlanNoDescription} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 </div>
                             }
                         </div>
@@ -1493,17 +1476,17 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>需要回應外界團體(如：關注組、區議會、立法會等)的關注／查詢</label>
                         <div className={`col ${(error && error['NeedResponse']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={() => setForm({ ...form, needResponse: true })} checked={form.needResponse === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="response" id="response-true" value="RESPONSE_TRUE" onClick={() => setForm({ ...form, needResponse: true })} checked={form.needResponse === true} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="response-true">是</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={() => setForm({ ...form, needResponse: false })} checked={form.needResponse === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                <input className="form-check-input" type="radio" name="response" id="response-false" value="RESPONSE_FALSE" onClick={() => setForm({ ...form, needResponse: false })} checked={form.needResponse === false} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="response-false">否</label>
                             </div>
                             {
                                 form.needResponse === true &&
                                 <div>
-                                    <AutosizeTextarea className={`form-control ${(error && error['NeedResponseDetail']) ? "is-invalid" : ""}`} placeholder="請註明" name="needResponseDetail" value={form.needResponseDetail} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                                    <AutosizeTextarea className={`form-control ${(error && error['NeedResponseDetail']) ? "is-invalid" : ""}`} placeholder="請註明" name="needResponseDetail" value={form.needResponseDetail} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                                 </div>
                             }
                         </div>
@@ -1512,14 +1495,14 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="form-row row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>已作出即時的跟進行動，包括保護其他服務使用者的措施 (如適用)</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="immediateFollowUp" value={form.immediateFollowUp} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <AutosizeTextarea className="form-control" name="immediateFollowUp" value={form.immediateFollowUp} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
 
                     <div className="form-row row mb-4">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>跟進計劃</label>
                         <div className="col">
-                            <AutosizeTextarea className={`form-control ${(error && error['FollowUpPlan']) ? "is-invalid" : ""}`} name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(context, formStatus, formStage, smInfo) && !pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <AutosizeTextarea className={`form-control ${(error && error['FollowUpPlan']) ? "is-invalid" : ""}`} name="followUpPlan" value={form.followUpPlan} onChange={inputFieldHandler} disabled={!formInitial(currentUserRole, formStatus) && !pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                 </section>
@@ -1592,7 +1575,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={smInfo && smInfo.Email} onChange={(event => setSMEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(context, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus)}>
+                                        disabled={!pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus)}>
                                         <option value={departments[0].hr_deptmgr}>{departments[0].hr_deptmgr}</option>
                                         <option value={departments[0].new_deptmgr}>{departments[0].new_deptmgr}</option>
                                     </select>
@@ -1609,11 +1592,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle}`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理評語</span></label>
                         <div className="col">
                             <AutosizeTextarea className="form-control" value={smComment} onChange={(event) => setSmComment(event.target.value)}
-                                disabled={!pendingSmApprove(context, formStatus, formStage, smInfo) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
+                                disabled={!pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !formInitBySm(CURRENT_USER.email, spSmInfo ? spSmInfo.Email : "", formStatus)} />
                         </div>
                     </div>
                     {
-                        pendingSmApprove(context, formStatus, formStage, smInfo) &&
+                        pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) &&
                         <div className="form-row row mb-2">
                             <div className="col-12">
                                 <div className="d-flex justify-content-center">
@@ -1647,7 +1630,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             {
                                 formInitial(currentUserRole, formStatus) && Array.isArray(departments) && departments.length > 0 && departments[0].override === true ?
                                     <select className={`custom-select`} value={sdInfo && sdInfo.Email} onChange={(event => setSDEmail(event.target.value))}
-                                        disabled={!pendingSmApprove(context, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus)}
+                                        disabled={!pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus)}
                                     >
                                         <option value={departments[0].hr_sd}>{departments[0].hr_sd}</option>
                                         <option value={departments[0].new_sd}>{departments[0].new_sd}</option>
@@ -1664,7 +1647,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>電話</label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" placeholder={sdInfo && sdInfo.Phone} value={sdPhone} onChange={event => setSdPhone(event.target.value)} disabled={!pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <input type="text" className="form-control" placeholder={sdInfo && sdInfo.Phone} value={sdPhone} onChange={event => setSdPhone(event.target.value)} disabled={!pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
                         <div className="col-12 col-md-4">
@@ -1679,11 +1662,11 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     <div className="row mb-0 mb-md-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSdApprove(context, formStatus, formStage, sdInfo)} />
+                            <AutosizeTextarea className="form-control" value={sdComment} onChange={(event) => setSdComment(event.target.value)} disabled={!pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo)} />
                         </div>
                     </div>
                     {
-                        pendingSdApprove(context, formStatus, formStage, sdInfo) &&
+                        pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo) &&
                         <div className="row justify-content-center my-2">
                             <div className="col-md-2 col-4">
                                 <button className="btn btn-warning w-100" onClick={sdApproveHandler}>批准</button>
@@ -1711,13 +1694,13 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             </div>
                         }
                         {
-                            pendingSdApprove(context, formStatus, formStage, sdInfo) &&
+                            pendingSdApprove(CURRENT_USER.email, formStatus, formStage, sdInfo) &&
                             <div className='col-md-2 col-4 mb-2'>
                                 <button className="btn btn-warning w-100" onClick={sdSubmitHandler}>儲存</button>
                             </div>
                         }
                         {
-                            pendingSmApprove(context, formStatus, formStage, smInfo) &&
+                            pendingSmApprove(CURRENT_USER.email, formStatus, formStage, smInfo) &&
                             <div className='col-md-2 col-4 mb-2'>
                                 <button className="btn btn-warning w-100" onClick={smSubmitHadnler}>儲存</button>
                             </div>

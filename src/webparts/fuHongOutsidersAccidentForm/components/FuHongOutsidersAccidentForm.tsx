@@ -60,11 +60,25 @@ interface IFuHongOutsidersAccidentFormState {
   loading:boolean;
   serviceUnitList:any;
 }
+
+interface UserInfo {
+	userEmail: string;
+	userDisplayName: string;
+  userId: number;
+}
+
 export default class FuHongOutsidersAccidentForm extends React.Component<IFuHongOutsidersAccidentFormProps, IFuHongOutsidersAccidentFormState> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.split('/sites/')[1].split('/')[0];
 	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
 	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
 	
+  private getCurrentUser(): UserInfo {
+		return {
+			userEmail: this.props.context.pageContext.user.email,
+			userDisplayName:this.props.context.pageContext.user.displayName,
+      userId:this.props.context.pageContext.legacyPageContext.userId
+		};
+	}
 
   public constructor(props) {
     super(props);
@@ -103,7 +117,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
   }
 
   private initialState = async () => {
-    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
     
@@ -113,19 +127,19 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
 
   public componentDidMount() {
     this.initialState().then((lists) => {
-      getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
         /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
         }*/
         this.initialDataByFormId().then((data) => {
           if (data && data.Investigator && data.Investigator.EMail) {
-            if (data.Investigator.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+            if (data.Investigator.EMail === this.getCurrentUser().userEmail) {
               this.setState({ currentUserRole: Role.INVESTIGATOR });
             }
           }
   
           if (data) {
-            let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
+            let userEmail = this.getCurrentUser().userEmail;
             if (data.Stage == '1' && data.SM && data.SM.EMail) {
               if (data.SM.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
@@ -236,7 +250,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           }
           getAdmin().then((admin) => {
             admin.forEach((item) => {
-              if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (item.Admin && item.Admin.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.ADMIN,permissionList:['All'], currentUserRead:true  });
               }
             })
@@ -279,10 +293,10 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
           formTwentyOneDataSelected = formTwentyOneData.Id
         }
         //this.setState({ outsiderAccidentFormData: data, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData });
-        if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.props.context.pageContext.legacyPageContext.userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
+        if (data.Stage == '2' && data.Status == 'PENDING_INVESTIGATE' && (data.SDComment == null || data.SDComment == '') && data.SDId == this.getCurrentUser().userId && new Date(new Date(data.SPTDate).setDate(new Date(data.SPTDate).getDate()  + 7)) > new Date()) {
           this.setState({ outsiderAccidentFormData: data, indexTab:0, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint });
         } else if (data.Stage == '3' && data.Status == 'PENDING_SM_FILL_IN') {
-          if (formTwentyData.SMId == this.props.context.pageContext.legacyPageContext.userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(new Date(formTwentyData.SPTDate).setDate(new Date(formTwentyData.SPTDate).getDate() + 7)) > new Date()) {
+          if (formTwentyData.SMId == this.getCurrentUser().userId && (formTwentyData.SMComment == null || formTwentyData.SMComment == '') && new Date(new Date(formTwentyData.SPTDate).setDate(new Date(formTwentyData.SPTDate).getDate() + 7)) > new Date()) {
             this.setState({ outsiderAccidentFormData: data, indexTab:1, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });
           } else {
             this.setState({ outsiderAccidentFormData: data, indexTab:stage, formTwentyData:formTwentyData, formTwentyOneData:formTwentyOneData, formTwentyOneDataPrint:formTwentyOneDataPrint, formTwentyOneDataSelected:formTwentyOneDataSelected });

@@ -58,12 +58,23 @@ interface IFuHongSpecialIncidentReportLicenseStates {
   formTwentySixDataSelected:number;
   serviceUnitList:any;
 }
-
+interface UserInfo {
+	userId: string;
+	userEmail: string;
+	userDisplayName: string;
+}
 export default class FuHongSpecialIncidentReportLicense extends React.Component<IFuHongSpecialIncidentReportLicenseProps, IFuHongSpecialIncidentReportLicenseStates> {
   private siteCollectionName = this.props.context.pageContext.web.absoluteUrl.split('/sites/')[1].split('/')[0];
 	private siteCollecitonOrigin = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/")) : this.props.context.pageContext.web.absoluteUrl.substring(0, this.props.context.pageContext.web.absoluteUrl.indexOf(".com" + 4));
 	private siteCollectionUrl = this.props.context.pageContext.web.absoluteUrl.indexOf("/sites/") > -1 ? this.siteCollecitonOrigin + "/sites/" + this.siteCollectionName : this.siteCollecitonOrigin;
 	
+  private getCurrentUser(): UserInfo {
+		return {
+			userEmail: this.props.context.pageContext.user.email,
+			userDisplayName:this.props.context.pageContext.user.displayName,
+      userId:this.props.context.pageContext.legacyPageContext.userId
+		};
+	}
   public constructor(props) {
     super(props);
     getCanvasZone();
@@ -92,8 +103,8 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
   }
 
   private initialState = async () => {
-    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
-    const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.props.context.pageContext.legacyPageContext.userEmail);
+    const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
+    const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const speicalIncidentReportWorkflow = await getSpeicalIncidentReportLicenseWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
     return [PermissionList, DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
@@ -102,7 +113,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
 
   public componentDidMount() {
     this.initialState().then((lists)=> {
-      getUserAdByGraph(this.props.context.pageContext.legacyPageContext.userEmail).then(value => {
+      getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
         /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
         }*/
@@ -120,7 +131,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
                 formTwentySixDataSelected = formTwentySixData.Id;
               }
             }
-            let userEmail = this.props.context.pageContext.legacyPageContext.userEmail;
+            let userEmail = this.getCurrentUser().userEmail;
             if (data && data.Investigator && data.Investigator.EMail) {
               if (data.Investigator.EMail === userEmail) {
                 this.setState({ currentUserRole: Role.INVESTIGATOR });
@@ -190,7 +201,7 @@ export default class FuHongSpecialIncidentReportLicense extends React.Component<
           
           getAdmin().then((admin) => {
             admin.forEach((item) => {
-              if (item.Admin && item.Admin.EMail === this.props.context.pageContext.legacyPageContext.userEmail) {
+              if (item.Admin && item.Admin.EMail === this.getCurrentUser().userEmail) {
                 this.setState({ currentUserRole: Role.ADMIN,departmentList:{"All":true}, currentUserRead:true });
               }
             })
