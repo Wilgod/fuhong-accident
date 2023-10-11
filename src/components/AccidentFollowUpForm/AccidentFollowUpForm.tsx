@@ -34,6 +34,12 @@ const formTypeParser = (formType: string, additonalString: string) => {
 interface IErrorFields {
 
 }
+
+interface UserInfo {
+	id: string;
+	email: string;
+	name: string;
+}
 export default function AccidentFollowUpForm({ context, formType, styles, currentUserRole, parentFormData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, formTwentyData, formTwentyOneData, workflow, changeFormTwentyOneDataSelected, serviceUnitList, print }: IAccidentFollowUpFormProps) {
     const type: string = getQueryParameterString("type");
     const [smDate, setSmDate] = useState(null); // 高級服務經理
@@ -64,6 +70,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         accidentalFollowUpContinue: undefined,
     });
 
+    const CURRENT_USER: UserInfo = {
+        email: context.pageContext.legacyPageContext.userEmail,
+        name: context.pageContext.legacyPageContext.userDisplayName,
+        id: context.pageContext.legacyPageContext.userId,
+    }
+    
     const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
         action: "",
         date: new Date().toISOString(),
@@ -128,7 +140,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     //For SM only
     const smSubmitHandler = (event) => {
 
-        if (stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)) { // SPT
+        if (stageThreePendingSdApproveForSpt(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)) { // SPT
             notifyServiceUserAccidentSMSDComment(context, parentFormData.Id, 3, workflow);
             sptCommentUpdate();
         } else {
@@ -296,8 +308,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                     RecordId: parentFormData.Id,
                                     Report: "事故跟進/結束報告(三)",
                                     ServiceUnit: parentFormData.ServiceLocation
-                                }).catch(console.error)
-
+                                }).catch(console.error);
                                 formSubmittedHandler();
                             }).catch(console.error);
                         }
@@ -552,7 +563,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         "Status": "CLOSED",
                         "ReminderDate": null
                     }).then((updateServiceUserAccidentByIdRes) => {
-
                         postLog({
                             AccidentTime: parentFormData.AccidentTime,
                             Action: "批准",
@@ -562,7 +572,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                             Report: "事故跟進/結束報告(三)",
                             ServiceUnit: parentFormData.ServiceLocation
                         }).catch(console.error);
-
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else if (formType === "OUTSIDERS") {
@@ -849,7 +858,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                 disabled={type=='cms' ||
                                     followUpActions.length >= 5 ||
                                     completed ||
-                                    (!canSaveDraft && !stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))}>
+                                    (!canSaveDraft && !stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))}>
                                 新增意外跟進行動
                             </button>
                         }
@@ -885,7 +894,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 setFollowUpActions(arr);
                                             }}
                                                 value={item.action}
-                                                disabled={type=='cms' ||completed || (!canSaveDraft && !stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                                disabled={type=='cms' ||completed || (!canSaveDraft && !stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                         </div>
                                     </div>
                                     <div className="form-row mb-2">
@@ -898,7 +907,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 actionItem.date = new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
-                                                readOnly={completed || (!canSaveDraft && !stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))}
+                                                readOnly={completed || (!canSaveDraft && !stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))}
                                             />
                                             {/* <input type="text" className="form-control" name="executionPeriod" value={form.executionPeriod} onChange={textFieldHandler}
                                             disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(currentUserRole, formStatus, formStage) && !stageThreePendingSdApprove(currentUserRole, formStatus, formStage))} /> */}
@@ -914,7 +923,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                                 actionItem.remark = event.target.value;
                                                 setFollowUpActions(arr);
                                             }} value={item.remark}
-                                                disabled={type=='cms' ||completed || (!canSaveDraft && !stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                                disabled={type=='cms' ||completed || (!canSaveDraft && !stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                         </div>
                                     </div>
                                 </div>)
@@ -927,12 +936,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         <div className="col-12 col-md-4">
                             <div className={`form-check form-check-inline ${(error && error['accidentalFollowUpContinue']) ? "is-invalid" : ""}`} >
                                 <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === true} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={() => setForm({ ...form, accidentalFollowUpContinue: true })}
-                                    disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                    disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-false" checked={form.accidentalFollowUpContinue === false} value="ACCIDENT_FOLLOW_UP_FALSE" onChange={() => setForm({ ...form, accidentalFollowUpContinue: false })}
-                                    disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                    disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>
                         </div>
@@ -942,7 +951,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 服務經理姓名 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級服務經理/<span className="d-sm-inline d-md-block">服務經理姓名</span></label>
                         <div className="col-12 col-md-4">
-                            <input type="text" className="form-control" readOnly value={`${serviceManager && serviceManager.Title ? `${serviceManager.Title}` : ""}`} disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                            <input type="text" className="form-control" readOnly value={`${serviceManager && serviceManager.Title ? `${serviceManager.Title}` : ""}`} disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                         </div>
                         {/* 日期*/}
                         <label className={`col-12 col-md-1 col-form-label ${styles.fieldTitle} pt-xl-0`}>日期</label>
@@ -995,7 +1004,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>高級物理治療師評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={type=='cms' ||!stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)} />
+                            <AutosizeTextarea className="form-control" name="sptComment" onChange={(event) => setSptComment(event.target.value)} value={sptComment} disabled={type=='cms' ||!stageThreePendingSdApproveForSpt(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId)} />
                         </div>
                     </div>
                     {/* <div className="form-group row mb-2">
@@ -1051,12 +1060,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         {/* 評語 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>服務總監評語</label>
                         <div className="col">
-                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} disabled={type=='cms' ||completed || !stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData)} />
+                            <AutosizeTextarea className="form-control" name="sdComment" onChange={(event) => setSdComment(event.target.value)} value={sdComment} disabled={type=='cms' ||completed || !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData)} />
                         </div>
                     </div>
 
                     {
-                        !completed && stageThreePendingSdApprove(context,currentUserRole, formStatus, formStage, formTwentyOneData) &&
+                        !completed && stageThreePendingSdApprove(CURRENT_USER.email,currentUserRole, formStatus, formStage, formTwentyOneData) &&
                         <div className="form-row justify-content-center mb-2">
                             {
                                 <div className="col-md-2 col-4 mb-2">
@@ -1076,25 +1085,25 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     <div className="row">
                         {
                             <>
-                                {!completed && stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData) &&
+                                {!completed && stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) &&
                                     <div className="col-md-2 col-4 mb-2">
                                         <button className="btn btn-warning w-100" onClick={(event) => smSubmitHandler(event)}>提交</button>
                                     </div>
                                 }
                                 {
-                                    stageThreePendingSdApprove(context, currentUserRole, formStatus, formStage, formTwentyOneData) &&
+                                    stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) &&
                                     <div className="col-md-2 col-4 mb-2">
                                         <button className="btn btn-warning w-100" onClick={(event => sdSubmitHandler(event))}>提交</button>
                                     </div>
                                 }
                                 {
-                                    stageThreePendingSdApproveForSpt(context, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId) &&
+                                    stageThreePendingSdApproveForSpt(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData, accidentFollowUpFormList, selectedAccidentFollowUpFormId) &&
                                     <div className="col-md-2 col-4 mb-2">
                                         <button className="btn btn-warning w-100" onClick={(event => sptCommentUpdate())}>提交</button>
                                     </div>
                                 }
                                 {
-                                    (canSaveDraft || stageThreePendingSmFillIn(context, currentUserRole, formStatus, formStage, formTwentyOneData)) &&
+                                    (canSaveDraft || stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData)) &&
                                     <div className="col-md-2 col-4 mb-2">
                                         <button className="btn btn-success w-100" onClick={(event => draftHandler(event))}>草稿</button>
                                     </div>

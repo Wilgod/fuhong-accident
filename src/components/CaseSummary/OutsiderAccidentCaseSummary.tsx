@@ -595,7 +595,7 @@ function genderFormatter(cell, rowIndex) {
 function dateFormatter(cell, rowIndex) {
     let div = [];
     if (cell != undefined && cell != null) {
-        div.push(<div >{moment(cell.IncidentTime).format("YYYY-MM-DD hh:mm")}</div>);
+        div.push(<div >{moment(cell).format("YYYY-MM-DD hh:mm")}</div>);
         //div.push(<div >{new Date(cell).getFullYear() + `-` +(`0`+(new Date(cell).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(cell).getDate()).slice(-2) + ` ` + (`0`+new Date(cell).getHours()).slice(-2) + `:` + + (`0`+new Date(cell).getMinutes()).slice(-2)}</div>);
     }
     return div;
