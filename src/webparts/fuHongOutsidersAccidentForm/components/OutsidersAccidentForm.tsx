@@ -540,11 +540,20 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             } else {
 
                 if (formStatus === "SM_VOID") {
-
-                    updateOutsiderAccidentFormById(formData.Id, {
-                        ...body,
+                    let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
-                    }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                    };
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["SMApproved"] = true;
+                        extraBody["SMComment"] = smComment;
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                        extraBody["Status"] = "PENDING_SPT_APPROVE"
+                    } else {
+
+                    }
+
+                    updateOutsiderAccidentFormById(formData.Id, extraBody).then(async (updateOutsiderAccidentFormByIdRes) => {
                         console.log(updateOutsiderAccidentFormByIdRes)
                         // Photo upload implement
                         let att = [];

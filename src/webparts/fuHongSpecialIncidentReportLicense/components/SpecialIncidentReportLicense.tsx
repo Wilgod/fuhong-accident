@@ -1251,10 +1251,15 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
-                updateSpecialIncidentReportLicense(formData.Id, {
-                    ...body,
+                let extraBody = {
                     "Status": "PENDING_SM_APPROVE"
-                }).then(async (res) => {
+                };
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment;
+                }
+                updateSpecialIncidentReportLicense(formData.Id, extraBody).then(async (res) => {
                     await uploadFile(formData.Id);
 
                     postLog({

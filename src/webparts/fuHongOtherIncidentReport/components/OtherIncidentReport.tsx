@@ -365,6 +365,16 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
+                let extraBody = {
+                    "Status": "PENDING_SM_APPROVE",
+                    "SubmitDate": new Date().toISOString(),
+                    "PreparationStaffId": CURRENT_USER.id,
+                };
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment
+                }
                 updateOtherIncidentReport(formData.Id, {
                     ...body,
                     "Status": "PENDING_SM_APPROVE",

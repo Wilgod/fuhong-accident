@@ -845,7 +845,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             "Status": "PENDING_SM_APPROVE"
                         };
     
-    
+                        if (CURRENT_USER.email === spSmInfo.Email) {
+                            extraBody["SMApproved"] = true;
+                            extraBody["SMComment"] = smComment;
+                            extraBody["SMDate"] = new Date().toISOString();
+                            extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                            extraBody["Status"] = "PENDING_SPT_APPROVE"
+                        }
+
                         if (formStatus === "DRAFT") {
                             updateServiceUserAccidentById(formData.Id, {
                                 ...body,
@@ -967,10 +974,17 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setError(error);
             } else {
                 if (formStatus === "SM_VOID") {
-                    updateServiceUserAccidentById(formData.Id, {
-                        ...body,
+                    let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
-                    }).then(async (updateServiceUserAccidentByIdRes) => {
+                    };
+                    if (CURRENT_USER.email === spSmInfo.Email) {
+                        extraBody["SMApproved"] = true;
+                        extraBody["SMComment"] = smComment;
+                        extraBody["SMDate"] = new Date().toISOString();
+                        extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                        extraBody["Status"] = "PENDING_SPT_APPROVE"
+                    }
+                    updateServiceUserAccidentById(formData.Id, extraBody).then(async (updateServiceUserAccidentByIdRes) => {
                         let att = [];
                         if (form.photo === "PHOTO_TRUE" && selectedCctvPhoto.length > 0) {
                             att = [...attachmentsFilesFormatParser(selectedCctvPhoto, "CCTV")];

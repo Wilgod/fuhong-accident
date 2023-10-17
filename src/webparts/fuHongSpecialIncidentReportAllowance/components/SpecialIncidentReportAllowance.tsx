@@ -600,11 +600,15 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             alert(msg);
         } else {
             if (formStatus === "SM_VOID") {
-                updateSpecialIncidentReportAllowance(formData.Id, {
-                    ...body,
-                    "Status": "PENDING_SM_APPROVE",
-
-                }).then(async res => {
+                let extraBody = {
+                    "Status": "PENDING_SM_APPROVE"
+                };
+                if (CURRENT_USER.email === spSmInfo.Email) {
+                    extraBody["Status"] = "PENDING_SD_APPROVE";
+                    extraBody["SMDate"] = new Date().toISOString();
+                    extraBody["SMComment"] = smComment;
+                }
+                updateSpecialIncidentReportAllowance(formData.Id, extraBody).then(async res => {
                     console.log(res)
                     if (uploadFile.length > 0) {
                         let att = [];
