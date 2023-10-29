@@ -53,6 +53,7 @@ interface IServiceUserAccidentFormProps {
     cmsUserWorkflow:string;
     cmsUserInformationWorkflow:string;
     cmsUserInformationIdWorkflow:string;
+    skipApproval:boolean;
 }
 
 interface IErrorFields {

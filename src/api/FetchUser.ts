@@ -32,6 +32,24 @@ export async function getUserInfoByEmailInUserInfoAD(siteCollectionUrl:string, e
     }
 }
 
+export async function getSkipApproval(siteCollectionUrl:string, hr_jobcode: string) {
+    try {
+        const LIST_NAME = "Skip Approval";
+        const URL = siteCollectionUrl;
+        debugger
+        const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`Title eq '${hr_jobcode}'`).top(1).get();
+        if (result.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+        
+    } catch (err) {
+        console.error(err);
+        throw new Error("getSkipApproval error");
+    }
+}
+
 export async function getDepartmentByShortName(shortName: string, siteCollectionUrl:string) {
     try {
         const LIST_NAME = "SM SD Mapping";
@@ -147,13 +165,21 @@ export async function getSeniorPhysiotherapistByGraph(siteCollectionUrl) {
         throw new Error("getSeniorPhysiotherapistByGraph error");
     }*/
 }
-
+export async function checkSkipApproval(siteCollectionUrl,userEmail) {
+    let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
+    let skipApproval = false;
+    if (user.length > 0) {
+        skipApproval = await getSkipApproval(siteCollectionUrl, user[0].hr_jobcode);
+    }
+    return skipApproval;
+}
 
 export async function checkDepartmentList(siteCollectionUrl,userEmail) {
     let user = await getUserInfoByEmailInUserInfoAD(siteCollectionUrl,userEmail);
     let dept = [];
     if (user.length > 0) {
       let access = await getAccessRight();
+      
       console.log('user hr_jobcode2 : ' +  user[0].hr_jobcode);
       let getAllSMSD = await getAllSMSDMapping(siteCollectionUrl);
       access.forEach(async(item) => {

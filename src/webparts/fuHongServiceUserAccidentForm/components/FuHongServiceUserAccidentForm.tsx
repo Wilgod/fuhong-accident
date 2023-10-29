@@ -17,7 +17,7 @@ import { getUserInfoByEmailInUserInfoAD } from '../../../api/FetchUser';
 import { getUserAdByGraph } from '../../../api/FetchUser';
 import ThankYouComponent from '../../../components/ThankYou/ThankYouComponent';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
-import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
+import { getAllServiceUnit, checkPermissionList, checkSkipApproval } from '../../../api/FetchUser';
 import { getAccidentReportFormById, getAccidentFollowUpFormById, getAllAccidentFollowUpFormByCaseNumber,getAdmin, getServiceUserAccidentById } from '../../../api/FetchFuHongList';
 import { getServiceUserAccidentWorkflow, getCMSUserWorkflow, getCMSUserInformationIdWorkflow, getCMSUserInformationWorkflow } from '../../../api/FetchFuHongList';
 import ServiceUserAccidentFormPrint from "../../../components/ServiceUserAccidentForm/ServiceUserAccidentFormPrint";
@@ -63,6 +63,7 @@ interface IFuHongServiceUserAccidentFormState {
   cmsUserWorkflow:string;
   cmsUserInformationWorkflow:string;
   cmsUserInformationIdWorkflow:string;
+  skipApproval:boolean;
 }
 
 interface UserInfo {
@@ -105,7 +106,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
       serviceUnitList:[],
       cmsUserWorkflow:'',
       cmsUserInformationWorkflow:'',
-      cmsUserInformationIdWorkflow:''
+      cmsUserInformationIdWorkflow:'',
+      skipApproval:false
     }
     console.log("Flow 1");
   }
@@ -131,17 +133,19 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
+    const skipApproval = await checkSkipApproval(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const serviceUserAccidentWorkflow = await getServiceUserAccidentWorkflow();
     const cmsUserWorkflow = await getCMSUserWorkflow();
     const cmsUserInformationIdWorkflow = await getCMSUserInformationIdWorkflow();
     const cmsUserInformationWorkflow = await getCMSUserInformationWorkflow()
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
-    return [PermissionList,serviceUserAccidentWorkflow.Url,serviceUnitList, cmsUserWorkflow.Url, cmsUserInformationWorkflow.Url, cmsUserInformationIdWorkflow.Url]
+    return [PermissionList,serviceUserAccidentWorkflow.Url,serviceUnitList, cmsUserWorkflow.Url, cmsUserInformationWorkflow.Url, cmsUserInformationIdWorkflow.Url, skipApproval]
     //this.setState({ permissionList: PermissionList, serviceUserAccidentWorkflow:serviceUserAccidentWorkflow.Url,serviceUnitList:serviceUnitList });
   }
 
   public componentDidMount() {
     this.initialState().then((lists)=> {
+      this.setState({ skipApproval:lists[6] });
       getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
         /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
@@ -253,7 +257,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             }
             //if (lists.)
-            debugger
+            
             if (lists[0].length > 0) {
               for (let dept of lists[0]) {
                 if (dept == 'All') {
@@ -263,7 +267,8 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                 }
               }
             }
-            
+
+            debugger
             this.setState({ currentUserRead: userCanRead });
           }
           getAdmin().then((admin) => {
@@ -419,7 +424,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                           <Tab onClick={()=>this.tab(2)}>事故跟進/結束報告(三)</Tab>
                         </TabList>
                         <TabPanel>
-                          <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} print={this.print} cmsUserWorkflow={this.state.cmsUserWorkflow} cmsUserInformationWorkflow={this.state.cmsUserInformationWorkflow} cmsUserInformationIdWorkflow={this.state.cmsUserInformationIdWorkflow}/>
+                          <ServiceUserAccidentForm context={this.props.context} currentUserRole={this.state.currentUserRole} formData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} serviceUserAccidentWorkflow={this.state.serviceUserAccidentWorkflow} print={this.print} cmsUserWorkflow={this.state.cmsUserWorkflow} cmsUserInformationWorkflow={this.state.cmsUserInformationWorkflow} cmsUserInformationIdWorkflow={this.state.cmsUserInformationIdWorkflow} skipApproval={this.state.skipApproval}/>
                         </TabPanel>
                         <TabPanel>
                           <AccidentReportForm context={this.props.context} styles={styles} formType={"SERVICE_USER"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.serviceUserAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.serviceUserAccidentWorkflow} serviceUnitList={this.state.serviceUnitList} print={this.print}/>

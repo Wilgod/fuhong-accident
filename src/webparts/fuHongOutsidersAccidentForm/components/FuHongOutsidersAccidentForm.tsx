@@ -19,7 +19,7 @@ import { getUserAdByGraph } from '../../../api/FetchUser';
 import { getAdmin, getOutsiderAccidentById } from '../../../api/FetchFuHongList';
 import { getAccidentReportFormById, getAllAccidentFollowUpFormByCaseNumber, getAccidentFollowUpFormById } from '../../../api/FetchFuHongList';
 import { getOutsiderAccidentWorkflow } from '../../../api/FetchFuHongList';
-import { getAllServiceUnit, checkPermissionList } from '../../../api/FetchUser';
+import { getAllServiceUnit, checkPermissionList, checkSkipApproval } from '../../../api/FetchUser';
 import NoAccessComponent from '../../../components/NoAccessRight/NoAccessRightComponent';
 import OutsidersAccidentFormPrint from "../../../components/OutsidersAccidentForm/OutsidersAccidentFormPrint";
 if (document.getElementById('workbenchPageContent') != null) {
@@ -59,6 +59,7 @@ interface IFuHongOutsidersAccidentFormState {
   indexTab:number;
   loading:boolean;
   serviceUnitList:any;
+  skipApproval:boolean;
 }
 
 interface UserInfo {
@@ -102,7 +103,8 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
       indexTab:0,
       loading:true,
       serviceUnitList:[],
-      currentUserRead:false
+      currentUserRead:false,
+      skipApproval:false
     }
   }
 
@@ -118,15 +120,17 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
 
   private initialState = async () => {
     const PermissionList = await checkPermissionList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
+    const skipApproval = await checkSkipApproval(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const outsiderAccidentWorkflow = await getOutsiderAccidentWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
     
-    return [PermissionList,outsiderAccidentWorkflow.Url,serviceUnitList]
+    return [PermissionList,outsiderAccidentWorkflow.Url,serviceUnitList, skipApproval]
     //this.setState({ permissionList: PermissionList, outsiderAccidentWorkflow:outsiderAccidentWorkflow.Url,serviceUnitList:serviceUnitList });
   }
 
   public componentDidMount() {
     this.initialState().then((lists) => {
+      this.setState({ skipApproval:lists[3] });
       getUserAdByGraph(this.getCurrentUser().userEmail).then(value => {
         /*if (value && value.jobTitle) {
           this.setState({ currentUserRole: jobTitleParser2(value.jobTitle) });
@@ -372,7 +376,7 @@ export default class FuHongOutsidersAccidentForm extends React.Component<IFuHong
                         <Tab onClick={()=>this.tab(2)}>事故跟進/結束報告(三)</Tab>
                       </TabList>
                       <TabPanel>
-                    <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow} print={this.print}/>
+                    <OutsidersAccidentForm context={this.props.context} formSubmittedHandler={this.formSubmittedHandler} currentUserRole={this.state.currentUserRole} formData={this.state.outsiderAccidentFormData} isPrintMode={this.state.isPrintMode} siteCollectionUrl={this.siteCollectionUrl} permissionList={this.state.permissionList} workflow={this.state.outsiderAccidentWorkflow} print={this.print} skipApproval={this.state.skipApproval}/>
                   </TabPanel>
                   <TabPanel>
                     <AccidentReportForm context={this.props.context} styles={styles} formType={"OUTSIDERS"} currentUserRole={this.state.currentUserRole} parentFormData={this.state.outsiderAccidentFormData} formSubmittedHandler={this.formSubmittedHandler} isPrintMode={this.state.isPrintMode} formTwentyData={this.state.formTwentyData} workflow={this.state.outsiderAccidentWorkflow} serviceUnitList={this.state.serviceUnitList} print={this.print}/>

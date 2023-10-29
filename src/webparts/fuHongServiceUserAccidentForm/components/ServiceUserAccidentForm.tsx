@@ -55,7 +55,7 @@ if (document.querySelector('.CanvasZone') != null) {
     (document.querySelector('.CanvasZone') as HTMLElement).style.maxWidth = '1920px';
 }
 
-export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow, cmsUserInformationWorkflow, cmsUserInformationIdWorkflow }: IServiceUserAccidentFormProps) {
+export default function ServiceUserAccidentForm({ context, currentUserRole, formData, formSubmittedHandler, isPrintMode, siteCollectionUrl, permissionList, serviceUserAccidentWorkflow, print, cmsUserWorkflow, cmsUserInformationWorkflow, cmsUserInformationIdWorkflow, skipApproval }: IServiceUserAccidentFormProps) {
     const type: string = getQueryParameterString("type");
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -691,7 +691,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
 
-        if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
+        if ((currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") || skipApproval) {
             body["SMApproved"] = true;
             body["Status"] = "PENDING_SPT_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
@@ -977,7 +977,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
                     };
-                    if (CURRENT_USER.email === spSmInfo.Email) {
+                    if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
                         extraBody["SMApproved"] = true;
                         extraBody["SMComment"] = smComment;
                         extraBody["SMDate"] = new Date().toISOString();
@@ -1027,7 +1027,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
 
                         //SM Auto approve go to next step
-                        if (CURRENT_USER.email === spSmInfo.Email) {
+                        if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
                             extraBody["SMApproved"] = true;
                             extraBody["SMComment"] = smComment;
                             extraBody["SMDate"] = new Date().toISOString();

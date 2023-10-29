@@ -55,9 +55,10 @@ interface IOutsidersAccidentFormProps {
     permissionList: any;
     workflow: string;
     print: any;
+    skipApproval:boolean;
 }
 
-export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, permissionList, workflow, print }: IOutsidersAccidentFormProps) {
+export default function OutsidersAccidentForm({ context, formSubmittedHandler, currentUserRole, formData, isPrintMode, siteCollectionUrl, permissionList, workflow, print, skipApproval }: IOutsidersAccidentFormProps) {
     const [error, setError] = useState<IErrorFields>();
     const [formStatus, setFormStatus] = useState("");
     const [formStage, setFormStage] = useState("");
@@ -420,7 +421,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             msg += "請填寫高級物理治療師\n";
         }
 
-        if (currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") {
+        if ((currentUserRole === Role.SERVICE_MANAGER && status === "SUBMIT") || skipApproval) {
             body["SMApproved"] = true;
             // body["Status"] = "PENDING_SPT_APPROVE";
             body["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
@@ -543,7 +544,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
                     };
-                    if (CURRENT_USER.email === spSmInfo.Email) {
+                    if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
                         extraBody["SMApproved"] = true;
                         extraBody["SMComment"] = smComment;
                         extraBody["SMDate"] = new Date().toISOString();
@@ -593,7 +594,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             "Status": "PENDING_SM_APPROVE"
                         }
 
-                        if (CURRENT_USER.email === spSmInfo.Email) {
+                        if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
                             extraBody["SMApproved"] = true;
                             extraBody["SMComment"] = smComment;
                             extraBody["SMDate"] = new Date().toISOString();
