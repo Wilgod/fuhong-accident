@@ -173,6 +173,7 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
                     (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
                     (item.HomesName != null && item.HomesName.toLocaleLowerCase().trim() == key) ||
+                    (item.AffectedName != null && item.AffectedName.toLocaleLowerCase().trim() == key) ||
                     (item.AffectedIdCardNo != null && item.AffectedIdCardNo.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterSpecialIncidentReportLicense) {

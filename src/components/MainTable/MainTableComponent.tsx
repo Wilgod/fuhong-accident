@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect } from 'react';
+import { useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import useServiceUnit from '../../hooks/useServiceUnits';
@@ -17,6 +17,7 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
         id: context.pageContext.legacyPageContext.userId,
     }
 
+    const [iframeLink, setIframeLink] = useState('');
     const [data] = useFetchAllForms(CURRENT_USER.id, serviceUnitList, screenType, {
         startDate: dateRange.start,
         endDate: dateRange.end,
@@ -30,19 +31,37 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
     }, siteCollectionUrl);
     // const [data, setStartDate, setEndDate, setSearchServiceUnit, setSearchFormTypes, setSearchFormStatus, setSearchExpired] = useFetchAllForms(CURRENT_USER.id);
 
-    console.log("data", data)
+    console.log("iframeLink", iframeLink)
 
     return (
         <div>
-            <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
-                搜尋結果 [{`${data.length} 筆記錄`}]
-            </div>
-            <BootstrapTable boot keyField='id' data={data || []} columns={columns(context, type)} pagination={paginationFactory()} bootstrap4={true} />
+            {iframeLink == "" &&
+            <>
+                <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
+                    搜尋結果 [{`${data.length} 筆記錄`}]
+                </div>
+                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context, type, setIframeLink)} pagination={paginationFactory()} bootstrap4={true}/>
+            </>
+            }
+            {iframeLink != "" &&
+            <>
+                <button onClick={() => setIframeLink("")} className="btn btn-primary">上一頁</button>
+                <iframe src={iframeLink} width={'100%'} height={'1100px'} frameBorder="0"></iframe>
+            </>
+            }
         </div>
     )
 }
 
-const columns = (context, type) => {
+const openPage = (type, formLink, setIframeLink) => {
+    if (type == 'cms') {
+        setIframeLink(formLink)
+    } else {
+        window.open(formLink, "_self")
+    }
+    
+}
+const columns = (context, type, setIframeLink) => {
     const path = context.pageContext.site.absoluteUrl + `/accident-and-incident/SitePages/`;
     return [
         {
@@ -191,7 +210,7 @@ const columns = (context, type) => {
                 }
 
                 return <div className="d-flex justify-content-center">
-                    <button className="btn btn-sm btn-primary" onClick={() => window.open(formLink, "_self")} disabled={value === null}>
+                    <button className="btn btn-sm btn-primary" onClick={() => openPage(type, formLink, setIframeLink) } disabled={value === null}>
                         檢視
                     </button>
                 </div>
