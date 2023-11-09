@@ -90,6 +90,7 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
         return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(1)}`;
     } catch (err) {
         console.error(err);
-        throw new Error("caseNumberFactory error");
+        return ""
+        //throw new Error("caseNumberFactory error");
     }
 }

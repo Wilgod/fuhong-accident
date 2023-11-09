@@ -1824,6 +1824,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     //console.log('serviceUnit',serviceUnit);
 
     console.log('contactStaff', contactStaff);
+    console.log('serviceCategory', serviceCategory);
     return (
         <>
             {
@@ -1985,23 +1986,23 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         <label className={`col-12 col-xl-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>接受服務類別</label>
                         <div className={`col ${(error && error['ResidentialServices']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Residential-Services" value="住宿服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("住宿服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Residential-Services" value="住宿服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory != null && serviceCategory.indexOf("住宿服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Residential-Services">住宿服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Day-Training-Services" value="日間訓練服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("日間訓練服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Day-Training-Services" value="日間訓練服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory != null && serviceCategory.indexOf("日間訓練服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Day-Training-Services">日間訓練服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Community-Support-Services" value="社區支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("社區支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Community-Support-Services" value="社區支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory != null && serviceCategory.indexOf("社區支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Community-Support-Services">社區支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("自閉症及發展障礙支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services" value="自閉症及發展障礙支援服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory != null && serviceCategory.indexOf("自閉症及發展障礙支援服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Autism-Spectrum-Disorders-and-Developmental-Disabilities-Support-Services">自閉症及發展障礙支援服務</label>
                             </div>
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory.indexOf("職業康復及發展服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
+                                <input className="form-check-input" type="checkbox" name="service" id="Vocational-Rehabilitation-and-Development-Services" value="職業康復及發展服務" onClick={checkboxServiceCategoryHandler} checked={serviceCategory != null && serviceCategory.indexOf("職業康復及發展服務") > -1} disabled={type=='cms' || !pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, smInfo) && !formInitial(currentUserRole, formStatus) && !pendingSptApproveForSPT(CURRENT_USER.email, currentUserRole, formStatus, formStage, sPhysicalTherapyEmail)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="Vocational-Rehabilitation-and-Development-Services">職業康復及發展服務</label>
                             </div>
                             {/*

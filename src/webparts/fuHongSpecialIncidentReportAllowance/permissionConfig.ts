@@ -20,16 +20,16 @@ export const formInitBySm = (currentUserEmail: string, smEmail: string, status: 
 }
 
 //Stage 1 / PENDING_SM_APPROVE
-export const pendingSmApprove = (context:any, currentUserRole: Role, status: string, stage: string, spSmInfo:any): boolean => {
-    if (stage === "1" && status === "PENDING_SM_APPROVE" && spSmInfo != null && spSmInfo.Email == context.pageContext.legacyPageContext.userEmail) {
+export const pendingSmApprove = (currentUserEmail:string, currentUserRole: Role, status: string, stage: string, spSmInfo:any): boolean => {
+    if (stage === "1" && status === "PENDING_SM_APPROVE" && spSmInfo != null && spSmInfo.Email == currentUserEmail) {
         return true;
     }
     return false;
 }
 
 //Stage 1 / PENDING_SD_APPROVE
-export const pendingSdApprove = (context:any, currentUserRole: Role, status: string, stage: string, spSdInfo:any): boolean => {
-    if (stage === "1" && status === "PENDING_SD_APPROVE" && spSdInfo != null && spSdInfo.Email == context.pageContext.legacyPageContext.userEmail) {
+export const pendingSdApprove = (currentUserEmail:string, currentUserRole: Role, status: string, stage: string, spSdInfo:any): boolean => {
+    if (stage === "1" && status === "PENDING_SD_APPROVE" && spSdInfo != null && spSdInfo.Email == currentUserEmail) {
         return true;
     }
     return false;
