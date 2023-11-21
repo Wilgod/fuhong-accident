@@ -844,7 +844,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         let error = {};
         let msg = '';
         body["ServiceUnit"] = serviceUnit
-
+        body["ServiceLocation"] = serviceUnit
         //經辦人 (負責督察姓名)
         if (form.responsibleName) {
             body["ResponsibleName"] = form.responsibleName;
@@ -1246,6 +1246,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         console.log(error);
+        debugger
         if (Object.keys(error).length > 0) {
             setError(error);
             alert(msg);
