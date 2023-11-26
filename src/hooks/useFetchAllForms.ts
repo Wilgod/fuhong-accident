@@ -280,9 +280,14 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
             }
             for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
-                if (item.Id== 252) {
+                if (item.Id== 127) {
+                    debugger
                 }
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
+                if (item.ServiceLocation == 'HO') {
+                    let unit1 = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUnit});
+                    item['ServiceLocationTC'] = unit1.length > 0 ? unit1[0].su_name_tc : '';
+                }
                 item['IncidentFollowUpForms'] = [];
                 if (item['Status'] === "PENDING_SM_FILL_IN") {
                     item['StatusTC'] = '尚待服務經理填表';
