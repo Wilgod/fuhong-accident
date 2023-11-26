@@ -7,7 +7,7 @@
     //Prod
     //"name": "Fu Hong Accident Prod",
     //"id": "cf9f497d-46a7-47b2-8a4d-7ef63ba8f96a",
-    "version": "1.0.0.329",
+    "version": "1.0.0.330",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {

@@ -169,7 +169,7 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
                 sa['ResidentAbuse'] = residentAbuse;
                 sa['AccidentReportForm'] = getARF;
                 if (sa['Stage'] == '1') {
-                    sa['Form'] = '特別事故(牌照事務處)';
+                    sa['Form'] = '特別事故(津貼科)';
                     sa['CurrentSM'] = sa['SM'];
                     sa['CurrentSD'] = sa['SD'];
                 } else if (sa['Stage'] == '2') {
@@ -304,7 +304,7 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
         XLSX.utils.sheet_add_json(ws, flattenedResult, { origin: "A3" });
         ws = styleArray(ws, col, row, exportList, resultMax);
         ws["A1"] = { t: 's', v: "扶康會", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true } } };
-        ws["A2"] = { t: 's', v: "特別事故(牌照事務處)報告 ", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true } } };
+        ws["A2"] = { t: 's', v: "特別事故(津貼科)報告 ", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, font: { bold: true } } };
         ws["A3"] = { t: 's', v: "服務單位", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
         ws["B3"] = { t: 's', v: "意外日期及時間", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
         ws["C3"] = { t: 's', v: "事故發生地點", s: { alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: { top: { style: 'thick', color: { rgb: "000000" } }, bottom: { style: 'thick', color: { rgb: "000000" } }, screenLeft: { style: 'thick', color: { rgb: "000000" } }, right: { style: 'thick', color: { rgb: "000000" } } } } };
