@@ -1560,7 +1560,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 } else {
                     namesTempTraversed.push(elem);
                     currentCountOfName = 1;
-                    elem.cr98a_nameen = `${elem.cr98a_nameen} (${currentCountOfName} of ${len})`;
+                    elem.cr98a_nameen = `${elem.cr98a_nameen}`;
                     } 
                 }
             });
