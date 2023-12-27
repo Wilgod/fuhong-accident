@@ -3287,7 +3287,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </div>
                 </section>
                 }
-                {type =='cms' &&
+                {/*type =='cms' &&
                 <section className="py-3">
                     <div className="row">
                         <div className="col-md-2 col-4 mb-2">
@@ -3296,7 +3296,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                     </div>
                 </section>
-                }
+            */}
                 {openModel &&
 
                     <Modal dialogClassName="formModal" show={openModel} size="lg" backdrop="static">

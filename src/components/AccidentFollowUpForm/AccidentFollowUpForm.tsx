@@ -1119,7 +1119,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     </div>
                 </section>
                 }
-                {type =='cms' &&
+                {/*type =='cms' &&
                 <section className="py-3">
                     <div className="row">
                         <div className="col-md-2 col-4 mb-2">
@@ -1128,7 +1128,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
                     </div>
                 </section>
-                }
+            */}
             </div>
         </>
     )
