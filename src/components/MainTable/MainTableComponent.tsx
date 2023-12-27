@@ -47,6 +47,7 @@ export default function MainTableComponent({ context, dateRange, searchExpired, 
             <>
                 <button onClick={() => setIframeLink("")} className="btn btn-primary">上一頁</button>
                 <iframe src={iframeLink} width={'100%'} height={'1100px'} frameBorder="0"></iframe>
+                <button className="btn btn-warning" onClick={() => setIframeLink("")}>返回</button>
             </>
             }
         </div>

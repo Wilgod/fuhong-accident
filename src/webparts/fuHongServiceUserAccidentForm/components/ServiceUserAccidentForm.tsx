@@ -1567,7 +1567,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             for (let nameTemp of namesTempTraversed) {
                 let temp = userInformationIdlist.results.filter(item => {return item.cr98a_userinformationid == nameTemp.cr98a_userinformationid})
                 if (temp.length > 0) {
-                    nameTemp['cr98a_nameen'] = nameTemp['cr98a_nameen'].toLowerCase();
+                    //nameTemp['cr98a_nameen'] = nameTemp['cr98a_nameen'].toLowerCase();
                     namesTraversed.push(nameTemp);
                 }
             }
@@ -3079,7 +3079,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     </section>
                 }
 
-                {type =='cms' &&
+                {/*type =='cms' &&
                 <section className="py-3">
                     <div className="row">
                         <div className="col-md-2 col-4 mb-2">
@@ -3088,7 +3088,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                     </div>
                 </section>
-                }
+            */}
 
                 {openModel &&
 
