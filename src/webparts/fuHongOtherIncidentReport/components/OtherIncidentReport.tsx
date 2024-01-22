@@ -101,6 +101,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     const [sdJobTitle, setSdJobTitle] = useState("");
     const { departments, setHrDepartment } = useDepartmentMangers(siteCollectionUrl);
     const [openModel, setOpenModel] = useState(false);
+    const [openSubmitInsuranceModel, setOpenSubmitInsuranceModel] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
@@ -758,31 +759,53 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }
 
     // fill in the insurance number
-    const adminSubmitHandler = (event) => {
-        event.preventDefault();
-        getInsuranceEMailRecords(formData.CaseNumber, "OIN", formData.Id).then((res1) => {
-            if (res1.length > 0) {
-                updateOtherIncidentReport(formData.Id, {
-                    "InsuranceCaseNo": form.insuranceCaseNo
-                }).then(res => {
-                    console.log(res);
+    const adminSubmitHandler = (checkEmail) => {
+        //event.preventDefault();
+        if (checkEmail) {
+            getInsuranceEMailRecords(formData.CaseNumber, "OIN", formData.Id).then((res1) => {
+                if (res1.length > 0) {
+                    updateOtherIncidentReport(formData.Id, {
+                        "InsuranceCaseNo": form.insuranceCaseNo
+                    }).then(res => {
+                        console.log(res);
+    
+                        postLog({
+                            AccidentTime: incidentTime.toISOString(),
+                            Action: "更新",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "OIN",
+                            RecordId: formData.Id,
+                            ServiceUnit: serviceLocation,
+                            Report: "其他事故呈報表"
+                        })
+    
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                } else {
+                    alert('請先發送EMail');
+                    setOpenSubmitInsuranceModel(true);
+                }
+            });
+        } else {
+            updateOtherIncidentReport(formData.Id, {
+                "InsuranceCaseNo": form.insuranceCaseNo
+            }).then(res => {
+                console.log(res);
 
-                    postLog({
-                        AccidentTime: incidentTime.toISOString(),
-                        Action: "更新",
-                        CaseNumber: formData.CaseNumber,
-                        FormType: "OIN",
-                        RecordId: formData.Id,
-                        ServiceUnit: serviceLocation,
-                        Report: "其他事故呈報表"
-                    })
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "更新",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "OIN",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "其他事故呈報表"
+                })
 
-                    formSubmittedHandler();
-                }).catch(console.error);
-            } else {
-                alert('請先發送EMail');
-            }
-        });
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
+        
 
     }
 
@@ -1700,7 +1723,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                         {
                             adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={adminSubmitHandler}>儲存</button>
+                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHandler(true)}>儲存</button>
                             </div>
                         }
                         {
@@ -1777,6 +1800,28 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     </Modal>
 
                 }
+                {openSubmitInsuranceModel &&
+
+                    <Modal dialogClassName="formModal" show={openSubmitInsuranceModel} size="lg" backdrop="static">
+                        <Modal.Header>
+                            <div style={{ height: '15px' }}>
+                                <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenSubmitInsuranceModel(false)} />
+                            </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row" style={{ padding: '15px' }}>
+
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    Submit Insurance Case No without sending email
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <button className="btn btn-warning mr-3" onClick={() => adminSubmitHandler(false)}>發送</button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    }
             </div >
         </>
     )

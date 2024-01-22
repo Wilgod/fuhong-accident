@@ -102,6 +102,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const [intelligence, setIntelligence] = useState("");
 
     const [openModel, setOpenModel] = useState(false);
+    const [openSubmitInsuranceModel, setOpenSubmitInsuranceModel] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
@@ -795,37 +796,61 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         window.open(path, "_self");
     }
     
-    const submitHandler = (event) => {
-        event.preventDefault();
+    const submitHandler = (checkEmail) => {
+        //event.preventDefault();
         debugger
         if (currentUserRole === Role.ADMIN) {
             if (insuranceNumber != null && insuranceNumber != "") {
-                getInsuranceEMailRecords(formData.CaseNumber, "SUI", formId).then((res1) => {
-                    if (res1.length > 0) {
-                        updateInsuranceNumber(res1[0].Id, insuranceNumber);
-                        updateServiceUserAccidentById(formId, {
-                            "InsuranceCaseNo": insuranceNumber,
-                            "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
-                        }).then((res) => {
-                            // Update form to stage 1-2
-                            // Trigger notification workflow
-                            console.log(res);
-                            postLog({
-                                AccidentTime: formData.AccidentTime,
-                                Action: "更新",
-                                CaseNumber: formData.CaseNumber,
-                                FormType: "SUI",
-                                Report: "服務使用者意外填報表(一)",
-                                ServiceUnit: formData.ServiceLocation,
-                                RecordId: formData.Id
+                if (checkEmail) {
+                    getInsuranceEMailRecords(formData.CaseNumber, "SUI", formId).then((res1) => {
+                        if (res1.length > 0) {
+                            updateInsuranceNumber(res1[0].Id, insuranceNumber);
+                            updateServiceUserAccidentById(formId, {
+                                "InsuranceCaseNo": insuranceNumber,
+                                "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                            }).then((res) => {
+                                // Update form to stage 1-2
+                                // Trigger notification workflow
+                                console.log(res);
+                                postLog({
+                                    AccidentTime: formData.AccidentTime,
+                                    Action: "更新",
+                                    CaseNumber: formData.CaseNumber,
+                                    FormType: "SUI",
+                                    Report: "服務使用者意外填報表(一)",
+                                    ServiceUnit: formData.ServiceLocation,
+                                    RecordId: formData.Id
+                                }).catch(console.error);
+                                formSubmittedHandler();
                             }).catch(console.error);
-                            formSubmittedHandler();
+                        } else {
+                            alert('請先發送EMail');
+                            setOpenSubmitInsuranceModel(true);
+                        }
+    
+                    });
+                } else {
+                    //updateInsuranceNumber(formData.Id, insuranceNumber);
+                    updateServiceUserAccidentById(formId, {
+                        "InsuranceCaseNo": insuranceNumber,
+                        "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                    }).then((res) => {
+                        // Update form to stage 1-2
+                        // Trigger notification workflow
+                        console.log(res);
+                        postLog({
+                            AccidentTime: formData.AccidentTime,
+                            Action: "更新",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "SUI",
+                            Report: "服務使用者意外填報表(一)",
+                            ServiceUnit: formData.ServiceLocation,
+                            RecordId: formData.Id
                         }).catch(console.error);
-                    } else {
-                        alert('請先發送EMail');
-                    }
-
-                });
+                        formSubmittedHandler();
+                    }).catch(console.error);
+                }
+                
             } else {
                 let [body, error, msg] = dataFactory("SUBMIT");
                 debugger
@@ -3040,7 +3065,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     currentUserRole === Role.ADMIN)
                                 &&
                                 <div className='col-md-2 col-4 mb-2'>
-                                    <button className="btn btn-warning w-100" onClick={submitHandler}>提交</button>
+                                    <button className="btn btn-warning w-100" onClick={() => submitHandler(true)}>提交</button>
                                 </div>
                             }
                             {
@@ -3118,6 +3143,28 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     </Modal>
 
                 }
+                {openSubmitInsuranceModel &&
+
+                    <Modal dialogClassName="formModal" show={openSubmitInsuranceModel} size="lg" backdrop="static">
+                        <Modal.Header>
+                            <div style={{ height: '15px' }}>
+                                <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenSubmitInsuranceModel(false)} />
+                            </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row" style={{ padding: '15px' }}>
+
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    Submit Insurance Case No without sending email
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <button className="btn btn-warning mr-3" onClick={() => submitHandler(false)}>發送</button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    }
             </div>
         </>
     )

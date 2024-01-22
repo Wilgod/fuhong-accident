@@ -149,6 +149,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     const [uploadedSubpoenaFile, setUploadedSubpoenaFile] = useState([]);
 
     const [openModel, setOpenModel] = useState(false);
+    const [openSubmitInsuranceModel, setOpenSubmitInsuranceModel] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
@@ -1469,30 +1470,50 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         window.open(path, "_self");
     }
 
-    const adminSubmitHanlder = (event) => {
-        event.preventDefault();
-        getInsuranceEMailRecords(formData.CaseNumber, "SIH", formData.Id).then((res1) => {
-            if (res1.length > 0) {
-                updateSpecialIncidentReportLicense(formData.Id, {
-                    "InsuranceCaseNo": form.insuranceCaseNo
-                }).then(res => {
-                    console.log(res);
-                    postLog({
-                        AccidentTime: incidentTime.toISOString(),
-                        Action: "更新",
-                        CaseNumber: formData.CaseNumber,
-                        FormType: "SIH",
-                        RecordId: formData.Id,
-                        ServiceUnit: serviceLocation,
-                        Report: "特別事故報告(牌照事務處)"
+    const adminSubmitHanlder = (checkEmail) => {
+        //event.preventDefault();
+        if (checkEmail) {
+            getInsuranceEMailRecords(formData.CaseNumber, "SIH", formData.Id).then((res1) => {
+                if (res1.length > 0) {
+                    updateSpecialIncidentReportLicense(formData.Id, {
+                        "InsuranceCaseNo": form.insuranceCaseNo
+                    }).then(res => {
+                        console.log(res);
+                        postLog({
+                            AccidentTime: incidentTime.toISOString(),
+                            Action: "更新",
+                            CaseNumber: formData.CaseNumber,
+                            FormType: "SIH",
+                            RecordId: formData.Id,
+                            ServiceUnit: serviceLocation,
+                            Report: "特別事故報告(牌照事務處)"
+                        }).catch(console.error);
+    
+                        formSubmittedHandler();
                     }).catch(console.error);
-
-                    formSubmittedHandler();
+                } else {
+                    alert('請先發送EMail');
+                }
+            });
+        } else {
+            updateSpecialIncidentReportLicense(formData.Id, {
+                "InsuranceCaseNo": form.insuranceCaseNo
+            }).then(res => {
+                console.log(res);
+                postLog({
+                    AccidentTime: incidentTime.toISOString(),
+                    Action: "更新",
+                    CaseNumber: formData.CaseNumber,
+                    FormType: "SIH",
+                    RecordId: formData.Id,
+                    ServiceUnit: serviceLocation,
+                    Report: "特別事故報告(牌照事務處)"
                 }).catch(console.error);
-            } else {
-                alert('請先發送EMail');
-            }
-        });
+
+                formSubmittedHandler();
+            }).catch(console.error);
+        }
+        
 
     }
 
@@ -3241,7 +3262,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {
                             adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={adminSubmitHanlder}>儲存</button>
+                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHanlder(true)}>儲存</button>
                             </div>
                         }
                         {
@@ -3325,6 +3346,28 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     </Modal>
 
                 }
+                {openSubmitInsuranceModel &&
+
+                    <Modal dialogClassName="formModal" show={openSubmitInsuranceModel} size="lg" backdrop="static">
+                        <Modal.Header>
+                            <div style={{ height: '15px' }}>
+                                <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenSubmitInsuranceModel(false)} />
+                            </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row" style={{ padding: '15px' }}>
+
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    Submit Insurance Case No without sending email
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <button className="btn btn-warning mr-3" onClick={() => submitHandler(false)}>發送</button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    }
             </div>
         </>
     )

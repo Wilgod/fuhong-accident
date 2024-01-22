@@ -88,6 +88,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     const [uploadedPhotoRecordFiles, setUploadedPhotoRecordFiles] = useState([]);
     const [serviceUserUnitList, patientServiceUnit, setPatientServiceUnit] = useServiceUnit2(siteCollectionUrl);
     const [openModel, setOpenModel] = useState(false);
+    const [openSubmitInsuranceModel, setOpenSubmitInsuranceModel] = useState(false);
     const [file, setFile] = useState(null);
     const [uploadButton, setUploadButton] = useState(true);
     const [filename, setFilename] = useState("Choose file");
@@ -436,8 +437,8 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         return [body, error, msg];
     }
 
-    const submitHandler = (event) => {
-        event.preventDefault();
+    const submitHandler = (checkEmail) => {
+        //event.preventDefault();
         const [body, error,msg] = dataFactory("SUBMIT");
         body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
@@ -448,33 +449,58 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         } else {
             if (currentUserRole === Role.ADMIN) {
                 if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
-                    getInsuranceEMailRecords(formData.CaseNumber, "PUI", formId).then((res1) => {
-                        if (res1.length > 0) {
-                            updateInsuranceNumber(res1[0].Id, form.insuranceCaseNo);
-                            updateOutsiderAccidentFormById(formId, {
-                                "InsuranceCaseNo": form.insuranceCaseNo,
-                                "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
-                            }).then((res) => {
-                                // Update form to stage 1-2
-                                // Trigger notification workflow
-                                console.log(res);
-
-                                postLog({
-                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
-                                    Action: "更新",
-                                    CaseNumber: formData.CaseNumber,
-                                    FormType: "PUI",
-                                    Report: "外界人士意外填報表(一)",
-                                    ServiceUnit: serviceLocation,
-                                    RecordId: formData.Id
+                    if (checkEmail) {
+                        getInsuranceEMailRecords(formData.CaseNumber, "PUI", formId).then((res1) => {
+                            if (res1.length > 0) {
+                                updateInsuranceNumber(res1[0].Id, form.insuranceCaseNo);
+                                updateOutsiderAccidentFormById(formId, {
+                                    "InsuranceCaseNo": form.insuranceCaseNo,
+                                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                                }).then((res) => {
+                                    // Update form to stage 1-2
+                                    // Trigger notification workflow
+                                    console.log(res);
+    
+                                    postLog({
+                                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                        Action: "更新",
+                                        CaseNumber: formData.CaseNumber,
+                                        FormType: "PUI",
+                                        Report: "外界人士意外填報表(一)",
+                                        ServiceUnit: serviceLocation,
+                                        RecordId: formData.Id
+                                    }).catch(console.error);
+    
+                                    formSubmittedHandler();
                                 }).catch(console.error);
+                            } else {
+                                alert('請先發送EMail');
+                                setOpenSubmitInsuranceModel(true);
+                            }
+                        })
+                    } else {
+                        updateOutsiderAccidentFormById(formId, {
+                            "InsuranceCaseNo": form.insuranceCaseNo,
+                            "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                        }).then((res) => {
+                            // Update form to stage 1-2
+                            // Trigger notification workflow
+                            console.log(res);
 
-                                formSubmittedHandler();
+                            postLog({
+                                AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                Action: "更新",
+                                CaseNumber: formData.CaseNumber,
+                                FormType: "PUI",
+                                Report: "外界人士意外填報表(一)",
+                                ServiceUnit: serviceLocation,
+                                RecordId: formData.Id
                             }).catch(console.error);
-                        } else {
-                            alert('請先發送EMail');
-                        }
-                    })
+
+                            formSubmittedHandler();
+                        }).catch(console.error);
+                    }
+                    
                 } else if (form.cctvRecord) {
                     updateOutsiderAccidentFormById(formId, {
                         "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
@@ -1891,7 +1917,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 currentUserRole === Role.ADMIN)
                             &&
                             <div className="col-md-2 col-4 mb-2">
-                                <button className="btn btn-warning w-100" onClick={submitHandler}>提交</button>
+                                <button className="btn btn-warning w-100" onClick={() => submitHandler(true)}>提交</button>
                             </div>
                         }
                         {
@@ -1957,6 +1983,28 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     </Modal>
 
                 }
+                {openSubmitInsuranceModel &&
+
+                    <Modal dialogClassName="formModal" show={openSubmitInsuranceModel} size="lg" backdrop="static">
+                        <Modal.Header>
+                            <div style={{ height: '15px' }}>
+                                <FontAwesomeIcon icon={fontawesome["faTimes"]} size="2x" style={{ float: 'right', cursor: 'pointer', position: 'absolute', top: '10px', right: '10px' }} onClick={() => setOpenSubmitInsuranceModel(false)} />
+                            </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className="row" style={{ padding: '15px' }}>
+
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    Submit Insurance Case No without sending email
+                                </div>
+                                <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
+                                    <button className="btn btn-warning mr-3" onClick={() => submitHandler(false)}>發送</button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    }
             </div>
         </>
     )
