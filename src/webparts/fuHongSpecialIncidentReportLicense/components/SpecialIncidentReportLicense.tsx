@@ -1493,6 +1493,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     }).catch(console.error);
                 } else {
                     alert('請先發送EMail');
+                    setOpenSubmitInsuranceModel(true);
                 }
             });
         } else {
