@@ -60,7 +60,9 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
                     (item.CaseNumber != null && item.CaseNumber.toLocaleLowerCase().trim() == key) || 
                     (item.InsuranceCaseNo != null && item.InsuranceCaseNo.toLocaleLowerCase().trim() == key) ||
                     (item.UnitCN != null && item.UnitCN.toLocaleLowerCase().trim() == key) ||
-                    (item.HKID != null && item.HKID.toLocaleLowerCase().trim() == key) })
+                    (item.HKID != null && item.HKID.toLocaleLowerCase().trim() == key) ||
+                    (item.ServiceUserUnit != null && item.ServiceUserUnit.toLocaleLowerCase().trim() == key) ||
+                    (item.ServiceLocation != null && item.ServiceLocation.toLocaleLowerCase().trim() == key) })
             }
             for (let item of filterServiceUserAccidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUserUnit});

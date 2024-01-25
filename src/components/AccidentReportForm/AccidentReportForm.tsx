@@ -325,14 +325,14 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const draftHandler = async () => {
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
-
+            debugger
             if (formType === "SERVICE_USER") {
                 debugger
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
-                updateOutsiderAccidentFormById(parentFormData.Id, body).then((updateOutsiderAccidentResponse) => {
+                updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateOutsiderAccidentResponse) => {
                     formSubmittedHandler();
                 }).catch(console.error);
             }

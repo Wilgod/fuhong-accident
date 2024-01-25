@@ -936,7 +936,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                         <div className="col-12 col-md-4">
                             <div className={`form-check form-check-inline ${(error && error['accidentalFollowUpContinue']) ? "is-invalid" : ""}`} >
                                 <input className="form-check-input" type="radio" name="accidentalFollowUpContinue" id="accident-follow-up-true" checked={form.accidentalFollowUpContinue === true} value="ACCIDENT_FOLLOW_UP_TRUE" onChange={() => setForm({ ...form, accidentalFollowUpContinue: true })}
-                                    disabled={type=='cms' ||completed || (!stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
+                                    disabled={type=='cms' || !completed || (!stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
