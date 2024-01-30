@@ -110,8 +110,11 @@ export async function getUserAdByGraph(email: string) {
         return matchingUser;
     } catch (err) {
         console.log(email + " not in AD")
-        console.error(err);
-        return null;
+        const user = await getUserInfoByEmailInUserInfoAD("https://fuhongsociety.sharepoint.com/sites/Portal/", email)
+        debugger
+        user[0].mail = user[0].Email;
+        user[0].displayName = user[0].Name
+        return user[0];
         //throw new Error("Get User AD By Graph error");
     }
 }

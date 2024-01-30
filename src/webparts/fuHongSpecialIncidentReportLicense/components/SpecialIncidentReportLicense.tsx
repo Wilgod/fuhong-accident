@@ -1241,7 +1241,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
     }
 
     const submitHandler = (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         const [body, error, msg] = dataFactory();
         body['SubmitDate'] = new Date().toISOString();
         body["ReporterId"] = CURRENT_USER.id;
@@ -3263,13 +3263,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {
                             adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHanlder(true)}>儲存</button>
+                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHanlder(true)}>儲存1</button>
                             </div>
                         }
                         {
                             pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={smSubmitHandler}>儲存</button>
+                                <button className="btn btn-warning w-100" onClick={smSubmitHandler}>儲存2</button>
                             </div>
                         }
 
@@ -3362,7 +3362,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                                     Submit Insurance Case No without sending email
                                 </div>
                                 <div className="col-12" style={{ padding: '0', margin: '10px 0' }}>
-                                    <button className="btn btn-warning mr-3" onClick={() => submitHandler(false)}>發送</button>
+                                    <button className="btn btn-warning mr-3" onClick={() => adminSubmitHanlder(false)}>發送</button>
                                 </div>
                             </div>
                         </Modal.Body>

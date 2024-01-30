@@ -313,6 +313,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
         }
         
         const Reporter = await getUserAdByGraph(data.Reporter.EMail);
+        debugger
         const investigator = data.Investigator != null ? await getUserAdByGraph(data.Investigator.EMail) : null;
         
         if (Reporter == null) {
