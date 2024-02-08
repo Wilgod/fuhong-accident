@@ -114,6 +114,7 @@ export async function getUserAdByGraph(email: string) {
         debugger
         user[0].mail = user[0].Email;
         user[0].displayName = user[0].Name
+        user[0].jobTitle = user[0].Title
         return user[0];
         //throw new Error("Get User AD By Graph error");
     }

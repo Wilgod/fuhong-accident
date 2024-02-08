@@ -3263,13 +3263,13 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         {
                             adminUpdateInsuranceNumber(currentUserRole, formStatus) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHanlder(true)}>儲存1</button>
+                                <button className="btn btn-warning w-100" onClick={() => adminSubmitHanlder(true)}>儲存</button>
                             </div>
                         }
                         {
                             pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) &&
                             <div className='col-md-2 col-4 mb-2'>
-                                <button className="btn btn-warning w-100" onClick={smSubmitHandler}>儲存2</button>
+                                <button className="btn btn-warning w-100" onClick={smSubmitHandler}>儲存</button>
                             </div>
                         }
 
