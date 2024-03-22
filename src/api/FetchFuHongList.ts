@@ -594,14 +594,13 @@ export async function getOutsiderAccidentBySPId(spId: number) {
     try {
         const LIST_NAME = "Outsider Accident Form";
         const items: any[] = await sp.web.lists.getByTitle(LIST_NAME).items
-            .filter(`(SMId eq ${spId} or SDId eq ${spId} or ReporterId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
+            //.filter(`(SMId eq ${spId} or SDId eq ${spId} or ReporterId eq ${spId} or InvestigatorId eq ${spId} or SPTId eq ${spId}) and Status ne 'CLOSED'`)
             .select("*", "Reporter/Id", "Reporter/EMail", 'Reporter/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
             .expand("SM", "SD", "SPT", "Reporter", "Investigator")
             .getAll();
-
         return items.filter((item) => {
             if (item.Status === "DRAFT") {
-                if (item.ReporterId === spId) {
+                if (item.ReporterId === spId || item.AuthorId === spId) {
                     return true
                 } else {
                     return false

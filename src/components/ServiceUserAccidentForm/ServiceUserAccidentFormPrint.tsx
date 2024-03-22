@@ -259,24 +259,24 @@ return <>
                             </td>
                             <td>
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_HEAD") > -1  && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_HEAD") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_HEAD") > -1  && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_HEAD") == -1 && <span>&#9744;</span>}
                                 頭部&nbsp;&nbsp;
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_NECK") > -1 && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_NECK") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_NECK") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_NECK") == -1 && <span>&#9744;</span>}
                                 頸部&nbsp;&nbsp;
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_BODY") > -1 && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_BODY") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_BODY") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_BODY") == -1 && <span>&#9744;</span>}
                                 軀幹&nbsp;&nbsp;
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") > -1 && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_UPPER_LIMB") == -1 && <span>&#9744;</span>}
                                 上肢&nbsp;&nbsp;
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") > -1 && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") > -1 && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_LOWER_LIMB") == -1 && <span>&#9744;</span>}
                                 下肢&nbsp;&nbsp;
                             </td>
                         </tr>
@@ -287,8 +287,8 @@ return <>
                             </td>
                             <td style={{width:'140px'}}>
                                 {formData == null && <span>&#9744;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_OTHER") > -1  && <span>&#9745;</span>}
-                                {formData != null && formData.InjuredArea.indexOf("INJURY_OTHER") == -1 && <span>&#9744;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_OTHER") > -1  && <span>&#9745;</span>}
+                                {formData != null && formData.InjuredArea != null && formData.InjuredArea.indexOf("INJURY_OTHER") == -1 && <span>&#9744;</span>}
                                 其他 請註明&nbsp;&nbsp;
                             </td>
                             <td style={{borderBottom:'1px solid',width:'430px'}}>

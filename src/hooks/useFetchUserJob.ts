@@ -90,6 +90,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         }
         const allOutsiderAccidentData = await getOutsiderAccidentBySPId(spId);
         let outsiderAccidentData = [];
+        //debugger
         for (let oa of allOutsiderAccidentData) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
@@ -130,8 +131,8 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
             }
             oa['ServiceUserNameCN'] = oa['ServiceUserNameTC']
             if (oa.Status === "DRAFT") {
-                if (oa.ReporterId === spId) {
-                    serviceUserAccidentData.push(oa);
+                if (oa.ReporterId === spId || oa.AuthorId === spId) {
+                    outsiderAccidentData.push(oa);
                 }
             } else {
                 let admin = permissionList.filter(p => {return p == 'All'});

@@ -54,15 +54,18 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             if (ser.length > 0) {
                 setServiceUserUnit(ser[0].su_name_tc);
             }
-            getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Reporter.EMail).then((userInfosRes) => {
-                if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                    setReporterJobTitle(userInfosRes[0].hr_jobcode);
-                    setReporterName(userInfosRes[0].Name);
-                }
-            }).catch((err) => {
-                console.error('getUserInfoByEmailInUserInfoAD error')
-                console.error(err)
-            });
+            if (formData.Reporter) {
+                getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Reporter.EMail).then((userInfosRes) => {
+                    if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
+                        setReporterJobTitle(userInfosRes[0].hr_jobcode);
+                        setReporterName(userInfosRes[0].Name);
+                    }
+                }).catch((err) => {
+                    console.error('getUserInfoByEmailInUserInfoAD error')
+                    console.error(err)
+                });
+            }
+            
             debugger
             if (formTwentyData.Investigator) {
                 getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formTwentyData.Investigator.EMail).then((userInfosRes) => {
