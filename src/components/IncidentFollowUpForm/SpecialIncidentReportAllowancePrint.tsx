@@ -386,7 +386,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                 guardianRelationship:formData.GuardianRelationship,
                 guardianRelation: formData.GuardianRelation,
                 guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : null,
-                guardianDatetime: formData.GuarrdianDatetime ? new Date(formData.GuarrdianDatetime) : null,
+                guardianDatetime: formData.GuardianDatetime ? new Date(formData.GuardianDatetime) : null,
                 guardianReason: formData.GuardianReason,
                 guardianDescription:formData.GuardianDescription,
                 otherRelatedParties:formData.OtherRelatedParties,

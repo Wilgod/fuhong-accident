@@ -391,7 +391,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                 guardianRelationship:formData.GuardianRelationship,
                 guardianRelation: formData.GuardianRelation,
                 guardianDate: formData.GuarrdianDate ? new Date(formData.GuarrdianDate) : null,
-                guardianDatetime: formData.GuarrdianDatetime ? new Date(formData.GuarrdianDatetime) : null,
+                guardianDatetime: formData.GuardianDatetime ? new Date(formData.GuardianDatetime) : null,
                 guardianReason: formData.GuardianReason,
                 guardianDescription:formData.GuardianDescription,
                 medicalArrangement:formData.MedicalArrangement,
@@ -650,7 +650,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                         <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionOne}</td>
                                     </tr>
                                     <tr>
-                                        <td>(b)	服務使用者(第二位，如有)</td>
+                                        <td>(b)	職員(第二位，如有)</td>
                                         <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
                                         <td style={{borderBottom:'1px solid', width:'100px'}}>
                                             {form.staffGenderTwo == 'male' && '男'}
@@ -660,7 +660,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                         <td style={{borderBottom:'1px solid', width:'100px'}}>{form.staffPositionTwo}</td>
                                     </tr>
                                     <tr>
-                                        <td>(c)	服務使用者(第三位，如有)</td>
+                                        <td>(c)	職員(第三位，如有)</td>
                                         <td style={{textAlign:'right'}}>性別&nbsp;&nbsp;</td>
                                         <td style={{borderBottom:'1px solid', width:'100px'}}>
                                             {form.staffGenderThree == 'male' && '男'}
