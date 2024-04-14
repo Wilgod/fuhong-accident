@@ -106,24 +106,24 @@ return <>
                                 <td>接受服務類別</td>
                                 <td>
                                     {formData == null && <span>&#9744;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("住宿服務") > -1 && <span>&#9745;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("住宿服務") == -1 && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("住宿服務") > -1 && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("住宿服務") == -1 && <span>&#9744;</span>}
                                     住宿服務&nbsp;&nbsp;
                                     {formData == null && <span>&#9744;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("日間訓練服務") > -1 && <span>&#9745;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("日間訓練服務") == -1 && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("日間訓練服務") > -1 && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("日間訓練服務") == -1 && <span>&#9744;</span>}
                                     日間訓練服務&nbsp;&nbsp;
                                     {formData == null && <span>&#9744;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("社區支援服務") > -1 && <span>&#9745;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("社區支援服務") == -1 && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("社區支援服務") > -1 && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("社區支援服務") == -1 && <span>&#9744;</span>}
                                     社區支援服務&nbsp;&nbsp;
                                     {formData == null && <span>&#9744;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("自閉症及發展障礙支援服務") > -1 && <span>&#9745;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("自閉症及發展障礙支援服務") == -1 && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("自閉症及發展障礙支援服務") > -1 && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("自閉症及發展障礙支援服務") == -1 && <span>&#9744;</span>}
                                     自閉症及發展障礙支援服務&nbsp;&nbsp;
                                     {formData == null && <span>&#9744;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("職業康復及發展服務") > -1 && <span>&#9745;</span>}
-                                    {formData != null && formData.ServiceCategory.indexOf("職業康復及發展服務") == -1 && <span>&#9744;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("職業康復及發展服務") > -1 && <span>&#9745;</span>}
+                                    {formData != null && formData.ServiceCategory != null && formData.ServiceCategory.indexOf("職業康復及發展服務") == -1 && <span>&#9744;</span>}
                                     職業康復及發展服務
                                 </td>
                                 <td> </td>
@@ -925,7 +925,7 @@ return <>
                                 高級物理治療師姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid',width:'250px'}}>
-                                {formData != null && formData.SPT.Title}
+                                {formData != null && formData.SPT != null && formData.SPT.Title}
                                 </td>
                                 <td style={{width:'200px'}}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;日期
