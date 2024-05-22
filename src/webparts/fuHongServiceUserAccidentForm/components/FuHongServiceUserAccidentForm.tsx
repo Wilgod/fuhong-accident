@@ -226,33 +226,33 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             }
             if (data.Stage == '2') {
-              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.SPTId !== null && this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
             }
             if (data.Stage == '3') {
-              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.SPTId !== null && this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyOneData.SMId !== null && this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyOneData.SDId !== null && this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyOneData.SPTId !== null && this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
             }

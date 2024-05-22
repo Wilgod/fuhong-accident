@@ -54,8 +54,8 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
     useEffect( () => {
         window.print();
     }, [])
-    console.log('formData.ServiceCategory',formData.ServiceCategory);
-    debugger
+    //console.log('formData.ServiceCategory',formData.ServiceCategory);
+    //debugger
 return <>
     <div style={{color:'black'}}>
         <div className={`notPrintable`}>
@@ -826,7 +826,7 @@ return <>
                                 評語 :
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formTwentyData != null && formData.SMComment != null ? formData.SMComment : ''}
+                                {formTwentyData != null && formData != null && formData.SMComment != null ? formData.SMComment : ''}
                                 </td>
                             </tr>
                         </table>
@@ -843,7 +843,7 @@ return <>
                                 評語 :
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formTwentyData != null && formData.SDComment != null ? formData.SDComment : ''}
+                                {formTwentyData != null && formData != null &&  formData.SDComment != null ? formData.SDComment : ''}
                                 </td>
                             </tr>
                         </table>

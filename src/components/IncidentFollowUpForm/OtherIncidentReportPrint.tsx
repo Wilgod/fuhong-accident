@@ -1027,7 +1027,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                     日期
                                     </td>
                                     <td style={{width:'200px',borderBottom:'1px solid'}}>
-                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
+                                    {formTwentySixDataPrint != null && formTwentySixDataPrint.length > 0 && formTwentySixDataPrint[0].SMDate != null &&  new Date(formTwentySixDataPrint[0].SMDate).getFullYear() + `-` +(`0`+(new Date(formTwentySixDataPrint[0].SMDate).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(formTwentySixDataPrint[0].SMDate).getDate()).slice(-2)}
                                     </td>
                                 </tr>
                             </table>
