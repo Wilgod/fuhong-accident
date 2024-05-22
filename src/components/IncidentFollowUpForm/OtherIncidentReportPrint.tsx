@@ -533,6 +533,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
     const windowPrint = async () => {
         window.print()
     }
+    console.log('formData',formData)
     return (
         <>
             <style media="print">
@@ -580,11 +581,11 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                                     </tr>
                                     <tr>
                                         <td>(e))事故被傳媒報導 :</td>
-                                        <td>{formData.mediaReports&& <span>&#9745;</span>}
-                                            {!formData.mediaReports && <span>&#9744;</span>}
+                                        <td>{formData != null && formData.mediaReports&& <span>&#9745;</span>}
+                                            {formData != null && !formData.mediaReports && <span>&#9744;</span>}
                                             是&nbsp;&nbsp;
-                                            {!formData.mediaReports&& <span>&#9745;</span>}
-                                            {formData.mediaReports && <span>&#9744;</span>}
+                                            {formData != null && !formData.mediaReports&& <span>&#9745;</span>}
+                                            {formData != null && formData.mediaReports && <span>&#9744;</span>}
                                             否&nbsp;&nbsp;
                                         </td>
 

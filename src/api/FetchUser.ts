@@ -10,6 +10,7 @@ import "@pnp/graph/users";
 import { getAccessRight,getAdminRight,getSMSDMapping,getAllSMSDMapping } from './FetchFuHongList';
 import { IContextInfo } from "@pnp/sp/sites";
 import arraySort from 'array-sort';
+import { notifyIncidentReject } from './Notification';
 export async function getUserInfoByEmail(email: string) {
     try {
         const result = await sp.web.siteUsers.getByEmail(email).get();
@@ -112,10 +113,15 @@ export async function getUserAdByGraph(email: string) {
         console.log(email + " not in AD")
         const user = await getUserInfoByEmailInUserInfoAD("https://fuhongsociety.sharepoint.com/sites/Portal/", email)
         debugger
-        user[0].mail = user[0].Email;
-        user[0].displayName = user[0].Name
-        user[0].jobTitle = user[0].Title
-        return user[0];
+        if (user.length > 0) {
+            user[0].mail = user[0].Email;
+            user[0].displayName = user[0].Name
+            user[0].jobTitle = user[0].Title
+            return user[0];
+        } else {
+            return null
+        }
+        
         //throw new Error("Get User AD By Graph error");
     }
 }
