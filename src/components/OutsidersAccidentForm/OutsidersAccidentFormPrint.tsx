@@ -175,7 +175,7 @@ return <>
                                     {formData != null && formData.AccidentTime != null && moment(formData.AccidentTime).format("YYYY-MM-DD hh:mm")}
                                 </td>
                                 <td style={{width:'100px'}}>&nbsp;&nbsp;地點</td>
-                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
+                                <td style={{borderBottom:'1px solid', width:'310px'}}>{formData != null && formData.AccidentLocation != null ? formData.AccidentLocation : ''}</td>
                             </tr>
                         </table>
                     </div>
@@ -417,8 +417,8 @@ return <>
                             </tr>
                             <tr>
                                 <td colSpan={7}>
-                                {formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9745;</span>}
-                                {formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9744;</span>}
+                                {formData != null && formData.MedicalArrangement == "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9745;</span>}
+                                {formData != null && formData.MedicalArrangement != "ARRANGEMENT_EMERGENCY_REJECT" && <span>&#9744;</span>}
                                 拒絕就診&nbsp;&nbsp;
                                 </td>
                             </tr>
@@ -497,7 +497,7 @@ return <>
                                 &nbsp;&nbsp;與傷者關係:
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.FamilyRelationship != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>{formData.FamilyRelationship}</span> : ''}
+                                {formData != null && formData.FamilyRelationship != null ? <span style={{borderBottom:'1px solid',display: 'inline-block'}}>{formData.FamilyRelationship}</span> : ''}
                                 </td>
                             </tr>
                         </table>
@@ -514,7 +514,7 @@ return <>
                                 評語 :
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formTwentyData != null && formData.SMComment != null ? formData.SMComment : ''}
+                                {formData != null && formData.SMComment != null ? formData.SMComment : ''}
                                 </td>
                             </tr>
                         </table>
@@ -531,7 +531,7 @@ return <>
                                 評語 :
                                 </td>
                                 <td style={{borderBottom:'1px solid'}}>
-                                {formTwentyData != null && formData.SDComment != null ? formData.SDComment : ''}
+                                {formData != null && formData.SDComment != null ? formData.SDComment : ''}
                                 </td>
                             </tr>
                         </table>
@@ -551,7 +551,7 @@ return <>
                                 日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {moment(formData.Created).format("YYYY-MM-DD hh:mm")}
+                                {formData != null && moment(formData.Created).format("YYYY-MM-DD hh:mm")}
                                 </td>
                             </tr>
                             <tr>
@@ -559,13 +559,13 @@ return <>
                                 服務經理姓名
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.SM != null && formData.SM.Title}
+                                {formData != null && formData.SM != null && formData.SM.Title}
                                 </td>
                                 <td style={{width:'200px', textAlign:'right'}}>
                                 日期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </td>
                                 <td style={{borderBottom:'1px solid', width:'250px'}}>
-                                {formData.SMDate != null && moment(formData.SMDate).format("YYYY-MM-DD hh:mm")}
+                                {formData != null && formData.SMDate != null && moment(formData.SMDate).format("YYYY-MM-DD hh:mm")}
                                 </td>
                             </tr>
                         </table>
