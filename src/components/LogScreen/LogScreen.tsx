@@ -20,6 +20,10 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
     const [endDate, setEndDate] = useState(new Date());
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data, setData] = useState([]);
+    const [displayData, setDisplayData] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [status, setStatus] = useState('');
+    const [keyword, setKeyword] = useState('');
     const [log] = useLog(permission);
 
     const multipleOptionsSelectParser = (event) => {
@@ -31,7 +35,52 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
         return result;
     }
 
+    const inputFieldHandler = (event) => {
+        const value = event.target.value;
+        setKeyword(value);
+    }
 
+    const filter = () => {
+        let filterData = data;
+        if (selectedOptions.length > 0) {
+            if (selectedOptions[0] != 'ALL') {
+                let dataLists = [];
+                for (let option of selectedOptions) {
+                    let newDataList = filterData.filter(item => { return (item.ServiceLocation == option || item.ServiceUnit == option) });
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
+                }
+                filterData = dataLists;
+            }
+
+        }
+        if (startDate != null) {
+            let newStartDate = new Date(startDate).setHours(0,0,0);
+            filterData = filterData.filter(item => { return (new Date(item.AccidentTime).getTime() >= new Date(newStartDate).getTime() || new Date(item.IncidentTime).getTime() >= new Date(newStartDate).getTime()) });
+        }
+        if (endDate != null) {
+            let newEndDate = new Date(endDate).setHours(23,59,59);
+            filterData = filterData.filter(item => { return (new Date(item.AccidentTime).getTime() <= new Date(newEndDate).getTime() || new Date(item.IncidentTime).getTime() <= new Date(newEndDate).getTime()) });
+        }
+
+        if (status != '' && status != 'ALL') {
+            if (status == 'Apply') {
+                filterData = filterData.filter(item => { return item.Stage == '1' });
+            } else if (status == 'Confirm') {
+                filterData = filterData.filter(item => { return item.Stage == '2' });
+            }
+        }
+        debugger
+        filterData = filterData.filter(item => {
+            return ((item.HomesName != null && item.HomesName.indexOf(keyword) >= 0) ||
+                (item.ServiceLocation != null && item.ServiceLocation.indexOf(keyword) >= 0) ||
+                (item.CaseNumber != null && item.CaseNumber.indexOf(keyword) >= 0) ||
+                (item.InsuranceCaseNo != null && item.InsuranceCaseNo.indexOf(keyword) >= 0))
+        });
+
+        setDisplayData(filterData);
+    }
 
 
     useEffect(() => {
@@ -48,6 +97,7 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                 dataLog.push(l);
             }
             setData(dataLog);
+            setDisplayData(dataLog);
         }
     }, [log, serviceLocation]);
     return (
@@ -86,12 +136,13 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
+                        setSelectedOptions(selectedOptions);
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
                         {permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
                             serviceLocation.map((item) => {
-                                return <option value={item.su_Eng_name_display}>{item.su_name_tc}</option>
+                                return <option value={item.su_name_tc}>{item.su_name_tc}</option>
                             })
                         }
                         {permission.indexOf('All') < 0 && serviceLocation.length > 0 &&
@@ -133,7 +184,7 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                         顯示狀態
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
-
+                        setStatus(event.target.selectedOptions[0].value);
                     }}>
                         <option value="PROCESSING">跟進中個案</option>
                         <option value="CLOSED">已結束個案</option>
@@ -155,10 +206,10 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                 </div>
                 <div className="row">
                     <div className="col-md-10 col-12 mt-1">
-                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" />
+                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" onChange={inputFieldHandler}/>
                     </div>
                     <div className="col-md-2 col-12 mt-1">
-                        <button type="button" className="btn btn-primary w-100" >搜尋</button>
+                        <button type="button" className="btn btn-primary w-100" onClick={() => filter()}>搜尋</button>
                     </div>
                 </div>
             </div>
@@ -166,7 +217,7 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
                     搜尋結果 [{`${log.length} 筆記錄`}]
                 </div>
-                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
+                <BootstrapTable boot keyField='id' data={displayData || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )

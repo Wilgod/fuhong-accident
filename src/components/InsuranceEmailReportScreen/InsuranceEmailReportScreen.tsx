@@ -16,12 +16,17 @@ interface IInsuranceEmailReportScreenProps {
 }
 
 
+
 function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: IInsuranceEmailReportScreenProps) {
     const [startDate, setStartDate] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 3)));
     const [endDate, setEndDate] = useState(new Date());
     //const [serviceUnitList] = useServiceUnit2(siteCollectionUrl);
     const [serviceLocation] = useServiceLocation(siteCollectionUrl);
     const [data] = useEmailRecord(permission);
+    const [displayData, setDisplayData] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [status, setStatus] = useState('');
+    const [keyword, setKeyword] = useState('');
     console.log(data);
     const multipleOptionsSelectParser = (event) => {
         let result = [];
@@ -31,6 +36,59 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
         }
         return result;
     }
+
+    const inputFieldHandler = (event) => {
+        const value = event.target.value;
+        setKeyword(value);
+    }
+
+    const filter = () => {
+        let filterData = data;
+        if (selectedOptions.length > 0) {
+            if (selectedOptions[0] != 'ALL') {
+                let dataLists = [];
+                for (let option of selectedOptions) {
+                    let newDataList = filterData.filter(item => { return (item.ServiceLocation == option || item.ServiceUnit == option) });
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
+                }
+                filterData = dataLists;
+            }
+
+        }
+        if (startDate != null) {
+            let newStartDate = new Date(startDate).setHours(0,0,0);
+            filterData = filterData.filter(item => { return (new Date(item.AccidentTime).getTime() >= new Date(newStartDate).getTime() || new Date(item.IncidentTime).getTime() >= new Date(newStartDate).getTime()) });
+        }
+        if (endDate != null) {
+            let newEndDate = new Date(endDate).setHours(23,59,59);
+            filterData = filterData.filter(item => { return (new Date(item.AccidentTime).getTime() <= new Date(newEndDate).getTime() || new Date(item.IncidentTime).getTime() <= new Date(newEndDate).getTime()) });
+        }
+
+        if (status != '' && status != 'ALL') {
+            if (status == 'Apply') {
+                filterData = filterData.filter(item => { return item.Stage == '1' });
+            } else if (status == 'Confirm') {
+                filterData = filterData.filter(item => { return item.Stage == '2' });
+            }
+        }
+        debugger
+        filterData = filterData.filter(item => {
+            return ((item.HomesName != null && item.HomesName.indexOf(keyword) >= 0) ||
+                (item.ServiceLocation != null && item.ServiceLocation.indexOf(keyword) >= 0) ||
+                (item.CaseNumber != null && item.CaseNumber.indexOf(keyword) >= 0) ||
+                (item.InsuranceCaseNo != null && item.InsuranceCaseNo.indexOf(keyword) >= 0))
+        });
+
+        setDisplayData(filterData);
+    }
+
+    useEffect(() => {
+        if (data.length > 0) {
+            setDisplayData(data)
+        }
+    }, [data]);
 
     return (
         <div>
@@ -68,7 +126,7 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
                     </div> */}
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
-
+                        setSelectedOptions(selectedOptions);
                     }}>
                         <option value="ALL">--- 所有 ---</option>
                         {permission.indexOf('All') >= 0 && serviceLocation.length > 0 &&
@@ -137,18 +195,18 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
                 </div>
                 <div className="row">
                     <div className="col-md-10 col-12 mt-1">
-                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" />
+                        <input className="form-control" placeholder="(可搜尋：事主姓名 / 檔案編號 / 保險公司備案編號)" onChange={inputFieldHandler}/>
                     </div>
                     <div className="col-md-2 col-12 mt-1">
-                        <button type="button" className="btn btn-primary w-100" >搜尋</button>
+                        <button type="button" className="btn btn-primary w-100" onClick={() => filter()} >搜尋</button>
                     </div>
                 </div>
             </div>
             <div>
                 <div className="mb-1" style={{ fontSize: "1.05rem", fontWeight: 600 }}>
-                    搜尋結果 [{`${data.length} 筆記錄`}]
+                    搜尋結果 [{`${displayData.length} 筆記錄`}]
                 </div>
-                <BootstrapTable boot keyField='id' data={data || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
+                <BootstrapTable boot keyField='id' data={displayData || []} columns={columns(context)} pagination={paginationFactory()} bootstrap4={true} />
             </div>
         </div>
     )
