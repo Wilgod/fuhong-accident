@@ -25,6 +25,7 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
     const [data] = useEmailRecord(permission);
     const [displayData, setDisplayData] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedForm, setSelectedForm] = useState([]);
     const [status, setStatus] = useState('');
     const [keyword, setKeyword] = useState('');
     console.log(data);
@@ -56,6 +57,18 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
                 filterData = dataLists;
             }
 
+        }
+        if (selectedForm.length > 0) {
+            let dataLists = [];
+            if (selectedForm[0] != 'ALL') {
+                for (let option of selectedForm) {
+                    let newDataList = filterData.filter(item => { return item.FormType == option});
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
+                }
+                filterData = dataLists;
+            }
         }
         if (startDate != null) {
             let newStartDate = new Date(startDate).setHours(0,0,0);
@@ -158,6 +171,7 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
+                        setSelectedForm(selectedOptions);
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>

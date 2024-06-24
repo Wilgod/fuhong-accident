@@ -22,6 +22,7 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
     const [data, setData] = useState([]);
     const [displayData, setDisplayData] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedForm, setSelectedForm] = useState([]);
     const [status, setStatus] = useState('');
     const [keyword, setKeyword] = useState('');
     const [log] = useLog(permission);
@@ -55,6 +56,18 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
             }
 
         }
+        if (selectedForm.length > 0) {
+            let dataLists = [];
+            if (selectedForm[0] != 'ALL') {
+                for (let option of selectedForm) {
+                    let newDataList = filterData.filter(item => { return item.FormType == option});
+                    for (let dataList of newDataList) {
+                        dataLists.push(dataList);
+                    }
+                }
+                filterData = dataLists;
+            }
+        }
         if (startDate != null) {
             let newStartDate = new Date(startDate).setHours(0,0,0);
             filterData = filterData.filter(item => { return (new Date(item.AccidentTime).getTime() >= new Date(newStartDate).getTime() || new Date(item.IncidentTime).getTime() >= new Date(newStartDate).getTime()) });
@@ -65,10 +78,12 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
         }
 
         if (status != '' && status != 'ALL') {
-            if (status == 'Apply') {
-                filterData = filterData.filter(item => { return item.Stage == '1' });
-            } else if (status == 'Confirm') {
-                filterData = filterData.filter(item => { return item.Stage == '2' });
+            if (status == 'PROCESSING') {
+                //filterData = filterData.filter(item => { return item.Stage == '1' });
+                filterData = filterData.filter(item => { return item.Action !== '評語' && item.Report !== '服務使用者意外填報表(一)'&& item.Report !== '外界人士意外填報表(一)'});
+            } else if (status == 'CLOSED') {
+                //filterData = filterData.filter(item => { return item.Stage == '2' });
+                filterData = filterData.filter(item => { return item.Report !== '服務使用者意外填報表(一)'&& item.Report !== '外界人士意外填報表(一)' && (item.Action === '評語' ||  (item.Action === '批准' && (item.Report == '特別事故報告(牌照事務處)' || item.Report == '特別事故報告(津貼科)'))) });
             }
         }
         debugger
@@ -169,6 +184,7 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                     </div>
                     <select multiple className="form-control" onChange={(event) => {
                         const selectedOptions = multipleOptionsSelectParser(event);
+                        setSelectedForm(selectedOptions);
 
                     }}>
                         <option value="ALL">--- 所有 ---</option>
