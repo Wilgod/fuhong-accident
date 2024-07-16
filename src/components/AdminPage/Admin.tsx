@@ -219,7 +219,10 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                     }
                 }
                 if (addItem) {
-                    groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
+                    if (item[position] !== null) {
+                        groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
+                    }
+                    
                 } else {
                     for(let i=0; i< groupBy.length; i++) {
                         if (groupBy[i].key == item[position].Title) {

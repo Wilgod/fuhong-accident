@@ -673,11 +673,18 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         if (parentFormData) {
             setInsuranceCaseNo(parentFormData.InsuranceCaseNo);
             setCaseNo(parentFormData.CaseNumber);
+            debugger
             setIncidentDatetime(new Date(parentFormData.IncidentTime))
             if (Array.isArray(parentFormData.FollowUpFormsId) && parentFormData.FollowUpFormsId.length > 0) {
                 getAllIncidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((getAllIncidentFollowUpFormByCaseNumberRes) => {
                     if (Array.isArray(getAllIncidentFollowUpFormByCaseNumberRes) && getAllIncidentFollowUpFormByCaseNumberRes.length > 0) {
-
+                        if (getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate != null) {
+                            setSmDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate));
+                        }
+                        if (getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate != null) {
+                            setSdDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate));
+                        }
+                        
                         setIncidentFollowUpFormList(getAllIncidentFollowUpFormByCaseNumberRes);
                         setSelectedIncidentFollowUpFormId(getAllIncidentFollowUpFormByCaseNumberRes[0].Id);
                     }

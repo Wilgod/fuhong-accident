@@ -616,7 +616,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
         //Service User
         setServiceUserRecordId(parentFormData.ServiceUserId);
-
+        debugger
         if (parentFormData && parentFormData.CaseNumber) {
             getAllAccidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((accidentFollowUpFormRepseonseRes) => {
                 setAccidentFollowUpFormList(accidentFollowUpFormRepseonseRes);
