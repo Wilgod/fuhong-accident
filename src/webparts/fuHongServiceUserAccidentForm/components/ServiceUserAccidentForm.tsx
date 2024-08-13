@@ -230,8 +230,8 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     }
     //request body parser and validation
     const dataFactory = (status: string) => {
-        const body = {};
-        const error = {};
+        let body = {};
+        let error = {};
         let msg = "";
         // Service User info
         body["ServiceUserNameCN"] = serviceUserNameCN;
@@ -261,7 +261,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             msg += "請填寫服務使用者檔案號碼\n";
         }
         //body["ServiceUserId"] = serviceUserId == null ? null : serviceUserId.toString();
-        debugger
+        
         let serCategory= JSON.stringify(serviceCategory).replace(`"[`, `[`).replace(`]"`, `]`).replace(/\\/g, ``);
         if (serCategory != '[]') {
             body["ServiceCategory"] = serCategory
@@ -270,7 +270,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             msg += "請填寫接受服務類別\n";
         }
         
-        debugger
         if (wheelchair != undefined) {
             body["Wheelchair"] = wheelchair;
         } else {
@@ -640,6 +639,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         if (contactStaffPickerInfo && contactStaffPickerInfo.length > 0) {
             const [contactStaffObj] = contactStaffPickerInfo;
             body["ContactFamilyStaffId"] = contactStaffObj.id;
+            
+        } else {
+            error["ContactFamilyStaffId"] = true;
             msg += "請填寫負責通知家屬的職員姓名\n";
         }
 
@@ -706,6 +708,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         }
 
         body["Stage"] = "1";
+        console.log('body',body)
+        console.log('error',error)
+        console.log('msg',msg)
+        debugger
         return [body, error, msg];
     }
 
@@ -861,6 +867,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     alert(msg);
                     setError(error);
                 } else {
+                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
                         let extraBody = {
@@ -878,7 +885,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             extraBody["Status"] = "PENDING_SPT_APPROVE"
                         }
 
-                        if (formStatus === "DRAFT") {
+                        if (formStatus === "DRAFT" || formStatus === "SM_VOID") {
                             updateServiceUserAccidentById(formData.Id, {
                                 ...body,
                                 ...extraBody
@@ -991,17 +998,19 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 formSubmittedHandler();
             }).catch(console.error);
         } else {
-            let [body, error, msg] = dataFactory("SUBMIT");
-            body["ReporterId"] = CURRENT_USER.id;
-            console.log(error);
-            if (Object.keys(error).length > 0) {
-                alert(msg);
-                setError(error);
+            const [extraBody, extraError, extraMsg] = dataFactory("SUBMIT");
+            debugger
+            extraBody["ReporterId"] = CURRENT_USER.id;
+            console.log(extraError);
+            if (Object.keys(extraError).length > 0) {
+                alert(extraMsg);
+                setError(extraError);
             } else {
                 if (formStatus === "SM_VOID") {
-                    let extraBody = {
+                    /*let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
-                    };
+                    };*/
+                    extraBody["Status"] = "PENDING_SM_APPROVE"
                     if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
                         extraBody["SMApproved"] = true;
                         extraBody["SMComment"] = smComment;
@@ -1040,14 +1049,19 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
+                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
-                        let extraBody = {
+                        extraBody["CaseNumber"] = caseNumber;
+                        extraBody["Title"] =  "SUI",
+                        extraBody["ServiceLocation"] = serviceLocation,
+                        extraBody["Status"] = "PENDING_SM_APPROVE"
+                        /*let extraBody = {
                             "CaseNumber": caseNumber,
                             "Title": "SUI",
                             "ServiceLocation": serviceLocation,
                             "Status": "PENDING_SM_APPROVE"
-                        };
+                        };*/
 
 
 
@@ -1062,7 +1076,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
                         if (formStatus === "DRAFT") {
                             updateServiceUserAccidentById(formData.Id, {
-                                ...body,
+                                //...body,
                                 ...extraBody
                             }).then(async (updateServiceUserAccidentByIdRes) => {
                                 let att = [];
@@ -1100,10 +1114,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                 formSubmittedHandler();
                             }).catch(console.error);
                         } else {
-                            console.log("body : ", body);
+                            //console.log("body : ", body);
                             console.log("extraBody : ", extraBody);
                             createServiceUserAccident({
-                                ...body,
+                                //...body,
                                 ...extraBody
                             }).then(async (createServiceUserAccidentRes) => {
 
