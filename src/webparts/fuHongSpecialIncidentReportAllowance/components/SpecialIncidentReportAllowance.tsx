@@ -609,7 +609,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     extraBody["SMDate"] = new Date().toISOString();
                     extraBody["SMComment"] = smComment;
                 }
-                updateSpecialIncidentReportAllowance(formData.Id, extraBody).then(async res => {
+                updateSpecialIncidentReportAllowance(formData.Id, {
+                    ...body,
+                    ...extraBody}).then(async res => {
                     console.log(res)
                     if (uploadFile.length > 0) {
                         let att = [];

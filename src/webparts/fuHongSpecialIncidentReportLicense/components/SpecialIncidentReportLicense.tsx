@@ -1261,7 +1261,9 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     extraBody["SMDate"] = new Date().toISOString();
                     extraBody["SMComment"] = smComment;
                 }
-                updateSpecialIncidentReportLicense(formData.Id, extraBody).then(async (res) => {
+                updateSpecialIncidentReportLicense(formData.Id, {
+                    ...body,
+                    ...extraBody}).then(async (res) => {
                     await uploadFile(formData.Id);
 
                     postLog({

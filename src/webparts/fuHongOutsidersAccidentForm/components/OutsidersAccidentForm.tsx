@@ -448,45 +448,134 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             alert(msg);
         } else {
             if (currentUserRole === Role.ADMIN) {
-                if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
-                    if (checkEmail) {
-                        getInsuranceEMailRecords(formData.CaseNumber, "PUI", formId).then((res1) => {
-                            if (res1.length > 0) {
-                                updateInsuranceNumber(res1[0].Id, form.insuranceCaseNo);
-                                updateOutsiderAccidentFormById(formId, {
-                                    "InsuranceCaseNo": form.insuranceCaseNo,
-                                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
-                                }).then((res) => {
-                                    // Update form to stage 1-2
-                                    // Trigger notification workflow
-                                    console.log(res);
-    
+                if (formStatus === "DRAFT" || formStatus === "SM_VOID") {
+                    caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        console.log(caseNumber);
+                        let extraBody = {
+                            "Title": "PUI",
+                            "ServiceLocation": serviceLocation,
+                            "Status": "PENDING_SM_APPROVE"
+                        }
+
+                        if (CURRENT_USER.email === spSmInfo.Email || skipApproval) {
+                            extraBody["SMApproved"] = true;
+                            extraBody["SMComment"] = smComment;
+                            extraBody["SMDate"] = new Date().toISOString();
+                            extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
+                            extraBody["Status"] = "PENDING_SPT_APPROVE";
+                        }
+                        if (formStatus === "DRAFT") {
+                            extraBody["CaseNumber"] = caseNumber;
+                        }
+                        if (formStatus === "DRAFT" || formStatus === "SM_VOID") {
+                            updateOutsiderAccidentFormById(formData.Id, {
+                                ...body,
+                                ...extraBody,
+                            }).then(async (updateOutsiderAccidentFormByIdRes) => {
+                                console.log(updateOutsiderAccidentFormByIdRes)
+                                // Photo upload implement
+                                let att = [];
+                                if (form.photoRecord === true && selectedPhotoRecordFiles.length > 0) {
+                                    att = [...attachmentsFilesFormatParser(selectedPhotoRecordFiles, "CCTV")];
+                                }
+
+                                if (att.length > 0) {
+                                    await updateOutsidersAccidentFormAttachmentById(formData.Id, att).then((updateOutsidersAccidentFormAttachmentByIdRes) => {
+                                        if (updateOutsidersAccidentFormAttachmentByIdRes) {
+                                            console.log(updateOutsidersAccidentFormAttachmentByIdRes);
+                                        }
+                                    }).catch(console.error);
+                                }
+                                if (extraBody["Status"] = "PENDING_SPT_APPROVE") {
+
                                     postLog({
                                         AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
-                                        Action: "更新",
-                                        CaseNumber: formData.CaseNumber,
+                                        Action: "提交",
+                                        CaseNumber: caseNumber,
                                         FormType: "PUI",
                                         Report: "外界人士意外填報表(一)",
                                         ServiceUnit: serviceLocation,
                                         RecordId: formData.Id
                                     }).catch(console.error);
+                                } else {
+                                    postLog({
+                                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                        Action: "提交",
+                                        CaseNumber: caseNumber,
+                                        FormType: "PUI",
+                                        Report: "外界人士意外填報表(一)",
+                                        ServiceUnit: serviceLocation,
+                                        RecordId: formData.Id
+                                    }).catch(console.error);
+                                }
+
+                                notifyOutsiderAccident(context, formData.Id, 1, workflow);
+                                formSubmittedHandler();
+                            })
+                        } 
+                    }).catch(console.error);
+                } else {
+                    if (form.insuranceCaseNo != null && form.insuranceCaseNo != "") {
+                        if (checkEmail) {
+                            getInsuranceEMailRecords(formData.CaseNumber, "PUI", formId).then((res1) => {
+                                if (res1.length > 0) {
+                                    updateInsuranceNumber(res1[0].Id, form.insuranceCaseNo);
+                                    updateOutsiderAccidentFormById(formId, {
+                                        "InsuranceCaseNo": form.insuranceCaseNo,
+                                        "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                                    }).then((res) => {
+                                        // Update form to stage 1-2
+                                        // Trigger notification workflow
+                                        console.log(res);
+        
+                                        postLog({
+                                            AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                            Action: "更新",
+                                            CaseNumber: formData.CaseNumber,
+                                            FormType: "PUI",
+                                            Report: "外界人士意外填報表(一)",
+                                            ServiceUnit: serviceLocation,
+                                            RecordId: formData.Id
+                                        }).catch(console.error);
+        
+                                        formSubmittedHandler();
+                                    }).catch(console.error);
+                                } else {
+                                    alert('請先發送EMail');
+                                    setOpenSubmitInsuranceModel(true);
+                                }
+                            })
+                        } else {
+                            updateOutsiderAccidentFormById(formId, {
+                                "InsuranceCaseNo": form.insuranceCaseNo,
+                                "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
+                            }).then((res) => {
+                                // Update form to stage 1-2
+                                // Trigger notification workflow
+                                console.log(res);
     
-                                    formSubmittedHandler();
+                                postLog({
+                                    AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
+                                    Action: "更新",
+                                    CaseNumber: formData.CaseNumber,
+                                    FormType: "PUI",
+                                    Report: "外界人士意外填報表(一)",
+                                    ServiceUnit: serviceLocation,
+                                    RecordId: formData.Id
                                 }).catch(console.error);
-                            } else {
-                                alert('請先發送EMail');
-                                setOpenSubmitInsuranceModel(true);
-                            }
-                        })
-                    } else {
+    
+                                formSubmittedHandler();
+                            }).catch(console.error);
+                        }
+                        
+                    } else if (form.cctvRecord) {
                         updateOutsiderAccidentFormById(formId, {
-                            "InsuranceCaseNo": form.insuranceCaseNo,
                             "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                         }).then((res) => {
                             // Update form to stage 1-2
                             // Trigger notification workflow
                             console.log(res);
-
+    
                             postLog({
                                 AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                                 Action: "更新",
@@ -496,19 +585,18 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                                 ServiceUnit: serviceLocation,
                                 RecordId: formData.Id
                             }).catch(console.error);
-
+    
                             formSubmittedHandler();
                         }).catch(console.error);
                     }
-                    
-                } else if (form.cctvRecord) {
                     updateOutsiderAccidentFormById(formId, {
+                        "InsuranceCaseNo": form.insuranceCaseNo,
                         "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
                     }).then((res) => {
                         // Update form to stage 1-2
                         // Trigger notification workflow
                         console.log(res);
-
+    
                         postLog({
                             AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
                             Action: "更新",
@@ -518,30 +606,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                             ServiceUnit: serviceLocation,
                             RecordId: formData.Id
                         }).catch(console.error);
-
+    
                         formSubmittedHandler();
                     }).catch(console.error);
                 }
-                updateOutsiderAccidentFormById(formId, {
-                    "InsuranceCaseNo": form.insuranceCaseNo,
-                    "CctvRecordReceiveDate": cctvRecordReceiveDate == null ? null : cctvRecordReceiveDate.toISOString()
-                }).then((res) => {
-                    // Update form to stage 1-2
-                    // Trigger notification workflow
-                    console.log(res);
-
-                    postLog({
-                        AccidentTime: accidentTime == null ? '' : accidentTime.toISOString(),
-                        Action: "更新",
-                        CaseNumber: formData.CaseNumber,
-                        FormType: "PUI",
-                        Report: "外界人士意外填報表(一)",
-                        ServiceUnit: serviceLocation,
-                        RecordId: formData.Id
-                    }).catch(console.error);
-
-                    formSubmittedHandler();
-                }).catch(console.error);
+                
             } else if (pendingSptApproveForSD(CURRENT_USER.email, currentUserRole, formStatus, formStage, sptDate, sdInfo)) {
                 updateOutsiderAccidentFormById(formId, {
                     "SDComment": sdComment,
@@ -567,6 +636,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             } else {
 
                 if (formStatus === "SM_VOID") {
+                    debugger
                     let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
                     };
@@ -580,7 +650,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
                     }
 
-                    updateOutsiderAccidentFormById(formData.Id, extraBody).then(async (updateOutsiderAccidentFormByIdRes) => {
+                    updateOutsiderAccidentFormById(formData.Id, {
+                        ...body,
+                        ...extraBody
+                    }).then(async (updateOutsiderAccidentFormByIdRes) => {
                         console.log(updateOutsiderAccidentFormByIdRes)
                         // Photo upload implement
                         let att = [];

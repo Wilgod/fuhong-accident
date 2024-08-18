@@ -376,6 +376,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     extraBody["SMDate"] = new Date().toISOString();
                     extraBody["SMComment"] = smComment
                 }
+                
                 updateOtherIncidentReport(formData.Id, {
                     ...body,
                     "Status": "PENDING_SM_APPROVE",
@@ -392,6 +393,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             }
                         }).catch(console.error);
                     }
+                    notifyOtherIncident(context, formData.Id, 1, workflow);
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交至服務經理",
@@ -740,7 +742,8 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             const [body, error] = dataFactory();
             updateOtherIncidentReport(formData.Id, {
                 ...body,
-                "Status": "SM_VOID"
+                "Status": "SM_VOID",
+                "SMComment": smComment
             }).then((res) => {
                 notifyIncidentReject(context, formData.Id, 1, workflow);
                 postLog({
