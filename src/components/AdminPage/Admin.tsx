@@ -212,14 +212,20 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 if (type == 'SpecialIncidentReportLicense') {
                     //debugger
                 }
+                if (item.Id === 725) {
+                    debugger
+                }
+                console.log('item.Id',item.Id)
+                console.log('position',position)
+                console.log('item[position]',item[position])
                 let addItem = true;
                 for(let groupItem of groupBy) {
-                    if (groupItem.key == item[position].Title) {
+                    if (item[position] !== undefined && groupItem.key == item[position].Title) {
                         addItem = false;
                     }
                 }
                 if (addItem) {
-                    if (item[position] !== null) {
+                    if (item[position] !== undefined && item[position] !== null) {
                         groupBy.push({key:item[position].Title, child:[item], display:false, groupby:position});
                     }
                     
