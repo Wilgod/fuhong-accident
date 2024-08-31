@@ -622,6 +622,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             }
                         }).catch(console.error);
                     }
+                    notifySpecialIncidentAllowance(context, formData.Id, 1,speicalIncidentReportWorkflow);
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交",
@@ -898,7 +899,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
             updateSpecialIncidentReportAllowance(formData.Id, {
                 ...body,
-                "Status": "SM_VOID"
+                "Status": "SM_VOID",
+                "SMComment": smComment
             }).then((res) => {
                 console.log(res);
 

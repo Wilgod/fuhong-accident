@@ -1265,7 +1265,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     ...body,
                     ...extraBody}).then(async (res) => {
                     await uploadFile(formData.Id);
-
+                    notifySpecialIncidentLicense(context, formData.Id, 1, speicalIncidentReportWorkflow);
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交",
@@ -1649,10 +1649,11 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
         if (confirm("確認拒絕 ?")) {
             const [body, error] = dataFactory();
-
+            debugger
             updateSpecialIncidentReportLicense(formData.Id, {
                 ...body,
-                "Status": "SM_VOID"
+                "Status": "SM_VOID",
+                "SMComment": smComment
             }).then((res) => {
                 console.log(res);
                 notifyIncidentReject(context, formData.Id, 1, speicalIncidentReportWorkflow);
