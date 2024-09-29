@@ -2973,7 +2973,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         <div className="col-12">
                             <p style={{ fontWeight: 'bold', textDecoration: 'underline' }}>註1</p>
                             <p>如屬社會福利署津助院舍， 請同時通知以下社會福利署單位：</p>
-                            <p>(1)津貼組(傳真:2575 5632 及 電郵:rehabenq@swd.gov.hk); 及</p>
+                            <p>(1)津貼組(傳真:2575 5632 及 電郵:suenq@swd.gov.hk); 及</p>
                             <p>(2)康復及醫務社會服務科 （傳真：2893 6983 及 電郵：rehabenq@swd.gov.hk）</p>
                             <p style={{ fontWeight: 'bold', textDecoration: 'underline' }}>註2</p>
                             <p>精神虐待是指危害或損害被虐者心理健康的行為／或態度，例如羞辱，喝罵，孤立，令他們長期陷於恐懼中，侵犯他們的私隱，及在不必要的情況下限制他們的活動範圍或活動自由等</p>
