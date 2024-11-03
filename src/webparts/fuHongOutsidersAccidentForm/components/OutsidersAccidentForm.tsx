@@ -1011,7 +1011,7 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                 "SPTApproved": false,
                 "SPTComment": sptComment,
                 "SPTDate": new Date().toISOString(),
-                "InvestigatorId": investigatorPickerInfo[0].id,
+                //"InvestigatorId": investigatorPickerInfo[0].id,
                 "Status": "PENDING_SM_APPROVE"
             };
             updateOutsiderAccidentFormById(formId, body).then(() => {
