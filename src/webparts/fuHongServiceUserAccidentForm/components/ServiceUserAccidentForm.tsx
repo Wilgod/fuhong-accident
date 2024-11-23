@@ -1635,6 +1635,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 } else if (user.cr98a_mentalretarded == 111910004) {
                     mentalretarded = "UNKNOWN";
                 }
+                if (user.cr98a_namecn === '羅志遠') {
+                    debugger
+                }
                 cmsuser.push({
                     "ServiceNumber": user.cr98a_filenumber,
                     "Age": parseInt(user.cr98a_age),
