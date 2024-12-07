@@ -130,14 +130,15 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 msg += "請填寫其他環境因素\n";
             }
         }
-        if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther &&
-            !form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
+        if (!form.accidentNatureFall && !form.accidentNatureChok && !form.accidentNatureBehavior && !form.accidentNatureEnvFactor && !form.accidentNatureOther) {
+            error["accidentalNature"] = true;
+            msg += "請填寫意外性質";
+        }
+        if (!form.envFactorSlipperyGround && !form.envFactorUnevenGround && !form.envFactorObstacleItems && !form.envFactorInsufficientLight && !form.envFactorAssistiveEquipment && !form.envFactorNotEnoughSpace
             && !form.envFactorNoise && !form.envFactorCollision && !form.envFactorHurtByOthers && !form.envFactorOther && !form.personalFactorEmotional && !form.personalFactorImpatient && !form.personalFactorChok
             && !form.personalFactorUnsteadyWalk && !form.personalFactorTwitch && !form.personalFactorOther) {
-            error["accidentalNature"] = true;
             error["envFactor"] = true;
             error["personalFactor"] = true;
-            msg += "請填寫意外性質";
             msg += "請填寫環境因素";
             msg += "請填寫個人因素";
         }
