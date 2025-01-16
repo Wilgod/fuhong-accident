@@ -1577,9 +1577,15 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
             let userInformationIdlist = await postCMSWorkflowGetUserInformationId(context, value, cmsUserInformationIdWorkflow);
             //arraySort(userInformationIdlist.results, 'cr98a_nameen');
+            for (let user of userlist.results) {
+                if (user.cr98a_namecn === "羅智遠") {
+                    //debugger
+                }
+            }
             debugger
+            
             let cmsuser = []
-            let userlist1 = userlist.results.filter(item => {return item.cr98a_formstatus == "Approved"})
+            let userlist1 = userlist.results; //.filter(item => {return item.cr98a_formstatus == "Approved"})
             arraySort(userlist1, 'cr98a_lastupdate');
             //cr98a_lastupdate
             //cr98a_nameen
@@ -1604,7 +1610,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     } 
                 }
             });
-            for (let nameTemp of namesTempTraversed) {
+
+            const uniqueUsers = namesTempTraversed.filter((user, index, self) =>
+                index === self.findIndex((u) => u.cr98a_nameen === user.cr98a_nameen)
+            );
+            debugger
+            for (let nameTemp of uniqueUsers) {
                 let temp = userInformationIdlist.results.filter(item => {return item.cr98a_userinformationid == nameTemp.cr98a_userinformationid})
                 if (temp.length > 0) {
                     //nameTemp['cr98a_nameen'] = nameTemp['cr98a_nameen'].toLowerCase();

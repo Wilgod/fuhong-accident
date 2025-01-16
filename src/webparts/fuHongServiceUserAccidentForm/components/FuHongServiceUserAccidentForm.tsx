@@ -164,13 +164,14 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail || data.SM.EMail === this.getCurrentUser().userEmail) {
+              console.log('this.state.formTwentyData', this.state.formTwentyData)
+              if (this.state.formTwentyData.length > 0 && (this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail || data.SM.EMail === this.getCurrentUser().userEmail)) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail ||
+              if (this.state.formTwentyData.length > 0 && (this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail ||
                 this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail || 
-                data.SM.EMail === this.getCurrentUser().userEmail) {
+                data.SM.EMail === this.getCurrentUser().userEmail)) {
                 this.setState({ currentUserRole: Role.SERVICE_MANAGER });
               }
             }
@@ -188,14 +189,14 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             } else if (data.Stage == '2') {
-              if (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail ||
-                data.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.length > 0 && (this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail ||
+                data.SPT.EMail === this.getCurrentUser().userEmail)) {
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             } else if (data.Stage == '3') {
-              if (this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail ||
+              if (this.state.formTwentyData.length > 0 && (this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail ||
                 this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail ||
-                data.SPT.EMail === this.getCurrentUser().userEmail) {
+                data.SPT.EMail === this.getCurrentUser().userEmail)) {
                 this.setState({ currentUserRole: Role.SENIOR_PHYSIOTHERAPIST });
               }
             }
@@ -226,33 +227,33 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             }
             if (data.Stage == '2') {
-              if (this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.SPTId !== null && this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyData.SPTId !== null && this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
             }
             if (data.Stage == '3') {
-              if (this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyData.SMId !== null && this.state.formTwentyData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
               if (this.state.formTwentyData.SPTId !== null && this.state.formTwentyData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyData.InvestigatorId !== null && this.state.formTwentyData.Investigator.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SMId !== null && this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyOneData.SMId !== null && this.state.formTwentyOneData.SM.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SDId !== null && this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyOneData.SDId !== null && this.state.formTwentyOneData.SD.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
-              if (this.state.formTwentyOneData.SPTId !== null && this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail) {
+              if (this.state.formTwentyData.lenght > 0 && this.state.formTwentyOneData.SPTId !== null && this.state.formTwentyOneData.SPT.EMail === this.getCurrentUser().userEmail) {
                 userCanRead = true;
               }
             }
