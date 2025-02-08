@@ -13,10 +13,14 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         let allSMSDMapping = await getAllSMSDMapping(siteCollectionUrl);
         let serviceUserAccidentData = [];
+        debugger
         for (let sa of allServiceUserAccident) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sa.ServiceUserUnit });
+            if (sa.ID === 506) {
+                debugger
+            }
             sa['AccidentReportForm'] = getARF;
             sa['AccidentFollowUpForm'] = getAFUF;
             sa['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
@@ -74,7 +78,7 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
                         serviceUserAccidentData.push(sa);
                     }
                 } else if (sa['Stage'] == '2') {
-                    if (sa.Status === "PENDING_INVESTIGATE" && (sa['InvestigatorId'] == spId || getARF[0]['Investigator'].Id == spId)) {
+                    if (sa.Status === "PENDING_INVESTIGATE" && (sa['InvestigatorId'] == spId || (getARF.length > 0 && getARF[0]['Investigator'].Id == spId))) {
                         serviceUserAccidentData.push(sa);
                     } else if (sa.Status === "PENDING_SPT_APPROVE" && getARF.length > 0 && (getARF[0]['SMId'] == spId || getARF[0]['SPTId'] == spId)) {
                         serviceUserAccidentData.push(sa);

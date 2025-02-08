@@ -397,8 +397,10 @@ export async function getServiceUserAccidentById(id: number) {
     try {
         const LIST_NAME = "Service User Accident";
         const item = await sp.web.lists.getByTitle(LIST_NAME).items
-            .getById(id).select("*", "Author/Id", "Author/EMail", 'Author/Title', "Reporter/Id", "Reporter/EMail", 'Reporter/Title', "ContactFamilyStaff/Id", "ContactFamilyStaff/EMail", 'ContactFamilyStaff/Title', "SD/Id", "SD/EMail", 'SD/Title', "SPT/Id", "SPT/EMail", 'SPT/Title', "SM/Id", "SM/EMail", 'SM/Title', "Investigator/Id", "Investigator/EMail", "Investigator/Title")
-            .expand("Reporter", "ContactFamilyStaff", "SM", "SPT", "SD", "Investigator","Author").get();
+            .getById(id)
+            .select("*", "Author/Id", "Author/EMail", 'Author/Title', "Reporter/Id", "Reporter/EMail", "Reporter/Title", "ContactFamilyStaff/Id", "ContactFamilyStaff/EMail", "ContactFamilyStaff/Title", "SPT/Id", "SPT/EMail", "SPT/Title", "SD/Id", "SD/EMail", "SD/Title", "SM/Id", "SM/EMail", "SM/Title", "Investigator/Id", "Investigator/EMail", "Investigator/Title")
+            .expand("Reporter","Author", "ContactFamilyStaff","SPT", "SD", "SM", "Investigator")
+            .get();
         return item;
     } catch (err) {
         console.error(err);
