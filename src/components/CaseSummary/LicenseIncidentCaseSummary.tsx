@@ -134,9 +134,6 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
                     if (residentAbuse != "") { residentAbuse += ","; }
                     residentAbuse += sa['RA_OtherDescription']
                 }
-                if (residentAbuse != '') {
-                    debugger
-                }
                 if (sa['UnusalIncident'] != null && sa['UnusalIncident'] != '') {
                     sa['IncidentReason'] =sa['UnusalIncident']
                 } else if (sa['ResidentMissing'] != null && sa['ResidentMissing'] != '') {
@@ -194,7 +191,6 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
             }
 
         }
-        debugger
         if (startDate != null) {
             let newStartDate = new Date(startDate).setHours(0,0,0);
             filterData = filterData.filter(item => { return new Date(item.IncidentTime).getTime() >= new Date(newStartDate).getTime() });
@@ -223,7 +219,6 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
 
     async function exportExcel() {
         let exportList = [];
-        debugger
         for (let results of displayData) {
             let IncidentTime = '';
             let IncidentReason = '';
@@ -442,7 +437,6 @@ function LicenseIncidentCaseSummary({ context, siteCollectionUrl, permission }: 
 
     function actionFormatter(cell, rowIndex) {
     
-        debugger
         let divButton = [];
         
         divButton.push(
@@ -584,7 +578,6 @@ function dateFormatter(cell, rowIndex) {
 
 function incidentReasonFormatter(cell, rowIndex) {
     let div = [];
-    debugger
     if (cell == "UNUSAL_INCIDENT_GENERAL") {
         div.push(<div>(1) 住客不尋常死亡／重複受傷; 或其他事故導致住客死亡／嚴重受傷 - 在院舍內發生事故及送院救治／送院後死亡</div>);
     } else if (cell == "UNUSAL_INCIDENT_SUICIDE") {

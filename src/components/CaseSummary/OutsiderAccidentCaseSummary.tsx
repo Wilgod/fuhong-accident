@@ -112,7 +112,6 @@ function OutsiderAccidentCaseSummary({ context, siteCollectionUrl, permission }:
     
     function actionFormatter(cell, rowIndex) {
     
-        debugger
         let divButton = [];
         
         divButton.push(

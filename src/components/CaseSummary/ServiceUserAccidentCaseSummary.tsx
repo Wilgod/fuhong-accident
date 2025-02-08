@@ -139,7 +139,6 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
 
     function actionFormatter(cell, rowIndex) {
     
-        debugger
         let divButton = [];
         
         divButton.push(
@@ -329,7 +328,6 @@ function ServiceUserAccidentCaseSummary({ context, siteCollectionUrl, permission
                     Suggestion += '服務使用者經診治後情況 : \n';
                     Suggestion += results.AfterTreatmentDescription + '\n';
                 }
-                debugger
                 if (results.AccidentReportForm != undefined && results.AccidentReportForm.length > 0 && results.AccidentReportForm[0].Suggestion != null) {
                     Suggestion += '調查員建議 : \n';
                     Suggestion += results.AccidentReportForm[0].Suggestion + '\n';
@@ -787,7 +785,6 @@ function accidentCauseFactorFormatter(cell, rowIndex) {
 function suggestionFactorFormatter(cell, rowIndex) {
     let div = [];
     //if (rowIndex.AccidentReportForm != undefined && rowIndex.AccidentReportForm.length > 0) {
-        debugger
         if (rowIndex.TreatmentAfterAccident != null) {
             div.push(<div>服務單位即時治療/處理 : </div>);
             div.push(<div>{rowIndex.TreatmentAfterAccident}</div>);

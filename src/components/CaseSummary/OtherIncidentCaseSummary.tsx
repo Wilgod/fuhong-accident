@@ -85,7 +85,6 @@ function OtherIncidentCaseSummary({ context, siteCollectionUrl, permission }: IO
 
     function actionFormatter(cell, rowIndex) {
     
-        debugger
         let divButton = [];
         
         divButton.push(
