@@ -218,7 +218,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
     
     const submitHandler = () => {
-        debugger
         if (parentFormData.AccidentReportFormId) {
 
             if (stageTwoPendingSptApproveForSM(CURRENT_USER.email, currentUserRole, formStatus, formStage, sptDate, formTwentyData)) {
@@ -265,7 +264,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 const [body, error, msg] = dataFactory();
                 
                 console.log('error',error)
-                debugger
                 if (Object.keys(error).length > 0) {
                     alert(msg);
                     setError(error);
@@ -326,9 +324,7 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     const draftHandler = async () => {
         if (parentFormData.AccidentReportFormId) {
             const [body, error] = dataFactory();
-            debugger
             if (formType === "SERVICE_USER") {
-                debugger
                 updateAccidentReportFormById(parentFormData.AccidentReportFormId, body).then((updateAccidentReportFormResponse) => {
                     formSubmittedHandler();
                 }).catch(console.error);
@@ -492,7 +488,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
     }
 
     const loadData = () => {
-        debugger
         if (parentFormData.Status) {
             setFormStatus(parentFormData.Status)
         }
@@ -513,7 +508,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
                 attchementsRes.forEach((att) => {
                     attachments.push(att);
                 });
-                debugger
                 setSelectedFile(attachments);
             }).catch(console.error);
         }
@@ -521,7 +515,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
         //調查員
         console.log('parentFormData.Investigator', parentFormData.Investigator);
         console.log('investigator1', investigator);
-        debugger
         if (formTwentyData.Investigator) {
             setInvestigator([{ secondaryText: formTwentyData.Investigator.EMail, id: formTwentyData.Investigator.Id }]);
         } else if (parentFormData.Investigator) {
@@ -562,7 +555,6 @@ export default function AccidentFollowUpRepotForm({ context, styles, formType, p
 
                 setSptComment(formTwentyData.SPTComment);
                 if (formTwentyData.SPTDate) {
-                    debugger
                     setSptDate(new Date(formTwentyData.SPTDate));
                 }
 

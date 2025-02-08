@@ -258,7 +258,7 @@ export default class FuHongServiceUserAccidentForm extends React.Component<IFuHo
               }
             }
             //if (lists.)
-            
+            debugger
             if (lists[0].length > 0) {
               for (let dept of lists[0]) {
                 if (dept == 'All') {

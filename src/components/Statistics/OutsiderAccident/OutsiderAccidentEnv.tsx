@@ -774,7 +774,6 @@ function OutsiderAccidentEnv(props) {
 
                 let envOtherResult = sampleThreeParser(data.filter((item) => {return item.EnvOther}), startDate, endDate);
                 let envOtherMFChart = financialYearChartParser(envOtherResult);
-                debugger
                 return <>
                     <div className="row">
                         <div className="col-12">

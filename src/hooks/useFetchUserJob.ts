@@ -13,14 +13,10 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         let allIncidentFollowUpForm = await getAllIncidentFollowUpForm();
         let allSMSDMapping = await getAllSMSDMapping(siteCollectionUrl);
         let serviceUserAccidentData = [];
-        debugger
         for (let sa of allServiceUserAccident) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == sa.CaseNumber && item.ParentFormId == sa.ID});
             let location = allSMSDMapping.filter(item => {return item.su_Eng_name_display == sa.ServiceUserUnit });
-            if (sa.ID === 506) {
-                debugger
-            }
             sa['AccidentReportForm'] = getARF;
             sa['AccidentFollowUpForm'] = getAFUF;
             sa['ServiceLocationTC'] = location.length > 0 ? location[0].su_name_tc : "";
@@ -94,7 +90,6 @@ export default function useFetchUserJob(spId: number,permissionList:any[], siteC
         }
         const allOutsiderAccidentData = await getOutsiderAccidentBySPId(spId);
         let outsiderAccidentData = [];
-        //debugger
         for (let oa of allOutsiderAccidentData) {
             let getARF = allAccidentReportForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});
             let getAFUF = allAccidentFollowUpForm.filter(item => {return item.CaseNumber == oa.CaseNumber && item.ParentFormId == oa.ID});

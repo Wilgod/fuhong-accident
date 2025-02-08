@@ -86,7 +86,6 @@ function InsuranceEmailReportScreen({ context, siteCollectionUrl, permission }: 
                 filterData = filterData.filter(item => { return item.Stage == '2' });
             }
         }
-        debugger
         filterData = filterData.filter(item => {
             return ((item.HomesName != null && item.HomesName.indexOf(keyword) >= 0) ||
                 (item.ServiceLocation != null && item.ServiceLocation.indexOf(keyword) >= 0) ||

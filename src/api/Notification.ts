@@ -283,7 +283,6 @@ export async function notifyIncidentReject(context: WebPartContext, formId: numb
 
 export async function postCMSWorkflowGetUser(context: WebPartContext, serviceLocation:string, workflowUrl:string) {
     try {
-        debugger
         const CONFIG: ISPHttpClientOptions = {
             headers: {
                 "Accept": "application/json;odata=verbose",

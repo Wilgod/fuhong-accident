@@ -321,9 +321,6 @@ const monthDiff = (d1: Date, d2: Date) => {
 const categoryFilter = (unusalIncident: string,residentMissing:string, ra:boolean, conflict:string, medicalIncident:string, otherIncident:string, other:string, dataset: IDataset): IDataset => {
     let result = dataset;
     console.log('residentMissing:',residentMissing)
-    if (residentMissing == 'RESIDENT_MISSING_INSIDE') {
-        // debugger
-    }
     if (unusalIncident == "UNUSAL_INCIDENT_GENERAL" || unusalIncident == "UNUSAL_INCIDENT_SUICIDE" || unusalIncident == "UNUSAL_INCIDENT_OTHER" || unusalIncident == "UNUSAL_INCIDENT_COURT") {
         result.unusalIncident += 1;
     }
@@ -355,7 +352,6 @@ const categoryFilter = (unusalIncident: string,residentMissing:string, ra:boolea
 
 const sampleOneParser = (serviceUserAge: any[]) => {
     let dataset: IDataset = { ...initialDataset };
-    // debugger
     serviceUserAge.forEach((item) => {
         let ra = false;
         if (item.RA_Body || item.RA_Mental || item.RA_Negligent || item.RA_EmbezzleProperty || item.RA_Abandoned || item.RA_SexualAssault || item.RA_Other) {

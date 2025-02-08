@@ -237,7 +237,6 @@ const monthZero = (dataset: IMonth = initialDatasetMonth): IMonth => {
 }
 
 const monthFilter = (month: number, dataset: IMonth = initialDatasetMonth): IMonth => {
-    debugger
     let result = { ...dataset };
     switch (month) {
         case 1:
@@ -2275,7 +2274,6 @@ function OutsiderAccidentNature(props) {
                                 loader={<div>Loading Chart</div>}
                                 data={[['月份', '跌倒', '哽塞', '服務使用者行為問題', '環境因素', '其他'],
                                 ...sampleTwoParser(data, startDate, endDate).map((item) => {
-                                    debugger
                                     return [item.month, item.dataset.accidentNatureFall, item.dataset.accidentNatureChok, item.dataset.accidentNatureBehavior, item.dataset.accidentNatureEnvFactor, item.dataset.accidentNatureOther]
                                 })]
                                 }

@@ -673,7 +673,6 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
         if (parentFormData) {
             setInsuranceCaseNo(parentFormData.InsuranceCaseNo);
             setCaseNo(parentFormData.CaseNumber);
-            debugger
             setIncidentDatetime(new Date(parentFormData.IncidentTime))
             if (Array.isArray(parentFormData.FollowUpFormsId) && parentFormData.FollowUpFormsId.length > 0) {
                 getAllIncidentFollowUpFormByCaseNumber(parentFormData.CaseNumber).then((getAllIncidentFollowUpFormByCaseNumberRes) => {

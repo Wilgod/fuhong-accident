@@ -86,7 +86,6 @@ function LogScreen({ context, siteCollectionUrl, permission }: ILogScreenProps) 
                 filterData = filterData.filter(item => { return item.Report !== '服務使用者意外填報表(一)'&& item.Report !== '外界人士意外填報表(一)' && (item.Action === '評語' ||  (item.Action === '批准' && (item.Report == '特別事故報告(牌照事務處)' || item.Report == '特別事故報告(津貼科)'))) });
             }
         }
-        debugger
         filterData = filterData.filter(item => {
             return ((item.HomesName != null && item.HomesName.indexOf(keyword) >= 0) ||
                 (item.ServiceLocation != null && item.ServiceLocation.indexOf(keyword) >= 0) ||

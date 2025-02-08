@@ -44,7 +44,6 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
     //console.log('formData.InjuredArea',formData.InjuredArea);
     let ServiceUserUnit = "";
     if (formData != null) {
-        debugger
         let ser = serviceUnitList.filter(o => {return o.su_Eng_name_display == formData.ServiceUserUnit});
         if (ser.length > 0) {
             ServiceUserUnit = ser[0].su_name_tc;
@@ -56,7 +55,6 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
         window.print();
     }, [])
     //console.log('formData.ServiceCategory',formData.ServiceCategory);
-    //debugger
 return <>
     <div style={{color:'black'}}>
         <div className={`notPrintable`}>

@@ -209,12 +209,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                         }
                     }
                 }
-                if (type == 'SpecialIncidentReportLicense') {
-                    //debugger
-                }
-                if (item.Id === 725) {
-                    debugger
-                }
                 console.log('item.Id',item.Id)
                 console.log('position',position)
                 console.log('item[position]',item[position])
@@ -519,7 +513,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','OtherIncidentReport');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','OtherIncidentReport');
             }
-            debugger;
             setGroupOtherIncidentReportByServiceUserList(groupByList);
         }
         
@@ -533,7 +526,6 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 groupByList[i].childSM = groupByPosition(groupByList[i].child, 'CurrentSM','SpecialIncidentReportLicense');
                 groupByList[i].childSD = groupByPosition(groupByList[i].child, 'CurrentSD','SpecialIncidentReportLicense');
             }
-            debugger
             setGroupSpecialIncidentReportLicenseByServiceUserList(groupByList);
         }
         

@@ -2225,7 +2225,6 @@ function ServiceUserAccidentPersonal(props) {
                         titleYear3 += ", "
                     }
                 })
-                debugger
                 return <>
                     <div className="row">
                         <div className="col-12">

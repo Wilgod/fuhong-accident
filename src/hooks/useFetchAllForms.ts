@@ -39,7 +39,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
             incidentFollowUpForm = await getAllIncidentFollowUpFormWithClosed();
         }
         if (searchFormTypesAll || searchCriteria.formTypes.indexOf("SUI") > -1) {
-            debugger
             //const serviceUserAccidentData = await getServiceUserAccident(spId, searchCriteria);
             serviceUserAccidentData = await getAllServiceUserAccidentWithClosed();
             console.log('serviceUserUnitList',serviceUserUnitList);
@@ -282,9 +281,6 @@ export default function useFetchAllForms(spId: number, serviceUnitList:any,scree
             }
             for (let item of filterOtherIncidentData) {
                 let unit = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceLocation});
-                if (item.Id== 127) {
-                    debugger
-                }
                 item['ServiceLocationTC'] = unit.length > 0 ? unit[0].su_name_tc : '';
                 if (item.ServiceLocation == 'HO') {
                     let unit1 = serviceUnitList.filter(o => {return o.su_Eng_name_display == item.ServiceUnit});

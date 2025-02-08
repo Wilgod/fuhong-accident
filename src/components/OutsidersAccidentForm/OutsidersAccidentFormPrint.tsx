@@ -66,11 +66,9 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
                 });
             }
             
-            debugger
             if (formTwentyData.Investigator) {
                 getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formTwentyData.Investigator.EMail).then((userInfosRes) => {
                     if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                        debugger
                         setInvestigatorName(userInfosRes[0].Name);
                         setInvestigatorJobTitle(userInfosRes[0].hr_jobcode);
                         window.print();
@@ -82,7 +80,6 @@ export default function ServiceUserAccidentFormPrint({ index,  formData, formTwe
             } else if (formData.Investigator) {
                 getUserInfoByEmailInUserInfoAD(siteCollectionUrl,formData.Investigator.EMail).then((userInfosRes) => {
                     if (Array.isArray(userInfosRes) && userInfosRes.length > 0) {
-                        debugger
                         setInvestigatorName(userInfosRes[0].Name);
                         setInvestigatorJobTitle(userInfosRes[0].hr_jobcode);
                         window.print();

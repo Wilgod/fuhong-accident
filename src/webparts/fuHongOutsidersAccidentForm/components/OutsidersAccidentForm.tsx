@@ -350,7 +350,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
                     error["MedicalArrangementHospital"] = true;
                     msg += "請填寫醫院名稱\n";
                 }
-                debugger
                 if (hospitalArriveTime) {
                     body["HospitalArriveTime"] = hospitalArriveTime.toISOString();
                 } else {
@@ -636,7 +635,6 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             } else {
 
                 if (formStatus === "SM_VOID") {
-                    debugger
                     let extraBody = {
                         "Status": "PENDING_SM_APPROVE"
                     };

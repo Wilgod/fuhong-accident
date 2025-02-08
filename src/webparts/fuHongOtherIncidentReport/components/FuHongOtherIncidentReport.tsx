@@ -118,7 +118,6 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
     const DepartmentList = await checkDepartmentList(this.siteCollectionUrl, this.getCurrentUser().userEmail);
     const speicalIncidentReportWorkflow = await getOtherIncidentReportWorkflow();
     const serviceUnitList:any = await getAllServiceUnit(this.siteCollectionUrl);
-    debugger
     return [PermissionList, DepartmentList,speicalIncidentReportWorkflow.Url,serviceUnitList]
     //this.setState({ departmentList: DepartmentList, loading:true, speicalIncidentReportWorkflow:speicalIncidentReportWorkflow.Url, serviceUnitList:serviceUnitList });
   }
@@ -140,7 +139,6 @@ export default class FuHongOtherIncidentReport extends React.Component<IFuHongOt
           let formTwentySixDataSelected = null;
           if (data != null) {
             formTwentySixDataPrint = await getAllIncidentFollowUpFormByParentId(data.Id);
-            debugger
             if (formTwentySixDataPrint.length > 0) {
               let filterTSdata = formTwentySixDataPrint.filter(item => {return item.CaseNumber.indexOf('OIN-') >= 0});
               if (filterTSdata.length > 0) {

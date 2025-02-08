@@ -497,7 +497,6 @@ const sampleFiveParser = (data: any[], startDate: Date, endDate: Date): ISampleF
     data.forEach((item) => {
         const d = new Date(item.AccidentTime || item.IncidentTime);
         if (d) {
-            //debugger
             const formType: string = item.CaseNumber.split("-")[0];
             const currentFinicailYear = getDateFinancialYear(d);
             if (m.has(currentFinicailYear)) {

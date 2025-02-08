@@ -711,7 +711,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         console.log('body',body)
         console.log('error',error)
         console.log('msg',msg)
-        debugger
         return [body, error, msg];
     }
 
@@ -804,7 +803,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     
     const submitHandler = (checkEmail) => {
         //event.preventDefault();
-        debugger
         if (currentUserRole === Role.ADMIN) {
             if (insuranceNumber != null && insuranceNumber != "") {
                 if (checkEmail) {
@@ -859,15 +857,12 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 
             } else {
                 let [body, error, msg] = dataFactory("SUBMIT");
-                debugger
                 body["ReporterId"] = CURRENT_USER.id;
                 if (Object.keys(error).length > 0) {
-                    debugger
                     //alert("提交錯誤");
                     alert(msg);
                     setError(error);
                 } else {
-                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
                         let extraBody = {
@@ -1000,7 +995,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }).catch(console.error);
         } else {
             const [extraBody, extraError, extraMsg] = dataFactory("SUBMIT");
-            debugger
             extraBody["ReporterId"] = CURRENT_USER.id;
             console.log(extraError);
             if (Object.keys(extraError).length > 0) {
@@ -1050,7 +1044,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
-                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
                         extraBody["CaseNumber"] = caseNumber;
@@ -1407,7 +1400,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             }
             setMedicalArrangementDate(data.MedicalArrangementDate != null ? new Date(data.MedicalArrangementDate) : null);
             setHkid(data.HKID);
-            debugger
             setForm({
                 accidentDetail: data.AccidentDetail || "",
                 accidentLocation: data.AccidentLocation || "",
@@ -1577,12 +1569,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             let userlist = await postCMSWorkflowGetUser(context, value, cmsUserWorkflow);
             let userInformationIdlist = await postCMSWorkflowGetUserInformationId(context, value, cmsUserInformationIdWorkflow);
             //arraySort(userInformationIdlist.results, 'cr98a_nameen');
-            for (let user of userlist.results) {
-                if (user.cr98a_namecn === "羅智遠") {
-                    //debugger
-                }
-            }
-            debugger
             
             let cmsuser = []
             let userlist1 = userlist.results; //.filter(item => {return item.cr98a_formstatus == "Approved"})
@@ -1614,7 +1600,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             const uniqueUsers = namesTempTraversed.filter((user, index, self) =>
                 index === self.findIndex((u) => u.cr98a_nameen === user.cr98a_nameen)
             );
-            debugger
             for (let nameTemp of uniqueUsers) {
                 let temp = userInformationIdlist.results.filter(item => {return item.cr98a_userinformationid == nameTemp.cr98a_userinformationid})
                 if (temp.length > 0) {
@@ -1622,7 +1607,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     namesTraversed.push(nameTemp);
                 }
             }
-            debugger
             arraySort(namesTraversed, 'cr98a_nameen');
             console.log('namesTraversed',namesTraversed);
             //let getUserlist = userlist.results.filter(item => {return item.cr98a_serviceunits == value});
@@ -1646,9 +1630,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 } else if (user.cr98a_mentalretarded == 111910004) {
                     mentalretarded = "UNKNOWN";
                 }
-                if (user.cr98a_namecn === '羅志遠') {
-                    debugger
-                }
                 cmsuser.push({
                     "ServiceNumber": user.cr98a_filenumber,
                     "Age": parseInt(user.cr98a_age),
@@ -1665,7 +1646,6 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 })
                 //"ServiceCategory": ["住宿"],
             }
-            debugger
             setCmsUserList(cmsuser)
         }
 
@@ -1690,9 +1670,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         let selectUser = cmsUserList.filter(item => { return item.ServiceNumber == value });
         if (selectUser.length > 0) {
-            debugger
             let userInformationlist = await postCMSUserInformationWorkflowGetUser(context, selectUser[0].UserinformationId, cmsUserInformationWorkflow);
-            debugger
             let sc = [];
             if (userInformationlist.ServiceType.length > 0) {
                 for (let st of userInformationlist.ServiceType) {

@@ -99,7 +99,6 @@ function AllowanceCaseSummary({ context, siteCollectionUrl, permission }: IAllow
 
     function actionFormatter(cell, rowIndex) {
     
-        debugger
         let divButton = [];
         
         divButton.push(

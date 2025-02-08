@@ -37,7 +37,6 @@ export async function getSkipApproval(siteCollectionUrl:string, hr_jobcode: stri
     try {
         const LIST_NAME = "Skip Approval";
         const URL = siteCollectionUrl;
-        debugger
         const result = await Web(URL).lists.getByTitle(LIST_NAME).items.filter(`Title eq '${hr_jobcode}'`).top(1).get();
         if (result.length > 0) {
             return true;
@@ -112,7 +111,6 @@ export async function getUserAdByGraph(email: string) {
     } catch (err) {
         console.log(email + " not in AD")
         const user = await getUserInfoByEmailInUserInfoAD("https://fuhongsociety.sharepoint.com/sites/Portal/", email)
-        debugger
         if (user.length > 0) {
             user[0].mail = user[0].Email;
             user[0].displayName = user[0].Name

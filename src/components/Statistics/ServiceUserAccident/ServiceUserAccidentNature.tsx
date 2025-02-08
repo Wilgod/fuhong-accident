@@ -374,7 +374,6 @@ const sampleTwoParser = (data: any[], startDate: Date, endDate: Date): ISampleTw
                     let oldDataset = m.get(formattedDate);
                     let newDataset = natureFilter(item, oldDataset);
                     console.log('result',result);
-                    debugger
                     m.set(formattedDate, newDataset);
                 } else {
                     let newDataset = natureFilter(item, initialDataset);
@@ -795,7 +794,6 @@ function ServiceUserAccidentNature(props) {
 
                 let accidentNatureOtherResult = sampleThreeParser(data.filter((item) => {return item.AccidentNatureOther}), startDate, endDate);
                 let accidentNatureOtherMFChart = financialYearChartParser(accidentNatureOtherResult);
-                debugger
                 return <>
                     <div className="row">
                         <div className="col-12">
@@ -2310,7 +2308,6 @@ function ServiceUserAccidentNature(props) {
                                 loader={<div>Loading Chart</div>}
                                 data={[['月份', '跌倒', '哽塞', '服務使用者行為問題', '環境因素', '其他'],
                                 ...sampleTwoParser(data, startDate, endDate).map((item) => {
-                                    debugger
                                     return [item.month, item.dataset.accidentNatureFall, item.dataset.accidentNatureChok, item.dataset.accidentNatureBehavior, item.dataset.accidentNatureEnvFactor, item.dataset.accidentNatureOther]
                                 })]
                             }

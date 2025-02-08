@@ -16,7 +16,6 @@ export default function useServiceUser() {
         if (serviceUserRecordId === -1) return;
         
         if (serviceUserRecordId) {
-            debugger
             if (isNaN(parseInt(serviceUserRecordId))) {
                 getServiceUserByID(parseInt(serviceUserRecordId)).then((user) => {
                     setServiceUser(user);
