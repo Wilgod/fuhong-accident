@@ -803,6 +803,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     
     const submitHandler = (checkEmail) => {
         //event.preventDefault();
+        debugger
         if (currentUserRole === Role.ADMIN) {
             if (insuranceNumber != null && insuranceNumber != "") {
                 if (checkEmail) {
