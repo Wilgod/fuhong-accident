@@ -864,6 +864,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     alert(msg);
                     setError(error);
                 } else {
+                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
                         let extraBody = {
@@ -1045,6 +1046,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                         formSubmittedHandler();
                     }).catch(console.error);
                 } else {
+                    debugger
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
                         console.log(caseNumber)
                         extraBody["CaseNumber"] = caseNumber;
@@ -1176,7 +1178,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         //     "Status": "PENDING_SPT_APPROVE"
         // };
         if (confirm("確認批准 ?")) {
-
+            debugger
 
             updateServiceUserAccidentById(formId, {
                 ...body,
@@ -1236,7 +1238,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
     const sptApproveHandler = () => {
         if (confirm("確認批准 ?")) {
             const [body, error] = dataFactory("");
-
+            debugger
             if (Array.isArray(investigatorPickerInfo) && investigatorPickerInfo.length > 0) {
                 const serviceAccidentUserFormBody = {
                     ...body,
@@ -1251,8 +1253,10 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 };
                 updateServiceUserAccidentById(formId, serviceAccidentUserFormBody).then((formOneResponse) => {
                     // Create form 20, switch to stage 2]
+                    debugger
                     if (formOneResponse) {
                         getServiceUserAccidentById(formId).then((serviceUserAccidentForm) => {
+                            debugger
                             if (serviceUserAccidentForm && serviceUserAccidentForm.CaseNumber && serviceUserAccidentForm.Id) {
                                 let accidentTime = serviceUserAccidentForm.AccidentTime
                                 const accidentReportFormBody = {
@@ -1264,13 +1268,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                                     "SMId": serviceUserAccidentForm.SMId,
                                     "InvestigatorId": serviceUserAccidentForm.InvestigatorId
                                 }
+                                debugger
                                 createAccidentReportForm(accidentReportFormBody).then((formTwoResponse) => {
                                     // Trigger notification workflow
 
 
                                     //AccidentReportForm
                                     if (formTwoResponse && formTwoResponse.data && formTwoResponse.data.Id) {
-
+                                        debugger
                                         updateServiceUserAccidentById(formId, { "AccidentReportFormId": formTwoResponse.data.Id }).then((res) => {
                                             console.log(res)
 

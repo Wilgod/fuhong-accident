@@ -85,7 +85,7 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
                 }
             }
         }
-
+        debugger
         // If there are no last case number / or new financial year
         return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(1)}`;
     } catch (err) {

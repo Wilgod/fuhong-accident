@@ -214,7 +214,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 console.log('item[position]',item[position])
                 let addItem = true;
                 for(let groupItem of groupBy) {
-                    if (item[position] !== undefined && groupItem.key == item[position].Title) {
+                    if (item[position] !== undefined && item[position] !== null && groupItem.key == item[position].Title) {
                         addItem = false;
                     }
                 }
