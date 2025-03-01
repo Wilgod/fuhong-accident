@@ -365,6 +365,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             setError(error);
             alert(msg);
         } else {
+            debugger
             if (formStatus === "SM_VOID") {
                 let extraBody = {
                     "Status": "PENDING_SM_APPROVE",
@@ -407,6 +408,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     formSubmittedHandler();
                 }).catch(console.error);
             } else {
+                debugger
                 caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceLocation).then((caseNumber) => {
                     console.log(caseNumber)
                     const extraBody = {
@@ -978,6 +980,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     }
 
     const changeServiceUserUnit = (event) => {
+        debugger
         let value = event.target.value;
         //setServiceUnitTC(value);
         setServiceUnit(value);
@@ -1041,6 +1044,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
     // Get current User info in ad
     useEffect(() => {
         getAllServiceUnit(siteCollectionUrl).then((userUnitList) => {
+            debugger
             if (permissionList.indexOf('All') >= 0) {
                 setServiceUserUnitList(userUnitList);
             } else {
@@ -1071,7 +1075,6 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                 setServiceUnit("CHH");
                 return;
             }*/
-
             if (userInfo && userInfo.hr_deptid) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
@@ -1080,6 +1083,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     setServiceUnitTC(ser[0].su_name_tc);
 
                 }
+                debugger
                 setServiceLocation(userInfo.hr_location);
             }
         }

@@ -880,9 +880,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                             extraBody["NextDeadline"] = addBusinessDays(new Date(), 3).toISOString();
                             extraBody["Status"] = "PENDING_SPT_APPROVE"
                         }
-                        if (formStatus === "DRAFT") {
-                            extraBody["CaseNumber"] = caseNumber;
-                        }
+                        extraBody["CaseNumber"] = caseNumber;
                         if (formStatus === "DRAFT" || formStatus === "SM_VOID") {
                             updateServiceUserAccidentById(formData.Id, {
                                 ...body,

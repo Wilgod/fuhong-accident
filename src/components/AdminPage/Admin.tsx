@@ -33,6 +33,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 
     function groupByServiceUserAccidentServiceUnit() {
         let groupBy = [];
+        debugger
         serviceUserAccident.map(function(item) {
             console.log('CaseNumber', item['CaseNumber'])
 			let addItem = true;
@@ -551,6 +552,7 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
                 服務使用者意外
             </div>
             {groupServiceUserAccidentByServiceUserList.map((item, index) => {
+                debugger
                 return (
                     <div>
                         
