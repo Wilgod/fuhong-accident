@@ -1760,6 +1760,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
             //loadData(formData);
         } else {
             if (userInfo && userInfo.hr_deptid) {
+                debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
                 setServiceLocation(userInfo.hr_location);

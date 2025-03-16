@@ -33,24 +33,27 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
 
     function groupByServiceUserAccidentServiceUnit() {
         let groupBy = [];
-        debugger
+
         serviceUserAccident.map(function(item) {
             console.log('CaseNumber', item['CaseNumber'])
-			let addItem = true;
-			for(let groupItem of groupBy) {
-				if (groupItem.key == item['ServiceUserUnit']) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-				groupBy.push({key:item['ServiceUserUnit'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item['ServiceUserUnit']) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
+            if (item.Status != "DRAFT" && item.Status != "SM_VOID") {
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (groupItem.key == item['ServiceUserUnit']) {
+                        addItem = false;
+                    }
+                }
+                if (addItem) {
+                    groupBy.push({key:item['ServiceUserUnit'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item['ServiceUserUnit']) {
+                            groupBy[i].child.push(item);
+                        }
+                    }
+                }
+            }
+			
 		  
         });
         return groupBy;
@@ -60,21 +63,24 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
         let groupBy = [];
         outsiderAccident.map(function(item) {
             console.log('CaseNumber', item['CaseNumber'])
-			let addItem = true;
-			for(let groupItem of groupBy) {
-				if (groupItem.key == item['ServiceLocation']) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-				groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item['ServiceLocation']) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
+            if (item.Status != "DRAFT") {
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (groupItem.key == item['ServiceLocation']) {
+                        addItem = false;
+                    }
+                }
+                if (addItem) {
+                    groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item['ServiceLocation']) {
+                            groupBy[i].child.push(item);
+                        }
+                    }
+                }
+            }
+			
 		  
         });
         return groupBy;
@@ -83,22 +89,25 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function groupByOtherIncidentReportServiceUnit() {
         let groupBy = [];
         otherIncidentReport.map(function(item) {
-            console.log('CaseNumber', item['CaseNumber'])
-			let addItem = true;
-			for(let groupItem of groupBy) {
-				if (groupItem.key == item['ServiceLocation']) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-				groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item['ServiceLocation']) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
+            console.log('CaseNumber', item['CaseNumber']);
+            if (item.Status != "DRAFT") {
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (groupItem.key == item['ServiceLocation']) {
+                        addItem = false;
+                    }
+                }
+                if (addItem) {
+                    groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item['ServiceLocation']) {
+                            groupBy[i].child.push(item);
+                        }
+                    }
+                }
+            }
+			
 		  
         });
         return groupBy;
@@ -106,22 +115,25 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function groupBySpecialIncidentReportLicenseServiceUnit() {
         let groupBy = [];
         specialIncidentReportLicense.map(function(item) {
-            console.log('CaseNumber', item['CaseNumber'])
-			let addItem = true;
-			for(let groupItem of groupBy) {
-				if (groupItem.key == item['ServiceLocation']) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-				groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item['ServiceLocation']) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
+            console.log('CaseNumber', item['CaseNumber']);
+            if (item.Status != "DRAFT") {
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (groupItem.key == item['ServiceLocation']) {
+                        addItem = false;
+                    }
+                }
+                if (addItem) {
+                    groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item['ServiceLocation']) {
+                            groupBy[i].child.push(item);
+                        }
+                    }
+                }
+            }
+			
 		  
         });
         return groupBy;
@@ -129,22 +141,25 @@ export default function Admin({ context,siteCollectionUrl }: IAdmin) {
     function groupBySpecialIncidentReportAllowanceServiceUnit() {
         let groupBy = [];
         specialIncidentReportAllowance.map(function(item) {
-            console.log('CaseNumber', item['CaseNumber'])
-			let addItem = true;
-			for(let groupItem of groupBy) {
-				if (groupItem.key == item['ServiceLocation']) {
-					addItem = false;
-				}
-			}
-			if (addItem) {
-				groupBy.push({key:item['ServiceLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
-			} else {
-				for(let i=0; i< groupBy.length; i++) {
-					if (groupBy[i].key == item['ServiceLocation']) {
-						groupBy[i].child.push(item);
-					}
-				}
-			}
+            console.log('CaseNumber', item['CaseNumber']);
+            if (item.Status != "DRAFT") {
+                let addItem = true;
+                for(let groupItem of groupBy) {
+                    if (groupItem.key == item['IncidentLocation']) {
+                        addItem = false;
+                    }
+                }
+                if (addItem) {
+                    groupBy.push({key:item['IncidentLocation'], child:[item], display:false, displaySD:false, displaySM:false, displaySPT:false, displayInv:false, groupby:'ServiceUserUnit'});
+                } else {
+                    for(let i=0; i< groupBy.length; i++) {
+                        if (groupBy[i].key == item['IncidentLocation']) {
+                            groupBy[i].child.push(item);
+                        }
+                    }
+                }
+            }
+			
 		  
         });
         return groupBy;
