@@ -637,6 +637,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 }).catch(console.error);
             } else {
                 caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceLocation).then((caseNumber: string) => {
+                    debugger
                     console.log(caseNumber)
                     let extraBody = {
                         "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
@@ -1138,7 +1139,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (userInfo && userInfo.hr_deptid && !formData) {
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
-                setServiceLocation(userInfo.hr_location);
+                setServiceLocation(userInfo.hr_deptid);
             }
         }
     }, [userInfo, serviceUserUnitList]);

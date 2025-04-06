@@ -1280,6 +1280,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 }).catch(console.error);
             } else {
                 caseNumberFactory(FormFlow.SPECIAL_INCIDENT_LICENSE, serviceLocation).then((caseNumber) => {
+                    debugger
                     console.log(caseNumber)
                     const extraBody = {
                         "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
@@ -1998,7 +1999,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         if (serviceUnit == '') {
                             setHrDepartment(userInfo.hr_deptid);
                             setServiceUnit(userInfo.hr_deptid);
-                            setServiceLocation(userInfo.hr_location);
+                            setServiceLocation(userInfo.hr_deptid);
                         }
                         
                     }

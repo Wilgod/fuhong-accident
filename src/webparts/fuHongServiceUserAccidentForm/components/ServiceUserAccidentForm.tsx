@@ -864,8 +864,9 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                     alert(msg);
                     setError(error);
                 } else {
-                    debugger
+                    
                     caseNumberFactory(FormFlow.SERVICE_USER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        debugger
                         console.log(caseNumber)
                         let extraBody = {
                             "Title": "SUI",
@@ -1763,7 +1764,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
-                setServiceLocation(userInfo.hr_location);
+                setServiceLocation(userInfo.hr_deptid);
                 setPatientServiceUnit(userInfo.hr_deptid);
                 changeCMSUser(userInfo.hr_deptid, true);
             }

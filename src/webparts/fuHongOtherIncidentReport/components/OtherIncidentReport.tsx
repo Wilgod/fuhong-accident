@@ -410,6 +410,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
             } else {
                 debugger
                 caseNumberFactory(FormFlow.OTHER_INCIDENT, serviceLocation).then((caseNumber) => {
+                    debugger
                     console.log(caseNumber)
                     const extraBody = {
                         "Status": "PENDING_SM_APPROVE",
@@ -1084,7 +1085,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
 
                 }
                 debugger
-                setServiceLocation(userInfo.hr_location);
+                setServiceLocation(userInfo.hr_deptid);
             }
         }
     }, [userInfo, serviceUserUnitList]);

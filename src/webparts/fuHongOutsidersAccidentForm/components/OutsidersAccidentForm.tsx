@@ -446,9 +446,11 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
             setError(error);
             alert(msg);
         } else {
+            console.log('Role.ADMIN',Role.ADMIN, + ' currentUserRole', currentUserRole)
             if (currentUserRole === Role.ADMIN) {
-                if (formStatus === "DRAFT" || formStatus === "SM_VOID") {
+                if (formStatus === '' || formStatus === "DRAFT" || formStatus === "SM_VOID") {
                     caseNumberFactory(FormFlow.OUTSIDER_ACCIDENT, serviceLocation).then((caseNumber) => {
+                        debugger
                         console.log(caseNumber);
                         let extraBody = {
                             "Title": "PUI",
@@ -1253,9 +1255,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
 
         } else {
             if (userInfo && userInfo.hr_deptid) {
+                debugger
                 setHrDepartment(userInfo.hr_deptid);
                 setServiceUnit(userInfo.hr_deptid);
-                setServiceLocation(userInfo.hr_location);
+                setServiceLocation(userInfo.hr_deptid);
                 setPatientServiceUnit(userInfo.hr_deptid);
             }
             setReporter([{ secondaryText: CURRENT_USER.email, id: CURRENT_USER.id }]);
@@ -1278,9 +1281,10 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
         }*/
 
         if (userInfo && userInfo.hr_deptid) {
+            debugger
             setHrDepartment(userInfo.hr_deptid);
             setServiceUnit(userInfo.hr_deptid);
-            setServiceLocation(userInfo.hr_location);
+            setServiceLocation(userInfo.hr_deptid);
         }
     }, [userInfo]);
 
@@ -1312,7 +1316,14 @@ export default function OutsidersAccidentForm({ context, formSubmittedHandler, c
     }, [sptList]);
 
     useEffect(() => {
-        setHrDepartment(patientServiceUnit)
+        if (patientServiceUnit) {
+            debugger
+            setHrDepartment(patientServiceUnit);
+            setServiceUnit(patientServiceUnit);
+            setServiceLocation(patientServiceUnit);
+        }
+        
+        
         /*getDepartmentBySuEngNameDisplay(patientServiceUnit).then((res) => {
             if (Array.isArray(res) && res.length) {
                 const dept = res[0];
