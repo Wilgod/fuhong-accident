@@ -1,4 +1,4 @@
-import { FormFlow, getLastCaseNo } from "../api/FetchFuHongList";
+import { FormFlow, getLastCaseNo, checkCaseNumberExists } from "../api/FetchFuHongList";
 
 
 // Fincial Year start 1st aprile, end 31st March
@@ -72,22 +72,33 @@ export const caseNumberFactory = async (formFlow: FormFlow, serviceUnit: string)
         console.log(lastCase);
         const currentFinancialYear = getCurrentFinancialYear();
         const caseType = formFlowShortFormParser(formFlow);
+        
+        let caseOrder = 1; // Default starting case order
+        
         if (lastCase && lastCase.CaseNumber) {
             const caseNumberSplit = lastCase.CaseNumber.split("-");
             if (caseNumberSplit.length === 2) {
                 const [caseType, caseNumberRemain] = caseNumberSplit;
                 const financialYear = caseNumberRemain.substring(0, 4);
                 if (financialYear === currentFinancialYear) {
-                    const caseOrder = parseInt(caseNumberRemain.substring(4 + lastCase.ServiceLocation.length));
-                    if (isNaN(caseOrder) === false) {
-                        return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(caseOrder + 1)}`;
+                    const lastCaseOrder = parseInt(caseNumberRemain.substring(4 + lastCase.ServiceLocation.length));
+                    if (isNaN(lastCaseOrder) === false) {
+                        caseOrder = lastCaseOrder + 1;
                     }
                 }
             }
         }
-        debugger
-        // If there are no last case number / or new financial year
-        return `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(1)}`;
+        
+        // Generate case number and check for uniqueness
+        let generatedCaseNumber = `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(caseOrder)}`;
+        
+        // Keep incrementing until we find a unique case number
+        while (await checkCaseNumberExists(formFlow, generatedCaseNumber)) {
+            caseOrder++;
+            generatedCaseNumber = `${caseType}-${currentFinancialYear}${serviceUnit.toUpperCase()}${newFormIdParser(caseOrder)}`;
+        }
+        
+        return generatedCaseNumber;
     } catch (err) {
         console.error(err);
         return ""

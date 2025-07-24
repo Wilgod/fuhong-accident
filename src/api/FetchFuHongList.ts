@@ -4,6 +4,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import { Web } from "@pnp/sp/webs";
 import { ISearchCriteria } from "../hooks/useFetchAllForms";
+import { getCurrentFinancialYear } from "../utils/CaseNumberParser";
 
 
 export async function getUpdateUserWorkflow(siteCollectionUrl) {
@@ -245,12 +246,48 @@ const formFlowParser = (formFlow: FormFlow) => {
     }
 }
 
+export async function checkCaseNumberExists(formFlow: FormFlow, caseNumber: string): Promise<boolean> {
+    try {
+        const LIST_NAME = formFlowParser(formFlow);
+        const items = await sp.web.lists.getByTitle(LIST_NAME).items.filter(`CaseNumber eq '${caseNumber}'`).select("CaseNumber").top(1).get();
+        return items.length > 0;
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
+}
+
 export async function getLastCaseNo(formFlow: FormFlow) {
     try {
         const LIST_NAME = formFlowParser(formFlow);
-        const item = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created", "ServiceUnit", "ServiceLocation").orderBy("Created", false).top(1).get();
-        if (item.length > 0) return item[0];
-        return null;
+        const items = await sp.web.lists.getByTitle(LIST_NAME).items.filter("Status ne 'DRAFT'").select("Status", "CaseNumber", "Created", "ServiceUnit", "ServiceLocation").getAll();
+        
+        if (items.length === 0) return null;
+        
+        // Find the item with the highest case number for the current financial year
+        const currentFinancialYear = getCurrentFinancialYear();
+        let highestCaseNumber = 0;
+        let latestItem = null;
+        
+        for (const item of items) {
+            if (item.CaseNumber) {
+                const caseNumberSplit = item.CaseNumber.split("-");
+                if (caseNumberSplit.length === 2) {
+                    const [caseType, caseNumberRemain] = caseNumberSplit;
+                    const financialYear = caseNumberRemain.substring(0, 4);
+                    
+                    if (financialYear === currentFinancialYear && item.ServiceLocation) {
+                        const caseOrder = parseInt(caseNumberRemain.substring(4 + item.ServiceLocation.length));
+                        if (!isNaN(caseOrder) && caseOrder > highestCaseNumber) {
+                            highestCaseNumber = caseOrder;
+                            latestItem = item;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return latestItem;
     } catch (err) {
         console.error(err);
         throw new Error("getLastCaseNo failed");
