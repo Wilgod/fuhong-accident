@@ -675,6 +675,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
         const [data] = accidentFollowUpFormList.filter((item) => item.ID === selectedAccidentFollowUpFormId);
 
         if (data) {
+            
             if (data.FollowUpActions) {
                 setFollowUpActions(JSON.parse(data.FollowUpActions));
             }
@@ -687,9 +688,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             //     followUpMeasures: data.FollowUpMeasures || "",
             //     remark: data.Remark || ""
             // });
-            setForm({
-                accidentalFollowUpContinue: data.AccidentalFollowUpContinue,
-            });
+            if (data.Completed) {
+                setForm({
+                    accidentalFollowUpContinue: data.AccidentalFollowUpContinue,
+                });
+            }
+            
 
             setSdComment(data.SDComment || "");
             if (data.SMDate) {
@@ -864,6 +868,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     </div>
                     {
                         followUpActions.map((item, index) => {
+                            debugger
                             return (
                                 <div className="mb-3 px-2 py-3" style={{ border: "1px solid #d9dde0", borderRadius: "10px" }} >
                                     {
@@ -900,10 +905,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                                         {/* 完成日期 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>完成日期</label>
                                         <div className="col">
-                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={item.date ? new Date(item.date) : null} onChange={(date) => {
                                                 let arr = [...followUpActions];
                                                 let actionItem = arr[index];
-                                                actionItem.date = new Date(date).toISOString();
+                                                actionItem.date = date === null ? null : new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
                                                 readOnly={completed || (!canSaveDraft && !stageThreePendingSmFillIn(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData) && !stageThreePendingSdApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, formTwentyOneData))}

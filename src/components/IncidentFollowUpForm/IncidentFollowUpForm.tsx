@@ -84,7 +84,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
     const [error, setError] = useState<IErrorFields>({});
     const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
         action: "",
-        date: new Date().toISOString(),
+        date: null,
         remark: ""
     }]);
 
@@ -708,9 +708,12 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             //     incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
             //     remark: data.Remark || ""
             // })
-            setForm({
-                incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
-            })
+            if (data.Completed) {
+                setForm({
+                    incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
+                })
+            }
+            
 
             setFormStatus(data.Status);
             // setForm({
@@ -909,10 +912,10 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                                         {/* 完成日期 */}
                                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>完成日期</label>
                                         <div className="col">
-                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={new Date(item.date)} onChange={(date) => {
+                                            <DatePicker className="form-control" dateFormat="yyyy/MM/dd" selected={item.date ? new Date(item.date) : null} onChange={(date) => {
                                                 let arr = [...followUpActions];
                                                 let actionItem = arr[index];
-                                                actionItem.date = new Date(date).toISOString();
+                                                actionItem.date = date === null ? null : new Date(date).toISOString();
                                                 setFollowUpActions(arr);
                                             }}
                                                 readOnly={type=='cms' || completed || (!canSaveDraft && !pendingSdApprove(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
