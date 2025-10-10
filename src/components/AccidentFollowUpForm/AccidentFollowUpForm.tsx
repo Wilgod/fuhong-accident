@@ -78,7 +78,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
     
     const [followUpActions, setFollowUpActions] = useState<IFollowUpAction[]>([{
         action: "",
-        date: new Date().toISOString(),
+        date: null,
         remark: ""
     }]);
 
@@ -673,11 +673,13 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
 
     const updateState = () => {
         const [data] = accidentFollowUpFormList.filter((item) => item.ID === selectedAccidentFollowUpFormId);
-
+        debugger
         if (data) {
-            
-            if (data.FollowUpActions) {
-                setFollowUpActions(JSON.parse(data.FollowUpActions));
+            if (data.AccidentalFollowUpContinue) {
+                setForm({
+                    accidentalFollowUpContinue: true,
+                });
+                //setFollowUpActions(data.AccidentalFollowUpContinue);
             }
 
             setCompleted(data.Completed === true ? true : false);
@@ -690,7 +692,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             // });
             if (data.Completed) {
                 setForm({
-                    accidentalFollowUpContinue: data.AccidentalFollowUpContinue,
+                    accidentalFollowUpContinue: false,
                 });
             }
             
@@ -868,7 +870,6 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     </div>
                     {
                         followUpActions.map((item, index) => {
-                            debugger
                             return (
                                 <div className="mb-3 px-2 py-3" style={{ border: "1px solid #d9dde0", borderRadius: "10px" }} >
                                     {
