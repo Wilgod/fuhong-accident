@@ -700,12 +700,12 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
             setSdComment(data.SDComment || "");
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));
-            } else setSmDate(new Date());
+            } //else setSmDate(new Date());
 
             setSptComment(data.SPTComment || "");
             if (data.SPTDate) {
                 setSmDate(new Date(data.SPTDate));
-            } else setSmDate(new Date());
+            } //else setSmDate(new Date());
         }
     }
 
