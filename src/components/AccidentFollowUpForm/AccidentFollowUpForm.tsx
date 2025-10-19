@@ -681,7 +681,15 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                 });
                 //setFollowUpActions(data.AccidentalFollowUpContinue);
             }
-
+            if (data.FollowUpActions) {
+                setFollowUpActions(JSON.parse(data.FollowUpActions))
+            } else {
+                setFollowUpActions([{
+                    action: "",
+                    date: null,
+                    remark: ""
+                }]);
+            }
             setCompleted(data.Completed === true ? true : false);
 
             // setForm({
@@ -870,6 +878,7 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     </div>
                     {
                         followUpActions.map((item, index) => {
+                            debugger
                             return (
                                 <div className="mb-3 px-2 py-3" style={{ border: "1px solid #d9dde0", borderRadius: "10px" }} >
                                     {
