@@ -385,6 +385,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                     "PreparationStaffId": CURRENT_USER.id,
                 }).then(async (updateOtherIncidentReportRes) => {
                     console.log(updateOtherIncidentReportRes)
+                    notifyOtherIncident(context, formData.Id, 1, workflow);
                     if (uploadFile.length > 0) {
                         let att = [];
                         att = [...attachmentsFilesFormatParser(uploadFile, "")];
@@ -394,7 +395,7 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                             }
                         }).catch(console.error);
                     }
-                    notifyOtherIncident(context, formData.Id, 1, workflow);
+                    
                     postLog({
                         AccidentTime: incidentTime.toISOString(),
                         Action: "提交至服務經理",
@@ -444,8 +445,9 @@ export default function OtherIncidentReport({ context, styles, formSubmittedHand
                                     }
                                 }).catch(console.error);
                             }
+                            notifyOtherIncident(context, formData.Id, 1, workflow);
                             if (extraBody["Status"] === "PENDING_SD_APPROVE") {
-                                notifyOtherIncident(context, formData.Id, 1, workflow);
+                                
                                 postLog({
                                     AccidentTime: incidentTime.toISOString(),
                                     Action: "提交",
