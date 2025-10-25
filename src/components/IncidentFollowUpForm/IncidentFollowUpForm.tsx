@@ -712,6 +712,16 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                 setForm({
                     incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
                 })
+            } else {
+                if (data.IncidentFollowUpContinue) {
+                setForm({
+                    incidentFollowUpContinue: true,
+                });
+            } else {
+                setForm({
+                    incidentFollowUpContinue: false,
+                });
+            }
             }
             
 

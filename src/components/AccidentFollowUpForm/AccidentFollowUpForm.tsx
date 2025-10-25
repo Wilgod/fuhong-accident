@@ -680,6 +680,10 @@ export default function AccidentFollowUpForm({ context, formType, styles, curren
                     accidentalFollowUpContinue: true,
                 });
                 //setFollowUpActions(data.AccidentalFollowUpContinue);
+            } else {
+                setForm({
+                    accidentalFollowUpContinue: false,
+                });
             }
             if (data.FollowUpActions) {
                 setFollowUpActions(JSON.parse(data.FollowUpActions))
