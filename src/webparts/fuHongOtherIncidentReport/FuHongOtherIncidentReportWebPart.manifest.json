@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   //uat
-  //"id": "76110741-5ea5-4a5f-8248-130274663dbe",
+  "id": "76110741-5ea5-4a5f-8248-130274663dbe",
   //prod no use
   //"id": "76220743-5ea5-5a5f-8348-132275663dbe",
   //prod1
-  "id": "76330744-5ea5-6a5f-8348-233375663dbe",
+  //"id": "76330744-5ea5-6a5f-8348-233375663dbe",
   "alias": "FuHongOtherIncidentReportWebPart",
   "componentType": "WebPart",
   // The "*" signifies that the version should be taken from the package.json
@@ -26,8 +26,8 @@
         "default": "Other"
       },
       "title": {
-        //"default": "fuHongOtherIncidentReport"
-        "default": "Fu Hong Other Incident Report Prod1"
+        "default": "fuHongOtherIncidentReport"
+        //"default": "Fu Hong Other Incident Report Prod1"
       },
       "description": {
         "default": "Fu Hong Other Incident Report Form 23"

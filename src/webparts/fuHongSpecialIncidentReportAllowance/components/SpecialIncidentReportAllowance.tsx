@@ -190,6 +190,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         let body = {};
         let error = {};
         let msg = "";
+        debugger
         body["OrgName"] = reportOrg;
         body["OrgPhone"] = reportPhone;
         body["OrgAddress"] = reportAddress;
@@ -233,7 +234,26 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             body["AbsuseDetailsStatus"] = accidentCategoryAbuseDetails.status;
             body["AbsuseDetailsPerson"] = accidentCategoryAbuseDetails.person;
             body["AbsuseDetailsReason"] = accidentCategoryAbuseDetails.reason;
+            if (accidentCategoryAbuseDetails.status) {
+
+            } else {
+                error["AccidentCategoryAbuseDetailsStatus"] = true;
+                msg += "請填寫事故類別確立/懷疑\n";
+            }
+            if (accidentCategoryAbuseDetails.person) {
+
+            } else {
+                error["AccidentCategoryAbuseDetailsPerson"] = true;
+                msg += "請填寫事故類別職員/其他服務使用者\n";
+            }
+            if (accidentCategoryAbuseDetails.reason) {
+
+            } else {
+                error["AccidentCategoryAbuseDetailsReason"] = true;
+                msg += "請填寫事故類別虐待/侵犯\n";
+            }
         }
+        debugger
 
         //事故被傳媒報導
         body["MediaReports"] = form.mediaReports;
@@ -477,7 +497,11 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (formData) {
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
-            setIncidentTime(new Date(formData.IncidentTime));
+            debugger
+            if (formData.IncidentTime != null) {
+                setIncidentTime(new Date(formData.IncidentTime));
+            }
+            
             if (formData.SubmitDate) {
                 setReportDate(new Date(formData.SubmitDate));
             }
@@ -530,7 +554,8 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.OtherRelatedPartiesDatetime) {
                 setOtherRelatedPartiesDatetime(new Date(formData.OtherRelatedPartiesDatetime));
             }
-            setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus, reason: formData.AbsuseDetailsReson });
+            debugger
+            setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus, reason: formData.AbsuseDetailsReason });
             setServiceLocation(formData.ServiceLocation)
             setReporterPhone(formData.ReporterPhone);
             setPoliceDatetime(new Date(formData.PoliceDatetime));
@@ -1449,7 +1474,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
 
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故類別</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['AccidentCategoryType']) ? styles.divInvalid : ""}`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-unusual-death" value="ACCIDENT_CATEGORY_UNUSUAL_DEATH" onChange={radioButtonHandler}
                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} checked={form.accidentCategory === "ACCIDENT_CATEGORY_UNUSUAL_DEATH"} />
@@ -1465,56 +1490,64 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-abuse" >
                                     (3) *已
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-establish" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>確立</label>
+                                    <span className={`${(error && error['AccidentCategoryAbuseDetailsStatus']) ? styles.divInvalid : ""}`}>
+                                        <span className={`pl-4`}>
+                                            <input className="form-check-input" type="radio" name="status" id="accident-category-status-establish" value="ACCIDENT_CATEGORY_STATUS_ESTABLISH" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-establish" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_ESTABLISH" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>確立</label>
+                                        </span>
+                                        ／
+                                        <span className="pl-4">
+                                            <input className="form-check-input" type="radio" name="status" id="accident-category-status-doubt" value="ACCIDENT_CATEGORY_STATUS_DOUBT" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-doubt" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>懷疑</label>
+                                        </span>
                                     </span>
-                                    ／
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="status" id="accident-category-status-doubt" value="ACCIDENT_CATEGORY_STATUS_DOUBT" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-status-doubt" style={{ textDecoration: `${accidentCategoryAbuseDetails.status === "ACCIDENT_CATEGORY_STATUS_DOUBT" || !accidentCategoryAbuseDetails.status ? "none" : "line-through"}` }}>懷疑</label>
-                                    </span>
+                                    
                                     &nbsp;
 
                                     有服務使用者被
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-staff" value="ACCIDENT_CATEGORY_PERSON_STAFF" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-staff">
-                                            <span style={{ cursor: "help", textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }} title={footNoteTwo}>職員<sup>2</sup></span>
-                                        </label>
-                                    </span>
+                                    <span className={`${(error && error['AccidentCategoryAbuseDetailsPerson']) ? styles.divInvalid : ""}`}>
+                                        <span className={`pl-4`}>
+                                            <input className="form-check-input" type="radio" name="person" id="accident-category-person-staff" value="ACCIDENT_CATEGORY_PERSON_STAFF" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-staff">
+                                                <span style={{ cursor: "help", textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_STAFF" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }} title={footNoteTwo}>職員<sup>2</sup></span>
+                                            </label>
+                                        </span>
 
-                                    ／
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="person" id="accident-category-person-other" value="ACCIDENT_CATEGORY_PERSON_OTHER" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-other" style={{ textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }}>其他服務使用者</label>
+                                        ／
+                                        <span className="pl-4">
+                                            <input className="form-check-input" type="radio" name="person" id="accident-category-person-other" value="ACCIDENT_CATEGORY_PERSON_OTHER" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-person-other" style={{ textDecoration: `${accidentCategoryAbuseDetails.person === "ACCIDENT_CATEGORY_PERSON_OTHER" || !accidentCategoryAbuseDetails.person ? "none" : "line-through"}` }}>其他服務使用者</label>
+                                        </span>
                                     </span>
+                                    
 
                                     &nbsp;
+                                    <span className={`${(error && error['AccidentCategoryAbuseDetailsReason']) ? styles.divInvalid : ""}`}>
+                                        <span className="pl-4">
+                                            <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-abuse" value="ACCIDENT_CATEGORY_REASON_ABUSE" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-abuse" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>虐待</label>
+                                        </span>
 
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-abuse" value="ACCIDENT_CATEGORY_REASON_ABUSE" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-abuse" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_ABUSE" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>虐待</label>
+                                        ／
+                                        <span className="pl-4">
+                                            <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-violated" value="ACCIDENT_CATEGORY_REASON_VIOLATED" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED"}
+                                                disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
+                                            <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-violated" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>侵犯</label>
+                                        </span>
                                     </span>
-
-                                    ／
-                                    <span className="pl-4">
-                                        <input className="form-check-input" type="radio" name="reason" id="accident-category-reason-violated" value="ACCIDENT_CATEGORY_REASON_VIOLATED" onChange={accidentCategoryAbuseDetailsRadioButtonHandler} checked={accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED"}
-                                            disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
-                                        <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-reason-violated" style={{ textDecoration: `${accidentCategoryAbuseDetails.reason === "ACCIDENT_CATEGORY_REASON_VIOLATED" || !accidentCategoryAbuseDetails.reason ? "none" : "line-through"}` }}>侵犯</label>
-                                    </span>
+                                    
 
                                 </label>
                             </div>
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
                                 <div className="px-4">
-                                    <div className="row ">
+                                    <div className={`row`}>
                                         <label className={`col-12 col-form-label ${styles.fieldTitle} pt-xl-0`}>虐待性質</label>
                                         <div className="col">
                                             <div className="form-check form-check-inline mr-3">
