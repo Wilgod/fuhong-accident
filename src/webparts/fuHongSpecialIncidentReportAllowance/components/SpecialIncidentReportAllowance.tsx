@@ -229,7 +229,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (form.abusive_other) {
             body["AbusiveDescription"] = form.abusiveDescription;
         }
-
+        debugger
+        if (form.accidentCategory) {
+        } else {
+            error["AccidentCategoryType"] = true;
+            msg += "請填寫事故類別\n";
+        }
         if (form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE") {
             body["AbsuseDetailsStatus"] = accidentCategoryAbuseDetails.status;
             body["AbsuseDetailsPerson"] = accidentCategoryAbuseDetails.person;
