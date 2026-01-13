@@ -235,6 +235,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             error["AccidentCategoryType"] = true;
             msg += "請填寫事故類別\n";
         }
+        
         if (form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE") {
             body["AbsuseDetailsStatus"] = accidentCategoryAbuseDetails.status;
             body["AbsuseDetailsPerson"] = accidentCategoryAbuseDetails.person;
@@ -257,6 +258,12 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 error["AccidentCategoryAbuseDetailsReason"] = true;
                 msg += "請填寫事故類別虐待/侵犯\n";
             }
+            if (form.abusive_body || form.abusive_sexual || form.abusive_mental || form.abusive_negligent || form.abusive_other) {
+
+            } else {
+                error["AccidentCategoryAbuseType"] = true;
+                msg += "請填寫虐待性質\n";
+            }
         }
         debugger
 
@@ -273,7 +280,13 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             msg += "請填寫事故被傳媒報導\n";
         }
 
-        body["IncidentDescription"] = form.incidentDescription
+        if (form.incidentDescription) {
+            body["IncidentDescription"] = form.incidentDescription
+        } else {
+            error["IncidentDescription"] = true;
+            msg += "請填寫特別事故的詳情\n";
+        }
+        
 
 
         //(a) 服務使用者 (一)
@@ -1552,9 +1565,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             {
                                 form.accidentCategory === "ACCIDENT_CATEGORY_ABUSE" &&
                                 <div className="px-4">
-                                    <div className={`row`}>
-                                        <label className={`col-12 col-form-label ${styles.fieldTitle} pt-xl-0`}>虐待性質</label>
-                                        <div className="col">
+                                    <div className={`row ${(error && error['AccidentCategoryAbuseType']) ? styles.divInvalid : ""}`}>
+                                        <label className={`col-12 col-form-label ${styles.fieldTitle} pt-xl-0 `}>虐待性質</label>
+                                        <div className={`col`}>
                                             <div className="form-check form-check-inline mr-3">
                                                 <input className="form-check-input" type="checkbox" name="abusiveNature" id="abusive-nature-body" value="ABUSIVE_NATURE_BODY" checked={form.abusive_body === true} onClick={() => setForm({ ...form, abusive_body: !form.abusive_body })}
                                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
@@ -1623,9 +1636,9 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                         </div>
                     </div>
 
-                    <div className="form-row mb-2">
+                    <div className="form-row mb-2" >
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>特別事故的詳情</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['IncidentDescription']) ? styles.divInvalid : ""}`}>
                             <AutosizeTextarea className="form-control" name="incidentDescription" value={form.incidentDescription} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>

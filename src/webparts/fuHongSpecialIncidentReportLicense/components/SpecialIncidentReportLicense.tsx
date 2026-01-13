@@ -922,9 +922,18 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
         }
 
-
+        debugger
         //1a)  已報警求助
-
+        if (form.unusalIncident) {
+            if (form.police === undefined) {
+                error["Police"] = true;
+                msg += "請填寫1a\n";
+            }
+            if (form.policeInvestigate === undefined) {
+                error["PoliceInvestigate"] = true;
+                msg += "請填寫警方到院舍調查日期及時間\n";
+            }
+        }
         if (form.police === true) {
             if (form.policeDatetime) {
                 body["PoliceDatetime"] = form.policeDatetime.toISOString();
@@ -987,7 +996,16 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             body["MissingPoliceReportNo"] = "";
         }
 
-
+        if (form.residentMissing) {
+            if (form.found === undefined) {
+                error["Found"] = true;
+                msg += "請填寫2a\n";
+            }
+            if (form.policeInvestigate === undefined) {
+                error["PoliceInvestigate"] = true;
+                msg += "請填寫警方到院舍調查日期及時間\n";
+            }
+        }
         //(2a)
         body["Found"] = form.found;
         if (form.found === true) {
@@ -1039,6 +1057,25 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
             }
         }
 
+        if (form.establishedCase || form.ra_body || form.ra_mental || form.ra_negligent || form.ra_embezzleProperty
+            || form.ra_abandoned || form.ra_other) {
+                if (form.establishedCase === undefined || form.establishedCase === null) {
+                    error["EstablishedCase"] = true;
+                    msg += "請填寫3a\n";
+                }
+                if (form.abuser === undefined || form.abuser === null || form.abuser === '') {
+                    error["Abuser"] = true;
+                    msg += "請填寫 施虐者／懷疑施虐者／侵犯者的身份\n";
+                }
+                if (form.referSocialWorker === undefined) {
+                    error["Referrals"] = true;
+                    msg += "請填寫3c\n";
+                }
+                if (form.abuser_police === undefined) {
+                    error["AbuserPolice"] = true;
+                    msg += "請填寫3d\n";
+                }
+            }
         // {/* (3a) 施虐者／懷疑施虐者的身份 */}
         body["Abuser"] = form.abuser;
         body["AbuserDescription"] = form.abuserDescription;
@@ -2342,10 +2379,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                             }
                         </div>
                     </div>
-                    <div className="form-row mb-2" style={{ marginTop: '15px' }}>
+                    <div className={`form-row mb-2 `} style={{ marginTop: '15px' }}>
                         {/* 報警求助 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1a)</label>
-                        <div className={`col`}>
+                        <div className={`col ${(error && error['Police']) ? styles.divInvalid : ""}`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="police" id="police-true" onChange={(e) => checkboxHandler1(e, true)} checked={form.police === true}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
@@ -2374,10 +2411,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                         </div>
                     </div>
 
-                    <div className="form-row mb-2" style={{ marginTop: '15px' }}>
+                    <div className={`form-row mb-2`} style={{ marginTop: '15px' }}>
                         {/* 警方到院舍調查日期及時間 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(1b) 警方到院舍調查日期及時間 (如適用)</label>
-                        <div className={`col`}>
+                        <div className={`col ${(error && error['PoliceInvestigate']) ? styles.divInvalid : ""}`}>
                             <div className="form-check">
                                 <input className={"form-check-input"} type="checkbox" name="policeInvestigate" id="police-investigate-true" value={"true"} onChange={(e) => checkboxHandler1(e, true)} checked={form.policeInvestigate === true}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx1} />
@@ -2452,7 +2489,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2" style={{ marginTop: '15px' }}>
                         {/* (2a) */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2a)</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Found']) ? styles.divInvalid : ""}`}>
                             <div className="form-check">
                                 <input className="form-check-input" type="checkbox" name="residentMissingFound" id="resident-missing-found-true" onClick={() => setForm({ ...form, found: true })} checked={form.found === true}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
@@ -2491,7 +2528,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2" style={{ marginTop: '15px' }}>
                         {/* (2b) 失蹤住客病歷 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(2b) 失蹤住客病歷</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Found']) ? styles.divInvalid : ""}`}>
                             <AutosizeTextarea className="form-control" name="medicalRecords" value={form.medicalRecords} onChange={inputFieldHandler}
                                 disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx2} />
                         </div>
@@ -2546,7 +2583,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2" style={{ marginTop: '15px' }}>
                         {/* (3a)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3a)</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['EstablishedCase']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="establishedCase" id="establishedCase-true" checked={form.establishedCase === true} onClick={() => setForm({ ...form, establishedCase: true })}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3} />
@@ -2563,7 +2600,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
 
                         {/* (3b) 施虐者／懷疑施虐者的身份 */}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3b) 施虐者／懷疑施虐者／侵犯者的身份</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Abuser']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="abuser" id="abuser-staff" value="ABUSER_STAFF" onChange={checkboxHandler} checked={form.abuser === "ABUSER_STAFF"}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
@@ -2595,7 +2632,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2" style={{ marginTop: '15px' }}>
                         {/* (3c)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3c)</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['Referrals']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="referrals" id="referrals-false" checked={form.referSocialWorker === false} onClick={() => setForm({ ...form, referSocialWorker: false })}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
@@ -2627,7 +2664,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                     <div className="form-row mb-2" style={{ marginTop: '15px' }}>
                         {/* (3d)*/}
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>(3d)</label>
-                        <div className="col">
+                        <div className={`col ${(error && error['AbuserPolice']) ? styles.divInvalid : ""}`}>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" name="residentAbusePolice" id="resident-abuse-police-false" checked={form.abuser_police === false} onClick={() => setForm({ ...form, abuser_police: false })}
                                     disabled={type=='cms' || (!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)) || disabledEx3}  />
