@@ -952,7 +952,7 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
         }
 
         //(1b) 警方到院舍調查日期及時間
-
+        debugger
         if (form.policeInvestigate === true) {
             if (form.policeInvestigateDate) {
                 body["PoliceInvestigateDate"] = form.policeInvestigateDate.toISOString();
@@ -1001,10 +1001,10 @@ export default function SpecialIncidentReportLicense({ context, styles, formSubm
                 error["Found"] = true;
                 msg += "請填寫2a\n";
             }
-            if (form.policeInvestigate === undefined) {
+            /*if (form.policeInvestigate === undefined) {
                 error["PoliceInvestigate"] = true;
                 msg += "請填寫警方到院舍調查日期及時間\n";
-            }
+            }*/
         }
         //(2a)
         body["Found"] = form.found;
