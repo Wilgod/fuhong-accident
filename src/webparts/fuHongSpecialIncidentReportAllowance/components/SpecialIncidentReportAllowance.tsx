@@ -190,7 +190,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         let body = {};
         let error = {};
         let msg = "";
-        debugger
         body["OrgName"] = reportOrg;
         body["OrgPhone"] = reportPhone;
         body["OrgAddress"] = reportAddress;
@@ -229,7 +228,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (form.abusive_other) {
             body["AbusiveDescription"] = form.abusiveDescription;
         }
-        debugger
         if (form.accidentCategory) {
         } else {
             error["AccidentCategoryType"] = true;
@@ -265,7 +263,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 msg += "請填寫虐待性質\n";
             }
         }
-        debugger
 
         //事故被傳媒報導
         body["MediaReports"] = form.mediaReports;
@@ -515,7 +512,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         if (formData) {
             setFormStatus(formData.Status);
             setFormStage(formData.Stage);
-            debugger
             if (formData.IncidentTime != null) {
                 setIncidentTime(new Date(formData.IncidentTime));
             }
@@ -572,7 +568,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             if (formData.OtherRelatedPartiesDatetime) {
                 setOtherRelatedPartiesDatetime(new Date(formData.OtherRelatedPartiesDatetime));
             }
-            debugger
             setAccidentCategoryAbuseDetails({ person: formData.AbsuseDetailsPerson, status: formData.AbsuseDetailsStatus, reason: formData.AbsuseDetailsReason });
             setServiceLocation(formData.ServiceLocation)
             setReporterPhone(formData.ReporterPhone);
@@ -680,7 +675,6 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 }).catch(console.error);
             } else {
                 caseNumberFactory(FormFlow.SPECIAL_INCIDENT_ALLOWANCE, serviceLocation).then((caseNumber: string) => {
-                    debugger
                     console.log(caseNumber)
                     let extraBody = {
                         "NextDeadline": addBusinessDays(new Date(), 3).toISOString(),
@@ -796,6 +790,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
         const [body] = dataFactory()
         body['SDId'] = spSdInfo.Id;
         body['SMId'] = spSmInfo.Id;
+        body["ReporterId"] = CURRENT_USER.id;
         console.log(body);
         if (formStatus === "DRAFT") {
             updateSpecialIncidentReportAllowance(formData.Id, {
@@ -1155,6 +1150,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             setReporterPhone(reporter.mobilePhone || "");
 
         }
+        debugger
         if (reporter) {
             getUserInfoByEmailInUserInfoAD(siteCollectionUrl, reporter.mail).then((userInfosRes) => {
 
