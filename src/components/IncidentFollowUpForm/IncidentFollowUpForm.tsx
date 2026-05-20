@@ -680,6 +680,7 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         if (getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate != null) {
                             setSmDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate));
                         }
+                        debugger
                         if (getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate != null) {
                             setSdDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate));
                         }
@@ -713,15 +714,9 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                     incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
                 })
             } else {
-                if (data.IncidentFollowUpContinue) {
                 setForm({
-                    incidentFollowUpContinue: true,
+                    incidentFollowUpContinue: data.IncidentFollowUpContinue === true ? true : data.IncidentFollowUpContinue === false ? false : undefined,
                 });
-            } else {
-                setForm({
-                    incidentFollowUpContinue: false,
-                });
-            }
             }
             
 
@@ -743,8 +738,12 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             }
 
             setSdComment(data.SDComment || "");
+            debugger
             if (data.SMDate) {
                 setSmDate(new Date(data.SMDate));
+            }
+            if (data.SDDate) {
+                setSdDate(new Date(data.SDDate));
             }
         }
     }
@@ -959,13 +958,13 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         <div className="col-12 col-md-4">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-true" onClick={() => setForm({ ...form, incidentFollowUpContinue: true })} checked={form.incidentFollowUpContinue === true}
-                                    disabled={type=='cms' || completed || (!pendingSdApprove(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                    disabled={type=='cms' || completed || pendingSdApprove(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) || (!pendingSmFillIn(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-true">繼續</label>
                             </div>
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="radio" name="accidentFollowUp" id="accident-follow-up-false" onClick={() => setForm({ ...form, incidentFollowUpContinue: false })} checked={form.incidentFollowUpContinue === false}
-                                    disabled={type=='cms' || completed || (!pendingSdApprove(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !pendingSmFillIn(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
+                                    disabled={type=='cms' || completed || pendingSdApprove(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) || (!pendingSmFillIn(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formTwentySixData) && !initialForm(CURRENT_USER.email, currentUserRole, parentFormData && parentFormData.Status || "", parentFormData && parentFormData.Stage || "", formStatus, formTwentySixData))}
                                 />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-follow-up-false">結束</label>
                             </div>

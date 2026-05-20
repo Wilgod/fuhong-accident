@@ -61,8 +61,7 @@ return <>
         <span onClick={() => backToForm()} style={{cursor:'pointer'}}><FontAwesomeIcon icon={fontawesome["faChevronLeft"]} color="black" size="2x"/><span style={{fontSize:'20px', verticalAlign:'bottom'}}>返回前頁</span></span>
         
         </div>
-        {index == 0 &&
-            <div>
+        <div>
                 <div className="form-row mb-3">
                     <div style={{position:'absolute', width:'160px'}}>
                         <img src={require('./image/fuhongLogo.png')} style={{ width: '100%' }} />
@@ -939,8 +938,8 @@ return <>
                     </div>
                 </div>
             </div>
-        }
-        {index == 1 &&
+        <div className={styles.pagebreak}></div>
+        {formTwentyData && !Array.isArray(formTwentyData) &&
             <div>
                 <div className="form-row mb-3">
                     <div style={{position:'absolute', width:'160px'}}>
@@ -1292,7 +1291,8 @@ return <>
                 </div>
             </div>
         }
-        {index == 2 &&
+        <div className={styles.pagebreak}></div>
+        {formTwentyOneData && Array.isArray(formTwentyOneData) && formTwentyOneData.length > 0 &&
         <div>
             <div className="form-row mb-3">
                 <div style={{position:'absolute', width:'160px'}}>
