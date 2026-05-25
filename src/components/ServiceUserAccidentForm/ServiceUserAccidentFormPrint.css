@@ -4,5 +4,6 @@
     html, body, div {
         overflow: visible !important;
         height: auto !important;
+        min-height: 0 !important;
     }
   }
