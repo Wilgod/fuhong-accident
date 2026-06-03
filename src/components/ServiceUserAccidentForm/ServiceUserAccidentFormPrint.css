@@ -1,7 +1,7 @@
 @media print {
     .notPrintable {display: none;}
 
-    html, body, div {
+    html, body, div, section, main, article, header, footer, aside, nav, form {
         overflow: visible !important;
         height: auto !important;
         min-height: 0 !important;

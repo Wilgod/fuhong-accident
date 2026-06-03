@@ -539,7 +539,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
             <style media="print">
 				{`@page {
                     size: auto;
-                    margin: 10 0;
+                    margin: 10mm 0;
                 }`}
 			</style>
             <div style={{color:'black'}}>
@@ -562,25 +562,25 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             事故資料
                             </div>
                             <div className={`col-12`}>
-                                <table>
+                                <table style={{width:'800px'}}>
                                     <tr>
-                                        <td>(a)事故發生日期 :</td>
+                                        <td style={{whiteSpace:'nowrap'}}>(a)事故發生日期 :</td>
                                         <td style={{borderBottom:'1px solid'}}>{form.incidentTime != null ? new Date(form.incidentTime).getFullYear() + `-` +(`0`+(new Date(form.incidentTime).getMonth()+ 1)).slice(-2) + `-` +(`0`+new Date(form.incidentTime).getDate()).slice(-2):''}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>(b)事故發生時間	:</td>
+                                        <td style={{whiteSpace:'nowrap'}}>(b)事故發生時間	:</td>
                                         <td style={{borderBottom:'1px solid'}}>
                                         {form.incidentTime != null ? moment(form.incidentTime).format("YYYY-MM-DD hh:mm"):''}
                                             {/*form.incidentTime != null ? (`0`+new Date(form.incidentTime).getHours()).slice(-2) + `:` + (`0`+new Date(form.incidentTime).getMinutes()).slice(-2):''*/}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>(c)事故發生地點	:</td>
+                                        <td style={{whiteSpace:'nowrap'}}>(c)事故發生地點	:</td>
                                         <td style={{borderBottom:'1px solid'}}>{form.incidentLocation}</td>
                                     </tr>
                                     <tr>
-                                        <td>(e))事故被傳媒報導 :</td>
+                                        <td style={{whiteSpace:'nowrap'}}>(e))事故被傳媒報導 :</td>
                                         <td>{formData != null && formData.mediaReports&& <span>&#9745;</span>}
                                             {formData != null && !formData.mediaReports && <span>&#9744;</span>}
                                             是&nbsp;&nbsp;
@@ -591,7 +591,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
 
                                     </tr>
                                     <tr>
-                                        <td>(f)特別事故的描述:</td>
+                                        <td style={{whiteSpace:'nowrap'}}>(f)特別事故的描述:</td>
                                         <td style={{borderBottom:'1px solid'}}>
                                         {form.incidentDescription != null ? form.incidentDescription:"" }
                                         </td>
@@ -843,7 +843,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                     此欄由高級服務經理/服務經理填寫
                     </div>
                     <div className={`col-12`}>
-                        <table style={{width:'950px'}}>
+                        <table style={{width:'800px'}}>
                             <tr>
                                 <td style={{width:'60px'}}>
                                 評語 :
@@ -860,7 +860,7 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                     此欄由服務總監填寫
                     </div>
                     <div className={`col-12`}>
-                        <table style={{width:'950px'}}>
+                        <table style={{width:'800px'}}>
                             <tr>
                                 <td style={{width:'60px'}}>
                                 評語 :
@@ -933,7 +933,6 @@ export default function OtherIncidentReportPrint({ index, context, formSubmitted
                             </table>
                         </div>
                     </div>
-                    <div className={`${styles.pagebreak}`} ></div>
                 </div>
                 }
                 {index == 1 &&

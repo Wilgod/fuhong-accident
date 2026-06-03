@@ -505,7 +505,7 @@ return <>
                     此欄由高級服務經理/服務經理填寫
                     </div>
                     <div className={`col-12`}>
-                        <table style={{width:'950px'}}>
+                        <table style={{width:'800px'}}>
                             <tr>
                                 <td style={{width:'60px'}}>
                                 評語 :
@@ -522,7 +522,7 @@ return <>
                     此欄由服務總監填寫
                     </div>
                     <div className={`col-12`}>
-                        <table style={{width:'950px'}}>
+                        <table style={{width:'800px'}}>
                             <tr>
                                 <td style={{width:'60px'}}>
                                 評語 :
@@ -536,7 +536,7 @@ return <>
                 </div>
                 <div className="form-row mb-3" style={{fontSize:'18px'}}>
                     <div className={`col-12`}>
-                        <table style={{width:'900px'}}>
+                        <table style={{width:'800px'}}>
                             <tr>
                                 <td style={{width:'200px'}}>
                                 填報人姓名及職級

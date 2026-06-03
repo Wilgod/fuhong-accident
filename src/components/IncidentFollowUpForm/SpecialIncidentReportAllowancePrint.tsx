@@ -534,7 +534,7 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
             <style media="print">
 				{`@page {
                     size: auto;
-                    margin: 10 0;
+                    margin: 10mm 0;
                 }`}
 			</style>
             <div style={{color:'black'}}>
@@ -1142,7 +1142,6 @@ export default function SpecialIncidentReportLicensePrint({ index, context, form
                             </table>
                         </div>
                     </div>
-                    <div className={`${styles.pagebreak}`} ></div>
                 </div>
                 }
                 {index == 1 &&
