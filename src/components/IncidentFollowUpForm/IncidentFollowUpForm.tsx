@@ -680,7 +680,6 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
                         if (getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate != null) {
                             setSmDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SMDate));
                         }
-                        debugger
                         if (getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate != null) {
                             setSdDate(new Date(getAllIncidentFollowUpFormByCaseNumberRes[0].SDDate));
                         }
@@ -738,13 +737,8 @@ export default function IncidentFollowUpForm({ context, styles, formType, formSu
             }
 
             setSdComment(data.SDComment || "");
-            debugger
-            if (data.SMDate) {
-                setSmDate(new Date(data.SMDate));
-            }
-            if (data.SDDate) {
-                setSdDate(new Date(data.SDDate));
-            }
+            setSmDate(data.SMDate ? new Date(data.SMDate) : null);
+            setSdDate(data.SDDate ? new Date(data.SDDate) : null);
         }
     }
 
