@@ -309,7 +309,14 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
 
         //意外發生日期和時間
         if (accidentTime) {
-            body["AccidentTime"] = accidentTime.toISOString();
+            const threeYearsAgo = new Date();
+            threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+            if (accidentTime < threeYearsAgo) {
+                error["AccidentTime"] = true;
+                msg += "意外發生日期和時間必須在過去三年內\n";
+            } else {
+                body["AccidentTime"] = accidentTime.toISOString();
+            }
         } else {
             error["AccidentTime"] = true;
             msg += "請填寫意外發生日期和時間\n";
