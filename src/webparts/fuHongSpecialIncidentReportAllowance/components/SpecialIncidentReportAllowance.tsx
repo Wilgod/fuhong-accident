@@ -1600,16 +1600,19 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                             }
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-conflict" value="ACCIDENT_CATEGORY_CONFLICT" onChange={radioButtonHandler}
+                                    checked={form.accidentCategory === "ACCIDENT_CATEGORY_CONFLICT"}
                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-conflict">(4) 爭執以致有人身體受傷而需要報警求助</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-other" value="ACCIDENT_CATEGORY_OTHER" onChange={radioButtonHandler}
+                                    checked={form.accidentCategory === "ACCIDENT_CATEGORY_OTHER"}
                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-other">(5) 其他嚴重事故以致影響服務單位的日常運作超過24小時</label>
                             </div>
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="accidentCategory" id="accident-category-media" value="ACCIDENT_CATEGORY_MEDIA" onChange={radioButtonHandler}
+                                    checked={form.accidentCategory === "ACCIDENT_CATEGORY_MEDIA"}
                                     disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                                 <label className={`form-check-label ${styles.labelColor}`} htmlFor="accident-category-media">(6) 可能引起公眾或傳媒關注的事故</label>
                             </div>
