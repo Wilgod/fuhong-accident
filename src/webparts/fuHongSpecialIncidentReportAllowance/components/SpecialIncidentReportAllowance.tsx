@@ -796,6 +796,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
             updateSpecialIncidentReportAllowance(formData.Id, {
                 ...body,
                 "ServiceUnit": serviceUnit,
+                "ServiceLocation": serviceLocation,
                 "Title": "SID"
             }).then(async res => {
                 console.log(res)
@@ -816,6 +817,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                 ...body,
                 "Status": "DRAFT",
                 "ServiceUnit": serviceUnit,
+                "ServiceLocation": serviceLocation,
                 "Title": "SID"
             }).then(async res => {
                 console.log(res);
@@ -1481,7 +1483,7 @@ export default function SpecialIncidentReportAllowance({ context, styles, formSu
                     <div className="form-row mb-2">
                         <label className={`col-12 col-md-2 col-form-label ${styles.fieldTitle} pt-xl-0`}>事故發生地點</label>
                         <div className="col">
-                            <input type="text" className={`form-control  ${(error && error['IncidentTime']) ? "is-invalid" : ""}`} name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler}
+                            <input type="text" className={`form-control  ${(error && error['IncidentLocation']) ? "is-invalid" : ""}`} name="incidentLocation" value={form.incidentLocation} onChange={inputFieldHandler}
                                 disabled={!pendingSmApprove(CURRENT_USER.email, currentUserRole, formStatus, formStage, spSmInfo) && !formInitial(currentUserRole, formStatus)} />
                         </div>
                     </div>

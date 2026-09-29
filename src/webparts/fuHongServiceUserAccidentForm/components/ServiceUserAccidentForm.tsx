@@ -1346,7 +1346,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
         values['RecordId'] = formId;
         values['CaseNumber'] = formData.CaseNumber;
         values['FormType'] = "SUI";
-        values['AccidentTime'] = accidentTime.toISOString();
+        values['AccidentTime'] = accidentTime ? accidentTime.toISOString() : null;
         values['EmailTo'] = emailTo;
         values['EmailCC'] = emailCc;
         values['EmailBody'] = emailBodyHtml;
@@ -1466,7 +1466,7 @@ export default function ServiceUserAccidentForm({ context, currentUserRole, form
                 setSptDate(new Date(data.SPTDate));
             }
 
-            setAccidentTime(new Date(data.AccidentTime));
+            setAccidentTime(data.AccidentTime ? new Date(data.AccidentTime) : null);
 
             //setAccidentTime
 
